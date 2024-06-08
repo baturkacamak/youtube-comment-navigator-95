@@ -1,45 +1,71 @@
 import { useDispatch } from 'react-redux';
-import { setComments, setCommentsCount, setLoading, setReplies, setTranscripts, setTranscriptsCount, setRepliesCount } from '../store/store';
+import {
+    setComments,
+    setCommentsCount,
+    setLoading,
+    setReplies,
+    setTranscripts,
+    setTranscriptsCount,
+    setRepliesCount,
+    updateCommentsData
+} from '../store/store';
 import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/comments/fetchComments';
 
 const useLoadComments = () => {
     const dispatch = useDispatch();
 
-    const loadComments = async (bypassCache = false) => {
+    const loadComments = async () => {
         dispatch(setLoading(true));
-        const data = await fetchComments(bypassCache);
-        dispatch(setComments(data.items));
-        dispatch(setCommentsCount(data.items.length));
-        dispatch(setLoading(false));
+        const handleFetchedComments = (comments: any[]) => {
+            dispatch(updateCommentsData({ comments, isLoading: false }));
+        };
+        await fetchComments(handleFetchedComments);
     };
 
     const loadChatReplies = async () => {
         dispatch(setLoading(true));
         const data = await fetchChatReplies();
-        dispatch(setReplies(data.items));
-        dispatch(setRepliesCount(data.items.length));
+        if (data && data.items) {
+            dispatch(setReplies(data.items));
+            dispatch(setRepliesCount(data.items.length));
+        } else {
+            dispatch(setReplies([]));
+            dispatch(setRepliesCount(0));
+        }
         dispatch(setLoading(false));
     };
 
     const loadTranscript = async () => {
         dispatch(setLoading(true));
         const data = await fetchTranscript();
-        dispatch(setTranscripts(data.items));
-        dispatch(setTranscriptsCount(data.items.length));
+        if (data && data.items) {
+            dispatch(setTranscripts(data.items));
+            dispatch(setTranscriptsCount(data.items.length));
+        } else {
+            dispatch(setTranscripts([]));
+            dispatch(setTranscriptsCount(0));
+        }
         dispatch(setLoading(false));
     };
 
     const loadAll = async (bypassCache = false) => {
         dispatch(setLoading(true));
-        const commentsData = await fetchComments();
+        const handleFetchedComments = (comments: any[]) => {
+            const allItems = [
+                ...comments,
+                ...(chatRepliesData && chatRepliesData.items ? chatRepliesData.items : []),
+                ...(transcriptsData && transcriptsData.items ? transcriptsData.items : [])
+            ];
+            dispatch(setComments(allItems));
+            dispatch(setCommentsCount(comments.length));
+            dispatch(setRepliesCount(chatRepliesData && chatRepliesData.items ? chatRepliesData.items.length : 0));
+            dispatch(setTranscriptsCount(transcriptsData && transcriptsData.items ? transcriptsData.items.length : 0));
+            dispatch(setLoading(false));
+        };
+
+        const commentsData = await fetchComments(handleFetchedComments, undefined, bypassCache);
         const chatRepliesData = await fetchChatReplies();
         const transcriptsData = await fetchTranscript();
-        const allItems = [...commentsData.items, ...chatRepliesData.items, ...transcriptsData.items];
-        dispatch(setComments(allItems));
-        dispatch(setCommentsCount(commentsData.items.length));
-        dispatch(setRepliesCount(chatRepliesData.items.length));
-        dispatch(setTranscriptsCount(transcriptsData.items.length));
-        dispatch(setLoading(false));
     };
 
     return {
