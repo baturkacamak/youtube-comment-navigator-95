@@ -1,119 +1,216 @@
-/**
- * Injects a React application into the specified container.
- *
- * @param {HTMLElement} container - The container element to inject the React app into.
- * @param {string} scriptUrl - The URL of the React app script to inject.
- * @param {string} cssUrl - The URL of the CSS file to inject.
- */
-function injectReactApp(container, scriptUrl, cssUrl) {
-    // Inject CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = cssUrl;
-    document.head.appendChild(link);
-
-    // Inject JS
-    const script = document.createElement('script');
-    script.src = scriptUrl;
-    script.onload = function () {};
-    script.onerror = function () {
-        console.error('Error loading React app script:', scriptUrl);
-    };
-    document.head.appendChild(script);
-}
-
-let appInjected = false; // Flag to check if the app is already injected
-
-/**
- * Checks for the comments section and injects the React app if not already injected.
- */
-function checkAndInject() {
-    if (appInjected) {
-        return; // Exit if the app is already injected
+class PubSub {
+    constructor() {
+        this.events = {};
     }
 
-    const commentsSection = document.getElementById('comments');
-    if (commentsSection) {
-        appInjected = true;
-        console.log('checkAndInject');
-        const appContainer = document.getElementById('youtube-comment-navigator-app');
-        if (appContainer) {
-            // Remove existing React app container if it exists
-            appContainer.remove();
+    subscribe(event, callback) {
+        if (!this.events[event]) {
+            this.events[event] = [];
         }
-        // Create new React app container
+        this.events[event].push(callback);
+    }
+
+    publish(event, data) {
+        if (this.events[event]) {
+            this.events[event].forEach(callback => callback(data));
+        }
+    }
+}
+
+class AssetInjector {
+    constructor(manifestUrl) {
+        this.manifestUrl = manifestUrl;
+        this.mainJs = null;
+        this.mainCss = null;
+    }
+
+    async loadManifest() {
+        try {
+            const response = await fetch(this.manifestUrl);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const manifest = await response.json();
+            this.mainJs = manifest['files']['main.js'];
+            this.mainCss = manifest['files']['main.css'];
+        } catch (err) {
+            console.error('Error fetching asset manifest:', err);
+        }
+    }
+
+    async injectReactApp(container) {
+        if (!this.mainJs || !this.mainCss) {
+            await this.loadManifest();
+        }
+        this.injectCSS(this.mainCss);
+        this.injectJS(this.mainJs);
+    }
+
+    injectCSS(cssFileName) {
+        if (!document.querySelector(`link[href="${chrome.runtime.getURL(cssFileName)}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = chrome.runtime.getURL(cssFileName);
+            document.head.appendChild(link);
+        }
+    }
+
+    injectJS(jsFileName) {
+        if (!document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`)) {
+            const script = document.createElement('script');
+            script.src = chrome.runtime.getURL(jsFileName);
+            script.onload = () => {
+            };
+            script.onerror = () => {
+                console.error('Error loading React app script:', script.src);
+            };
+            document.head.appendChild(script);
+        }
+    }
+
+    removeJS(jsFileName) {
+        const script = document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`);
+        if (script) {
+            script.remove();
+        }
+    }
+}
+
+class DOMHelper {
+    static createAppContainer(commentsSectionId, containerId) {
+        const commentsSection = document.getElementById(commentsSectionId);
+        if (!commentsSection) return null;
+
         const newAppContainer = document.createElement('div');
-        newAppContainer.id = 'youtube-comment-navigator-app';
+        newAppContainer.id = containerId;
         newAppContainer.style.width = '100%';
         commentsSection.parentNode.insertBefore(newAppContainer, commentsSection);
+        return newAppContainer;
+    }
 
-        fetch(chrome.runtime.getURL('asset-manifest.json'))
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(manifest => {
-                const mainJs = manifest['files']['main.js'];
-                const mainCss = manifest['files']['main.css']; // Assuming main.css is the CSS file name
-                injectReactApp(newAppContainer, chrome.runtime.getURL(mainJs), chrome.runtime.getURL(mainCss));
-                appInjected = true; // Set the flag to true once the app is injected
-            })
-            .catch(err => console.error('Error fetching asset manifest:', err));
+    static removeAppContainer(containerId) {
+        const appContainer = document.getElementById(containerId);
+        if (appContainer) {
+            appContainer.remove();
+        }
+    }
+
+    static isVideoWatchPage() {
+        return window.location.pathname === '/watch' && new URLSearchParams(window.location.search).has('v');
+    }
+}
+
+class URLChangeHandler {
+    constructor(pubSub) {
+        this.pubSub = pubSub;
+        this.currentUrl = window.location.href;
+        this.eventDetails = new AbortController();
+        this.hookHistoryMethods();
+        this.monitorUrlChange();
+    }
+
+    hookHistoryMethods() {
+        const originalPushState = history.pushState;
+        const originalReplaceState = history.replaceState;
+
+        history.pushState = (...args) => {
+            originalPushState.apply(this, args);
+            window.dispatchEvent(new Event('urlchange'));
+        };
+
+        history.replaceState = (...args) => {
+            originalReplaceState.apply(this, args);
+            window.dispatchEvent(new Event('urlchange'));
+        };
+
+        window.addEventListener('popstate', () => {
+            window.dispatchEvent(new Event('urlchange'));
+        });
+    }
+
+    async monitorUrlChange() {
+        const handler = async () => {
+            const newUrl = window.location.href;
+            if (this.currentUrl !== newUrl) {
+                this.currentUrl = newUrl;
+                this.eventDetails.abort();
+                this.pubSub.publish('urlchange', newUrl);
+            }
+        };
+
+        setInterval(handler, 1000);
     }
 }
 
 /**
- * Removes the React app from the page.
+ * Class representing the YouTube Comment Navigator.
+ * Handles the injection of a React application into the YouTube comments section.
  */
-function removeApp() {
-    const appContainer = document.getElementById('youtube-comment-navigator-app');
-    if (appContainer) {
-        appContainer.remove();
+class YouTubeCommentNavigator {
+    /**
+     * Initializes the YouTubeCommentNavigator instance.
+     * @param {PubSub} pubSub - An instance of the PubSub class for handling custom events.
+     */
+    constructor(pubSub) {
+        this.appContainerId = 'youtube-comment-navigator-app';
+        this.commentsSectionId = 'comments';
+        this.assetInjector = new AssetInjector(chrome.runtime.getURL('asset-manifest.json'));
+        this.pubSub = pubSub;
+        this.pubSub.subscribe('urlchange', () => this.onUrlChange());
+
+        this.setupInitialLoad();
     }
-    appInjected = false; // Reset the flag
+
+    /**
+     * Checks for the presence of the comments section at regular intervals and injects the React app when found.
+     * This function is used to ensure that the app is injected as soon as the comments section becomes available.
+     */
+    checkAndInjectWithInterval() {
+        const intervalId = setInterval(async () => {
+            if (!DOMHelper.isVideoWatchPage()) {
+                clearInterval(intervalId);
+                return;
+            }
+            if (document.getElementById(this.commentsSectionId)) {
+                clearInterval(intervalId);
+                await this.checkAndInject();
+            }
+        }, 2000);
+    }
+
+    /**
+     * Injects the React application into the YouTube comments section.
+     * Creates a new app container and injects the React app if the comments section is present.
+     */
+    async checkAndInject() {
+        const appContainer = DOMHelper.createAppContainer(this.commentsSectionId, this.appContainerId);
+        if (appContainer) {
+            await this.assetInjector.injectReactApp(appContainer);
+        }
+    }
+
+    /**
+     * Sets up the initial load by checking and injecting the React application.
+     * This function ensures that the app is injected on the initial page load.
+     */
+    setupInitialLoad() {
+        this.checkAndInjectWithInterval();
+    }
+
+    /**
+     * Handles the URL change event.
+     * Removes the existing app and reinjects it if the new URL is a YouTube watch page.
+     */
+    async onUrlChange() {
+        this.checkAndInjectWithInterval();
+        if (DOMHelper.isVideoWatchPage()) {
+            window.postMessage({type: 'URL_CHANGE_TO_VIDEO', url: window.location.href}, '*');
+        }
+    }
 }
 
-/**
- * Hooks into the history methods to listen for URL changes.
- */
-function hookHistoryMethods() {
-    const originalPushState = history.pushState;
-    const originalReplaceState = history.replaceState;
+// Instantiate the PubSub and YouTubeCommentNavigator
+const pubSub = new PubSub();
+new URLChangeHandler(pubSub);
+new YouTubeCommentNavigator(pubSub);
 
-    history.pushState = function () {
-        originalPushState.apply(this, arguments);
-        window.dispatchEvent(new Event('urlchange'));
-    };
-
-    history.replaceState = function () {
-        originalReplaceState.apply(this, arguments);
-        window.dispatchEvent(new Event('urlchange'));
-    };
-
-    window.addEventListener('popstate', () => {
-        window.dispatchEvent(new Event('urlchange'));
-    });
-}
-
-// Hook into history methods and listen for urlchange events
-hookHistoryMethods();
-
-window.addEventListener('urlchange', () => {
-    removeApp(); // Remove the existing app
-    checkAndInject(); // Re-inject the app
-});
-
-// Initial check in case the comments section is already present
-document.addEventListener('DOMContentLoaded', () => {
-    checkAndInject();
-});
-
-// // Fallback interval to check if the comments section appears later
-// const intervalId = setInterval(() => {
-//     if (!appInjected && document.getElementById('comments')) {
-//         checkAndInject();
-//         clearInterval(intervalId); // Clear the interval once the app is injected
-//     }
-// }, 1000); // Adjust the interval as needed (e.g., every 1000 milliseconds)
