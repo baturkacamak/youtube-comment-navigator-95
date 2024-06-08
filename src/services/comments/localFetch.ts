@@ -30,7 +30,8 @@ const fetchCommentsFromLocalIncrementally = async (
         try {
             const response = await fetch(file, { signal });
             const comment = await response.json();
-            onCommentsFetched([comment]);
+            const processedComments = processCommentsData([comment]);
+            onCommentsFetched(processedComments.items);
             await new Promise(resolve => setTimeout(resolve, 500));
         } catch (error) {
             if (signal?.aborted) {
