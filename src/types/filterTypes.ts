@@ -6,10 +6,21 @@ import {Option} from "./utilityTypes";
 export interface Filters {
     sortBy: string;
     sortOrder: string;
+    minLikes: number;
+    minDislikes: number;
+    startDate: string;
+    endDate: string;
+    user: string;
+    verified: boolean;
+    hasLinks: boolean;
+    minLength: number;
+    maxLength: number;
+    extendedSearch: boolean;
+    keyword: string; // Add the missing keyword property here
 }
 
 export interface FilterState extends Filters {
-    // Add any other filter-specific fields here if necessary
+
 }
 
 export interface CheckboxFilterProps {
