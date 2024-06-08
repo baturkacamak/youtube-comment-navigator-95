@@ -1,5 +1,4 @@
-// src/services/youtubeComments.ts
-import { fetchContinuationData } from './fetchContinuationData';
+import {fetchContinuationData} from './fetchContinuationData';
 
 const safelyExecute = (func: Function) => {
     try {
@@ -10,7 +9,10 @@ const safelyExecute = (func: Function) => {
     }
 };
 
-export const generateRequestOptions = ({ continue: continueToken, windowObj }: { continue: string, windowObj: any }, isFetchingReply: boolean = false) => {
+export const generateRequestOptions = ({continue: continueToken, windowObj}: {
+    continue: string,
+    windowObj: any
+}, isFetchingReply: boolean = false) => {
     try {
         const ytcfg = windowObj.ytcfg;
         const ytcfgData = ytcfg?.data_;
@@ -23,10 +25,12 @@ export const generateRequestOptions = ({ continue: continueToken, windowObj }: {
             throw new Error("Invalid or missing YouTube configuration data.");
         }
 
-        let continuation = fetchContinuationData(windowObj.ytInitialData, isFetchingReply);
 
+        let continuation;
         if (continueToken) {
             continuation = continueToken.replace(/(%3D)+$/g, '');
+        } else {
+            continuation = fetchContinuationData(windowObj.ytInitialData, isFetchingReply);
         }
 
         const requestOptions = {
@@ -41,7 +45,7 @@ export const generateRequestOptions = ({ continue: continueToken, windowObj }: {
             },
             referrerPolicy: "strict-origin-when-cross-origin",
             body: JSON.stringify({
-                context: { client: clientContext },
+                context: {client: clientContext},
                 continuation: continuation
             }),
             method: "POST",
@@ -92,4 +96,3 @@ export const fetchCommentData = async (continueToken: string | null, windowObj: 
 
     return await response.json();
 };
-
