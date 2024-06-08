@@ -1,38 +1,45 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
+import { extractYouTubeVideoIdFromUrl } from '../utils/extractYouTubeVideoIdFromUrl';
+import {resetState} from "../store/store";
+import {useDispatch} from "react-redux";
 
-function getWatchUrl(url: string): string {
-    const urlObj = new URL(url);
-    return urlObj.searchParams.get('v') || '';
-}
+
 
 function isYouTubeLoaded(): boolean {
     return !!document.querySelector('ytd-app');
 }
 
 const useUrlChange = (callback: () => Promise<void>) => {
-    useEffect(() => {
-        let currentUrl = getWatchUrl(window.location.href);
+    const dispatch = useDispatch();
 
+    useEffect(() => {
         const eventDetails = new AbortController();
+        let previousVideoId: string | null = null;
 
         const handleUrlChange = async () => {
             try {
-                const videoId = getWatchUrl(window.location.href);
+                const videoId = extractYouTubeVideoIdFromUrl();
+                if (videoId === previousVideoId) {
+                    return; // If the video ID hasn't changed, do nothing.
+                }
+                previousVideoId = videoId;
 
                 const waitForVideoElement = () => {
                     return new Promise<void>((resolve) => {
                         const checkVideoElement = () => {
                             const videoElement = document.querySelector(`[video-id="${videoId}"]`);
                             if (videoElement) {
+                                console.log('Video element found.');
                                 resolve();
                             } else {
                                 console.log('Video element not yet available, retrying...');
-                                setTimeout(checkVideoElement, 500); // Retry after 100ms
+                                setTimeout(checkVideoElement, 500); // Retry after 500ms
                             }
                         };
                         checkVideoElement();
                     });
                 };
+
                 if (videoId) {
                     await waitForVideoElement();
                     console.log('URL changed, executing callback...');
@@ -43,24 +50,16 @@ const useUrlChange = (callback: () => Promise<void>) => {
             }
         };
 
-        const monitorUrlChange = () => {
-            const handler = async () => {
-                if (isYouTubeLoaded() && document.querySelector("#meta.style-scope.ytd-watch-flexy")) {
-                    const newUrl = getWatchUrl(window.location.href);
-                    if (currentUrl !== newUrl) {
-                        currentUrl = newUrl;
-                        eventDetails.abort();
-                        await handleUrlChange();
-                    }
-                }
-            };
-
-            setInterval(handler, 1000);
+        const onMessage = (event: MessageEvent) => {
+            if (event.data.type === 'URL_CHANGE_TO_VIDEO') {
+                handleUrlChange();
+            }
         };
 
-        monitorUrlChange();
+        window.addEventListener('message', onMessage);
 
         return () => {
+            window.removeEventListener('message', onMessage);
             eventDetails.abort();
         };
     }, [callback]);
