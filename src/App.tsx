@@ -1,50 +1,61 @@
 // src/App.tsx
-import React, { useCallback, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useRef} from 'react';
+import {useDispatch} from 'react-redux';
 import SearchBar from './components/features/search/SearchBar';
 import SidebarFilterPanel from './components/features/sidebar/SidebarFilterPanel';
 import CommentList from './components/features/comments/CommentList';
 import LoadingSection from './components/features/loading/LoadingSection';
-import useComments from './hooks/useComments';
-import useSortedComments from './hooks/useSortedComments';
-import useFilteredComments from './hooks/useFilteredComments';
-import useLoadComments from './hooks/useLoadComments';
-import useSearchComments from './hooks/useSearchComments';
 import useUrlChange from './hooks/useUrlChange'; // Import the custom hook
-import { setFilters } from './store/store';
+import useAppState from './hooks/useAppState'; // Import the new custom hook
+import {fetchContinuationTokenFromRemote} from "./services/comments/fetchContinuationData";
+import {fetchCommentsFromRemote} from "./services/comments/remoteFetch";
+
 import './styles/App.css';
-import { Filters } from "./types/filterTypes";
-import { RootState } from "./types/rootState"; // Import RootState type
+import {resetState, setComments, setLoading, updateCommentsData} from "./store/store";
+import {processCommentsData} from "./services/utils/utils";
 
 const App: React.FC = () => {
+
     const dispatch = useDispatch();
+    const abortController = useRef<AbortController | null>(null);
 
-    // Using individual useSelector calls to avoid unnecessary re-renders
-    const comments = useSelector((state: RootState) => state.comments);
-    const originalComments = useSelector((state: RootState) => state.originalComments);
-    const filters = useSelector((state: RootState) => state.filters);
-    const isLoading = useSelector((state: RootState) => state.isLoading);
-    const commentsCount = useSelector((state: RootState) => state.commentsCount);
-    const repliesCount = useSelector((state: RootState) => state.repliesCount);
-    const transcriptsCount = useSelector((state: RootState) => state.transcriptsCount);
+    const {
+        comments,
+        originalCommentsCount,
+        filters,
+        isLoading,
+        commentsCount,
+        repliesCount,
+        transcriptsCount,
+        initialLoadCompleted,
+        handleSearch,
+        loadComments,
+        loadChatReplies,
+        loadTranscript,
+        loadAll,
+        filteredAndSortedComments,
+        setFiltersCallback
+    } = useAppState();
 
-    const originalCommentsCount = originalComments.length;
+    console.log('App');
 
-    const { initialLoadCompleted } = useComments();
-    const { sortComments } = useSortedComments(initialLoadCompleted);
-    const { filterComments } = useFilteredComments(initialLoadCompleted);
-    const { handleSearch } = useSearchComments();
-    const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadComments();
+    const handleFetchedComments = (comments: any[]) => {
+        dispatch(updateCommentsData({comments, isLoading: false}));
+    };
 
-    useUrlChange(() => loadComments(true));
+    useUrlChange(async () => {
+        if (abortController.current) {
+            abortController.current.abort();
+        }
+        abortController.current = new AbortController();
+        const signal = abortController.current.signal;
 
-    const filteredAndSortedComments = useMemo(() => {
-        return filterComments(sortComments(comments, filters.sortBy, filters.sortOrder), filters);
-    }, [filters, sortComments, filterComments]);
+        dispatch(resetState());
+        const continuationToken = await fetchContinuationTokenFromRemote();
+        console.log(continuationToken)
+        await fetchCommentsFromRemote(handleFetchedComments, signal, false, continuationToken);
+    });
 
-    const setFiltersCallback = useCallback((filters: Filters) => {
-        dispatch(setFilters(filters));
-    }, [dispatch]);
 
     return (
         <div className="flex">
@@ -58,12 +69,12 @@ const App: React.FC = () => {
                     onLoadChat={loadChatReplies}
                     onLoadTranscript={loadTranscript}
                     onLoadAll={loadAll}
-                    commentsCount={originalCommentsCount}
+                    commentsCount={commentsCount}
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                 />
-                <SearchBar onSearch={handleSearch} />
-                <CommentList comments={filteredAndSortedComments} isLoading={isLoading} />
+                <SearchBar onSearch={handleSearch}/>
+                <CommentList comments={filteredAndSortedComments} isLoading={isLoading}/>
             </div>
         </div>
     );
