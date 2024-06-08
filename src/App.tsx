@@ -31,8 +31,6 @@ const App: React.FC = () => {
         setFiltersCallback
     } = useAppState();
 
-    console.log('App');
-
     useHandleUrlChange();
 
     return (
