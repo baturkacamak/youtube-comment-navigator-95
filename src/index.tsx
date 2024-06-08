@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
-import { Provider } from 'react-redux';
+import {Provider} from 'react-redux';
 import store from './store/store';
+import {isLocalEnvironment} from "./utils/environmentVariables";
 
 const rootElement = document.getElementById('youtube-comment-navigator-app') as HTMLElement;
 
@@ -12,18 +13,18 @@ if (rootElement) {
 
     const AppWrapper = () => (
         <Provider store={store}>
-            <App />
+            <App/>
         </Provider>
     );
 
     const renderApp = () => {
         root.render(
-            process.env.NODE_ENV === 'development' ? (
+            isLocalEnvironment() ? (
                 <React.StrictMode>
-                    <AppWrapper />
+                    <AppWrapper/>
                 </React.StrictMode>
             ) : (
-                <AppWrapper />
+                <AppWrapper/>
             )
         );
     };
@@ -31,12 +32,9 @@ if (rootElement) {
     // Initial render
     renderApp();
 
-    // Expose the render function for external use
-    (window as any).renderApp = renderApp;
-
     // Conditionally import reportWebVitals
-    if (process.env.NODE_ENV === 'production') {
-        import('./reportWebVitals').then(({ default: reportWebVitals }) => {
+    if (!isLocalEnvironment()) {
+        import('./reportWebVitals').then(({default: reportWebVitals}) => {
             reportWebVitals(console.log); // Replace console.log with your analytics function
         });
     }
