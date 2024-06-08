@@ -4,14 +4,13 @@ import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicon
 import Box from "../../common/Box";
 import { AnimatePresence, motion } from 'framer-motion';
 import { getCommentBackgroundColor } from '../../../utils/colorUtils/index';
-
 import { Comment, CommentListProps } from "../../../types/commentTypes";
 
 const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
-    const [visibleCount, setVisibleCount] = useState(50);
+    const [visibleCount, setVisibleCount] = useState(20);
 
     const loadMoreComments = () => {
-        setVisibleCount(prevCount => prevCount + 50);
+        setVisibleCount(prevCount => prevCount + visibleCount);
     };
 
     if (isLoading) {
