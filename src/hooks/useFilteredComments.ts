@@ -23,10 +23,11 @@ const useFilteredComments = (initialLoadCompleted: boolean) => {
     useEffect(() => {
         if (initialLoadCompleted) {
             let filteredComments = originalComments;
-
             if (filters.timestamps || filters.heart || filters.links || filters.members || filters.donated) {
                 filteredComments = filterComments(originalComments, filters);
                 dispatch(setComments(filteredComments));
+            } else {
+                dispatch(setComments(originalComments));
             }
             previousFiltersRef.current = { ...filters };
         }
