@@ -58,7 +58,7 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 
 ## 🛠️ Support and Feedback
 
-For any issues, suggestions, or feedback, please contact the author Batur Kacamak at [📧 your-email@example.com](mailto:your-email@example.com).
+For any issues, suggestions, or feedback, please contact the author Batur Kacamak at [📧 baturkacamak@gmail.com](mailto:baturkacamak@gmail.com).
 
 ## 📜 License
 
