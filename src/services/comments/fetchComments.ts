@@ -2,15 +2,20 @@
 import { fetchCommentsFromLocal } from './localFetch';
 import { fetchCommentsFromRemote } from './remoteFetch';
 
-const isLocalEnvironment = process.env.NODE_ENV === 'development'; // Or any other condition to determine the environment
+import {isLocalEnvironment} from "../../utils/environmentVariables";
 
-export const fetchComments = async (bypassCache = false) => {
-    if (isLocalEnvironment) {
+export const fetchComments = async (
+    onCommentsFetched: (comments: any[]) => void,
+    signal?: AbortSignal,
+    bypassCache = false
+) => {
+    if (isLocalEnvironment()) {
         return fetchCommentsFromLocal();
     } else {
-        return fetchCommentsFromRemote(bypassCache);
+        return fetchCommentsFromRemote(onCommentsFetched, signal, bypassCache);
     }
 };
+
 
 export const fetchChatReplies = async (pageToken = '') => {
     // This is a dummy function that returns an empty list of chat replies
