@@ -1,8 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setComments, setCommentsCount } from '../store/store';
+import { setComments, setCommentsCount, setFilters } from '../store/store';
 import useSortedComments from "./useSortedComments";
-
-import {Comment} from "../types/commentTypes";
+import { Comment } from "../types/commentTypes";
 
 const useSearchComments = () => {
   const dispatch = useDispatch();
@@ -11,6 +10,8 @@ const useSearchComments = () => {
   const { sortComments } = useSortedComments(true);
 
   const handleSearch = (keyword: string) => {
+    dispatch(setFilters({ ...filters, keyword }));
+
     if (keyword.trim() === '') {
       dispatch(setComments(originalComments));
       dispatch(setCommentsCount(originalComments.length));
