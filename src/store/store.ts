@@ -23,7 +23,7 @@ const initialState: RootState = {
         sortBy: '',
         sortOrder: '',
     },
-    isLoading: false,
+    isLoading: true,
     commentsCount: 0,
     repliesCount: 0,
     transcriptsCount: 0,
@@ -35,10 +35,12 @@ const commentsSlice = createSlice({
     reducers: {
         setInitialComments: (state, action: PayloadAction<Comment[]>) => {
             state.originalComments = action.payload;
-            state.comments = action.payload;
         },
         setComments: (state, action: PayloadAction<Comment[]>) => {
             state.comments = action.payload;
+        },
+        setCommentsCount: (state, action: PayloadAction<number>) => {
+            state.commentsCount = action.payload;
         },
         setReplies: (state, action: PayloadAction<any[]>) => {
             state.replies = action.payload;
@@ -52,15 +54,19 @@ const commentsSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
-        setCommentsCount: (state, action: PayloadAction<number>) => {
-            state.commentsCount = action.payload;
-        },
         setRepliesCount: (state, action: PayloadAction<number>) => {
             state.repliesCount = action.payload;
         },
         setTranscriptsCount: (state, action: PayloadAction<number>) => {
             state.transcriptsCount = action.payload;
         },
+        updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
+            const { comments, isLoading } = action.payload;
+            state.comments = [...state.comments, ...comments];
+            state.isLoading = isLoading;
+            state.commentsCount = state.comments.length;
+        },
+        resetState: () => initialState,
     },
 });
 
@@ -74,6 +80,8 @@ export const {
     setCommentsCount,
     setRepliesCount,
     setTranscriptsCount,
+    updateCommentsData,
+    resetState
 } = commentsSlice.actions;
 
 const store = configureStore({
