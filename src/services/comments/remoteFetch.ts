@@ -1,6 +1,6 @@
 import {processCommentsData} from "../utils/utils";
 import {fetchCommentData} from "./youtubeComments";
-import {extractVideoId} from "../../utils/extractVideoId";
+import {extractYouTubeVideoIdFromUrl} from "../../utils/extractYouTubeVideoIdFromUrl";
 import {getValidCachedData, storeDataInCache} from "../../utils/cacheUtils";
 
 import {CommentData} from "../../types/commentTypes";
@@ -32,27 +32,35 @@ const fetchReplies = async (comment: any, windowObj: any) => {
 
 const CACHE_EXPIRATION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
-export const fetchCommentsFromRemote = async (bypassCache = false) => {
+export const fetchCommentsFromRemote = async (
+    onCommentsFetched: (comments: any[]) => void,
+    signal?: AbortSignal,
+    bypassCache: boolean = false,
+    continuationToken?: string
+) => {
     try {
-        const videoId = extractVideoId();
+        const videoId = extractYouTubeVideoIdFromUrl();
         if (!videoId) {
             throw new Error('Video ID not found');
         }
 
         const LOCAL_STORAGE_KEY = `cachedComments_${videoId}`;
-        if (!bypassCache) {
-            const cachedData = await getValidCachedData(LOCAL_STORAGE_KEY);
+        const cachedData = await getValidCachedData(LOCAL_STORAGE_KEY);
 
-            if (cachedData) {
-                return cachedData;
-            }
+        if (cachedData) {
+            onCommentsFetched(cachedData.items);
+            return;
         }
 
         const windowObj = window as any; // Cast window to any to use in YouTube logic
-        const allComments: CommentData[] = [];
-        let token: string | undefined = '';
+        let allComments: CommentData[] = [];
+        let token: string | null = continuationToken || null;
 
         do {
+            if (signal?.aborted) {
+                return;
+            }
+
             const data: CommentData = await fetchCommentData(token, windowObj, null);
             allComments.push(data);
 
@@ -66,15 +74,21 @@ export const fetchCommentsFromRemote = async (bypassCache = false) => {
                 allComments.push(...replies);
             }
 
+            const processedData = processCommentsData([data]);
+            onCommentsFetched(processedData.items);
+
         } while (token);
 
-        const processedData = processCommentsData(allComments);
-        if (processedData.items.length > 0) {
-            await storeDataInCache(LOCAL_STORAGE_KEY, processedData);
+        const finalProcessedData = processCommentsData(allComments);
+        if (finalProcessedData.items.length > 0) {
+            await storeDataInCache(LOCAL_STORAGE_KEY, finalProcessedData);
         }
-        return processedData; // Process all fetched data
+
     } catch (error) {
+        if (signal?.aborted) {
+            console.log(`Fetch aborted`);
+            return;
+        }
         console.error('Error fetching comments from remote:', error);
-        return {items: []};
     }
 };
