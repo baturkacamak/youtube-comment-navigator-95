@@ -1,10 +1,10 @@
 // src/services/comments/localFetch.ts
-import { fetchCommentFiles, processCommentsData } from "../utils/utils";
+import { fetchCommentFiles, processRawJsonCommentsData } from "../utils/utils";
 import {isLocalEnvironment} from "../../utils/environmentVariables";
 import {fetchCommentsFromRemote} from "./remoteFetch";
 const commentFiles: string[] = [];
 for (let i = 1; i <= 34; i++) {
-    commentFiles.push(`/example-comments/scratch_${i}.json`);
+    commentFiles.push(`/example-comments/example-replies/scratch_${i}.json`);
 }
 
 export const fetchCommentsIncrementally = async (
@@ -30,7 +30,7 @@ const fetchCommentsFromLocalIncrementally = async (
         try {
             const response = await fetch(file, { signal });
             const comment = await response.json();
-            const processedComments = processCommentsData([comment]);
+            const processedComments = processRawJsonCommentsData([comment]);
             onCommentsFetched(processedComments.items);
             await new Promise(resolve => setTimeout(resolve, 500));
         } catch (error) {
@@ -46,7 +46,7 @@ const fetchCommentsFromLocalIncrementally = async (
 export const fetchCommentsFromLocal = async () => {
     try {
         const data = await fetchCommentFiles(commentFiles);
-        return processCommentsData(data);
+        return processRawJsonCommentsData(data);
     } catch (error) {
         console.error('Error fetching comments from local:', error);
         return { items: [] };
