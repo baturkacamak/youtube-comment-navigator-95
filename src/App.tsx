@@ -2,9 +2,8 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
 import SearchBar from './components/features/search/SearchBar';
-import SidebarFilterPanel from './components/features/sidebar/SidebarFilterPanel';
+import ControlPanel from './components/features/sidebar/ControlPanel';
 import CommentList from './components/features/comments/CommentList';
-import LoadingSection from './components/features/loading/LoadingSection';
 import useAppState from './hooks/useAppState'; // Import the new custom hook
 import './styles/App.css';
 import useHandleUrlChange from "./hooks/useHandleUrlChange";
@@ -35,12 +34,9 @@ const App: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <SidebarFilterPanel
+            <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
-            />
-            <SearchBar onSearch={handleSearch}/>
-            <LoadingSection
                 onLoadComments={loadComments}
                 onLoadChat={loadChatReplies}
                 onLoadTranscript={loadTranscript}
@@ -49,6 +45,7 @@ const App: React.FC = () => {
                 repliesCount={repliesCount}
                 transcriptsCount={transcriptsCount}
             />
+            <SearchBar onSearch={handleSearch}/>
             <CommentList comments={filteredAndSortedComments} isLoading={isLoading}/>
         </div>
     );
