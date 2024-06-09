@@ -11,8 +11,8 @@ import {
     LinkIcon
 } from '@heroicons/react/24/outline';
 
-import {CommentActionsProps} from "../../../../types/commentTypes";
-import {extractYouTubeVideoIdFromUrl} from "../../../../utils/extractYouTubeVideoIdFromUrl";
+import { CommentActionsProps } from "../../../../types/commentTypes";
+import { extractYouTubeVideoIdFromUrl } from "../../../../utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../../common/Tooltip";
 
 const CommentFooter: React.FC<CommentActionsProps> = ({
@@ -29,23 +29,17 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2">
-            <div>
-                <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
-                    <div className="flex items-center mr-3" aria-hidden="true">
-                        <HandThumbUpIcon className="w-4 h-4 mr-1"/>
-                        <span className="text-sm">{comment.likes}</span>
-                    </div>
-                    <div className="flex items-center mr-3" aria-hidden="true">
-                        <ChatBubbleLeftRightIcon className="w-4 h-4 mr-1"/>
-                        <span className="text-sm">{comment.replyCount}</span>
-                    </div>
-                    <div className="flex items-center" aria-hidden="true">
-                        <ClockIcon className="w-4 h-4 mr-1"/>
-                        <span className="text-sm">{comment.published}</span>
-                    </div>
+            <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
+                <div className="flex items-center" aria-hidden="true">
+                    <HandThumbUpIcon className="w-4 h-4 mr-1"/>
+                    <span className="text-sm">{comment.likes}</span>
+                </div>
+                <div className="flex items-center" aria-hidden="true">
+                    <ClockIcon className="w-4 h-4 mr-1"/>
+                    <span className="text-sm">{comment.published}</span>
                 </div>
             </div>
-            <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
                 <button
                     onClick={handleCopyToClipboard}
                     className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
@@ -87,18 +81,17 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                     </button>
                 )}
             </div>
-            <div className="inline-flex items-center">
+            <div className="flex items-center gap-4">
                 <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
-                   rel="noopener noreferrer" className="mr-4">
+                   rel="noopener noreferrer" className="flex items-center">
                     <img
                         src={comment.authorAvatarUrl}
                         alt={`${comment.author}'s avatar`}
-                        className="w-12 h-12 rounded-full border border-gray-400 dark:border-gray-600"
+                        className="w-8 h-8 rounded-full border border-gray-400 dark:border-gray-600"
                     />
-                </a>
-                <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
-                   rel="noopener noreferrer" className="text-md font-bold text-gray-800 dark:text-gray-200">
-                    {comment.author}
+                    <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
+                        {comment.author}
+                    </span>
                 </a>
                 {comment.isAuthorContentCreator && (
                     <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">Creator</span>

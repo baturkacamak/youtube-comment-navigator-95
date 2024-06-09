@@ -1,13 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Box from '../../../common/Box';
-import CommentHeader from './CommentHeader';
 import CommentFooter from './CommentFooter';
 import CommentReplies from './CommentReplies';
 import CommentBody from './CommentBody';
 import useSticky from '../../../../hooks/useSticky';
-import {handleCopyToClipboard} from '../../../../utils/clipboard';
+import { handleCopyToClipboard } from '../../../../utils/clipboard';
 import handleTimestampClick from '../../../../utils/handleTimestampClick';
-import {CommentItemProps} from "../../../../types/commentTypes";
+import { CommentItemProps } from "../../../../types/commentTypes";
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -62,7 +61,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
             >
                 <div className="flex items-start w-full">
                     <div className="flex-1">
-                        <CommentHeader comment={comment}/>
                         <CommentBody content={comment.content} handleTimestampClick={handleTimestampClick}/>
                         <hr className="my-4 border-gray-400 dark:border-gray-600"/>
                         <CommentFooter
