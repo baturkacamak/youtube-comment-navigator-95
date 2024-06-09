@@ -40,7 +40,6 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
             default:
                 break;
         }
-        console.timeEnd(`Sorting by ${sortBy} in ${sortOrder} order`);
         return sortedComments;
     };
 
