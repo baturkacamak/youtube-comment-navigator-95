@@ -66,7 +66,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
     };
 
     return (
-        <Box className="mb-4">
+        <Box>
             <form onSubmit={handleSubmit} className="flex items-center p-2 relative">
                 <SelectBox
                     options={options}
