@@ -12,9 +12,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({replies, showReplies, re
         >
             <div className="mt-4 space-y-4">
                 {replies.map(reply => (
-                    <>
-                        <CommentItem key={reply.commentId} comment={reply} className="ml-10"/>
-                    </>
+                    <CommentItem key={reply.commentId} comment={reply} className="ml-10"/>
                 ))}
             </div>
         </div>

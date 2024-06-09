@@ -32,7 +32,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center" aria-hidden="true">
                     <HandThumbUpIcon className="w-4 h-4 mr-1"/>
-                    <span className="text-sm">{comment.likes}</span>
+                    <span className="text-sm font-bold">{comment.likes}</span>
                 </div>
                 <div className="flex items-center" aria-hidden="true">
                     <ClockIcon className="w-4 h-4 mr-1"/>
@@ -82,17 +82,6 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                 )}
             </div>
             <div className="flex items-center gap-4">
-                <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
-                   rel="noopener noreferrer" className="flex items-center">
-                    <img
-                        src={comment.authorAvatarUrl}
-                        alt={`${comment.author}'s avatar`}
-                        className="w-8 h-8 rounded-full border border-gray-400 dark:border-gray-600"
-                    />
-                    <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
-                        {comment.author}
-                    </span>
-                </a>
                 {comment.isAuthorContentCreator && (
                     <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">Creator</span>
                 )}
@@ -114,6 +103,17 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                         <img src={comment.authorBadgeUrl} alt="Member Badge" className="ml-2 w-4 h-4"/>
                     </Tooltip>
                 )}
+                <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
+                   rel="noopener noreferrer" className="flex items-center">
+                    <img
+                        src={comment.authorAvatarUrl}
+                        alt={`${comment.author}'s avatar`}
+                        className="w-8 h-8 rounded-full border border-gray-400 dark:border-gray-600"
+                    />
+                    <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
+                        {comment.author}
+                    </span>
+                </a>
             </div>
         </div>
     );

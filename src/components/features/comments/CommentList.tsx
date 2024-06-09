@@ -44,8 +44,6 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
         return groups;
     }, {} as { [key: string]: { comment: Comment, replies: Comment[] } });
 
-
-
     const visibleComments = Object.values(commentGroups).slice(0, visibleCount);
     const remainingComments = Object.values(commentGroups).length - visibleCount;
 
@@ -66,7 +64,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
                             <CommentItem
                                 comment={group.comment}
                                 replies={group.replies}
-                                className=""
+                                className="text-gray-800 dark:text-gray-200"
                                 bgColor={bgColor}
                                 darkBgColor={darkBgColor}
                                 borderColor={borderColor}
