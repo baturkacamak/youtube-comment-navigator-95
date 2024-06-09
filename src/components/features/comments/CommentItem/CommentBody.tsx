@@ -9,7 +9,7 @@ const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampCl
     const keyword = useSelector((state: RootState) => state.filters.keyword);
 
     return (
-        <p className="text-gray-800 dark:text-gray-200 mb-4">
+        <p className="text-lg text-gray-800 dark:text-gray-200 mb-2">
             {highlightText(parseTimestamps(content, handleTimestampClick), keyword)}
         </p>
     );

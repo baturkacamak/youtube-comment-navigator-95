@@ -6,7 +6,7 @@ import {CommentRepliesProps} from "../../../../types/commentTypes";
 const CommentReplies: React.FC<CommentRepliesProps> = ({replies, showReplies, repliesRef, repliesHeight}) => {
     return (
         <div
-            className={`mt-4 w-full overflow-hidden transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in' : 'animate-slide-out'}`}
+            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out'}`}
             style={{maxHeight: repliesHeight}}
             ref={repliesRef}
         >

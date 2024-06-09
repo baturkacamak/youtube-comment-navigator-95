@@ -24,6 +24,7 @@ export interface Comment {
 }
 
 export interface CommentActionsProps {
+    comment: Comment;
     commentId: string;
     replyCount: number;
     showReplies: boolean;

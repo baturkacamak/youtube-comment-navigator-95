@@ -49,7 +49,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
     return (
         <Box
-            className={`flex flex-col p-6 rounded-xl mb-4 shadow-lg ${className}`}
+            className={`flex flex-col p-4 rounded-lg mb-4 shadow-md ${className}`}
             bgColor={bgColor}
             darkBgColor={darkBgColor}
             borderColor={borderColor}
@@ -61,19 +61,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-4 p-4 sticky top-24 left-0 z-10' : ''}`}
             >
                 <div className="flex items-start w-full">
-                    <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
-                       rel="noopener noreferrer" className="mr-6">
-                        <img
-                            src={comment.authorAvatarUrl}
-                            alt={`${comment.author}'s avatar`}
-                            className="w-24 h-24 rounded-full border border-gray-400 dark:border-gray-600"
-                        />
-                    </a>
                     <div className="flex-1">
                         <CommentHeader comment={comment}/>
-                        <hr className="my-4 border-gray-400 dark:border-gray-600"/>
                         <CommentBody content={comment.content} handleTimestampClick={handleTimestampClick}/>
+                        <hr className="my-4 border-gray-400 dark:border-gray-600"/>
                         <CommentFooter
+                            comment={comment}
                             commentId={comment.commentId}
                             replyCount={comment.replyCount}
                             showReplies={showReplies}
