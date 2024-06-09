@@ -5,7 +5,7 @@ import { CommentContentProps } from "../../../../types/commentTypes";
 import { useSelector } from 'react-redux';
 import { RootState } from "../../../../types/rootState";
 
-const CommentContent: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
+const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
     const keyword = useSelector((state: RootState) => state.filters.keyword);
 
     return (
@@ -15,4 +15,4 @@ const CommentContent: React.FC<CommentContentProps> = ({ content, handleTimestam
     );
 };
 
-export default CommentContent;
+export default CommentBody;

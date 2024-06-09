@@ -1,13 +1,12 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Box from '../../../common/Box';
 import CommentHeader from './CommentHeader';
-import CommentActions from './CommentActions';
+import CommentFooter from './CommentFooter';
 import CommentReplies from './CommentReplies';
-import {handleCopyToClipboard} from '../../../../utils/clipboard';
-import CommentContent from './CommentContent';
+import CommentBody from './CommentBody';
 import useSticky from '../../../../hooks/useSticky';
+import {handleCopyToClipboard} from '../../../../utils/clipboard';
 import handleTimestampClick from '../../../../utils/handleTimestampClick';
-
 import {CommentItemProps} from "../../../../types/commentTypes";
 
 const CommentItem: React.FC<CommentItemProps> = ({
@@ -24,6 +23,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
     const [repliesHeight, setRepliesHeight] = useState('0px');
     const repliesRef = useRef<HTMLDivElement>(null);
     const parentCommentRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (showReplies && repliesRef.current) {
+            setRepliesHeight(`${repliesRef.current.scrollHeight}px`);
+        } else {
+            setRepliesHeight('0px');
+        }
+    }, [showReplies, replies]);
 
     const handleCopy = () => {
         handleCopyToClipboard(
@@ -51,7 +58,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <div
                 ref={parentCommentRef}
                 id={`parent-comment-${comment.commentId}`} // Unique identifier for each comment thread
-                className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-4 p-4 sticky top-0 left-0 z-10' : ''}`}
+                className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-4 p-4 sticky top-24 left-0 z-10' : ''}`}
             >
                 <div className="flex items-start w-full">
                     <a href={`https://www.youtube.com/channel/${comment.authorChannelId}`} target="_blank"
@@ -65,8 +72,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     <div className="flex-1">
                         <CommentHeader comment={comment}/>
                         <hr className="my-4 border-gray-400 dark:border-gray-600"/>
-                        <CommentContent content={comment.content} handleTimestampClick={handleTimestampClick} />
-                        <CommentActions
+                        <CommentBody content={comment.content} handleTimestampClick={handleTimestampClick}/>
+                        <CommentFooter
                             commentId={comment.commentId}
                             replyCount={comment.replyCount}
                             showReplies={showReplies}
@@ -77,7 +84,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     </div>
                 </div>
             </div>
-            {replies.length > 0 && (
+            {Number(comment.replyCount) > 0 && (
                 <CommentReplies
                     replies={replies}
                     showReplies={showReplies}

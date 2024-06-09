@@ -1,9 +1,10 @@
 import React from 'react';
-import {CheckCircleIcon, ChevronDownIcon, ChevronUpIcon, ClipboardIcon, LinkIcon} from '@heroicons/react/24/outline';
+import {CheckCircleIcon, ChevronDownIcon, ClipboardIcon, LinkIcon} from '@heroicons/react/24/outline';
 
 import {CommentActionsProps} from "../../../../types/commentTypes";
+import {extractYouTubeVideoIdFromUrl} from "../../../../utils/extractYouTubeVideoIdFromUrl";
 
-const CommentActions: React.FC<CommentActionsProps> = ({
+const CommentFooter: React.FC<CommentActionsProps> = ({
                                                            commentId,
                                                            replyCount,
                                                            showReplies,
@@ -11,6 +12,9 @@ const CommentActions: React.FC<CommentActionsProps> = ({
                                                            handleCopyToClipboard,
                                                            copySuccess
                                                        }) => {
+
+    const videoId = extractYouTubeVideoIdFromUrl();
+
     return (
         <div className="flex items-center justify-end space-x-4">
             <button
@@ -31,7 +35,7 @@ const CommentActions: React.FC<CommentActionsProps> = ({
                 )}
             </button>
             <a
-                href={`https://www.youtube.com/watch?v=VIDEO_ID&lc=${commentId}`} // Replace VIDEO_ID with the actual video ID if available
+                href={`https://www.youtube.com/watch?v=${videoId}&lc=${commentId}`} // Replace VIDEO_ID with the actual video ID if available
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
@@ -46,13 +50,15 @@ const CommentActions: React.FC<CommentActionsProps> = ({
                     className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
                     title={showReplies ? "Hide replies" : "Show replies"}
                 >
-                    {showReplies ? <ChevronUpIcon className="w-5 h-5 mr-1" aria-hidden="true"/> :
-                        <ChevronDownIcon className="w-5 h-5 mr-1" aria-hidden="true"/>}
-                    <span className="text-sm">{showReplies ? "Hide replies" : `Show replies (${replyCount})`}</span>
+                    <ChevronDownIcon
+                        className={`w-5 h-5 mr-1 transform transition-transform duration-300 ${showReplies ? "rotate-180" : "rotate-0"}`}
+                        aria-hidden="true"
+                    />
+                    <span className="text-sm">{showReplies ? "Hide replies" : `Show replies`} ({replyCount})</span>
                 </button>
             )}
         </div>
     );
 };
 
-export default CommentActions;
+export default CommentFooter;

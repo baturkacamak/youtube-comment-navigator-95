@@ -7,7 +7,7 @@ import { getCommentBackgroundColor } from '../../../utils/colorUtils/index';
 import { Comment, CommentListProps } from "../../../types/commentTypes";
 
 const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
-    const [visibleCount, setVisibleCount] = useState(20);
+    const [visibleCount, setVisibleCount] = useState(10);
 
     const loadMoreComments = () => {
         setVisibleCount(prevCount => prevCount + visibleCount);
@@ -50,7 +50,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
     const remainingComments = Object.values(commentGroups).length - visibleCount;
 
     return (
-        <div key={`comment-list`} className="flex flex-col mt-4 max-h-screen overflow-auto">
+        <div key={`comment-list`} className="flex flex-col">
             <AnimatePresence>
                 {visibleComments.map((group, index) => {
                     const { bgColor, darkBgColor, borderColor, darkBorderColor } = getCommentBackgroundColor(group.comment, index);
