@@ -73,7 +73,7 @@ export const generateRequestOptions = ({continue: continueToken, windowObj}: {
     }
 };
 
-export const fetchCommentData = async (continueToken: string | null, windowObj: any, signal: AbortSignal | null, isFetchingReply: boolean = false) => {
+export const fetchCommentJsonDataFromRemote = async (continueToken: string | null, windowObj: any, signal: AbortSignal | null, isFetchingReply: boolean = false) => {
     const requestOptions = generateRequestOptions({
         continue: continueToken || '', // Use empty string if continueToken is null
         windowObj,
