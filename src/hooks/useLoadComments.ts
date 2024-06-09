@@ -14,7 +14,7 @@ import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/co
 const useLoadComments = () => {
     const dispatch = useDispatch();
 
-    const loadComments = async () => {
+    const loadComments = async (bypassCache = false) => {
         dispatch(setLoading(true));
         const handleFetchedComments = (comments: any[]) => {
             dispatch(updateCommentsData({ comments, isLoading: false }));
