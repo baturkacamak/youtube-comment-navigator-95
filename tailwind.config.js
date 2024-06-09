@@ -6,7 +6,17 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'highlight-bar-expand': {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+      },
+      animation: {
+        'highlight-bar': 'highlight-bar-expand 0.5s ease-in-out',
+      },
+    },
   },
   plugins: [],
 }
