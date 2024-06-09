@@ -15,7 +15,7 @@ const LoadingSection: React.FC<LoadingSectionProps> = ({
                                                            commentsCount, repliesCount, transcriptsCount
                                                        }) => {
     return (
-        <Box className="mb-4">
+        <Box>
             <div className="flex items-center justify-around mb-4">
                 <Button onClick={() => onLoadComments(true)} icon={ChatBubbleOvalLeftIcon} label="Load Comments"
                         className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white"/>
