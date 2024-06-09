@@ -18,11 +18,11 @@ export const highlightText = (text: string | (string | JSX.Element)[], highlight
     const createHighlightedPart = (key: string, content: string) => (
         <span
             key={key}
-            className="relative font-bold text-red-500 inline-flex items-center p-0 py-1"
+            className="relative font-bold text-red-500 inline-flex items-center p-0 py-1 transition-colors duration-500 ease-in-out"
         >
             {content}
             <span
-                className="absolute left-0 bottom-0 h-1 w-full bg-gradient-to-r from-red-400 to-red-600 rounded-full"/>
+                className="absolute left-0 bottom-0 h-1 w-full bg-gradient-to-r from-red-400 to-red-600 rounded-full animate-highlight-bar"/>
         </span>
     );
 
