@@ -1,14 +1,16 @@
 // src/components/features/sidebar/SidebarFilterPanel.tsx
-
 import React, {useEffect, useState} from 'react';
 import {ArrowsUpDownIcon, FunnelIcon} from '@heroicons/react/24/outline';
 import Box from "../../common/Box";
 import FilterList from './FilterList';
 import SortList from './SortList';
+import LoadingSection from '../loading/LoadingSection';
+import {ControlPanelProps} from "../../../types/filterTypes";
 
-import {SidebarFilterPanelProps} from "../../../types/filterTypes";
-
-const SidebarFilterPanel: React.FC<SidebarFilterPanelProps> = ({filters, setFilters}) => {
+const ControlPanel: React.FC<ControlPanelProps> = ({
+                                                                   filters, setFilters, onLoadComments, onLoadChat, onLoadTranscript, onLoadAll,
+                                                                   commentsCount, repliesCount, transcriptsCount
+                                                               }) => {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
     useEffect(() => {
@@ -31,8 +33,7 @@ const SidebarFilterPanel: React.FC<SidebarFilterPanelProps> = ({filters, setFilt
     return (
         <Box className={`flex flex-col w-full gap-6`}>
             <div className="flex">
-                <h3 className="m-auto text-lg font-bold text-teal-800 dark:text-teal-200">YouTube Comment
-                    Navigator 95</h3>
+                <h3 className="m-auto text-lg font-bold text-teal-800 dark:text-teal-200">YouTube Comment Navigator 95</h3>
             </div>
             <hr className="border-gray-400 dark:border-gray-600"/>
             <div className="flex flex-row gap-4 justify-between">
@@ -55,8 +56,17 @@ const SidebarFilterPanel: React.FC<SidebarFilterPanelProps> = ({filters, setFilt
                     </div>
                 </div>
             </div>
+            <LoadingSection
+                onLoadComments={onLoadComments}
+                onLoadChat={onLoadChat}
+                onLoadTranscript={onLoadTranscript}
+                onLoadAll={onLoadAll}
+                commentsCount={commentsCount}
+                repliesCount={repliesCount}
+                transcriptsCount={transcriptsCount}
+            />
         </Box>
     );
 };
 
-export default SidebarFilterPanel;
+export default ControlPanel;
