@@ -14,7 +14,7 @@ export const transformComment = (comment: any): Comment => {
     const authorAvatarUrl = payload?.author?.avatarThumbnailUrl || 'Unknown';
     const isAuthorContentCreator = payload?.author?.isCreator || false;
     const authorChannelId = payload?.author?.channelId || 'Unknown';
-    const replyCount = payload?.toolbar?.replyCount || 0;
+    const replyCount = Number(payload?.toolbar?.replyCount) || 0;
     const commentId = payload?.properties?.commentId || 'Unknown';
     const replyLevel = payload?.properties?.replyLevel || 0;
     const authorBadgeUrl = payload?.author?.sponsorBadgeUrl || false;
