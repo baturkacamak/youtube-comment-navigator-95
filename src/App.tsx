@@ -34,24 +34,22 @@ const App: React.FC = () => {
     useHandleUrlChange();
 
     return (
-        <div className="flex">
+        <div className="flex flex-col gap-4">
             <SidebarFilterPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
             />
-            <div className="flex-grow px-4">
-                <LoadingSection
-                    onLoadComments={loadComments}
-                    onLoadChat={loadChatReplies}
-                    onLoadTranscript={loadTranscript}
-                    onLoadAll={loadAll}
-                    commentsCount={commentsCount}
-                    repliesCount={repliesCount}
-                    transcriptsCount={transcriptsCount}
-                />
-                <SearchBar onSearch={handleSearch}/>
-                <CommentList comments={filteredAndSortedComments} isLoading={isLoading}/>
-            </div>
+            <SearchBar onSearch={handleSearch}/>
+            <LoadingSection
+                onLoadComments={loadComments}
+                onLoadChat={loadChatReplies}
+                onLoadTranscript={loadTranscript}
+                onLoadAll={loadAll}
+                commentsCount={commentsCount}
+                repliesCount={repliesCount}
+                transcriptsCount={transcriptsCount}
+            />
+            <CommentList comments={filteredAndSortedComments} isLoading={isLoading}/>
         </div>
     );
 };
