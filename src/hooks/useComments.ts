@@ -2,7 +2,7 @@ import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {setComments, updateCommentsData} from '../store/store';
 import {fetchCommentsIncrementally} from "../services/comments/localFetch";
-import {processCommentsData} from "../services/utils/utils";
+import {processRawJsonCommentsData} from "../services/utils/utils";
 
 const useComments = () => {
     const dispatch = useDispatch();
