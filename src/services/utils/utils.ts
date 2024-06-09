@@ -59,7 +59,7 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
     });
 };
 
-export const processCommentsData = (data: any[]) => {
+export const processRawJsonCommentsData = (data: any[]) => {
     const allComments = data.flatMap(extractComments);
     const allCommentKeys = data.flatMap(extractCommentKeys);
 
