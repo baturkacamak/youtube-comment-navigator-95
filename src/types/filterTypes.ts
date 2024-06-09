@@ -19,9 +19,7 @@ export interface Filters {
     keyword: string; // Add the missing keyword property here
 }
 
-export interface FilterState extends Filters {
-
-}
+export interface FilterState extends Filters {}
 
 export interface CheckboxFilterProps {
     name: string;
@@ -54,9 +52,16 @@ export interface SelectBoxProps {
     setSelectedOption: (option: Option) => void;
 }
 
-export interface SidebarFilterPanelProps {
+export interface ControlPanelProps {
     filters: any;
     setFilters: (filters: any) => void;
+    onLoadComments: (bypassCache?: boolean) => Promise<void>;
+    onLoadChat: () => Promise<void>;
+    onLoadTranscript: () => Promise<void>;
+    onLoadAll: (bypassCache?: boolean) => Promise<void>;
+    commentsCount: number;
+    repliesCount: number;
+    transcriptsCount: number;
 }
 
 export interface AdvancedSortingProps {
