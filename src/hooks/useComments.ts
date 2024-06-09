@@ -1,8 +1,9 @@
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {setComments, updateCommentsData} from '../store/store';
+import {setComments, setInitialComments, updateCommentsData} from '../store/store';
 import {fetchCommentsIncrementally} from "../services/comments/localFetch";
 import {processRawJsonCommentsData} from "../services/utils/utils";
+import {Comment} from '../types/commentTypes'; // Import the Comment type
 
 const useComments = () => {
     const dispatch = useDispatch();
@@ -14,11 +15,13 @@ const useComments = () => {
             try {
                 dispatch(setComments([]));
                 const signal = abortController.current.signal;
-
+                let initialComments: Comment[] = [];
                 await fetchCommentsIncrementally((comments) => {
                     if (signal.aborted) return;
                     dispatch(updateCommentsData({comments: comments, isLoading: false}));
+                    initialComments.push(...comments);
                 }, signal); // Pass the signal to the fetch function
+                dispatch(setInitialComments(initialComments)); // Pass the array directly
                 initialLoadCompleted.current = true;
             } catch (error) {
                 if (error instanceof Error) {
