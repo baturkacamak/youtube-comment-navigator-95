@@ -26,3 +26,12 @@ export interface TooltipProps {
     bgColor?: string;
     textColor?: string;
 }
+
+export interface SettingsDrawerProps {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export interface SettingsButtonProps {
+    onClick: () => void;
+}
