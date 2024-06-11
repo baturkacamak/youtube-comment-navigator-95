@@ -9,12 +9,14 @@ for (let i = 1; i <= 34; i++) {
 
 export const fetchCommentsIncrementally = async (
     onCommentFetched: (comment: any) => void,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    byPassCache: boolean = false,
+    continuationToken?: string | undefined
 ) => {
     if (isLocalEnvironment()) {
         await fetchCommentsFromLocalIncrementally(onCommentFetched, signal);
     } else {
-        await fetchCommentsFromRemote(onCommentFetched, signal);
+        await fetchCommentsFromRemote(onCommentFetched, signal, byPassCache, continuationToken);
     }
 };
 

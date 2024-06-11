@@ -1,10 +1,11 @@
 import {processRawJsonCommentsData} from "../utils/utils";
 import {fetchCommentJsonDataFromRemote} from "./youtubeComments";
 import {extractYouTubeVideoIdFromUrl} from "../../utils/extractYouTubeVideoIdFromUrl";
-import {getValidCachedData, storeDataInCache} from "../../utils/cacheUtils";
+import {getValidCachedData, removeDataFromCache, storeDataInCache} from "../../utils/cacheUtils";
 
 import {CommentData} from "../../types/commentTypes";
 import {wildCardSearch} from "../../utils/wildCardSearch";
+import {CACHE_KEYS} from "../../utils/environmentVariables";
 
 const extractContinuationToken = (continuationItems: any[]) => {
     return continuationItems.map((continuationItem: any) =>
@@ -54,46 +55,54 @@ export const fetchCommentsFromRemote = async (
             throw new Error('Video ID not found');
         }
 
-        const LOCAL_STORAGE_KEY = `cachedComments_${videoId}`;
+        const LOCAL_STORAGE_KEY = CACHE_KEYS.FINAL(videoId);
+        const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
+        const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
         const cachedData = await getValidCachedData(LOCAL_STORAGE_KEY);
 
-        if (!cachedData) {
+        if (cachedData) {
             onCommentsFetched(cachedData.items);
             return;
         }
 
         let allComments: CommentData[] = [];
-
-
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
-
+        let totalComments: CommentData[] = [];
         do {
             if (signal?.aborted) {
                 return;
             }
 
             allComments = [];
-
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, null);
             allComments.push(rawJsonData);
 
             const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
                 || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
             token = extractContinuationToken(continuationItems);
+
             // Fetch replies for each comment
             const replies = await fetchReplies(rawJsonData, windowObj);
             allComments.push(...replies);
 
             const processedData = processRawJsonCommentsData(allComments);
             onCommentsFetched(processedData.items);
+            totalComments.push(...processedData.items);
 
+            // Update temporary cache and continuation token
+            await storeDataInCache(TEMP_CACHE_KEY, processedData);
+            localStorage.setItem(CONTINUATION_TOKEN_KEY, token || '');
         } while (token);
 
         const finalProcessedData = processRawJsonCommentsData(allComments);
         if (finalProcessedData.items.length > 0) {
-            await storeDataInCache(LOCAL_STORAGE_KEY, finalProcessedData);
+            await storeDataInCache(LOCAL_STORAGE_KEY, totalComments);
         }
+
+        // Clear temporary cache and continuation token
+        await removeDataFromCache(TEMP_CACHE_KEY);
+        localStorage.removeItem(CONTINUATION_TOKEN_KEY);
 
     } catch (error) {
         if (signal?.aborted) {
