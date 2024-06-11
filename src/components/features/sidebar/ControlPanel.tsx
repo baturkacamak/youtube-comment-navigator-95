@@ -6,10 +6,14 @@ import FilterList from './FilterList';
 import SortList from './SortList';
 import LoadingSection from '../loading/LoadingSection';
 import {ControlPanelProps} from "../../../types/filterTypes";
+import SettingsButton from "../../common/SettingsButton";
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
-                                                                   filters, setFilters, onLoadComments, onLoadChat, onLoadTranscript, onLoadAll,
-                                                                   commentsCount, repliesCount, transcriptsCount
+                                                                   filters,
+                                                       setFilters,
+                                                       onLoadComments, onLoadChat, onLoadTranscript, onLoadAll,
+                                                                   commentsCount, repliesCount, transcriptsCount,
+    openSettings
                                                                }) => {
     const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -33,6 +37,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     return (
         <Box className={`flex flex-col w-full gap-6`}>
             <div className="flex">
+                <SettingsButton onClick={openSettings} />
                 <h3 className="m-auto text-lg font-bold text-teal-800 dark:text-teal-200">YouTube Comment Navigator 95</h3>
             </div>
             <hr className="border-gray-400 dark:border-gray-600"/>
