@@ -7,7 +7,7 @@ import {
     setTranscripts,
     setTranscriptsCount,
     setRepliesCount,
-    updateCommentsData
+    updateCommentsData, setInitialComments
 } from '../store/store';
 import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/comments/fetchComments';
 
@@ -18,6 +18,7 @@ const useLoadComments = () => {
         dispatch(setLoading(true));
         const handleFetchedComments = (comments: any[]) => {
             dispatch(updateCommentsData({ comments, isLoading: false }));
+            dispatch(setInitialComments(comments));
         };
         await fetchComments(handleFetchedComments);
     };

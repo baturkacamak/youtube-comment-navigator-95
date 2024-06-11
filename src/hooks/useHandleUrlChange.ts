@@ -1,9 +1,9 @@
 // src/hooks/useHandleUrlChange.ts
-import { useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { resetState, updateCommentsData } from '../store/store';
-import { fetchContinuationTokenFromRemote } from '../services/comments/fetchContinuationData';
-import { fetchCommentsFromRemote } from '../services/comments/remoteFetch';
+import {useRef} from 'react';
+import {useDispatch} from 'react-redux';
+import {resetState, setInitialComments, updateCommentsData} from '../store/store';
+import {fetchContinuationTokenFromRemote} from '../services/comments/fetchContinuationData';
+import {fetchCommentsFromRemote} from '../services/comments/remoteFetch';
 import useUrlChange from './useUrlChange';
 
 const useHandleUrlChange = () => {
@@ -11,7 +11,8 @@ const useHandleUrlChange = () => {
     const abortController = useRef<AbortController | null>(null);
 
     const handleFetchedComments = (comments: any[]) => {
-        dispatch(updateCommentsData({ comments, isLoading: false }));
+        dispatch(updateCommentsData({comments, isLoading: false}));
+        dispatch(setInitialComments(comments));
     };
 
     useUrlChange(async () => {
