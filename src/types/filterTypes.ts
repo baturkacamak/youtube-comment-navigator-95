@@ -62,6 +62,7 @@ export interface ControlPanelProps {
     commentsCount: number;
     repliesCount: number;
     transcriptsCount: number;
+    openSettings: () => void;
 }
 
 export interface AdvancedSortingProps {
