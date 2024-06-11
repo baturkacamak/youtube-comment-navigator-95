@@ -10,8 +10,7 @@ import {
     XCircleIcon
 } from '@heroicons/react/24/outline';
 
-
-import {Option} from "../../../types/utilityTypes";
+import { Option } from "../../../types/utilityTypes";
 
 const options: Option[] = [
     { value: 'all', label: 'All', icon: ClipboardDocumentListIcon },
@@ -24,8 +23,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
     const [query, setQuery] = useState('');
     const [selectedOption, setSelectedOption] = useState<Option>(options[0]);
     const [placeholder, setPlaceholder] = useState('Search comments...');
-    const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
-    const isFirstRender = useRef(true);  // Ref to track the first render
+    const isFirstRender = useRef(true);
 
     const updatePlaceholder = useCallback(() => {
         switch (selectedOption.value) {
@@ -80,11 +78,16 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
                     onChange={e => setQuery(e.target.value)}
                     className="flex-grow p-2 bg-teal-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300 ease-in-out"
                 />
-                {query && (
-                    <button type="button" onClick={handleClear} className="absolute right-10 p-2 bg-teal-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none">
-                        <XCircleIcon className="w-5 h-5 text-red-500" />
-                    </button>
-                )}
+                <button
+                    type="button"
+                    onClick={handleClear}
+                    className={`absolute right-10 p-2 bg-teal-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out ${
+                        query ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
+                    }`}
+                    style={{ transformOrigin: 'right' }}
+                >
+                    <XCircleIcon className="w-5 h-5 text-red-500" />
+                </button>
                 <button type="submit" className="p-2 bg-teal-700 dark:bg-gray-800 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
                     <MagnifyingGlassIcon className="w-5 h-5" />
                 </button>
