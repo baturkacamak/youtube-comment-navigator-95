@@ -28,7 +28,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     const videoId = extractYouTubeVideoIdFromUrl();
 
     return (
-        <div className="flex items-center justify-between space-x-2 mt-2">
+        <div className="flex items-center justify-between space-x-2 mt-2 border-t pt-2">
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center" aria-hidden="true">
                     <HandThumbUpIcon className="w-4 h-4 mr-1"/>

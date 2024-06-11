@@ -62,7 +62,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <div className="flex items-start w-full">
                     <div className="flex-1">
                         <CommentBody content={comment.content} handleTimestampClick={handleTimestampClick}/>
-                        <span className="my-4 flex border rounded-md border-gray-400 dark:border-gray-600"/>
                         <CommentFooter
                             comment={comment}
                             commentId={comment.commentId}
