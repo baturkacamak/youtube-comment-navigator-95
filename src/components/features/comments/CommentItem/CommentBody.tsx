@@ -8,13 +8,14 @@ import { RootState } from "../../../../types/rootState";
 
 const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
     const keyword = useSelector((state: RootState) => state.filters.keyword);
+    const textSize = useSelector((state: RootState) => state.textSize);
 
     const linkedText = linkifyText(content);
     const timestampedText = parseTimestamps(linkedText, handleTimestampClick);
     const highlightedText = highlightText(timestampedText, keyword);
 
     return (
-        <p className="text-xl mb-2">
+        <p className={`${textSize} mb-2`}>
             {highlightedText}
         </p>
     );
