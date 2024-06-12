@@ -36,7 +36,7 @@ const App: React.FC = () => {
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div
-                    className="relative inset-0 bg-black bg-opacity-50 transition-all z-10"
+                    className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
                     onClick={closeSettings}
                 />
             )}
