@@ -1,6 +1,6 @@
 // src/components/common/SettingsDrawer.tsx
 import React, { useState, useEffect } from 'react';
-import { XMarkIcon, SunIcon, MoonIcon, SwatchIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { SettingsDrawerProps } from "../../types/layoutTypes";
 import SelectBox from './SelectBox';
 import NotificationBubble from './NotificationBubble';
@@ -12,34 +12,10 @@ const themeOptions = [
     { value: 'dark', label: 'Dark', icon: MoonIcon }
 ];
 
-const colorSchemeOptions = [
-    { value: 'default', label: 'Default', icon: SwatchIcon },
-    { value: 'blue', label: 'Blue', icon: SwatchIcon },
-    { value: 'green', label: 'Green', icon: SwatchIcon },
-    // Add more color schemes as needed
-];
-
-const languageOptions = [
-    { value: 'en', label: 'English', icon: PaperAirplaneIcon },
-    { value: 'es', label: 'Spanish', icon: PaperAirplaneIcon },
-    { value: 'tr', label: 'Turkish', icon: PaperAirplaneIcon },
-    // Add more languages as needed
-];
-
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
         const savedTheme = localStorage.getItem('theme');
         return themeOptions.find(option => option.value === savedTheme) || themeOptions[0];
-    });
-
-    const [selectedColorScheme, setSelectedColorScheme] = useState<Option>(() => {
-        const savedColorScheme = localStorage.getItem('colorScheme');
-        return colorSchemeOptions.find(option => option.value === savedColorScheme) || colorSchemeOptions[0];
-    });
-
-    const [selectedLanguage, setSelectedLanguage] = useState<Option>(() => {
-        const savedLanguage = localStorage.getItem('language');
-        return languageOptions.find(option => option.value === savedLanguage) || languageOptions[0];
     });
 
     const [showNotification, setShowNotification] = useState(false);
@@ -56,28 +32,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     }, [selectedTheme]);
 
     useEffect(() => {
-        const savedColorScheme = localStorage.getItem('colorScheme');
-        const currentColorScheme = selectedColorScheme.value;
-
-        if (savedColorScheme !== currentColorScheme) {
-            localStorage.setItem('colorScheme', selectedColorScheme.value);
-            document.documentElement.setAttribute('data-color-scheme', selectedColorScheme.value);
-            setShowNotification(true);
-        }
-    }, [selectedColorScheme]);
-
-    useEffect(() => {
-        const savedLanguage = localStorage.getItem('language');
-        const currentLanguage = selectedLanguage.value;
-
-        if (savedLanguage !== currentLanguage) {
-            localStorage.setItem('language', selectedLanguage.value);
-            // i18n.changeLanguage(selectedLanguage.value);
-            setShowNotification(true);
-        }
-    }, [selectedLanguage]);
-
-    useEffect(() => {
         if (showNotification) {
             const timer = setTimeout(() => setShowNotification(false), 4000);
             return () => clearTimeout(timer);
@@ -87,7 +41,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <>
             <div
-                className={`inset-y-0 left-0 z-50 flex transition-all h-fit duration-500 ${
+                className={`relative inset-y-0 left-0 z-50 flex transition-all min-h-96 duration-500 ${
                     isOpen ? 'ml-0' : '-ml-80'
                 }`}
             >
@@ -99,34 +53,19 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                                 <XMarkIcon className="w-6 h-6" />
                             </button>
                         </div>
-                        <div>
+                        <div className="space-y-6">
                             <div className="mb-4">
-                                <label className="text-gray-800 dark:text-gray-200 mb-1">Theme</label>
+                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Theme</label>
                                 <SelectBox
                                     options={themeOptions}
                                     selectedOption={selectedTheme}
                                     setSelectedOption={setSelectedTheme}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="text-gray-800 dark:text-gray-200 mb-1">Color Scheme</label>
-                                <SelectBox
-                                    options={colorSchemeOptions}
-                                    selectedOption={selectedColorScheme}
-                                    setSelectedOption={setSelectedColorScheme}
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="text-gray-800 dark:text-gray-200 mb-1">Language</label>
-                                <SelectBox
-                                    options={languageOptions}
-                                    selectedOption={selectedLanguage}
-                                    setSelectedOption={setSelectedLanguage}
+                                    buttonClassName="w-full rounded-lg"
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-4">
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mt-4 space-y-2">
                         <hr className="mb-4"/>
                         <p>App Version: <strong>{packageJson.version}</strong></p>
                         <p>Developed by <strong>Batur Kacamak</strong></p>
