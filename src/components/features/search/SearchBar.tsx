@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, FormEvent, useRef } from 'react';
-import SelectBox from '../../common/SelectBox';
+import SelectBox from '../../common/SelectBox/SelectBox';
 import Box from '../../common/Box';
 import {
     ChatBubbleOvalLeftIcon,
