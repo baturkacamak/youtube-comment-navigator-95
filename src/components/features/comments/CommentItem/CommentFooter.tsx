@@ -28,7 +28,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     const videoId = extractYouTubeVideoIdFromUrl();
 
     return (
-        <div className="flex items-center justify-between space-x-2 mt-2 border-t pt-2">
+        <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center" aria-hidden="true">
                     <HandThumbUpIcon className="w-4 h-4 mr-1"/>
@@ -108,7 +108,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                     <img
                         src={comment.authorAvatarUrl}
                         alt={`${comment.author}'s avatar`}
-                        className="w-8 h-8 rounded-full border border-gray-400 dark:border-gray-600"
+                        className="w-8 h-8 rounded-full border border-solid border-gray-400 dark:border-gray-600"
                     />
                     <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
                         {comment.author}
