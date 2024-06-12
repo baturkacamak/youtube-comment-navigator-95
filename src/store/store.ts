@@ -27,6 +27,7 @@ const initialState: RootState = {
     commentsCount: 0,
     repliesCount: 0,
     transcriptsCount: 0,
+    textSize: 'text-base',
 };
 
 const commentsSlice = createSlice({
@@ -60,6 +61,9 @@ const commentsSlice = createSlice({
         setTranscriptsCount: (state, action: PayloadAction<number>) => {
             state.transcriptsCount = action.payload;
         },
+        setTextSize: (state, action: PayloadAction<string>) => {
+            state.textSize = action.payload;
+        },
         updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
             const { comments, isLoading } = action.payload;
             state.comments = [...state.comments, ...comments];
@@ -80,6 +84,7 @@ export const {
     setCommentsCount,
     setRepliesCount,
     setTranscriptsCount,
+    setTextSize,
     updateCommentsData,
     resetState
 } = commentsSlice.actions;
@@ -90,3 +95,5 @@ const store = configureStore({
 
 export default store;
 export type { RootState }; // Export RootState type for useSelector
+
+
