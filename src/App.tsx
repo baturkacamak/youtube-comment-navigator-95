@@ -6,7 +6,7 @@ import SearchBar from './components/features/search/SearchBar';
 import CommentList from './components/features/comments/CommentList';
 import useAppState from './hooks/useAppState';
 import useHandleUrlChange from "./hooks/useHandleUrlChange";
-import './styles/App.css';
+import './styles/App.scss';
 
 const App: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -34,9 +34,14 @@ const App: React.FC = () => {
     return (
         <div className="relative flex overflow-x-hidden">
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
+            {isSettingsOpen && (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
+                    onClick={closeSettings}
+                />
+            )}
             <div
-                className={`flex flex-col gap-4 w-full transition-transform duration-500 ${isSettingsOpen ? 'translate-x-80 blur-sm' : 'translate-x-0'}`}
-                onClick={isSettingsOpen ? closeSettings : undefined}
+                className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${isSettingsOpen ? 'blur-sm -ml-80 left-80' : 'ml-0 left-0'}`}
             >
                 <ControlPanel
                     filters={filters}
