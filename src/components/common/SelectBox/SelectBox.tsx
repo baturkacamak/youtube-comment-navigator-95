@@ -1,37 +1,47 @@
-// src/components/SelectBox.tsx
+// src/components/common/SelectBox/SelectBox.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { SelectBoxProps } from "../../types/filterTypes";
-import { Option } from "../../types/utilityTypes";
+import { SelectBoxProps } from "../../../types/filterTypes";
+import { Option } from "../../../types/utilityTypes";
+import { normalizeString } from '../../../utils/normalizeString';
+import SearchInput from './SearchInput';
+import OptionList from './OptionList';
 
-const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName }) => {
+const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName, isSearchable = false }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(0);
+    const [filteredOptions, setFilteredOptions] = useState(options);
+    const [searchTerm, setSearchTerm] = useState('');
     const menuRef = useRef<HTMLDivElement>(null);
+    const searchRef = useRef<HTMLInputElement>(null);
 
     const handleOptionClick = (option: Option, index: number) => {
         setSelectedOption(option);
         setHighlightedIndex(index);
         setIsOpen(false);
+        setSearchTerm('');
+        setFilteredOptions(options);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
         switch (event.key) {
             case 'ArrowDown':
-                event.preventDefault(); // Prevent default behavior
-                setHighlightedIndex((prevIndex) => (prevIndex + 1) % options.length);
+                event.preventDefault();
+                setHighlightedIndex((prevIndex) => (prevIndex + 1) % filteredOptions.length);
                 break;
             case 'ArrowUp':
-                event.preventDefault(); // Prevent default behavior
-                setHighlightedIndex((prevIndex) => (prevIndex - 1 + options.length) % options.length);
+                event.preventDefault();
+                setHighlightedIndex((prevIndex) => (prevIndex - 1 + filteredOptions.length) % filteredOptions.length);
                 break;
             case 'Enter':
-                event.preventDefault(); // Prevent default behavior
-                setSelectedOption(options[highlightedIndex]);
+                event.preventDefault();
+                setSelectedOption(filteredOptions[highlightedIndex]);
                 setIsOpen(false);
+                setSearchTerm('');
+                setFilteredOptions(options);
                 break;
             case 'Escape':
-                event.preventDefault(); // Prevent default behavior
+                event.preventDefault();
                 setIsOpen(false);
                 break;
         }
@@ -39,11 +49,15 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
 
     useEffect(() => {
         if (isOpen) {
-            menuRef.current?.focus();
+            if (isSearchable) {
+                searchRef.current?.focus();
+            } else {
+                menuRef.current?.focus();
+            }
             const selectedIndex = options.findIndex(option => option.value === selectedOption.value);
             setHighlightedIndex(selectedIndex);
         }
-    }, [isOpen, selectedOption]);
+    }, [isOpen, options, selectedOption, isSearchable]);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -58,6 +72,17 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
         };
     }, [menuRef]);
 
+    useEffect(() => {
+        if (isSearchable) {
+            const normalizedSearchTerm = normalizeString(searchTerm);
+            const filtered = options.filter(option =>
+                normalizeString(option.label).includes(normalizedSearchTerm)
+            );
+            setFilteredOptions(filtered);
+            setHighlightedIndex(0);
+        }
+    }, [searchTerm, options, isSearchable]);
+
     return (
         <div className="relative inline-block text-left w-48 h-10">
             <button
@@ -69,7 +94,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
                 onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}
             >
                 <span className="flex items-center">
-                    <selectedOption.icon className="w-5 h-5 mr-2" />
+                    {selectedOption.icon && <selectedOption.icon className="w-5 h-5 mr-2" />}
                     {selectedOption.label}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
@@ -85,21 +110,8 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
                 aria-orientation="vertical"
                 aria-labelledby="options-menu"
             >
-                <div className="py-1">
-                    {options.map((option, index) => (
-                        <button
-                            key={option.value}
-                            onClick={() => handleOptionClick(option, index)}
-                            className={`flex items-center px-4 py-2 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:text-gray-900 w-full ${
-                                highlightedIndex === index ? 'bg-gray-100 dark:bg-gray-600' : ''
-                            } transition-all duration-300 ease-in-out`}
-                            role="menuitem"
-                        >
-                            <option.icon className="w-5 h-5 mr-2" />
-                            {option.label}
-                        </button>
-                    ))}
-                </div>
+                {isSearchable && <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} searchRef={searchRef} />}
+                <OptionList options={filteredOptions} highlightedIndex={highlightedIndex} handleOptionClick={handleOptionClick} searchTerm={searchTerm} />
             </div>
         </div>
     );
