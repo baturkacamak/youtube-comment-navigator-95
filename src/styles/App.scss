@@ -8,4 +8,22 @@
     *, *:before, *:after {
         box-sizing: border-box;
     }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 10px;
+        border: 2px solid #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }
