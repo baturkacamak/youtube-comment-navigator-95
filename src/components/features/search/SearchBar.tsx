@@ -70,6 +70,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
                     options={options}
                     selectedOption={selectedOption}
                     setSelectedOption={setSelectedOption}
+                    buttonClassName={'rounded-l-lg'}
                 />
                 <input
                     type="text"
