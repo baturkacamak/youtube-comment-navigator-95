@@ -36,12 +36,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     }, [filters, setFilters]);
 
     return (
-        <Box className={`flex flex-col w-full gap-6`}>
+        <Box className={`flex flex-col w-full gap-2`}>
             <div className="flex">
                 <SettingsButton onClick={openSettings}/>
                 <h3 className="m-auto text-lg font-bold text-teal-800 dark:text-teal-200">YouTube Comment Navigator 95</h3>
             </div>
-            <hr className="border-gray-400 dark:border-gray-600"/>
+            <hr className="border border-solid border-gray-400 dark:border-gray-600"/>
             <div className="flex justify-between">
                 <div className="flex flex-col gap-4">
                     <div className="flex gap-4 items-center">
