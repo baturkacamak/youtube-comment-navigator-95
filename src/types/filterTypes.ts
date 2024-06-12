@@ -50,6 +50,7 @@ export interface SelectBoxProps {
     options: Option[];
     selectedOption: Option;
     setSelectedOption: (option: Option) => void;
+    buttonClassName?: string;
 }
 
 export interface ControlPanelProps {
