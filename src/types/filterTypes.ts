@@ -51,6 +51,7 @@ export interface SelectBoxProps {
     selectedOption: Option;
     setSelectedOption: (option: Option) => void;
     buttonClassName?: string;
+    isSearchable?: boolean;
 }
 
 export interface ControlPanelProps {

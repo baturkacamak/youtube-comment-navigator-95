@@ -7,5 +7,5 @@ export interface ExtractOptions {
 export interface Option {
     value: string;
     label: string;
-    icon: ComponentType<SVGProps<SVGSVGElement>>;
+    icon?: ComponentType<SVGProps<SVGSVGElement>>;
 }

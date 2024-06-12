@@ -11,4 +11,5 @@ export interface RootState {
     commentsCount: number;
     repliesCount: number;
     transcriptsCount: number;
+    textSize: string;
 }
