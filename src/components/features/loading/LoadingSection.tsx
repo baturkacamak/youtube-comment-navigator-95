@@ -1,3 +1,5 @@
+// src/components/features/sidebar/LoadingSection.tsx
+
 import React from 'react';
 import {
     ChatBubbleOvalLeftIcon,
@@ -14,8 +16,7 @@ const LoadingSection: React.FC<LoadingSectionProps> = ({
                                                            commentsCount, repliesCount, transcriptsCount
                                                        }) => {
     return (
-        <Box className="p-1 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-teal-700 dark:to-teal-900 rounded-lg shadow-md">
-            <div className="flex items-center justify-between space-x-4">
+            <div className="grid grid-cols-2 gap-2">
                 <Button
                     onClick={() => onLoadComments(true)}
                     icon={ChatBubbleOvalLeftIcon}
@@ -41,7 +42,6 @@ const LoadingSection: React.FC<LoadingSectionProps> = ({
                     className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
                 />
             </div>
-        </Box>
     );
 };
 
