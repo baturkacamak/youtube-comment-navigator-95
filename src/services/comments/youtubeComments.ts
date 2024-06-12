@@ -1,4 +1,4 @@
-import {fetchContinuationData} from './fetchContinuationData';
+import {fetchContinuationData, fetchContinuationTokenFromRemote} from './fetchContinuationData';
 
 const safelyExecute = (func: Function) => {
     try {
@@ -9,7 +9,7 @@ const safelyExecute = (func: Function) => {
     }
 };
 
-export const generateRequestOptions = ({continue: continueToken, windowObj}: {
+export const generateRequestOptions = async ({continue: continueToken, windowObj}: {
     continue: string,
     windowObj: any
 }, isFetchingReply: boolean = false) => {
@@ -31,6 +31,9 @@ export const generateRequestOptions = ({continue: continueToken, windowObj}: {
             continuation = continueToken.replace(/(%3D)+$/g, '');
         } else {
             continuation = fetchContinuationData(windowObj.ytInitialData, isFetchingReply);
+            if (!continuation) {
+                continuation = await fetchContinuationTokenFromRemote();
+            }
         }
 
         const requestOptions = {
@@ -74,7 +77,7 @@ export const generateRequestOptions = ({continue: continueToken, windowObj}: {
 };
 
 export const fetchCommentJsonDataFromRemote = async (continueToken: string | null, windowObj: any, signal: AbortSignal | null, isFetchingReply: boolean = false) => {
-    const requestOptions = generateRequestOptions({
+    const requestOptions = await generateRequestOptions({
         continue: continueToken || '', // Use empty string if continueToken is null
         windowObj,
     }, isFetchingReply);
