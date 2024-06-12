@@ -1,22 +1,78 @@
-// src/components/common/SettingsDrawer.tsx
 import React, { useState, useEffect } from 'react';
-import { XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon, SunIcon, MoonIcon, CodeBracketIcon, EnvelopeIcon, UserCircleIcon, InformationCircleIcon, AdjustmentsHorizontalIcon, ArrowsPointingInIcon, ArrowsUpDownIcon, ArrowsPointingOutIcon, LanguageIcon } from '@heroicons/react/24/outline';
+import { useDispatch, useSelector } from 'react-redux';
 import { SettingsDrawerProps } from "../../types/layoutTypes";
-import SelectBox from './SelectBox';
+import SelectBox from './SelectBox/SelectBox';
 import NotificationBubble from './NotificationBubble';
 import { Option } from "../../types/utilityTypes";
+import { RootState } from "../../types/rootState";
 import packageJson from '../../../package.json';
+import { setTextSize } from "../../store/store";
 
 const themeOptions = [
     { value: 'light', label: 'Light', icon: SunIcon },
     { value: 'dark', label: 'Dark', icon: MoonIcon }
 ];
 
+const textSizeOptions: Option[] = [
+    { value: 'text-sm', label: 'Small', icon: AdjustmentsHorizontalIcon },
+    { value: 'text-base', label: 'Medium', icon: ArrowsPointingInIcon },
+    { value: 'text-lg', label: 'Large', icon: ArrowsUpDownIcon },
+    { value: 'text-xl', label: 'Extra Large', icon: ArrowsPointingOutIcon },
+];
+
+const languageOptions: Option[] = [
+    { value: 'ar', label: 'العربية' }, // Arabic
+    { value: 'bn', label: 'বাংলা' }, // Bengali
+    { value: 'cs', label: 'Čeština' }, // Czech
+    { value: 'da', label: 'Dansk' }, // Danish
+    { value: 'de', label: 'Deutsch' }, // German
+    { value: 'el', label: 'Ελληνικά' }, // Greek
+    { value: 'en', label: 'English' }, // English
+    { value: 'es', label: 'Español' }, // Spanish
+    { value: 'fa', label: 'فارسی' }, // Persian
+    { value: 'fi', label: 'Suomi' }, // Finnish
+    { value: 'fr', label: 'Français' }, // French
+    { value: 'he', label: 'עברית' }, // Hebrew
+    { value: 'hi', label: 'हिन्दी' }, // Hindi
+    { value: 'hu', label: 'Magyar' }, // Hungarian
+    { value: 'id', label: 'Bahasa Indonesia' }, // Indonesian
+    { value: 'it', label: 'Italiano' }, // Italian
+    { value: 'ja', label: '日本語' }, // Japanese
+    { value: 'jv', label: 'ꦧꦱꦗꦮ' }, // Javanese
+    { value: 'ko', label: '한국어' }, // Korean
+    { value: 'mr', label: 'मराठी' }, // Marathi
+    { value: 'ms', label: 'Bahasa Melayu' }, // Malay
+    { value: 'nl', label: 'Nederlands' }, // Dutch
+    { value: 'no', label: 'Norsk' }, // Norwegian
+    { value: 'pa', label: 'ਪੰਜਾਬੀ' }, // Punjabi
+    { value: 'pl', label: 'Polski' }, // Polish
+    { value: 'pt', label: 'Português' }, // Portuguese
+    { value: 'ro', label: 'Română' }, // Romanian
+    { value: 'ru', label: 'Русский' }, // Russian
+    { value: 'sk', label: 'Slovenčina' }, // Slovak
+    { value: 'sr', label: 'Српски' }, // Serbian
+    { value: 'sv', label: 'Svenska' }, // Swedish
+    { value: 'ta', label: 'தமிழ்' }, // Tamil
+    { value: 'te', label: 'తెలుగు' }, // Telugu
+    { value: 'th', label: 'ไทย' }, // Thai
+    { value: 'tl', label: 'Filipino' }, // Filipino
+    { value: 'tr', label: 'Türkçe' }, // Turkish
+    { value: 'uk', label: 'Українська' }, // Ukrainian
+    { value: 'ur', label: 'اردو' }, // Urdu
+    { value: 'vi', label: 'Tiếng Việt' }, // Vietnamese
+    { value: 'zh', label: '中文' }, // Mandarin Chinese
+];
+
+
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
         const savedTheme = localStorage.getItem('theme');
         return themeOptions.find(option => option.value === savedTheme) || themeOptions[0];
     });
+
+    const textSize = useSelector((state: RootState) => state.textSize);
+    const dispatch = useDispatch();
 
     const [showNotification, setShowNotification] = useState(false);
 
@@ -32,11 +88,49 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     }, [selectedTheme]);
 
     useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.classList.add(savedTheme);
+        } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+            setSelectedTheme(themeOptions.find(option => option.value === 'dark')!);
+        } else {
+            document.documentElement.classList.add('light');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (selectedTheme.value === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
+    }, [selectedTheme]);
+
+    useEffect(() => {
         if (showNotification) {
             const timer = setTimeout(() => setShowNotification(false), 4000);
             return () => clearTimeout(timer);
         }
     }, [showNotification]);
+
+    const handleTextSizeChange = (option: Option) => {
+        dispatch(setTextSize(option.value));
+    };
+
+    const [selectedLanguage, setSelectedLanguage] = useState<Option>(() => {
+        const savedLanguage = localStorage.getItem('language');
+        return languageOptions.find(option => option.value === savedLanguage) || languageOptions[0];
+    });
+
+    useEffect(() => {
+        const currentLanguage = selectedLanguage.value;
+        localStorage.setItem('language', currentLanguage);
+        setShowNotification(true);
+        // Add logic to change the language of the app
+    }, [selectedLanguage]);
 
     return (
         <>
@@ -55,7 +149,8 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                         </div>
                         <div className="space-y-6">
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Theme</label>
+                                <label
+                                    className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Theme</label>
                                 <SelectBox
                                     options={themeOptions}
                                     selectedOption={selectedTheme}
@@ -63,13 +158,47 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                                     buttonClassName="w-full rounded-lg"
                                 />
                             </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Text
+                                    Size</label>
+                                <SelectBox
+                                    options={textSizeOptions}
+                                    selectedOption={textSizeOptions.find(option => option.value === textSize)!}
+                                    setSelectedOption={handleTextSizeChange}
+                                    buttonClassName="w-full rounded-lg"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label
+                                    className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Language</label>
+                                <SelectBox
+                                    options={languageOptions}
+                                    selectedOption={selectedLanguage}
+                                    setSelectedOption={setSelectedLanguage}
+                                    buttonClassName="w-full rounded-lg"
+                                    isSearchable={true}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400 mt-4 space-y-2">
                         <hr className="mb-4"/>
-                        <p>App Version: <strong>{packageJson.version}</strong></p>
-                        <p>Developed by <strong>Batur Kacamak</strong></p>
-                        <p>Contact: <a href="mailto:hello@batur.info" className="text-teal-600 dark:text-teal-400">hello@batur.info</a></p>
+                        <p className="flex items-center">
+                            <InformationCircleIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400"/>
+                            App Version: <strong className="ml-1">{packageJson.version}</strong>
+                        </p>
+                        <p className="flex items-center">
+                            <UserCircleIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
+                            Developed by <strong className="ml-1">Batur Kacamak</strong>
+                        </p>
+                        <p className="flex items-center">
+                            <CodeBracketIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
+                            <a href="https://github.com/baturkacamak/youtube-comment-navigator-95" className="text-teal-600 dark:text-teal-400">GitHub Repository</a>
+                        </p>
+                        <p className="flex items-center">
+                            <EnvelopeIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
+                            Contact: <a href="mailto:hello@batur.info" className="text-teal-600 dark:text-teal-400 ml-1">hello@batur.info</a>
+                        </p>
                     </div>
                 </div>
                 <div className="flex-1" onClick={onClose}></div>
