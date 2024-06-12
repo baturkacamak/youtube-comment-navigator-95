@@ -41,7 +41,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     return (
         <>
             <div
-                className={`relative inset-y-0 left-0 z-50 flex transition-all min-h-96 duration-500 ${
+                className={`relative inset-y-0 left-0 z-50 flex transition-all h-fit duration-500 ${
                     isOpen ? 'ml-0' : '-ml-80'
                 }`}
             >
