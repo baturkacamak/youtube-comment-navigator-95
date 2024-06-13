@@ -1,9 +1,8 @@
 import React from 'react';
 
-export const linkifyText = (text: string) => {
+export const linkifyText = (text: string): (JSX.Element | string)[] => {
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     const elements: (JSX.Element | string)[] = [];
-
     let lastIndex = 0;
     let match;
     while ((match = urlRegex.exec(text)) !== null) {
@@ -16,7 +15,7 @@ export const linkifyText = (text: string) => {
         const url = match[0];
         elements.push(
             <a
-                key={match.index}
+                key={`${match.index}`}
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
