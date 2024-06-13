@@ -26,7 +26,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["asset-manifest.json", "static/js/*", "static/css/*"],
+      "resources": ["asset-manifest.json", "static/js/*", "static/css/*", "locales/*"],
       "matches": ["<all_urls>"]
     }
   ],
