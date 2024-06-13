@@ -3,13 +3,5 @@
     "@babel/preset-env",
     "@babel/preset-react",
     "@babel/preset-typescript"
-  ],
-  "plugins": [
-    ["babel-plugin-i18next-extract", {
-      "locales": ["en", "es"],
-      "keyAsDefaultValue": true,
-      "outputPath": "public/locales/{{locale}}/{{ns}}.json",
-      "useI18nextDefaultValue": ["en"]
-    }]
   ]
 }
