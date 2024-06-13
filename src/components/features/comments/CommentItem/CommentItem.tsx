@@ -70,7 +70,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
                         <CommentBody
                             content={comment.content}
                             handleTimestampClick={handleTimestampClick}
-                            id={`comment-content-${comment.commentId}`}
                         />
                         <CommentFooter
                             comment={comment}
@@ -80,7 +79,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
                             setShowReplies={setShowReplies}
                             handleCopyToClipboard={handleCopy}
                             copySuccess={copySuccess}
-                            id={`comment-footer-${comment.commentId}`}
                         />
                     </div>
                 </div>
