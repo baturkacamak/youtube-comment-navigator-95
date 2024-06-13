@@ -33,9 +33,9 @@ const Tooltip: React.FC<TooltipProps> = ({ text, children, className, bgColor = 
     }, []);
 
     return (
-        <div ref={wrapperRef} className="relative group">
+        <div ref={wrapperRef} className="relative group" aria-describedby="tooltip">
             {children}
-            <div className={classNames(
+            <div role="tooltip" className={classNames(
                 "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10",
                 bgColor,
                 textColor,

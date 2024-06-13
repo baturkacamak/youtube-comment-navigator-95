@@ -47,6 +47,9 @@ const NotificationBubble: React.FC<NotificationBubbleProps> = ({ message, durati
             className={`fixed ${positionClasses[position]} z-50 bg-green-500 text-white p-2 rounded-lg shadow-md transition duration-500 transform ${
                 isVisible ? visibleClasses : `${initialTranslateClasses[position]} ${hiddenClasses}`
             }`}
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
         >
             {message}
         </div>

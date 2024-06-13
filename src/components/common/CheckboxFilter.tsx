@@ -12,6 +12,9 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({ name, icon, value, chec
                 onChange={onChange}
                 disabled={disabled}
                 className="mr-2 form-checkbox h-5 w-5 text-teal-600 dark:text-teal-400 transition duration-150 ease-in-out"
+                aria-checked={checked}
+                aria-disabled={disabled}
+                aria-label={name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}
             />
             {icon}
             <span className="truncate">{name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}</span>

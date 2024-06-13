@@ -15,7 +15,7 @@ const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampCl
     const highlightedText = highlightText(timestampedText, keyword);
 
     return (
-        <p className={`${textSize} mb-2`}>
+        <p className={`${textSize} mb-2`} aria-live="polite">
             {highlightedText}
         </p>
     );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { XMarkIcon, SunIcon, MoonIcon, CodeBracketIcon, EnvelopeIcon, UserCircleIcon, InformationCircleIcon, AdjustmentsHorizontalIcon, ArrowsPointingInIcon, ArrowsUpDownIcon, ArrowsPointingOutIcon, LanguageIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { SettingsDrawerProps } from "../../types/layoutTypes";
 import SelectBox from './SelectBox/SelectBox';
 import NotificationBubble from './NotificationBubble';
@@ -66,6 +67,8 @@ const languageOptions: Option[] = [
 
 
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
+    const { t } = useTranslation();
+
     const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
         const savedTheme = localStorage.getItem('theme');
         return themeOptions.find(option => option.value === savedTheme) || themeOptions[0];
@@ -139,18 +142,17 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                     isOpen ? 'ml-0' : '-ml-80'
                 }`}
             >
-                <div className="bg-white dark:bg-gray-800 w-80 h-full shadow-lg p-4 flex flex-col justify-between">
+                <div className="bg-white dark:bg-gray-800 w-80 h-full shadow-lg p-4 flex flex-col justify-between" role="dialog" aria-labelledby="settings-title" aria-describedby="settings-description">
                     <div>
                         <div className="flex justify-between items-center mb-4">
-                            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-200">Settings</h2>
-                            <button onClick={onClose} className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400">
+                            <h2 id="settings-title" className="text-lg font-bold text-gray-800 dark:text-gray-200">{t('Settings')}</h2>
+                            <button onClick={onClose} className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400" aria-label={t('Close settings')}>
                                 <XMarkIcon className="w-6 h-6" />
                             </button>
                         </div>
-                        <div className="space-y-6">
+                        <div id="settings-description" className="space-y-6">
                             <div className="mb-4">
-                                <label
-                                    className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Theme</label>
+                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Theme')}</label>
                                 <SelectBox
                                     options={themeOptions}
                                     selectedOption={selectedTheme}
@@ -159,8 +161,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Text
-                                    Size</label>
+                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Text Size')}</label>
                                 <SelectBox
                                     options={textSizeOptions}
                                     selectedOption={textSizeOptions.find(option => option.value === textSize)!}
@@ -169,8 +170,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                                 />
                             </div>
                             <div className="mb-4">
-                                <label
-                                    className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">Language</label>
+                                <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Language')}</label>
                                 <SelectBox
                                     options={languageOptions}
                                     selectedOption={selectedLanguage}
@@ -185,25 +185,25 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                         <hr className="mb-4"/>
                         <p className="flex items-center">
                             <InformationCircleIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400"/>
-                            App Version: <strong className="ml-1">{packageJson.version}</strong>
+                            {t('App Version')}: <strong className="ml-1">{packageJson.version}</strong>
                         </p>
                         <p className="flex items-center">
                             <UserCircleIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
-                            Developed by <strong className="ml-1">Batur Kacamak</strong>
+                            {t('Developed by')} <strong className="ml-1">Batur Kacamak</strong>
                         </p>
                         <p className="flex items-center">
                             <CodeBracketIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
-                            <a href="https://github.com/baturkacamak/youtube-comment-navigator-95" className="text-teal-600 dark:text-teal-400">GitHub Repository</a>
+                            <a href="https://github.com/baturkacamak/youtube-comment-navigator-95" className="text-teal-600 dark:text-teal-400">{t('GitHub Repository')}</a>
                         </p>
                         <p className="flex items-center">
                             <EnvelopeIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
-                            Contact: <a href="mailto:hello@batur.info" className="text-teal-600 dark:text-teal-400 ml-1">hello@batur.info</a>
+                            {t('Contact')}: <a href="mailto:hello@batur.info" className="text-teal-600 dark:text-teal-400 ml-1">hello@batur.info</a>
                         </p>
                     </div>
                 </div>
                 <div className="flex-1" onClick={onClose}></div>
             </div>
-            {showNotification && <NotificationBubble message="Settings saved!" position="bottom-left" />}
+            {showNotification && <NotificationBubble message={t("Settings saved!")} position="bottom-left" />}
         </>
     );
 };

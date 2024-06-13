@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
-import {BoxProps} from "../../types/layoutTypes";
+import { BoxProps } from "../../types/layoutTypes";
 
 const Box: React.FC<BoxProps> = ({
                                      children,
@@ -11,6 +12,8 @@ const Box: React.FC<BoxProps> = ({
                                      borderColor = "border-2 border-gray-400",
                                      darkBorderColor = "dark:border-gray-600"
                                  }) => {
+    const { t } = useTranslation();
+
     const inlineStyles = (color: string) => {
         if (/^#|rgb/.test(color)) {
             return { background: color };
@@ -43,6 +46,7 @@ const Box: React.FC<BoxProps> = ({
                 ...borderStyles(borderColor),
                 ...borderStyles(darkBorderColor)
             }}
+            aria-live="polite"
         >
             {children}
         </div>

@@ -6,8 +6,10 @@ import { Option } from "../../../types/utilityTypes";
 import { normalizeString } from '../../../utils/normalizeString';
 import SearchInput from './SearchInput';
 import OptionList from './OptionList';
+import { useTranslation } from 'react-i18next';
 
 const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName, isSearchable = false }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(0);
     const [filteredOptions, setFilteredOptions] = useState(options);
@@ -95,7 +97,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
             >
                 <span className="flex items-center">
                     {selectedOption.icon && <selectedOption.icon className="w-5 h-5 mr-2" />}
-                    {selectedOption.label}
+                    {selectedOption.label || t('Select an option')}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
             </button>

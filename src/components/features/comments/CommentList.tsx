@@ -5,8 +5,10 @@ import Box from "../../common/Box";
 import { AnimatePresence, motion } from 'framer-motion';
 import { getCommentBackgroundColor } from '../../../utils/colorUtils/index';
 import { Comment, CommentListProps } from "../../../types/commentTypes";
+import { useTranslation } from 'react-i18next';
 
 const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
+    const { t } = useTranslation();
     const [visibleCount, setVisibleCount] = useState(10);
 
     const loadMoreComments = () => {
@@ -15,18 +17,22 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col items-center justify-center p-4 mt-4 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md">
+            <div
+                className="flex flex-col items-center justify-center p-4 mt-4 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md"
+                role="status"
+                aria-live="polite"
+            >
                 <ArrowPathIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4 animate-spin" />
-                <p className="text-lg text-gray-800 dark:text-gray-200">Loading comments...</p>
+                <p className="text-lg text-gray-800 dark:text-gray-200">{t('Loading comments...')}</p>
             </div>
         );
     }
 
     if (comments.length === 0) {
         return (
-            <Box className="flex flex-col items-center justify-center p-4 mt-4">
+            <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
                 <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
-                <p className="text-lg text-gray-800 dark:text-gray-200">No comments found. Try a different search or filter.</p>
+                <p className="text-lg text-gray-800 dark:text-gray-200">{t('No comments found. Try a different search or filter.')}</p>
             </Box>
         );
     }
@@ -60,6 +66,8 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
                             exit={{ opacity: 0, y: 5 }}
                             layout // Add layout property to enable layout animations
                             transition={{ duration: 0.5 }}
+                            role="listitem"
+                            aria-labelledby={`comment-${group.comment.commentId}`}
                         >
                             <CommentItem
                                 comment={group.comment}
@@ -78,9 +86,10 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
                 <button
                     onClick={loadMoreComments}
                     className="mt-4 py-2 px-4 bg-blue-500 text-white dark:bg-blue-700 dark:text-gray-200 rounded hover:bg-blue-600 dark:hover:bg-blue-800 flex items-center justify-center"
+                    aria-label={t('Load more comments')}
                 >
-                    <ChevronDownIcon className="w-5 h-5 mr-2" />
-                    Load More Comments ({remainingComments} remaining)
+                    <ChevronDownIcon className="w-5 h-5 mr-2" aria-hidden="true" />
+                    {t('Load More Comments ({remainingComments} remaining)', { remainingComments })}
                 </button>
             )}
         </div>

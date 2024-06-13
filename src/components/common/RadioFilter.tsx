@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
-import {ArrowPathIcon, ArrowUpIcon} from '@heroicons/react/24/outline';
-
-import {RadioFilterProps} from "../../types/filterTypes";
+import React, { useState } from 'react';
+import { ArrowPathIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
+import { RadioFilterProps } from "../../types/filterTypes";
 
 const RadioFilter: React.FC<RadioFilterProps> = ({ name, icon, value, selectedValue, sortOrder, isRandom, onChange, onToggleSortOrder }) => {
     const [spin, setSpin] = useState(false);
+    const { t } = useTranslation();
 
     const handleRandomClick = () => {
         if (isRandom) {
@@ -15,7 +16,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, icon, value, selectedVa
     };
 
     return (
-        <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-1">
+        <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-1" aria-label={`Radio filter for ${name}`} role="radio" aria-checked={selectedValue === value}>
             <input
                 type="radio"
                 name="sortBy"
@@ -23,11 +24,18 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, icon, value, selectedVa
                 checked={selectedValue === value}
                 onChange={onChange}
                 className="mr-2 form-radio h-5 w-5 text-teal-600 dark:text-teal-400 transition duration-150 ease-in-out"
+                aria-checked={selectedValue === value}
+                aria-label={name}
             />
             {icon}
             <span className="truncate">{name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}</span>
             {selectedValue === value && (
-                <button onClick={isRandom ? handleRandomClick : onToggleSortOrder} className="ml-2 transition-transform duration-500 ease-in-out">
+                <button
+                    onClick={isRandom ? handleRandomClick : onToggleSortOrder}
+                    className="ml-2 transition-transform duration-500 ease-in-out"
+                    aria-label={isRandom ? t('Randomize order') : t('Toggle sort order')}
+                    aria-live="polite"
+                >
                     {isRandom ? (
                         <ArrowPathIcon className={`w-4 h-4 transform ${spin ? 'animate-spin' : ''}`} />
                     ) : (

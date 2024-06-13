@@ -7,6 +7,7 @@ import useSticky from '../../../../hooks/useSticky';
 import { handleCopyToClipboard } from '../../../../utils/clipboard';
 import handleTimestampClick from '../../../../utils/handleTimestampClick';
 import { CommentItemProps } from "../../../../types/commentTypes";
+import { useTranslation } from 'react-i18next';
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -17,6 +18,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                                                      borderColor,
                                                      darkBorderColor,
                                                  }) => {
+    const { t } = useTranslation();
     const [copySuccess, setCopySuccess] = useState(false);
     const [showReplies, setShowReplies] = useState(false);
     const [repliesHeight, setRepliesHeight] = useState('0px');
@@ -53,15 +55,23 @@ const CommentItem: React.FC<CommentItemProps> = ({
             darkBgColor={darkBgColor}
             borderColor={borderColor}
             darkBorderColor={darkBorderColor}
+            aria-label={t('Comment')}
         >
             <div
                 ref={parentCommentRef}
                 id={`parent-comment-${comment.commentId}`} // Unique identifier for each comment thread
                 className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-4 p-4 sticky top-24 left-0 z-10' : ''}`}
+                role="article"
+                aria-labelledby={`comment-content-${comment.commentId}`}
+                aria-describedby={`comment-footer-${comment.commentId}`}
             >
                 <div className="flex items-start w-full">
                     <div className="flex-1">
-                        <CommentBody content={comment.content} handleTimestampClick={handleTimestampClick}/>
+                        <CommentBody
+                            content={comment.content}
+                            handleTimestampClick={handleTimestampClick}
+                            id={`comment-content-${comment.commentId}`}
+                        />
                         <CommentFooter
                             comment={comment}
                             commentId={comment.commentId}
@@ -70,6 +80,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                             setShowReplies={setShowReplies}
                             handleCopyToClipboard={handleCopy}
                             copySuccess={copySuccess}
+                            id={`comment-footer-${comment.commentId}`}
                         />
                     </div>
                 </div>
@@ -80,6 +91,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     showReplies={showReplies}
                     repliesRef={repliesRef}
                     repliesHeight={repliesHeight}
+                    aria-label={t('Replies')}
                 />
             )}
         </Box>
