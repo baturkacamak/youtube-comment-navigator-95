@@ -1,8 +1,10 @@
 import React from 'react';
-
-import {CheckboxFilterProps} from "../../types/filterTypes";
+import { useTranslation } from 'react-i18next';
+import { CheckboxFilterProps } from "../../types/filterTypes";
 
 const CheckboxFilter: React.FC<CheckboxFilterProps> = ({ name, icon, value, checked, onChange, disabled }) => {
+    const { t } = useTranslation();
+
     return (
         <label className={`flex items-center select-none text-gray-800 dark:text-gray-200 mb-1 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
             <input
@@ -14,10 +16,10 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({ name, icon, value, chec
                 className="mr-2 form-checkbox h-5 w-5 text-teal-600 dark:text-teal-400 transition duration-150 ease-in-out"
                 aria-checked={checked}
                 aria-disabled={disabled}
-                aria-label={name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}
+                aria-label={t(name)}
             />
             {icon}
-            <span className="truncate">{name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}</span>
+            <span className="truncate">{t(name)}</span>
         </label>
     );
 };
