@@ -1,73 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import { XMarkIcon, SunIcon, MoonIcon, CodeBracketIcon, EnvelopeIcon, UserCircleIcon, InformationCircleIcon, AdjustmentsHorizontalIcon, ArrowsPointingInIcon, ArrowsUpDownIcon, ArrowsPointingOutIcon, LanguageIcon } from '@heroicons/react/24/outline';
+import {
+    XMarkIcon, SunIcon, MoonIcon, CodeBracketIcon, EnvelopeIcon, UserCircleIcon, InformationCircleIcon,
+    AdjustmentsHorizontalIcon, ArrowsPointingInIcon, ArrowsUpDownIcon, ArrowsPointingOutIcon
+} from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { SettingsDrawerProps } from "../../types/layoutTypes";
 import SelectBox from './SelectBox/SelectBox';
 import NotificationBubble from './NotificationBubble';
-import { Option } from "../../types/utilityTypes";
 import { RootState } from "../../types/rootState";
 import packageJson from '../../../package.json';
 import { setTextSize } from "../../store/store";
-
-const themeOptions = [
-    { value: 'light', label: 'Light', icon: SunIcon },
-    { value: 'dark', label: 'Dark', icon: MoonIcon }
-];
-
-const textSizeOptions: Option[] = [
-    { value: 'text-sm', label: 'Small', icon: AdjustmentsHorizontalIcon },
-    { value: 'text-base', label: 'Medium', icon: ArrowsPointingInIcon },
-    { value: 'text-lg', label: 'Large', icon: ArrowsUpDownIcon },
-    { value: 'text-xl', label: 'Extra Large', icon: ArrowsPointingOutIcon },
-];
-
-const languageOptions: Option[] = [
-    { value: 'ar', label: 'العربية' }, // Arabic
-    { value: 'bn', label: 'বাংলা' }, // Bengali
-    { value: 'cs', label: 'Čeština' }, // Czech
-    { value: 'da', label: 'Dansk' }, // Danish
-    { value: 'de', label: 'Deutsch' }, // German
-    { value: 'el', label: 'Ελληνικά' }, // Greek
-    { value: 'en', label: 'English' }, // English
-    { value: 'es', label: 'Español' }, // Spanish
-    { value: 'fa', label: 'فارسی' }, // Persian
-    { value: 'fi', label: 'Suomi' }, // Finnish
-    { value: 'fr', label: 'Français' }, // French
-    { value: 'he', label: 'עברית' }, // Hebrew
-    { value: 'hi', label: 'हिन्दी' }, // Hindi
-    { value: 'hu', label: 'Magyar' }, // Hungarian
-    { value: 'id', label: 'Bahasa Indonesia' }, // Indonesian
-    { value: 'it', label: 'Italiano' }, // Italian
-    { value: 'ja', label: '日本語' }, // Japanese
-    { value: 'jv', label: 'ꦧꦱꦗꦮ' }, // Javanese
-    { value: 'ko', label: '한국어' }, // Korean
-    { value: 'mr', label: 'मराठी' }, // Marathi
-    { value: 'ms', label: 'Bahasa Melayu' }, // Malay
-    { value: 'nl', label: 'Nederlands' }, // Dutch
-    { value: 'no', label: 'Norsk' }, // Norwegian
-    { value: 'pa', label: 'ਪੰਜਾਬੀ' }, // Punjabi
-    { value: 'pl', label: 'Polski' }, // Polish
-    { value: 'pt', label: 'Português' }, // Portuguese
-    { value: 'ro', label: 'Română' }, // Romanian
-    { value: 'ru', label: 'Русский' }, // Russian
-    { value: 'sk', label: 'Slovenčina' }, // Slovak
-    { value: 'sr', label: 'Српски' }, // Serbian
-    { value: 'sv', label: 'Svenska' }, // Swedish
-    { value: 'ta', label: 'தமிழ்' }, // Tamil
-    { value: 'te', label: 'తెలుగు' }, // Telugu
-    { value: 'th', label: 'ไทย' }, // Thai
-    { value: 'tl', label: 'Filipino' }, // Filipino
-    { value: 'tr', label: 'Türkçe' }, // Turkish
-    { value: 'uk', label: 'Українська' }, // Ukrainian
-    { value: 'ur', label: 'اردو' }, // Urdu
-    { value: 'vi', label: 'Tiếng Việt' }, // Vietnamese
-    { value: 'zh', label: '中文' }, // Mandarin Chinese
-];
-
+import i18n from "../../i18n";
+import { supportedLanguages, isLocalEnvironment } from '../../utils/environmentVariables';
+import {Option} from "../../types/utilityTypes"; // Import supported languages
 
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
     const { t } = useTranslation();
+
+    const themeOptions = [
+        { value: 'light', label: t('Light'), icon: SunIcon },
+        { value: 'dark', label: t('Dark'), icon: MoonIcon }
+    ];
+
+    const textSizeOptions: Option[] = [
+        { value: 'text-sm', label: t('Small'), icon: AdjustmentsHorizontalIcon },
+        { value: 'text-base', label: t('Medium'), icon: ArrowsPointingInIcon },
+        { value: 'text-lg', label: t('Large'), icon: ArrowsUpDownIcon },
+        { value: 'text-xl', label: t('Extra Large'), icon: ArrowsPointingOutIcon },
+    ];
+
+    const languageOptions: Option[] = [
+        { value: 'ar', label: 'العربية' }, // Arabic
+        { value: 'bn', label: 'বাংলা' }, // Bengali
+        { value: 'cs', label: 'Čeština' }, // Czech
+        { value: 'da', label: 'Dansk' }, // Danish
+        { value: 'de', label: 'Deutsch' }, // German
+        { value: 'el', label: 'Ελληνικά' }, // Greek
+        { value: 'en', label: 'English' }, // English
+        { value: 'es', label: 'Español' }, // Spanish
+        { value: 'fa', label: 'فارسی' }, // Persian
+        { value: 'fi', label: 'Suomi' }, // Finnish
+        { value: 'fr', label: 'Français' }, // French
+        { value: 'he', label: 'עברית' }, // Hebrew
+        { value: 'hi', label: 'हिन्दी' }, // Hindi
+        { value: 'hu', label: 'Magyar' }, // Hungarian
+        { value: 'id', label: 'Bahasa Indonesia' }, // Indonesian
+        { value: 'it', label: 'Italiano' }, // Italian
+        { value: 'ja', label: '日本語' }, // Japanese
+        { value: 'jv', label: 'ꦧꦱꦗꦮ' }, // Javanese
+        { value: 'ko', label: '한국어' }, // Korean
+        { value: 'mr', label: 'मराठी' }, // Marathi
+        { value: 'ms', label: 'Bahasa Melayu' }, // Malay
+        { value: 'nl', label: 'Nederlands' }, // Dutch
+        { value: 'no', label: 'Norsk' }, // Norwegian
+        { value: 'pa', label: 'ਪੰਜਾਬੀ' }, // Punjabi
+        { value: 'pl', label: 'Polski' }, // Polish
+        { value: 'pt', label: 'Português' }, // Portuguese
+        { value: 'ro', label: 'Română' }, // Romanian
+        { value: 'ru', label: 'Русский' }, // Russian
+        { value: 'sk', label: 'Slovenčina' }, // Slovak
+        { value: 'sr', label: 'Српски' }, // Serbian
+        { value: 'sv', label: 'Svenska' }, // Swedish
+        { value: 'ta', label: 'தமிழ்' }, // Tamil
+        { value: 'te', label: 'తెలుగు' }, // Telugu
+        { value: 'th', label: 'ไทย' }, // Thai
+        { value: 'tl', label: 'Filipino' }, // Filipino
+        { value: 'tr', label: 'Türkçe' }, // Turkish
+        { value: 'uk', label: 'Українська' }, // Ukrainian
+        { value: 'ur', label: 'اردو' }, // Urdu
+        { value: 'vi', label: 'Tiếng Việt' }, // Vietnamese
+        { value: 'zh', label: '中文' }, // Mandarin Chinese
+    ];
 
     const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -132,8 +136,35 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
         const currentLanguage = selectedLanguage.value;
         localStorage.setItem('language', currentLanguage);
         setShowNotification(true);
-        // Add logic to change the language of the app
+
+        if (isLocalEnvironment()) {
+            // In development, use the simpler method to change the language
+            i18n.changeLanguage(currentLanguage);
+        } else {
+            // In production, send a message to the content script to load the selected language
+            window.postMessage({ type: 'CHANGE_LANGUAGE', payload: { language: currentLanguage } }, '*');
+        }
     }, [selectedLanguage]);
+
+    useEffect(() => {
+        if (!isLocalEnvironment()) {
+            const handleLanguageLoaded = (event: MessageEvent) => {
+                if (event.source !== window) return; // Only accept messages from the same window
+
+                const { type, payload } = event.data;
+                if (type === 'LANGUAGE_LOADED') {
+                    const { language } = payload;
+                    i18n.changeLanguage(language);
+                }
+            };
+
+            window.addEventListener('message', handleLanguageLoaded);
+
+            return () => {
+                window.removeEventListener('message', handleLanguageLoaded);
+            };
+        }
+    }, []);
 
     return (
         <>
