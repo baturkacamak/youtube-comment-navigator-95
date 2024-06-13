@@ -22,6 +22,9 @@ class AssetInjector {
         this.manifestUrl = manifestUrl;
         this.mainJs = null;
         this.mainCss = null;
+
+        // Listen for messages from the React app
+        window.addEventListener('message', this.handleMessage.bind(this));
     }
 
     async loadManifest() {
@@ -42,6 +45,7 @@ class AssetInjector {
         if (!this.mainJs || !this.mainCss) {
             await this.loadManifest();
         }
+
         this.injectCSS(this.mainCss);
         this.injectJS(this.mainJs);
     }
@@ -59,12 +63,40 @@ class AssetInjector {
         if (!document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`)) {
             const script = document.createElement('script');
             script.src = chrome.runtime.getURL(jsFileName);
-            script.onload = () => {
-            };
+            script.onload = () => {};
             script.onerror = () => {
                 console.error('Error loading React app script:', script.src);
             };
             document.head.appendChild(script);
+        }
+    }
+
+    async injectTranslation(locale) {
+        const namespace = 'translation';
+
+        try {
+            const response = await fetch(chrome.runtime.getURL(`locales/${locale}/${namespace}.json`));
+            const data = await response.json();
+            const script = document.createElement('script');
+            script.type = 'application/json';
+            script.id = `locale-${locale}`;
+            script.text = JSON.stringify(data);
+            document.head.appendChild(script);
+
+            // Notify React app that the translation has been loaded
+            window.postMessage({ type: 'LANGUAGE_LOADED', payload: { language: locale } }, '*');
+        } catch (error) {
+            console.error(`Error fetching locale file for ${locale}:`, error);
+        }
+    }
+
+    handleMessage(event) {
+        if (event.source !== window) return; // Only accept messages from the same window
+
+        const { type, payload } = event.data;
+        if (type === 'CHANGE_LANGUAGE') {
+            const { language } = payload;
+            this.injectTranslation(language);
         }
     }
 
@@ -79,7 +111,9 @@ class AssetInjector {
 class DOMHelper {
     static createAppContainer(commentsSectionId, containerId) {
         const commentsSection = document.getElementById(commentsSectionId);
-        if (!commentsSection) return null;
+        if (!commentsSection) {
+            return null;
+        }
 
         const newAppContainer = document.createElement('div');
         newAppContainer.id = containerId;
