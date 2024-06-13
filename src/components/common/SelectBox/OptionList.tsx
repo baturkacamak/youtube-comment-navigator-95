@@ -28,7 +28,7 @@ const OptionList: React.FC<OptionListProps> = ({ options, highlightedIndex, hand
                         id={`option-${index}`}
                     >
                         {option.icon && <option.icon className="w-5 h-5 mr-2" />}
-                        <span dangerouslySetInnerHTML={{ __html: option.label.replace(new RegExp(searchTerm, 'gi'), match => `<strong>${match}</strong>`) }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: t(option.label).replace(new RegExp(searchTerm, 'gi'), match => `<strong>${match}</strong>`) }}></span>
                     </button>
                 ))
             ) : (
