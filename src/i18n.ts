@@ -39,23 +39,33 @@ const getLoadPath = (): string | null => {
     return null; // In production, we will use the injected resources
 };
 
+// Create the configuration object dynamically
+const i18nConfig: any = {
+    fallbackLng: 'en',
+    lng: 'en',
+    debug: isLocalEnvironment(),
+    interpolation: {
+        escapeValue: false,
+    },
+    backend: {
+        loadPath: getLoadPath() || undefined, // Handle the null case
+    },
+    supportedLngs: supportedLanguages,
+};
+
+// Only add resources key if not in local environment
+if (!isLocalEnvironment()) {
+    const initialResources = loadLocaleFromDOM(i18n.language);
+    if (initialResources) {
+        i18nConfig.resources = initialResources;
+    }
+}
+
 i18n
     .use(HttpBackend)
     .use(LanguageDetector)
     .use(initReactI18next)
-    .init({
-        fallbackLng: 'en',
-        lng: 'en',
-        debug: isLocalEnvironment(),
-        interpolation: {
-            escapeValue: false,
-        },
-        backend: {
-            loadPath: getLoadPath() || undefined, // Handle the null case
-        },
-        supportedLngs: supportedLanguages,
-        resources: isLocalEnvironment() ? {} : loadLocaleFromDOM(i18n.language) || {}, // Load initial resources if available
-    });
+    .init(i18nConfig);
 
 // Listen for the language change and reload the necessary resources
 if (!isLocalEnvironment()) {
