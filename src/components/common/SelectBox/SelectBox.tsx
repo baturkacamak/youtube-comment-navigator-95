@@ -7,7 +7,7 @@ import SearchInput from './SearchInput';
 import OptionList from './OptionList';
 import { useTranslation } from 'react-i18next';
 
-const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName, isSearchable = false }) => {
+const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName, isSearchable = false, DefaultIcon: DefaultIcon }) => {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -95,7 +95,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
                 onClick={() => setIsOpen(prevIsOpen => !prevIsOpen)}
             >
                 <span className="flex items-center">
-                    {selectedOption.icon && <selectedOption.icon className="w-5 h-5 mr-2" />}
+                    {selectedOption.icon ? <selectedOption.icon className="w-5 h-5 mr-2" /> : DefaultIcon && <DefaultIcon className="w-5 h-5 mr-2" />}
                     {t(selectedOption.label) || t('Select an option')}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
