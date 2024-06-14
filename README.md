@@ -1,7 +1,5 @@
 # 🎉 YouTube Comment Navigator 95 🎉
 
-**Author**: Batur Kacamak
-
 ## Overview
 
 YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouTube experience by improving the comments section. It makes it easier to search, filter, and navigate through comments, helping you find specific feedback, popular comments, or replies more efficiently.
@@ -13,6 +11,9 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 - 🔎 **Filter Comments**: Apply various filters to view only the comments that matter to you.
 - 🌙 **Dark Mode Support**: Seamlessly integrates with YouTube's dark mode.
 - 📊 **Advanced Sorting**: Sort comments based on different criteria like likes, replies, and more.
+- 🌐 **Multilingual Support**: Choose your preferred language from a wide range of options.
+- 🔄 **Randomize Order**: Randomize the order of comments for a fresh perspective.
+- 🧩 **Customizable Themes**: Switch between different themes to personalize your experience.
 
 ## 🚀 Installation
 
@@ -58,7 +59,7 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 
 ## 🛠️ Support and Feedback
 
-For any issues, suggestions, or feedback, please contact the author Batur Kacamak at [📧 baturkacamak@gmail.com](mailto:baturkacamak@gmail.com).
+For any issues, suggestions, or feedback, please contact the author Batur Kacamak at [📧 hello@batur.info](mailto:hello@batur.info).
 
 ## 📜 License
 
