@@ -29,12 +29,12 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
-                <div className="flex items-center" aria-hidden="true">
-                    <HandThumbUpIcon className="w-4 h-4 mr-1" />
+                <div className="flex items-center">
+                    <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                     <span className="text-sm font-bold" aria-label={t('Likes')}>{comment.likes}</span>
                 </div>
-                <div className="flex items-center" aria-hidden="true">
-                    <ClockIcon className="w-4 h-4 mr-1" />
+                <div className="flex items-center">
+                    <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
                     <span className="text-sm" aria-label={t('Published date')}>{comment.published}</span>
                 </div>
             </div>
