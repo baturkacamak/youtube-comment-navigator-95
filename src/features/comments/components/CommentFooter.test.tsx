@@ -11,8 +11,12 @@ jest.mock('react-i18next', () => ({
 
 const mockProps: CommentActionsProps = {
     comment: {
-        likes: 10,
+        commentId: 'comment123',
+        content: 'This is a sample comment',
+        publishedDate: new Date('2024-06-14T12:00:00Z').getTime(), // Convert to timestamp
         published: '2024-06-14',
+        likes: 10,
+        replyCount: 2,
         isAuthorContentCreator: true,
         isDonated: true,
         donationAmount: '$10',
@@ -22,7 +26,10 @@ const mockProps: CommentActionsProps = {
         authorBadgeUrl: 'https://example.com/badge.png',
         authorChannelId: 'UC12345',
         authorAvatarUrl: 'https://example.com/avatar.png',
-        author: 'John Doe'
+        author: 'John Doe',
+        replyLevel: 0,
+        hasTimestamp: false,
+        hasLinks: false
     },
     commentId: 'comment123',
     replyCount: 5,
