@@ -16,10 +16,10 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({ name, icon, value, chec
                 className="mr-2 form-checkbox h-5 w-5 text-teal-600 dark:text-teal-400 transition duration-150 ease-in-out"
                 aria-checked={checked}
                 aria-disabled={disabled}
-                aria-label={t(name)}
+                aria-label={name}
             />
             {icon}
-            <span className="truncate">{t(name)}</span>
+            <span className="truncate">{name}</span>
         </label>
     );
 };
