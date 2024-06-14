@@ -16,11 +16,11 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
     };
 
     const filterOptions = [
-        { name: 'timestamps', icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('timestamps', 'swing')}`} /> },
-        { name: 'heart', icon: <HeartIcon className={`w-5 h-5 mr-2 ${getAnimationClass('heart', 'heartBeat')}`} /> },
-        { name: 'links', icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} /> },
-        { name: 'members', icon: <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} /> },
-        { name: 'donated', icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} /> },
+        { name: t('Timestamps'), icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('timestamps', 'swing')}`} /> },
+        { name: t('Heart'), icon: <HeartIcon className={`w-5 h-5 mr-2 ${getAnimationClass('heart', 'heartBeat')}`} /> },
+        { name: t('Links'), icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} /> },
+        { name: t('Members'), icon: <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} /> },
+        { name: t('Donated'), icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} /> },
     ];
 
     return (
