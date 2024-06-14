@@ -89,7 +89,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
                     aria-label={t('Load more comments')}
                 >
                     <ChevronDownIcon className="w-5 h-5 mr-2" aria-hidden="true" />
-                    {t('Load More Comments ({remainingComments} remaining)', { remainingComments })}
+                    {t('Load More Comments ({{remainingComments}} remaining)', { remainingComments })}
                 </button>
             )}
         </div>
