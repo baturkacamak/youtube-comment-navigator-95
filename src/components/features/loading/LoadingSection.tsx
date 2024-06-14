@@ -21,9 +21,9 @@ const LoadingSection: React.FC<LoadingSectionProps> = ({
             <Button
                 onClick={() => onLoadComments(true)}
                 icon={ChatBubbleOvalLeftIcon}
-                label={t('Load Comments', { count: commentsCount })}
+                label={t('Load Comments ({{count}})', { count: commentsCount })}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Comments', { count: commentsCount })}
+                aria-label={t('Load Comments ({{count}})', { count: commentsCount })}
             />
             <Button
                 onClick={onLoadChat}
