@@ -4,7 +4,7 @@ import './styles/index.css';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store/store';
-import { isLocalEnvironment } from "./utils/environmentVariables";
+import { isLocalEnvironment } from "./features/shared/utils/environmentVariables";
 import './i18n';
 import { getLanguageDirection } from './i18n';
 import i18n from './i18n'; // Import i18n to access the current language

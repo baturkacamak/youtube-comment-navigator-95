@@ -1,11 +1,11 @@
 // src/App.tsx
 import React, { useState } from 'react';
-import SettingsDrawer from './components/common/SettingsDrawer';
-import ControlPanel from './components/features/sidebar/ControlPanel';
-import SearchBar from './components/features/search/SearchBar';
-import CommentList from './components/features/comments/CommentList';
-import useAppState from './hooks/useAppState';
-import useHandleUrlChange from "./hooks/useHandleUrlChange";
+import SettingsDrawer from './features/settings/components/SettingsDrawer';
+import ControlPanel from './features/sidebar/components/ControlPanel';
+import SearchBar from './features/search/components/SearchBar';
+import CommentList from './features/comments/components/CommentList';
+import useAppState from './features/shared/hooks/useAppState';
+import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
 import './styles/App.scss';
 
 const App: React.FC = () => {

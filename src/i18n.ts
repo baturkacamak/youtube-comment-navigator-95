@@ -2,8 +2,8 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { supportedLanguages } from './utils/environmentVariables'; // Adjust the path as needed
-import { isLocalEnvironment } from './utils/environmentVariables'; // Import environment check
+import { supportedLanguages } from './features/shared/utils/environmentVariables'; // Adjust the path as needed
+import { isLocalEnvironment } from './features/shared/utils/environmentVariables'; // Import environment check
 
 const languageDirections: { [key: string]: 'ltr' | 'rtl' } = {
     ar: 'rtl',
