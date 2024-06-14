@@ -15,8 +15,17 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
             aria-label={t('Replies')}
         >
             <div className="mt-4 space-y-4">
-                {replies.map(reply => (
-                    <CommentItem key={reply.commentId} comment={reply} className="ml-10" aria-label={t('Reply')} />
+                {replies.map((reply, index) => (
+                    <CommentItem
+                        key={reply.commentId}
+                        comment={reply}
+                        className="ml-10"
+                        bgColor={index % 2 === 0 ? 'bg-teal-100' : 'bg-teal-200'}
+                        darkBgColor={index % 2 === 0 ? 'dark:bg-teal-700' : 'dark:bg-teal-900'}
+                        borderColor="border-gray-300"
+                        darkBorderColor="dark:border-gray-600"
+                        aria-label={t('Reply')}
+                    />
                 ))}
             </div>
         </div>
