@@ -18,7 +18,7 @@ import {Option} from "../../../types/utilityTypes"; // Import supported language
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
     const {t} = useTranslation();
 
-    const themeOptions = [
+    const themeOptions: Option[] = [
         {value: 'light', label: t('Light'), icon: SunIcon},
         {value: 'dark', label: t('Dark'), icon: MoonIcon}
     ];
