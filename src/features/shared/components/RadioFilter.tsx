@@ -3,7 +3,7 @@ import { ArrowPathIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { RadioFilterProps } from "../../../types/filterTypes";
 
-const RadioFilter: React.FC<RadioFilterProps> = ({ name, icon, value, selectedValue, sortOrder, isRandom, onChange, onToggleSortOrder }) => {
+const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, selectedValue, sortOrder, isRandom, onChange, onToggleSortOrder }) => {
     const [spin, setSpin] = useState(false);
     const { t } = useTranslation();
 
@@ -28,7 +28,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, icon, value, selectedVa
                 aria-label={name}
             />
             {icon}
-            <span className="truncate">{name.charAt(0).toUpperCase() + name.slice(1).replace(/([A-Z])/g, ' $1')}</span>
+            <span className="truncate">{label}</span>
             {selectedValue === value && (
                 <button
                     onClick={isRandom ? handleRandomClick : onToggleSortOrder}

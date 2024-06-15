@@ -1,7 +1,6 @@
 // src/components/common/SelectBox/OptionList.tsx
 import React from 'react';
 import { Option } from '../../../../types/utilityTypes';
-import { useTranslation } from 'react-i18next';
 
 interface OptionListProps {
     options: Option[];
@@ -11,8 +10,6 @@ interface OptionListProps {
 }
 
 const OptionList: React.FC<OptionListProps> = ({ options, highlightedIndex, handleOptionClick, searchTerm }) => {
-    const { t } = useTranslation();
-
     return (
         <div className="py-1 max-h-60 overflow-y-auto custom-scrollbar" role="listbox" aria-activedescendant={`option-${highlightedIndex}`}>
             {options.length > 0 ? (
@@ -28,12 +25,12 @@ const OptionList: React.FC<OptionListProps> = ({ options, highlightedIndex, hand
                         id={`option-${index}`}
                     >
                         {option.icon && <option.icon className="w-5 h-5 mr-2" />}
-                        <span dangerouslySetInnerHTML={{ __html: t(option.label).replace(new RegExp(searchTerm, 'gi'), match => `<strong>${match}</strong>`) }}></span>
+                        <span dangerouslySetInnerHTML={{ __html: option.label.replace(new RegExp(searchTerm, 'gi'), match => `<strong>${match}</strong>`) }}></span>
                     </button>
                 ))
             ) : (
                 <div className="px-4 py-2 text-sm text-gray-800 dark:text-gray-200">
-                    {t('No options available')}
+                    No options available
                 </div>
             )}
         </div>

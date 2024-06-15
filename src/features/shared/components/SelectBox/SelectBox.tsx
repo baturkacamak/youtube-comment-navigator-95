@@ -1,17 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { SelectBoxProps } from "../../../../types/filterTypes";
-import { Option } from "../../../../types/utilityTypes";
-import { normalizeString } from '../../utils/normalizeString';
+import React, {useEffect, useRef, useState} from 'react';
+import {ChevronDownIcon} from '@heroicons/react/24/outline';
+import {SelectBoxProps} from "../../../../types/filterTypes";
+import {Option} from "../../../../types/utilityTypes";
+import {normalizeString} from '../../utils/normalizeString';
 import SearchInput from './SearchInput';
 import OptionList from './OptionList';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 
-const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelectedOption, buttonClassName, isSearchable = false, DefaultIcon: DefaultIcon }) => {
+const SelectBox: React.FC<SelectBoxProps> = ({
+                                                 options,
+                                                 selectedOption,
+                                                 setSelectedOption,
+                                                 buttonClassName,
+                                                 isSearchable = false,
+                                                 DefaultIcon,
+                                             }) => {
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(0);
-    const [filteredOptions, setFilteredOptions] = useState(options.map(option => ({ ...option, label: t(option.label) })));
+    const [filteredOptions, setFilteredOptions] = useState(options);
     const [searchTerm, setSearchTerm] = useState('');
     const menuRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
@@ -21,7 +28,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
         setHighlightedIndex(index);
         setIsOpen(false);
         setSearchTerm('');
-        setFilteredOptions(options.map(option => ({ ...option, label: t(option.label) })));
+        setFilteredOptions(options);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -39,7 +46,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
                 setSelectedOption(filteredOptions[highlightedIndex]);
                 setIsOpen(false);
                 setSearchTerm('');
-                setFilteredOptions(options.map(option => ({ ...option, label: t(option.label) })));
+                setFilteredOptions(options);
                 break;
             case 'Escape':
                 event.preventDefault();
@@ -77,12 +84,12 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
         if (isSearchable) {
             const normalizedSearchTerm = normalizeString(searchTerm);
             const filtered = options.filter(option =>
-                normalizeString(t(option.label)).includes(normalizedSearchTerm)
+                normalizeString(option.label).includes(normalizedSearchTerm)
             );
             setFilteredOptions(filtered);
             setHighlightedIndex(0);
         }
-    }, [searchTerm, options, isSearchable, t]);
+    }, [searchTerm, options, isSearchable]);
 
     return (
         <div className="relative inline-block text-left w-48 h-10">
@@ -96,7 +103,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({ options, selectedOption, setSelec
             >
                 <span className="flex items-center">
                     {selectedOption.icon ? <selectedOption.icon className="w-5 h-5 mr-2" /> : DefaultIcon && <DefaultIcon className="w-5 h-5 mr-2" />}
-                    {t(selectedOption.label) || t('Select an option')}
+                    {selectedOption.label || t('Select an option')}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
             </button>
