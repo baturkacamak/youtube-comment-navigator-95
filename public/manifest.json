@@ -4,7 +4,6 @@
   "description": "Search and filter YouTube comments with a nostalgic 90s vibe.",
   "version": "0.1.1",
   "action": {
-    "default_popup": "index.html",
     "default_icon": {
       "16": "icon16.png",
       "48": "icon48.png",
