@@ -1,8 +1,8 @@
-const DEFAULT_CACHE_EXPIRATION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+export const DEFAULT_CACHE_EXPIRATION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 const DEFAULT_DB_NAME = 'commentsCacheDB';
 const DEFAULT_STORE_NAME = 'comments';
 
-function openDatabaseConnection(dbName: string = DEFAULT_DB_NAME, storeName: string = DEFAULT_STORE_NAME): Promise<IDBDatabase> {
+export function openDatabaseConnection(dbName: string = DEFAULT_DB_NAME, storeName: string = DEFAULT_STORE_NAME): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(dbName, 1);
         request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
@@ -29,10 +29,11 @@ export const retrieveDataFromDB = async (
     return new Promise((resolve, reject) => {
         const transaction = getObjectStoreTransaction(db, storeName, 'readonly');
         const request = transaction.get(key);
-        request.onsuccess = () => resolve(request.result);
+        request.onsuccess = () => resolve(request.result ? request.result.data : null);
         request.onerror = (event: Event) => reject((event.target as IDBRequest).error);
     });
 };
+
 
 export const isCacheValid = (cachedData: any, cacheDuration: number = DEFAULT_CACHE_EXPIRATION_DURATION): boolean => {
     if (!cachedData) return false;
