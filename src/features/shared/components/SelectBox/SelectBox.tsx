@@ -1,11 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {ChevronDownIcon} from '@heroicons/react/24/outline';
-import {SelectBoxProps} from "../../../../types/filterTypes";
-import {Option} from "../../../../types/utilityTypes";
-import {normalizeString} from '../../utils/normalizeString';
+import React, { useEffect, useRef, useState } from 'react';
+import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { SelectBoxProps } from "../../../../types/filterTypes";
+import { Option } from "../../../../types/utilityTypes";
+import { normalizeString } from '../../utils/normalizeString';
 import SearchInput from './SearchInput';
 import OptionList from './OptionList';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const SelectBox: React.FC<SelectBoxProps> = ({
                                                  options,
@@ -18,17 +18,29 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(0);
-    const [filteredOptions, setFilteredOptions] = useState(options);
+    const [filteredOptions, setFilteredOptions] = useState<Option[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const menuRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        // Translate the options when the component mounts or when the options change
+        const translatedOptions = options.map(option => ({
+            ...option,
+            label: t(option.label)
+        }));
+        setFilteredOptions(translatedOptions);
+    }, [options, t]);
 
     const handleOptionClick = (option: Option, index: number) => {
         setSelectedOption(option);
         setHighlightedIndex(index);
         setIsOpen(false);
         setSearchTerm('');
-        setFilteredOptions(options);
+        setFilteredOptions(options.map(option => ({
+            ...option,
+            label: t(option.label)
+        })));
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -46,7 +58,10 @@ const SelectBox: React.FC<SelectBoxProps> = ({
                 setSelectedOption(filteredOptions[highlightedIndex]);
                 setIsOpen(false);
                 setSearchTerm('');
-                setFilteredOptions(options);
+                setFilteredOptions(options.map(option => ({
+                    ...option,
+                    label: t(option.label)
+                })));
                 break;
             case 'Escape':
                 event.preventDefault();
@@ -84,12 +99,12 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         if (isSearchable) {
             const normalizedSearchTerm = normalizeString(searchTerm);
             const filtered = options.filter(option =>
-                normalizeString(option.label).includes(normalizedSearchTerm)
+                normalizeString(t(option.label)).includes(normalizedSearchTerm)
             );
             setFilteredOptions(filtered);
             setHighlightedIndex(0);
         }
-    }, [searchTerm, options, isSearchable]);
+    }, [searchTerm, options, isSearchable, t]);
 
     return (
         <div className="relative inline-block text-left w-48 h-10">
@@ -103,7 +118,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
             >
                 <span className="flex items-center">
                     {selectedOption.icon ? <selectedOption.icon className="w-5 h-5 mr-2" /> : DefaultIcon && <DefaultIcon className="w-5 h-5 mr-2" />}
-                    {selectedOption.label || t('Select an option')}
+                    {t(selectedOption.label) || t('Select an option')}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
             </button>
