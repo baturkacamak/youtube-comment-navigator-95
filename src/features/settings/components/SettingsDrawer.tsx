@@ -7,7 +7,6 @@ import ThemeSetting from './ThemeSetting';
 import TextSizeSetting from './TextSizeSetting';
 import LanguageSetting from './LanguageSetting';
 import SettingsInfo from './SettingsInfo';
-import GoogleDriveButtons from './GoogleDriveButtons';
 
 // Dummy implementation for useGoogleDrive
 const useGoogleDrive = () => {
@@ -64,13 +63,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                             <LanguageSetting />
                         </div>
                     </div>
-                    <GoogleDriveButtons
-                        isSignedIn={isSignedIn}
-                        signIn={signIn}
-                        signOut={signOut}
-                        handleSaveSettings={handleSaveSettings}
-                        handleLoadSettings={handleLoadSettings}
-                    />
                     <SettingsInfo />
                 </div>
                 <div className="flex-1" onClick={onClose}></div>
