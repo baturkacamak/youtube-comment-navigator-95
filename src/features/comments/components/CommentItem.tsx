@@ -60,7 +60,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             <div
                 ref={parentCommentRef}
                 id={`parent-comment-${comment.commentId}`} // Unique identifier for each comment thread
-                className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-4 p-4 sticky top-24 left-0 z-10' : ''}`}
+                className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-2 p-2 sticky top-24 left-0 z-10' : ''}`}
                 role="article"
                 aria-labelledby={`comment-content-${comment.commentId}`}
                 aria-describedby={`comment-footer-${comment.commentId}`}
