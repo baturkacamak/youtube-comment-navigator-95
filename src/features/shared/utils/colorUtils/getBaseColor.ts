@@ -45,26 +45,34 @@ const getBaseColor = (color: string) => {
                 textColor: 'text-gray-900',
                 darkTextColor: 'dark:text-white'
             };
+// Inside the function where you set the colors
         case baseColors.defaultEven:
             return {
-                bgColor: 'bg-gradient-to-r from-teal-100 to-teal-300',
-                darkBgColor: 'dark:bg-gradient-to-r dark:from-teal-700 dark:to-teal-900',
-                borderColor: 'border-2 border-teal-400',
-                darkBorderColor: 'dark:border-teal-600',
-                textColor: 'text-gray-900',
+                bgColor: 'bg-gradient-to-r from-gray-100 to-teal-100',
+                darkBgColor: 'dark:bg-gradient-to-r dark:from-gray-900 dark:to-teal-900',
+                borderColor: 'border-2 border-gray-400',
+                darkBorderColor: 'dark:border-teal-700',
+                textColor: 'text-black',
                 darkTextColor: 'dark:text-white'
             };
         case baseColors.defaultOdd:
             return {
-                bgColor: 'bg-gradient-to-r from-emerald-100 to-emerald-300',
-                darkBgColor: 'dark:bg-gradient-to-r dark:from-emerald-700 dark:to-emerald-900',
-                borderColor: 'border-2 border-emerald-400',
-                darkBorderColor: 'dark:border-emerald-600',
-                textColor: 'text-gray-900',
+                bgColor: 'bg-gradient-to-r from-blue-100 to-gray-100',
+                darkBgColor: 'dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900',
+                borderColor: 'border-2 border-blue-400',
+                darkBorderColor: 'dark:border-blue-700',
+                textColor: 'text-black',
                 darkTextColor: 'dark:text-white'
             };
         default:
-            return {};
+            return {
+                bgColor: 'bg-white',
+                darkBgColor: 'dark:bg-gray-800',
+                borderColor: 'border-gray-300',
+                darkBorderColor: 'dark:border-gray-600',
+                textColor: 'text-gray-900',
+                darkTextColor: 'dark:text-white'
+            };
     }
 };
 
