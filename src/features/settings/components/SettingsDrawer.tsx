@@ -217,6 +217,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
                                     buttonClassName="w-full rounded-lg"
                                     isSearchable={true}
                                     DefaultIcon={LanguageIcon}
+                                    isLabelTranslatable={false}
                                 />
                             </div>
                         </div>

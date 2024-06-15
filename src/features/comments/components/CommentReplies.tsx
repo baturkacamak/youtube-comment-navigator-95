@@ -17,7 +17,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
             <div className="mt-4 space-y-4">
                 {replies.map((reply, index) => (
                     <CommentItem
-                        key={reply.commentId}
+                        key={`${reply.commentId}-${index}`}
                         comment={reply}
                         className="ml-10"
                         bgColor={index % 2 === 0 ? 'bg-teal-100' : 'bg-teal-200'}

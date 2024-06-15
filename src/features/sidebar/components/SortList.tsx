@@ -36,32 +36,38 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
 
     const sortOptions = [
         {
-            name: t('Likes'),
+            name: 'Likes',
+            label: t('Likes'),
             icon: <HandThumbUpIcon className={`w-5 h-5 mr-2 ${getAnimationClass('likes', 'heartBeat')}`} />,
             value: 'likes'
         },
         {
-            name: t('Length'),
+            name: 'Length',
+            label: t('Length'),
             icon: <ChartBarIcon className={`w-5 h-5 mr-2 ${getAnimationClass('length', 'flash')}`} />,
             value: 'length'
         },
         {
-            name: t('Replies'),
+            name: 'Replies',
+            label: t('Replies'),
             icon: <ChatBubbleLeftRightIcon className={`w-5 h-5 mr-2 ${getAnimationClass('replies', 'bounceIn')}`} />,
             value: 'replies'
         },
         {
-            name: t('Date'),
+            name: 'Date',
+            label: t('Date'),
             icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('date', 'swing')}`} />,
             value: 'date'
         },
         {
-            name: t('Author'),
+            name: 'Author',
+            label: t('Author'),
             icon: <UserIcon className={`w-5 h-5 mr-2 ${getAnimationClass('author', 'rubberBand')}`} />,
             value: 'author'
         },
         {
-            name: t('Random'),
+            name: 'Random',
+            label: t('Random'),
             icon: <ArrowsUpDownIcon className={`w-5 h-5 mr-2 ${getAnimationClass('random', 'flip')}`} />,
             value: 'random'
         },
@@ -73,6 +79,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
                 <div key={option.value}>
                     <RadioFilter
                         name={option.name}
+                        label={option.label}
                         icon={option.icon}
                         value={option.value}
                         selectedValue={filters.sortBy}
@@ -80,7 +87,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
                         isRandom={option.value === 'random'}
                         onChange={option.value === 'random' ? handleRandomChange : handleRadioChange}
                         onToggleSortOrder={option.value === 'random' ? handleRandomChange : toggleSortOrder}
-                        aria-label={t(`Sort by ${option.name}`)}
+                        aria-label={t(`Sort By`) + option.label}
                     />
                 </div>
             ))}

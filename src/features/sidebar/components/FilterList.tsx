@@ -16,11 +16,11 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
     };
 
     const filterOptions = [
-        { name: t('Timestamps'), icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('timestamps', 'swing')}`} /> },
-        { name: t('Heart'), icon: <HeartIcon className={`w-5 h-5 mr-2 ${getAnimationClass('heart', 'heartBeat')}`} /> },
-        { name: t('Links'), icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} /> },
-        { name: t('Members'), icon: <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} /> },
-        { name: t('Donated'), icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} /> },
+        { name: 'timestamps', label: t('Timestamps'), icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('timestamps', 'swing')}`} /> },
+        { name: 'heart', label: t('Heart'), icon: <HeartIcon className={`w-5 h-5 mr-2 ${getAnimationClass('heart', 'heartBeat')}`} /> },
+        { name: 'links', label: t('Links'), icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} /> },
+        { name: 'members', label: t('Members'), icon: <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} /> },
+        { name: 'donated', label: t('Donated'), icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} /> },
     ];
 
     return (
@@ -28,7 +28,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
             {filterOptions.map(option => (
                 <div key={option.name}>
                     <CheckboxFilter
-                        name={option.name}
+                        name={option.label}
                         icon={option.icon}
                         value={option.name}
                         checked={filters[option.name]}
