@@ -37,6 +37,7 @@ export interface FilterListProps {
 
 export interface RadioFilterProps {
     name: string;
+    label: string;
     icon: JSX.Element;
     value: string;
     selectedValue: string;
