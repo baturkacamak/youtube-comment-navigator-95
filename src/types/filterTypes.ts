@@ -67,6 +67,8 @@ export interface ControlPanelProps {
     repliesCount: number;
     transcriptsCount: number;
     openSettings: () => void;
+    toggleBookmarkedComments: () => void;
+    showBookmarkedComments: boolean;
 }
 
 export interface AdvancedSortingProps {

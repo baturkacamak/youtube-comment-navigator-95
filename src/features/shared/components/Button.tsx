@@ -1,8 +1,7 @@
 import React from 'react';
+import { ButtonProps } from "../../../types/buttonTypes";
 
-import {ButtonProps} from "../../../types/buttonTypes";
-
-const Button: React.FC<ButtonProps> = ({ onClick, icon: Icon, label, className }) => {
+const Button: React.FC<ButtonProps> = ({ onClick, icon: Icon, label, className, iconOnly }) => {
     return (
         <button
             onClick={onClick}
@@ -10,7 +9,7 @@ const Button: React.FC<ButtonProps> = ({ onClick, icon: Icon, label, className }
             aria-label={label}
         >
             <Icon className="w-5 h-5" />
-            <span>{label}</span>
+            {!iconOnly && <span>{label}</span>}
         </button>
     );
 };

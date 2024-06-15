@@ -1,0 +1,48 @@
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import CommentItem from './CommentItem';
+import { Comment } from '../../../types/commentTypes';
+import Box from '../../shared/components/Box';
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
+
+const BookmarkedComments: React.FC = () => {
+    const { t } = useTranslation();
+    const [bookmarkedComments, setBookmarkedComments] = useState<Comment[]>([]);
+
+    useEffect(() => {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        const storedComments = JSON.parse(localStorage.getItem('storedComments') || '[]');
+        const filteredComments = storedComments.filter((comment: Comment) => bookmarks.includes(comment.commentId));
+        setBookmarkedComments(filteredComments);
+    }, []);
+
+    if (bookmarkedComments.length === 0) {
+        return (
+            <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
+                <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
+                <p className="text-lg text-gray-800 dark:text-gray-200">{t('No bookmarked comments found.')}</p>
+            </Box>
+        );
+    }
+
+    return (
+        <div className="flex flex-col">
+            {bookmarkedComments.map((comment, index) => (
+                <CommentItem
+                    key={comment.commentId}
+                    comment={comment}
+                    replies={[]} // Add logic to fetch and display replies if necessary
+                    className={`text-gray-800 dark:text-gray-200 ${index % 2 === 0 ? 'bg-teal-100 dark:bg-teal-700' : 'bg-teal-200 dark:bg-teal-900'}`}
+                    bgColor={index % 2 === 0 ? 'bg-teal-100' : 'bg-teal-200'}
+                    darkBgColor={index % 2 === 0 ? 'dark:bg-teal-700' : 'dark:bg-teal-900'}
+                    borderColor="border-gray-300"
+                    darkBorderColor="dark:border-gray-600"
+                    videoTitle={comment.videoTitle} // Assuming videoTitle is part of the comment object
+                    videoThumbnailUrl={`https://img.youtube.com/vi/${comment.videoId}/default.jpg`} // Generate thumbnail URL
+                />
+            ))}
+        </div>
+    );
+};
+
+export default BookmarkedComments;

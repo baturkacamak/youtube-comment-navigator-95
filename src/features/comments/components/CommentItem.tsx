@@ -17,6 +17,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
                                                      darkBgColor,
                                                      borderColor,
                                                      darkBorderColor,
+                                                     videoTitle,
+                                                     videoThumbnailUrl,
                                                  }) => {
     const { t } = useTranslation();
     const [copySuccess, setCopySuccess] = useState(false);
@@ -47,6 +49,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     };
 
     const isSticky = useSticky(parentCommentRef, showReplies);
+    const videoUrl = `https://www.youtube.com/watch?v=${comment.videoId}`;
 
     return (
         <Box
@@ -66,7 +69,17 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 aria-describedby={`comment-footer-${comment.commentId}`}
             >
                 <div className="flex items-start w-full">
+                    {videoThumbnailUrl && (
+                        <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+                            <img src={videoThumbnailUrl} alt="Video Thumbnail" className="w-16 h-9 mr-4" />
+                        </a>
+                    )}
                     <div className="flex-1">
+                        {videoTitle && (
+                            <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold mb-2 block">
+                                {videoTitle}
+                            </a>
+                        )}
                         <CommentBody
                             content={comment.content}
                             handleTimestampClick={handleTimestampClick}

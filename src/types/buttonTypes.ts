@@ -3,4 +3,5 @@ export interface ButtonProps {
     icon: any;
     label: string;
     className?: string;
+    iconOnly?: boolean;
 }

@@ -1,15 +1,17 @@
-// src/App.tsx
 import React, { useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
 import CommentList from './features/comments/components/CommentList';
+import BookmarkedComments from './features/comments/components/BookmarkedComments';
 import useAppState from './features/shared/hooks/useAppState';
 import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
 import './styles/App.scss';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const App: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [showBookmarked, setShowBookmarked] = useState(false);
 
     const openSettings = () => setIsSettingsOpen(true);
     const closeSettings = () => setIsSettingsOpen(false);
@@ -54,9 +56,33 @@ const App: React.FC = () => {
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                     openSettings={openSettings}
+                    toggleBookmarkedComments={() => setShowBookmarked(!showBookmarked)} // Pass the toggle function
+                    showBookmarkedComments={showBookmarked} // Pass the current state
                 />
                 <SearchBar onSearch={handleSearch} />
-                <CommentList comments={filteredAndSortedComments} isLoading={isLoading} />
+                <AnimatePresence mode={"wait"}>
+                    {showBookmarked ? (
+                        <motion.div
+                            key="bookmarked"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <BookmarkedComments />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="comments"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <CommentList comments={filteredAndSortedComments} isLoading={isLoading} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </div>
     );

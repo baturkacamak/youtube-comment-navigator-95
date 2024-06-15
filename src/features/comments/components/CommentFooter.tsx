@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     BanknotesIcon,
     CheckCircleIcon,
@@ -7,10 +7,11 @@ import {
     ClockIcon,
     HandThumbUpIcon,
     HeartIcon,
-    LinkIcon
+    LinkIcon,
+    BookmarkIcon
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import { CommentActionsProps } from "../../../types/commentTypes";
+import {Comment, CommentActionsProps} from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../shared/components/Tooltip";
 
@@ -25,6 +26,35 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                                                       }) => {
     const { t } = useTranslation();
     const videoId = extractYouTubeVideoIdFromUrl();
+
+    const [isBookmarked, setIsBookmarked] = useState(false);
+
+    useEffect(() => {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        setIsBookmarked(bookmarks.includes(commentId));
+    }, [commentId]);
+
+    const handleBookmark = () => {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        let storedComments = JSON.parse(localStorage.getItem('storedComments') || '[]');
+
+        if (bookmarks.includes(commentId)) {
+            const updatedBookmarks = bookmarks.filter((id: string) => id !== commentId);
+            localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+            setIsBookmarked(false);
+        } else {
+            bookmarks.push(commentId);
+            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+
+            // Ensure the comment is stored locally
+            if (!storedComments.find((storedComment: Comment) => storedComment.commentId === commentId)) {
+                storedComments.push(comment);
+                localStorage.setItem('storedComments', JSON.stringify(storedComments));
+            }
+
+            setIsBookmarked(true);
+        }
+    };
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
@@ -82,6 +112,15 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                         <span className="text-sm">{showReplies ? t('Hide replies') : t('Show replies')} ({replyCount})</span>
                     </button>
                 )}
+                <button
+                    onClick={handleBookmark}
+                    className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
+                    title={t('Bookmark')}
+                    aria-label={t('Bookmark')}
+                >
+                    <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <span className="text-sm">{t('Bookmark')}</span>
+                </button>
             </div>
             <div className="flex items-center gap-4">
                 {comment.isAuthorContentCreator && (

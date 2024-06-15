@@ -21,6 +21,8 @@ export interface Comment {
     authorMemberSince?: string;
     hasTimestamp: boolean;
     hasLinks: boolean;
+    videoTitle?: string;
+    videoId?: string;
 }
 
 export interface CommentActionsProps {
@@ -50,6 +52,8 @@ export interface CommentItemProps {
     darkBgColor?: string;
     borderColor?: string;
     darkBorderColor?: string;
+    videoTitle?: string;
+    videoThumbnailUrl?: string;
 }
 
 export interface CommentListProps {
