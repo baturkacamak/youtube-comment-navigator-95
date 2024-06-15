@@ -1,7 +1,7 @@
 import {processRawJsonCommentsData} from "../utils/utils";
 import {fetchCommentJsonDataFromRemote} from "./youtubeComments";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {getValidCachedData, removeDataFromCache, storeDataInCache} from "../../shared/utils/cacheUtils";
+import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../shared/utils/cacheUtils";
 
 import {CommentData} from "../../../types/commentTypes";
 import {wildCardSearch} from "../../shared/utils/wildCardSearch";
@@ -58,7 +58,7 @@ export const fetchCommentsFromRemote = async (
         const LOCAL_STORAGE_KEY = CACHE_KEYS.FINAL(videoId);
         const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
-        const cachedData = await getValidCachedData(LOCAL_STORAGE_KEY);
+        const cachedData = await getCachedDataIfValid(LOCAL_STORAGE_KEY);
 
         if (cachedData) {
             onCommentsFetched(cachedData.items);
@@ -91,17 +91,17 @@ export const fetchCommentsFromRemote = async (
             totalComments.push(...processedData.items);
 
             // Update temporary cache and continuation token
-            await storeDataInCache(TEMP_CACHE_KEY, processedData);
+            await storeDataInDB(TEMP_CACHE_KEY, processedData, true);
             localStorage.setItem(CONTINUATION_TOKEN_KEY, token || '');
         } while (token);
 
         const finalProcessedData = processRawJsonCommentsData(allComments);
         if (finalProcessedData.items.length > 0) {
-            await storeDataInCache(LOCAL_STORAGE_KEY, totalComments);
+            await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
         }
 
         // Clear temporary cache and continuation token
-        await removeDataFromCache(TEMP_CACHE_KEY);
+        await removeDataFromDB(TEMP_CACHE_KEY);
         localStorage.removeItem(CONTINUATION_TOKEN_KEY);
 
     } catch (error) {

@@ -3,7 +3,7 @@ import {useDispatch} from 'react-redux';
 import {setComments, setInitialComments, updateCommentsData} from '../../../store/store';
 import {fetchCommentsIncrementally} from "../services/localFetch";
 import {Comment} from '../../../types/commentTypes'; // Import the Comment type
-import {getValidCachedData} from "../../shared/utils/cacheUtils";
+import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 
@@ -23,7 +23,7 @@ const useComments = () => {
                 // Check for final cache
                 const videoId = extractYouTubeVideoIdFromUrl();
                 const FINAL_CACHE_KEY = CACHE_KEYS.FINAL(videoId);
-                const finalCachedData = await getValidCachedData(FINAL_CACHE_KEY);
+                const finalCachedData = await getCachedDataIfValid(FINAL_CACHE_KEY);
 
                 if (finalCachedData) {
                     dispatch(setInitialComments(finalCachedData));
@@ -35,7 +35,7 @@ const useComments = () => {
                 // Check for temporary cache and continuation token
                 const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
                 const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
-                const tempCachedData = await getValidCachedData(TEMP_CACHE_KEY);
+                const tempCachedData = await getCachedDataIfValid(TEMP_CACHE_KEY);
                 const continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || undefined;
 
                 if (tempCachedData && continuationToken) {
