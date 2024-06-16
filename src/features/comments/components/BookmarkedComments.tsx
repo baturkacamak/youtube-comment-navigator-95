@@ -4,16 +4,19 @@ import CommentItem from './CommentItem';
 import { Comment } from '../../../types/commentTypes';
 import Box from '../../shared/components/Box';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { retrieveDataFromDB } from '../../shared/utils/cacheUtils';
 
 const BookmarkedComments: React.FC = () => {
     const { t } = useTranslation();
     const [bookmarkedComments, setBookmarkedComments] = useState<Comment[]>([]);
 
     useEffect(() => {
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-        const storedComments = JSON.parse(localStorage.getItem('storedComments') || '[]');
-        const filteredComments = storedComments.filter((comment: Comment) => bookmarks.includes(comment.commentId));
-        setBookmarkedComments(filteredComments);
+        const fetchBookmarkedComments = async () => {
+            const bookmarks = await retrieveDataFromDB('bookmarks');
+            setBookmarkedComments(bookmarks || []);
+        };
+
+        fetchBookmarkedComments();
     }, []);
 
     if (bookmarkedComments.length === 0) {

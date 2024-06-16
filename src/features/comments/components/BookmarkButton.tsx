@@ -16,29 +16,21 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
     useEffect(() => {
         const checkBookmarkStatus = async () => {
             const bookmarks = await retrieveDataFromDB('bookmarks');
-            setIsBookmarked(bookmarks?.includes(commentId));
+            setIsBookmarked(bookmarks?.some((bookmark: Comment) => bookmark.commentId === commentId));
         };
         checkBookmarkStatus();
     }, [commentId]);
 
     const handleBookmark = async () => {
         const bookmarks = (await retrieveDataFromDB('bookmarks')) || [];
-        let storedComments = (await retrieveDataFromDB('storedComments')) || [];
 
-        if (bookmarks.includes(commentId)) {
-            const updatedBookmarks = bookmarks.filter((id: string) => id !== commentId);
+        if (bookmarks.some((bookmark: Comment) => bookmark.commentId === commentId)) {
+            const updatedBookmarks = bookmarks.filter((bookmark: Comment) => bookmark.commentId !== commentId);
             await storeDataInDB('bookmarks', updatedBookmarks);
             setIsBookmarked(false);
         } else {
-            bookmarks.push(commentId);
+            bookmarks.push(comment);
             await storeDataInDB('bookmarks', bookmarks);
-
-            // Ensure the comment is stored locally
-            if (!storedComments.find((storedComment: Comment) => storedComment.commentId === commentId)) {
-                storedComments.push(comment);
-                await storeDataInDB('storedComments', storedComments);
-            }
-
             setIsBookmarked(true);
         }
     };
