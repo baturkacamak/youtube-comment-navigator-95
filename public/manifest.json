@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "YouTube Comment Navigator 95",
   "description": "Search and filter YouTube comments with a nostalgic 90s vibe.",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "action": {
     "default_icon": {
       "16": "icon16.png",
