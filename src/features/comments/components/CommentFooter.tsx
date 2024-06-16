@@ -15,7 +15,7 @@ import { CommentActionsProps } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../shared/components/Tooltip";
 import BookmarkButton from './BookmarkButton';
-import translateTimeAgo from "../../settings/utils/translateTimeAgo";
+import getFormattedDate from "../../settings/utils/getFormattedDate";
 
 const CommentFooter: React.FC<CommentActionsProps> = ({
                                                           comment,
@@ -30,11 +30,6 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     const currentVideoId = extractYouTubeVideoIdFromUrl();
     const videoId = comment.videoId || currentVideoId; // Use stored videoId if available, otherwise use current videoId
 
-    const formatDate = (dateString: string) => {
-        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
@@ -44,7 +39,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                 </div>
                 <div className="flex items-center">
                     <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-                    <span className="text-sm" aria-label={t('Published date')}>{translateTimeAgo(comment.published)}</span>
+                    <span className="text-sm" aria-label={t('Published date')}>{getFormattedDate(comment.publishedDate)}</span>
                 </div>
             </div>
             <div className="flex items-center gap-6">
