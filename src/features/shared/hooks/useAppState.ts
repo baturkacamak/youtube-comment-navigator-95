@@ -1,8 +1,7 @@
-// src/hooks/useAppState.ts
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useMemo } from 'react';
 import { RootState } from '../../../types/rootState';
-import { setFilters } from '../../../store/store';
+import { setFilters, setShowBookmarked } from '../../../store/store';
 import useComments from '../../comments/hooks/useComments';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
@@ -18,6 +17,7 @@ const useAppState = () => {
     const originalComments = useSelector((state: RootState) => state.originalComments);
     const filters = useSelector((state: RootState) => state.filters);
     const isLoading = useSelector((state: RootState) => state.isLoading);
+    const showBookmarked = useSelector((state: RootState) => state.showBookmarked); // Add this line
     useSelector((state: RootState) => state.commentsCount);
     const repliesCount = useSelector((state: RootState) => state.repliesCount);
     const transcriptsCount = useSelector((state: RootState) => state.transcriptsCount);
@@ -37,6 +37,10 @@ const useAppState = () => {
         dispatch(setFilters(filters));
     }, [dispatch]);
 
+    const toggleShowBookmarked = useCallback(() => {
+        dispatch(setShowBookmarked(!showBookmarked));
+    }, [dispatch, showBookmarked]);
+
     return {
         comments,
         filters,
@@ -50,7 +54,9 @@ const useAppState = () => {
         loadTranscript,
         loadAll,
         filteredAndSortedComments,
-        setFiltersCallback
+        setFiltersCallback,
+        showBookmarked, // Add this line
+        toggleShowBookmarked, // Add this line
     };
 };
 

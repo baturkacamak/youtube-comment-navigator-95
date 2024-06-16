@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -11,7 +11,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 const App: React.FC = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [showBookmarked, setShowBookmarked] = useState(false);
 
     const openSettings = () => setIsSettingsOpen(true);
     const closeSettings = () => setIsSettingsOpen(false);
@@ -27,7 +26,9 @@ const App: React.FC = () => {
         isLoading,
         repliesCount,
         transcriptsCount,
-        setFiltersCallback
+        setFiltersCallback,
+        showBookmarked, // Get this from the hook
+        toggleShowBookmarked, // Get this from the hook
     } = useAppState();
 
     useHandleUrlChange();
@@ -54,8 +55,8 @@ const App: React.FC = () => {
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                     openSettings={openSettings}
-                    toggleBookmarkedComments={() => setShowBookmarked(!showBookmarked)} // Pass the toggle function
-                    showBookmarkedComments={showBookmarked} // Pass the current state
+                    toggleBookmarkedComments={toggleShowBookmarked} // Use the toggle function from the hook
+                    showBookmarkedComments={showBookmarked} // Use the state from the hook
                 />
                 <SearchBar onSearch={handleSearch} />
                 <AnimatePresence mode={"wait"}>

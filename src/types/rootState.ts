@@ -12,4 +12,5 @@ export interface RootState {
     repliesCount: number;
     transcriptsCount: number;
     textSize: string;
+    showBookmarked: boolean;
 }
