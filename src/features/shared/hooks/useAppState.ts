@@ -38,8 +38,10 @@ const useAppState = () => {
             dispatch(setBookmarkedComments(bookmarks || []));
         };
 
+        fetchBookmarkedComments(); // Fetch bookmarks on initial load
+
         if (showBookmarked) {
-            fetchBookmarkedComments();
+            fetchBookmarkedComments(); // Fetch bookmarks when showBookmarked is toggled
         }
     }, [showBookmarked, dispatch]);
 

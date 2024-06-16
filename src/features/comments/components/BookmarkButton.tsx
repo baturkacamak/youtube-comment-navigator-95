@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BookmarkIcon } from '@heroicons/react/24/outline';
+import { BookmarkIcon, BookmarkSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../types/rootState';
 import { Comment } from "../../../types/commentTypes";
 import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils";
+import { setBookmarkedComments } from '../../../store/store';
 
 interface BookmarkButtonProps {
     comment: Comment;
@@ -11,38 +14,40 @@ interface BookmarkButtonProps {
 
 const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     useEffect(() => {
-        const checkBookmarkStatus = async () => {
-            const bookmarks = await retrieveDataFromDB('bookmarks');
-            setIsBookmarked(bookmarks?.some((bookmark: Comment) => bookmark.commentId === commentId));
+        const checkBookmarkStatus = () => {
+            setIsBookmarked(bookmarkedComments.some((bookmark: Comment) => bookmark.commentId === commentId));
         };
         checkBookmarkStatus();
-    }, [commentId]);
+    }, [bookmarkedComments, commentId]);
 
     const handleBookmark = async () => {
-        const bookmarks = (await retrieveDataFromDB('bookmarks')) || [];
-
-        if (bookmarks.some((bookmark: Comment) => bookmark.commentId === commentId)) {
-            const updatedBookmarks = bookmarks.filter((bookmark: Comment) => bookmark.commentId !== commentId);
-            await storeDataInDB('bookmarks', updatedBookmarks);
-            setIsBookmarked(false);
+        let updatedBookmarks;
+        if (isBookmarked) {
+            updatedBookmarks = bookmarkedComments.filter((bookmark: Comment) => bookmark.commentId !== commentId);
         } else {
-            bookmarks.push(comment);
-            await storeDataInDB('bookmarks', bookmarks);
-            setIsBookmarked(true);
+            updatedBookmarks = [...bookmarkedComments, comment];
         }
+        await storeDataInDB('bookmarks', updatedBookmarks);
+        dispatch(setBookmarkedComments(updatedBookmarks));
     };
 
     return (
         <button
             onClick={handleBookmark}
-            className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
+            className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
             title={t('Bookmark')}
             aria-label={t('Bookmark')}
         >
-            <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+            {isBookmarked ? (
+                <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+            ) : (
+                <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+            )}
             <span className="text-sm">{t('Bookmark')}</span>
         </button>
     );

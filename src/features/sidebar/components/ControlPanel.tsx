@@ -10,6 +10,7 @@ import SettingsButton from '../../shared/components/SettingsButton';
 import Button from '../../shared/components/Button'; // Import your Button component
 import { useTranslation } from 'react-i18next';
 import { RootState } from '../../../types/rootState';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
                                                        filters,
@@ -54,18 +55,28 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <h3 className="text-lg font-bold text-teal-800 dark:text-teal-200" aria-label={t('YouTube Comment Navigator 95')}>
                     {t('YouTube Comment Navigator 95')}
                 </h3>
-                <Button
-                    onClick={toggleBookmarkedComments}
-                    icon={BookmarkIcon}
-                    label={`(${bookmarkCount})`}
-                    className={`text-white ${showBookmarkedComments ? 'bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800' : 'bg-teal-500 hover:bg-teal-600 dark:bg-teal-700 dark:hover:bg-teal-800'}`}
-                    iconOnly={bookmarkCount === 0}
-                />
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={bookmarkCount}
+                        initial={{scale: 1}}
+                        animate={{scale: [1, 1.1, 1], opacity: [1, 0.8, 1]}}
+                        exit={{scale: 1}}
+                        transition={{duration: 0.5, ease: 'easeInOut'}}
+                    >
+                        <Button
+                            onClick={toggleBookmarkedComments}
+                            icon={BookmarkIcon}
+                            label={`(${bookmarkCount})`}
+                            className={`text-white ${showBookmarkedComments ? 'bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800' : 'bg-teal-500 hover:bg-teal-600 dark:bg-teal-700 dark:hover:bg-teal-800'}`}
+                            iconOnly={bookmarkCount === 0}
+                        />
+                    </motion.div>
+                </AnimatePresence>
             </div>
-            <hr className="border border-solid border-gray-400 dark:border-gray-600" />
+            <hr className="border border-solid border-gray-400 dark:border-gray-600"/>
             <div className="flex justify-between">
                 <div className="flex flex-col gap-4">
-                    <div className="flex gap-4 items-center">
+                <div className="flex gap-4 items-center">
                         <FunnelIcon className="w-6 h-6" aria-hidden="true" />
                         <div className="flex gap-4">
                             <FilterList filters={filters} setFilters={setFilters} />
