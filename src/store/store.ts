@@ -28,7 +28,8 @@ const initialState: RootState = {
     repliesCount: 0,
     transcriptsCount: 0,
     textSize: 'text-base',
-    showBookmarked: false
+    showBookmarked: false,
+    bookmarkedComments: []
 };
 
 const commentsSlice = createSlice({
@@ -74,6 +75,9 @@ const commentsSlice = createSlice({
         setShowBookmarked: (state, action: PayloadAction<boolean>) => {
             state.showBookmarked = action.payload;
         },
+        setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
+            state.bookmarkedComments = action.payload;
+        },
         resetState: () => initialState,
     },
 });
@@ -91,7 +95,8 @@ export const {
     setTextSize,
     updateCommentsData,
     resetState,
-    setShowBookmarked
+    setShowBookmarked,
+    setBookmarkedComments
 } = commentsSlice.actions;
 
 const store = configureStore({

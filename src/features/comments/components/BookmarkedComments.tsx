@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CommentItem from './CommentItem';
 import { Comment } from '../../../types/commentTypes';
 import Box from '../../shared/components/Box';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { retrieveDataFromDB } from '../../shared/utils/cacheUtils';
 
-const BookmarkedComments: React.FC = () => {
+interface BookmarkedCommentsProps {
+    comments: Comment[];
+}
+
+const BookmarkedComments: React.FC<BookmarkedCommentsProps> = ({ comments }) => {
     const { t } = useTranslation();
-    const [bookmarkedComments, setBookmarkedComments] = useState<Comment[]>([]);
 
-    useEffect(() => {
-        const fetchBookmarkedComments = async () => {
-            const bookmarks = await retrieveDataFromDB('bookmarks');
-            setBookmarkedComments(bookmarks || []);
-        };
-
-        fetchBookmarkedComments();
-    }, []);
-
-    if (bookmarkedComments.length === 0) {
+    if (comments.length === 0) {
         return (
             <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
                 <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
@@ -30,7 +23,7 @@ const BookmarkedComments: React.FC = () => {
 
     return (
         <div className="flex flex-col">
-            {bookmarkedComments.map((comment, index) => (
+            {comments.map((comment, index) => (
                 <CommentItem
                     key={comment.commentId}
                     comment={comment}

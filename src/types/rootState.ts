@@ -13,4 +13,5 @@ export interface RootState {
     transcriptsCount: number;
     textSize: string;
     showBookmarked: boolean;
+    bookmarkedComments: any[];
 }

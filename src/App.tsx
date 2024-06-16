@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -27,8 +27,8 @@ const App: React.FC = () => {
         repliesCount,
         transcriptsCount,
         setFiltersCallback,
-        showBookmarked, // Get this from the hook
-        toggleShowBookmarked, // Get this from the hook
+        showBookmarked,
+        toggleShowBookmarked,
     } = useAppState();
 
     useHandleUrlChange();
@@ -55,8 +55,8 @@ const App: React.FC = () => {
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                     openSettings={openSettings}
-                    toggleBookmarkedComments={toggleShowBookmarked} // Use the toggle function from the hook
-                    showBookmarkedComments={showBookmarked} // Use the state from the hook
+                    toggleBookmarkedComments={toggleShowBookmarked}
+                    showBookmarkedComments={showBookmarked}
                 />
                 <SearchBar onSearch={handleSearch} />
                 <AnimatePresence mode={"wait"}>
@@ -68,7 +68,7 @@ const App: React.FC = () => {
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3 }}
                         >
-                            <BookmarkedComments />
+                            <BookmarkedComments comments={filteredAndSortedComments} />
                         </motion.div>
                     ) : (
                         <motion.div
