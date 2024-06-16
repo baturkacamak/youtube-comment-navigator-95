@@ -14,6 +14,9 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 - 🌐 **Multilingual Support**: Choose your preferred language from a wide range of options.
 - 🔄 **Randomize Order**: Randomize the order of comments for a fresh perspective.
 - 🧩 **Customizable Themes**: Switch between different themes to personalize your experience.
+- 📋 **Bookmark Comments**: Bookmark your favorite comments and view them later.
+- 🛠️ **Tooltips**: Get additional information and context with hover tooltips.
+- 🕒 **Accurate Time Display**: View the accurate time when comments were published, even for bookmarked comments.
 
 ## 🚀 Installation
 
@@ -56,6 +59,14 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 4. **Load More Comments**
 
    Click the "Load More Comments" button to fetch additional comments.
+
+5. **Bookmark Comments**
+
+   Bookmark your favorite comments by clicking the bookmark icon next to each comment. View bookmarked comments later from the bookmarks section.
+
+6. **Accurate Time Display**
+
+   View the accurate time when comments were published, even for bookmarked comments, which recalculates the relative time based on the current date.
 
 ## 🛠️ Support and Feedback
 
