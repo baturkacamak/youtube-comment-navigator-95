@@ -28,7 +28,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
                     aria-checked={selectedValue === value}
                     aria-label={name}
                 />
-                <div className={`h-5 w-5 border-2 rounded-full flex items-center justify-center transition duration-300 ease-in-out ${selectedValue === value ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400' : 'border-gray-400 dark:border-gray-600'}`}>
+                <div className={`h-5 w-5 border-2 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out transform ${selectedValue === value ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400 scale-110' : 'bg-white border-gray-400 dark:border-gray-600 scale-100'}`}>
                     {selectedValue === value && (
                         <div className="w-2.5 h-2.5 bg-white rounded-full" />
                     )}
