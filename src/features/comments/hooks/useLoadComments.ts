@@ -11,7 +11,7 @@ import {
 } from '../../../store/store';
 import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/fetchComments';
 
-const useLoadComments = () => {
+const useLoadComments = (bypassCache = false) => {
     const dispatch = useDispatch();
 
     const loadComments = async (bypassCache = false) => {
@@ -64,7 +64,7 @@ const useLoadComments = () => {
             dispatch(setLoading(false));
         };
 
-        const commentsData = await fetchComments(handleFetchedComments, undefined, bypassCache);
+        const commentsData = await fetchComments(handleFetchedComments, bypassCache, undefined);
         const chatRepliesData = await fetchChatReplies();
         const transcriptsData = await fetchTranscript();
     };

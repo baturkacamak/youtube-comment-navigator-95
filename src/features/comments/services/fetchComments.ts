@@ -6,8 +6,8 @@ import {isLocalEnvironment} from "../../shared/utils/environmentVariables";
 
 export const fetchComments = async (
     onCommentsFetched: (comments: any[]) => void,
-    signal?: AbortSignal,
-    bypassCache = false
+    bypassCache = false,
+    signal?: AbortSignal
 ) => {
     if (isLocalEnvironment()) {
         return fetchCommentsFromLocal();

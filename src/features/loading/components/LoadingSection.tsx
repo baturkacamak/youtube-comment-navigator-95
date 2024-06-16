@@ -5,39 +5,43 @@ import {
     DocumentTextIcon,
     InboxIcon
 } from '@heroicons/react/24/outline';
-import Box from "../../shared/components/Box";
 import Button from "../../shared/components/Button";
-import { LoadingSectionProps } from "../../../types/layoutTypes";
-import { useTranslation } from 'react-i18next';
+import {LoadingSectionProps} from "../../../types/layoutTypes";
+import {useTranslation} from 'react-i18next';
 
 const LoadingSection: React.FC<LoadingSectionProps> = ({
-                                                           onLoadComments, onLoadChat, onLoadTranscript, onLoadAll,
-                                                           commentsCount, repliesCount, transcriptsCount
+                                                           onLoadComments,
+                                                           onLoadChat,
+                                                           onLoadTranscript,
+                                                           onLoadAll,
+                                                           commentsCount,
+                                                           repliesCount,
+                                                           transcriptsCount
                                                        }) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
 
     return (
         <div className="grid grid-cols-2 gap-2" aria-label={t('Loading Section')}>
             <Button
                 onClick={() => onLoadComments(true)}
                 icon={ChatBubbleOvalLeftIcon}
-                label={t('Load Comments ({{count}})', { count: commentsCount })}
+                label={t('Load Comments ({{count}})', {count: commentsCount})}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Comments ({{count}})', { count: commentsCount })}
+                aria-label={t('Load Comments ({{count}})', {count: commentsCount})}
             />
             <Button
                 onClick={onLoadChat}
                 icon={InboxIcon}
-                label={t('Load Chat', { count: repliesCount })}
+                label={t('Load Chat', {count: repliesCount})}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Chat', { count: repliesCount })}
+                aria-label={t('Load Chat', {count: repliesCount})}
             />
             <Button
                 onClick={onLoadTranscript}
                 icon={DocumentTextIcon}
-                label={t('Load Transcript', { count: transcriptsCount })}
+                label={t('Load Transcript', {count: transcriptsCount})}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Transcript', { count: transcriptsCount })}
+                aria-label={t('Load Transcript', {count: transcriptsCount})}
             />
             <Button
                 onClick={() => onLoadAll(true)}
