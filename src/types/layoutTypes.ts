@@ -14,7 +14,6 @@ export interface LoadingSectionProps {
     onLoadChat: () => void;
     onLoadTranscript: () => void;
     onLoadAll: (bypassCache?: boolean) => void;
-    commentsCount: number;
     repliesCount: number;
     transcriptsCount: number;
 }

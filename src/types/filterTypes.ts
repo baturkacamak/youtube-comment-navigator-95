@@ -63,7 +63,6 @@ export interface ControlPanelProps {
     onLoadChat: () => Promise<void>;
     onLoadTranscript: () => Promise<void>;
     onLoadAll: (bypassCache?: boolean) => Promise<void>;
-    commentsCount: number;
     repliesCount: number;
     transcriptsCount: number;
     openSettings: () => void;

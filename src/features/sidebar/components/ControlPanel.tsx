@@ -16,7 +16,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                                                        onLoadChat,
                                                        onLoadTranscript,
                                                        onLoadAll,
-                                                       commentsCount,
                                                        repliesCount,
                                                        transcriptsCount,
                                                        openSettings,
@@ -79,7 +78,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                     onLoadChat={onLoadChat}
                     onLoadTranscript={onLoadTranscript}
                     onLoadAll={onLoadAll}
-                    commentsCount={commentsCount}
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                 />

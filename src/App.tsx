@@ -25,7 +25,6 @@ const App: React.FC = () => {
         loadAll,
         filteredAndSortedComments,
         isLoading,
-        commentsCount,
         repliesCount,
         transcriptsCount,
         setFiltersCallback
@@ -52,7 +51,6 @@ const App: React.FC = () => {
                     onLoadChat={loadChatReplies}
                     onLoadTranscript={loadTranscript}
                     onLoadAll={loadAll}
-                    commentsCount={commentsCount}
                     repliesCount={repliesCount}
                     transcriptsCount={transcriptsCount}
                     openSettings={openSettings}

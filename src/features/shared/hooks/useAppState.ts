@@ -18,7 +18,7 @@ const useAppState = () => {
     const originalComments = useSelector((state: RootState) => state.originalComments);
     const filters = useSelector((state: RootState) => state.filters);
     const isLoading = useSelector((state: RootState) => state.isLoading);
-    const commentsCount = useSelector((state: RootState) => state.commentsCount);
+    useSelector((state: RootState) => state.commentsCount);
     const repliesCount = useSelector((state: RootState) => state.repliesCount);
     const transcriptsCount = useSelector((state: RootState) => state.transcriptsCount);
 
@@ -41,7 +41,6 @@ const useAppState = () => {
         comments,
         filters,
         isLoading,
-        commentsCount,
         repliesCount,
         transcriptsCount,
         initialLoadCompleted,
