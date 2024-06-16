@@ -11,9 +11,11 @@ import {
     BookmarkIcon
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import {Comment, CommentActionsProps} from "../../../types/commentTypes";
+import { Comment, CommentActionsProps } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../shared/components/Tooltip";
+import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils";
+import translateTimeAgo from "../../settings/utils/translateTimeAgo";
 
 const CommentFooter: React.FC<CommentActionsProps> = ({
                                                           comment,
@@ -30,26 +32,29 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     const [isBookmarked, setIsBookmarked] = useState(false);
 
     useEffect(() => {
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-        setIsBookmarked(bookmarks.includes(commentId));
+        const checkBookmarkStatus = async () => {
+            const bookmarks = await retrieveDataFromDB('bookmarks');
+            setIsBookmarked(bookmarks?.includes(commentId));
+        };
+        checkBookmarkStatus();
     }, [commentId]);
 
-    const handleBookmark = () => {
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-        let storedComments = JSON.parse(localStorage.getItem('storedComments') || '[]');
+    const handleBookmark = async () => {
+        const bookmarks = (await retrieveDataFromDB('bookmarks')) || [];
+        let storedComments = (await retrieveDataFromDB('storedComments')) || [];
 
         if (bookmarks.includes(commentId)) {
             const updatedBookmarks = bookmarks.filter((id: string) => id !== commentId);
-            localStorage.setItem('bookmarks', JSON.stringify(updatedBookmarks));
+            await storeDataInDB('bookmarks', updatedBookmarks);
             setIsBookmarked(false);
         } else {
             bookmarks.push(commentId);
-            localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+            await storeDataInDB('bookmarks', bookmarks);
 
             // Ensure the comment is stored locally
             if (!storedComments.find((storedComment: Comment) => storedComment.commentId === commentId)) {
                 storedComments.push(comment);
-                localStorage.setItem('storedComments', JSON.stringify(storedComments));
+                await storeDataInDB('storedComments', storedComments);
             }
 
             setIsBookmarked(true);
@@ -65,7 +70,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                 </div>
                 <div className="flex items-center">
                     <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-                    <span className="text-sm" aria-label={t('Published date')}>{comment.published}</span>
+                    <span className="text-sm" aria-label={t('Published date')}>{translateTimeAgo(comment.published)}</span>
                 </div>
             </div>
             <div className="flex items-center gap-6">
