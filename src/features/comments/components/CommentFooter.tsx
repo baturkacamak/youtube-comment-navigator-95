@@ -8,13 +8,14 @@ import {
     HandThumbUpIcon,
     HeartIcon,
     LinkIcon,
+    BookmarkIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { CommentActionsProps } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../shared/components/Tooltip";
-import translateTimeAgo from "../../settings/utils/translateTimeAgo";
 import BookmarkButton from './BookmarkButton';
+import translateTimeAgo from "../../settings/utils/translateTimeAgo";
 
 const CommentFooter: React.FC<CommentActionsProps> = ({
                                                           comment,
@@ -28,6 +29,11 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
     const { t } = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();
     const videoId = comment.videoId || currentVideoId; // Use stored videoId if available, otherwise use current videoId
+
+    const formatDate = (dateString: string) => {
+        const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">

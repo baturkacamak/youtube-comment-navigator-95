@@ -23,6 +23,7 @@ export interface Comment {
     hasLinks: boolean;
     videoTitle?: string;
     videoId?: string;
+    bookmarkAddedDate?: string;
 }
 
 export interface CommentActionsProps {

@@ -6,7 +6,8 @@ import { RootState } from '../../../types/rootState';
 import { Comment } from "../../../types/commentTypes";
 import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils";
 import { setBookmarkedComments } from '../../../store/store';
-import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import Tooltip from '../../shared/components/Tooltip';
 
 interface BookmarkButtonProps {
     comment: Comment;
@@ -18,10 +19,17 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
     const dispatch = useDispatch();
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [bookmarkAddedDate, setBookmarkAddedDate] = useState<string | null>(null);
 
     useEffect(() => {
         const checkBookmarkStatus = () => {
-            setIsBookmarked(bookmarkedComments.some((bookmark: Comment) => bookmark.commentId === commentId));
+            const bookmarkedComment = bookmarkedComments.find((bookmark: Comment) => bookmark.commentId === commentId);
+            if (bookmarkedComment) {
+                setIsBookmarked(true);
+                setBookmarkAddedDate(bookmarkedComment.bookmarkAddedDate ? new Date(bookmarkedComment.bookmarkAddedDate).toLocaleString() : null);
+            } else {
+                setIsBookmarked(false);
+            }
         };
         checkBookmarkStatus();
     }, [bookmarkedComments, commentId]);
@@ -39,7 +47,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
         } else {
             const videoId = extractYouTubeVideoIdFromUrl();
             const videoTitle = getVideoTitle();
-            const bookmarkedComment = { ...comment, videoId, videoTitle };
+            const bookmarkedComment = { ...comment, videoId, videoTitle, bookmarkAddedDate: new Date().toISOString() };
             updatedBookmarks = [...bookmarkedComments, bookmarkedComment];
         }
         await storeDataInDB('bookmarks', updatedBookmarks);
@@ -47,19 +55,21 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
     };
 
     return (
-        <button
-            onClick={handleBookmark}
-            className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
-            title={t('Bookmark')}
-            aria-label={t('Bookmark')}
-        >
-            {isBookmarked ? (
-                <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-            ) : (
-                <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-            )}
-            <span className="text-sm">{t('Bookmark')}</span>
-        </button>
+        <Tooltip text={bookmarkAddedDate ? t('Bookmark added on: ') + bookmarkAddedDate : t('Bookmark')}>
+            <button
+                onClick={handleBookmark}
+                className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
+                title={t('Bookmark')}
+                aria-label={t('Bookmark')}
+            >
+                {isBookmarked ? (
+                    <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                ) : (
+                    <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                )}
+                <span className="text-sm">{t('Bookmark')}</span>
+            </button>
+        </Tooltip>
     );
 };
 
