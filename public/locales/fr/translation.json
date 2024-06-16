@@ -103,6 +103,6 @@
     "ago": "il y a",
     "format": "{{ago}} {{value}} {{unit}}"
   },
-  "Bookmark added on:": "Signet ajouté le:",
+  "Bookmark added on: ": "Signet ajouté le: ",
   "Bookmark": "Signet"
 }

@@ -103,6 +103,6 @@
     "ago": "پیش",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "نشانه‌گذاری شده در:",
+  "Bookmark added on: ": "نشانه‌گذاری شده در: ",
   "Bookmark": "نشانه‌گذاری"
 }

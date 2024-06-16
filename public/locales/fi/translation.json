@@ -103,6 +103,6 @@
     "ago": "sitten",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Kirjanmerkki lisätty:",
+  "Bookmark added on: ": "Kirjanmerkki lisätty: ",
   "Bookmark": "Kirjanmerkki"
 }

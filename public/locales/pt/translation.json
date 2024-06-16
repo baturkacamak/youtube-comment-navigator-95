@@ -103,6 +103,6 @@
     "ago": "atrás",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Marcador adicionado em:",
+  "Bookmark added on: ": "Marcador adicionado em: ",
   "Bookmark": "Marcador"
 }

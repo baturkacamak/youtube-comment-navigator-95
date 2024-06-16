@@ -103,6 +103,6 @@
     "ago": "пре",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Obeleživač dodan:",
+  "Bookmark added on: ": "Obeleživač dodan: ",
   "Bookmark": "Obeleživač"
 }

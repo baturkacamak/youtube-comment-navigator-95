@@ -103,6 +103,6 @@
     "ago": "geleden",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Bladwijzer toegevoegd op:",
+  "Bookmark added on: ": "Bladwijzer toegevoegd op: ",
   "Bookmark": "Bladwijzer"
 }

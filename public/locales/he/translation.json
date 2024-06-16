@@ -103,6 +103,6 @@
     "ago": "לפני",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "סימנייה נוספה בתאריך:",
+  "Bookmark added on: ": "סימנייה נוספה בתאריך: ",
   "Bookmark": "סימנייה"
 }

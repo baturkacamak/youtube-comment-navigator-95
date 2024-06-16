@@ -103,6 +103,6 @@
     "ago": "ที่ผ่านมา",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "บุ๊กมาร์กที่เพิ่มเมื่อ:",
+  "Bookmark added on: ": "บุ๊กมาร์กที่เพิ่มเมื่อ: ",
   "Bookmark": "บุ๊กมาร์ก"
 }

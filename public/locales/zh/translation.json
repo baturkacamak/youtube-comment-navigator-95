@@ -103,6 +103,6 @@
     "ago": "前",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "添加书签于:",
+  "Bookmark added on: ": "添加书签于: ",
   "Bookmark": "书签"
 }

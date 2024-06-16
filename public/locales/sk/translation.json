@@ -103,6 +103,6 @@
     "ago": "pred",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Záložka pridaná:",
+  "Bookmark added on: ": "Záložka pridaná: ",
   "Bookmark": "Záložka"
 }

@@ -103,6 +103,6 @@
     "ago": "vor",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Lesezeichen hinzugefügt am:",
+  "Bookmark added on: ": "Lesezeichen hinzugefügt am: ",
   "Bookmark": "Lesezeichen"
 }

@@ -103,6 +103,6 @@
     "ago": "siden",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Bogmærke tilføjet den:",
+  "Bookmark added on: ": "Bogmærke tilføjet den: ",
   "Bookmark": "Bogmærke"
 }

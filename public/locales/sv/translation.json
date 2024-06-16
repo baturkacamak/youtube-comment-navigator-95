@@ -103,6 +103,6 @@
     "ago": "sedan",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Bokmärke tillagt den:",
+  "Bookmark added on: ": "Bokmärke tillagt den: ",
   "Bookmark": "Bokmärke"
 }

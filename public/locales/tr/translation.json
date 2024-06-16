@@ -103,6 +103,6 @@
     "ago": "önce",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Yer imi eklendi:",
+  "Bookmark added on: ": "Yer imi eklendi: ",
   "Bookmark": "Yer imi"
 }

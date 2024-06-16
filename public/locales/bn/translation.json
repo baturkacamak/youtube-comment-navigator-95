@@ -103,6 +103,6 @@
     "ago": "আগে",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "বুকমার্ক যোগ করা হয়েছে:",
+  "Bookmark added on: ": "বুকমার্ক যোগ করা হয়েছে: ",
   "Bookmark": "বুকমার্ক"
 }

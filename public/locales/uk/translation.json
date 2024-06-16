@@ -103,6 +103,6 @@
     "ago": "тому",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Додано в закладки:",
+  "Bookmark added on: ": "Додано в закладки: ",
   "Bookmark": "Закладка"
 }

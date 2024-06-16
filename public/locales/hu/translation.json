@@ -103,6 +103,6 @@
     "ago": "ezelőtt",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Könyvjelző hozzáadva:",
+  "Bookmark added on: ": "Könyvjelző hozzáadva: ",
   "Bookmark": "Könyvjelző"
 }

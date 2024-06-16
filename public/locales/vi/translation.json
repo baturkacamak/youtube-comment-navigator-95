@@ -103,6 +103,6 @@
     "ago": "trước",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Đã thêm dấu trang vào:",
+  "Bookmark added on: ": "Đã thêm dấu trang vào: ",
   "Bookmark": "Dấu trang"
 }

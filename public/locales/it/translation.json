@@ -103,6 +103,6 @@
     "ago": "fa",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Segnalibro aggiunto il:",
+  "Bookmark added on: ": "Segnalibro aggiunto il: ",
   "Bookmark": "Segnalibro"
 }

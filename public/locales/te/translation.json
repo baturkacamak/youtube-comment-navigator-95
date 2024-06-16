@@ -103,6 +103,6 @@
     "ago": "క్రితం",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "బుక్‌మార్క్ జోడించిన తేదీ:",
+  "Bookmark added on: ": "బుక్‌మార్క్ జోడించిన తేదీ: ",
   "Bookmark": "బుక్‌మార్క్"
 }

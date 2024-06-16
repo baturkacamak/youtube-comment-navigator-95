@@ -103,6 +103,6 @@
     "ago": "în urmă",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Marcaj adăugat la:",
+  "Bookmark added on: ": "Marcaj adăugat la: ",
   "Bookmark": "Marcaj"
 }

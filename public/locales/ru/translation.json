@@ -103,6 +103,6 @@
     "ago": "назад",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Закладка добавлена:",
+  "Bookmark added on: ": "Закладка добавлена: ",
   "Bookmark": "Закладка"
 }

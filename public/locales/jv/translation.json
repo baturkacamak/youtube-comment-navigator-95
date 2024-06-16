@@ -103,6 +103,6 @@
     "ago": "yang lalu",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Penanda ditambahake ing:",
+  "Bookmark added on: ": "Penanda ditambahake ing: ",
   "Bookmark": "Penanda"
 }

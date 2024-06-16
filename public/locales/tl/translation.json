@@ -103,6 +103,6 @@
     "ago": "nakaraan",
     "format": "{{value}} {{unit}} {{ago}}"
   },
-  "Bookmark added on:": "Idinagdag ang bookmark noong:",
+  "Bookmark added on: ": "Idinagdag ang bookmark noong: ",
   "Bookmark": "Bookmark"
 }
