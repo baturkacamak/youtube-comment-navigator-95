@@ -4,9 +4,12 @@ import SelectBox from '../../shared/components/SelectBox/SelectBox';
 import { Option } from '../../../types/utilityTypes';
 import { useTranslation } from 'react-i18next';
 import {getSettings, saveSettings} from "../utils/settingsUtils";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../types/rootState";
 
 const ThemeSetting: React.FC = () => {
     const { t } = useTranslation();
+
 
     const themeOptions: Option[] = [
         { value: 'light', label: t('Light'), icon: SunIcon },
@@ -39,7 +42,7 @@ const ThemeSetting: React.FC = () => {
             <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Theme')}</label>
             <SelectBox
                 options={themeOptions}
-                selectedOption={selectedTheme}
+                selectedOption={themeOptions.find(option => option.value === selectedTheme.value)!}
                 setSelectedOption={setSelectedTheme}
                 buttonClassName="w-full rounded-lg"
             />
