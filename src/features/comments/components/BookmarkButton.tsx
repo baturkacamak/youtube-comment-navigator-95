@@ -6,6 +6,7 @@ import { RootState } from '../../../types/rootState';
 import { Comment } from "../../../types/commentTypes";
 import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils";
 import { setBookmarkedComments } from '../../../store/store';
+import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 
 interface BookmarkButtonProps {
     comment: Comment;
@@ -25,12 +26,21 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
         checkBookmarkStatus();
     }, [bookmarkedComments, commentId]);
 
+    const getVideoTitle = () => {
+        const titleElement = document.querySelector('yt-formatted-string.ytd-watch-metadata');
+        let videoTitle = titleElement?.textContent || document.title.replace(' - YouTube', '');
+        return videoTitle;
+    };
+
     const handleBookmark = async () => {
         let updatedBookmarks;
         if (isBookmarked) {
             updatedBookmarks = bookmarkedComments.filter((bookmark: Comment) => bookmark.commentId !== commentId);
         } else {
-            updatedBookmarks = [...bookmarkedComments, comment];
+            const videoId = extractYouTubeVideoIdFromUrl();
+            const videoTitle = getVideoTitle();
+            const bookmarkedComment = { ...comment, videoId, videoTitle };
+            updatedBookmarks = [...bookmarkedComments, bookmarkedComment];
         }
         await storeDataInDB('bookmarks', updatedBookmarks);
         dispatch(setBookmarkedComments(updatedBookmarks));
