@@ -26,7 +26,8 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                                                           copySuccess
                                                       }) => {
     const { t } = useTranslation();
-    const videoId = extractYouTubeVideoIdFromUrl();
+    const currentVideoId = extractYouTubeVideoIdFromUrl();
+    const videoId = comment.videoId || currentVideoId; // Use stored videoId if available, otherwise use current videoId
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
