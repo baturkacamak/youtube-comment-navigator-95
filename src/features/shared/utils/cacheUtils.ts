@@ -1,4 +1,4 @@
-export const DEFAULT_CACHE_EXPIRATION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+export const DEFAULT_CACHE_EXPIRATION_DURATION = 30 * 24 * 60 * 60 * 1000; // 30 days
 const DEFAULT_DB_NAME = 'commentsCacheDB';
 const DEFAULT_STORE_NAME = 'comments';
 
