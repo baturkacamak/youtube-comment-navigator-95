@@ -102,5 +102,7 @@
     "years": "years",
     "ago": "ago",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Bookmark added on:",
+  "Bookmark": "Bookmark"
 }

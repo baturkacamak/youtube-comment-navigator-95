@@ -102,5 +102,7 @@
     "years": "años",
     "ago": "hace",
     "format": "{{ago}} {{value}} {{unit}}"
-  }
+  },
+  "Bookmark added on:": "Marcador añadido el:",
+  "Bookmark": "Marcador"
 }

@@ -102,5 +102,7 @@
     "years": "roky",
     "ago": "před",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Záložka přidána:",
+  "Bookmark": "Záložka"
 }

@@ -102,5 +102,7 @@
     "years": "سنوات",
     "ago": "منذ",
     "format": "{{ago}} {{value}} {{unit}}"
-  }
+  },
+  "Bookmark added on:": "تمت الإضافة في:",
+  "Bookmark": "إشارة مرجعية"
 }

@@ -102,5 +102,7 @@
     "years": "वर्षे",
     "ago": "पूर्वी",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "वाचन चिन्ह जोडले:",
+  "Bookmark": "वाचन चिन्ह"
 }

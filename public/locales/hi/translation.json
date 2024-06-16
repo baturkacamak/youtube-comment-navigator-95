@@ -102,5 +102,7 @@
     "years": "साल",
     "ago": "पहले",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "बुकमार्क जोड़ा गया:",
+  "Bookmark": "बुकमार्क"
 }

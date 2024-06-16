@@ -102,5 +102,7 @@
     "years": "år",
     "ago": "siden",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Bokmerke lagt til:",
+  "Bookmark": "Bokmerke"
 }

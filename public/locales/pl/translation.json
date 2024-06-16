@@ -102,5 +102,7 @@
     "years": "lata",
     "ago": "temu",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Zakładka dodana dnia:",
+  "Bookmark": "Zakładka"
 }

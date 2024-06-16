@@ -102,5 +102,7 @@
     "years": "évek",
     "ago": "ezelőtt",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Könyvjelző hozzáadva:",
+  "Bookmark": "Könyvjelző"
 }

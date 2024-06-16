@@ -102,5 +102,7 @@
     "years": "έτη",
     "ago": "πριν",
     "format": "{{value}} {{unit}} {{ago}}"
-  }
+  },
+  "Bookmark added on:": "Προστέθηκε σελιδοδείκτης στις:",
+  "Bookmark": "Σελιδοδείκτης"
 }
