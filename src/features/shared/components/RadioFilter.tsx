@@ -17,32 +17,41 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
 
     return (
         <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-1" aria-label={`Radio filter for ${name}`} role="radio" aria-checked={selectedValue === value}>
-            <input
-                type="radio"
-                name="sortBy"
-                value={value}
-                checked={selectedValue === value}
-                onChange={onChange}
-                className="mr-2 form-radio h-5 w-5 text-teal-600 dark:text-teal-400 transition duration-150 ease-in-out"
-                aria-checked={selectedValue === value}
-                aria-label={name}
-            />
-            {icon}
-            <span className="truncate">{label}</span>
-            {selectedValue === value && (
-                <button
-                    onClick={isRandom ? handleRandomClick : onToggleSortOrder}
-                    className="ml-2 transition-transform duration-500 ease-in-out"
-                    aria-label={isRandom ? t('Randomize order') : t('Toggle sort order')}
-                    aria-live="polite"
-                >
-                    {isRandom ? (
-                        <ArrowPathIcon className={`w-4 h-4 transform ${spin ? 'animate-spin' : ''}`} />
-                    ) : (
-                        <ArrowUpIcon className={`w-4 h-4 transform transition-transform duration-300 ease-in-out ${sortOrder === 'asc' ? '' : 'rotate-180'}`} />
+            <div className="relative">
+                <input
+                    type="radio"
+                    name="sortBy"
+                    value={value}
+                    checked={selectedValue === value}
+                    onChange={onChange}
+                    className="absolute opacity-0 h-0 w-0"
+                    aria-checked={selectedValue === value}
+                    aria-label={name}
+                />
+                <div className={`h-5 w-5 border-2 rounded-full flex items-center justify-center transition duration-300 ease-in-out ${selectedValue === value ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400' : 'border-gray-400 dark:border-gray-600'}`}>
+                    {selectedValue === value && (
+                        <div className="w-2.5 h-2.5 bg-white rounded-full" />
                     )}
-                </button>
-            )}
+                </div>
+            </div>
+            <div className="ml-3 flex items-center">
+                {icon}
+                <span className="truncate">{label}</span>
+                {selectedValue === value && (
+                    <button
+                        onClick={isRandom ? handleRandomClick : onToggleSortOrder}
+                        className="ml-2 transition-transform duration-500 ease-in-out"
+                        aria-label={isRandom ? t('Randomize order') : t('Toggle sort order')}
+                        aria-live="polite"
+                    >
+                        {isRandom ? (
+                            <ArrowPathIcon className={`w-4 h-4 transform ${spin ? 'animate-spin' : ''}`} />
+                        ) : (
+                            <ArrowUpIcon className={`w-4 h-4 transform transition-transform duration-300 ease-in-out ${sortOrder === 'asc' ? '' : 'rotate-180'}`} />
+                        )}
+                    </button>
+                )}
+            </div>
         </label>
     );
 };
