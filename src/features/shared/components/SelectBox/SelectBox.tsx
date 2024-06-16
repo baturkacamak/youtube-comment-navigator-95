@@ -27,7 +27,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         // Translate the options when the component mounts or when the options change
         const translatedOptions = options.map(option => ({
             ...option,
-            label: t(option.label)
+            label: option.label
         }));
         setFilteredOptions(translatedOptions);
     }, [options, t]);
@@ -39,7 +39,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         setSearchTerm('');
         setFilteredOptions(options.map(option => ({
             ...option,
-            label: t(option.label)
+            label: option.label
         })));
     };
 
@@ -60,7 +60,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
                 setSearchTerm('');
                 setFilteredOptions(options.map(option => ({
                     ...option,
-                    label: t(option.label)
+                    label: option.label
                 })));
                 break;
             case 'Escape':
@@ -99,7 +99,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         if (isSearchable) {
             const normalizedSearchTerm = normalizeString(searchTerm);
             const filtered = options.filter(option =>
-                normalizeString(t(option.label)).includes(normalizedSearchTerm)
+                normalizeString(option.label).includes(normalizedSearchTerm)
             );
             setFilteredOptions(filtered);
             setHighlightedIndex(0);
@@ -118,7 +118,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
             >
                 <span className="flex items-center">
                     {selectedOption.icon ? <selectedOption.icon className="w-5 h-5 mr-2" /> : DefaultIcon && <DefaultIcon className="w-5 h-5 mr-2" />}
-                    {t(selectedOption.label) || t('Select an option')}
+                    {selectedOption.label || t('Select an option')}
                 </span>
                 <ChevronDownIcon className="w-5 h-5" />
             </button>
