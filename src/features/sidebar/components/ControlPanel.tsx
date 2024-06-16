@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { ArrowsUpDownIcon, FunnelIcon, BookmarkIcon } from '@heroicons/react/24/outline';
 import Box from '../../shared/components/Box';
 import FilterList from './FilterList';
@@ -8,6 +9,7 @@ import { ControlPanelProps } from '../../../types/filterTypes';
 import SettingsButton from '../../shared/components/SettingsButton';
 import Button from '../../shared/components/Button'; // Import your Button component
 import { useTranslation } from 'react-i18next';
+import { RootState } from '../../../types/rootState';
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
                                                        filters,
@@ -24,6 +26,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                                                    }) => {
     const { t } = useTranslation();
     const [showAdvanced, setShowAdvanced] = useState(false);
+
+    // Get the bookmark count from the Redux state
+    const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
 
     useEffect(() => {
         if (!filters.initialized) {
@@ -52,9 +57,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <Button
                     onClick={toggleBookmarkedComments}
                     icon={BookmarkIcon}
-                    label={showBookmarkedComments ? t('Hide Bookmarked Comments') : t('Show Bookmarked Comments')}
+                    label={`(${bookmarkCount})`}
                     className={`text-white ${showBookmarkedComments ? 'bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800' : 'bg-teal-500 hover:bg-teal-600 dark:bg-teal-700 dark:hover:bg-teal-800'}`}
-                    iconOnly={true}
+                    iconOnly={bookmarkCount === 0}
                 />
             </div>
             <hr className="border border-solid border-gray-400 dark:border-gray-600" />
