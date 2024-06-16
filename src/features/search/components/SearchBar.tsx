@@ -12,15 +12,17 @@ import {
 import { Option } from "../../../types/utilityTypes";
 import { useTranslation } from 'react-i18next';
 
-const options: Option[] = [
-    { value: 'all', label: 'All', icon: ClipboardDocumentListIcon },
-    { value: 'comments', label: 'Comments', icon: ChatBubbleOvalLeftIcon },
-    { value: 'chat', label: 'Live Chat', icon: InboxIcon },
-    { value: 'transcript', label: 'Transcript', icon: DocumentTextIcon },
-];
 
 const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }) => {
     const { t } = useTranslation();
+
+    const options: Option[] = [
+        { value: 'all', label: t('All'), icon: ClipboardDocumentListIcon },
+        { value: 'comments', label: t('Comments'), icon: ChatBubbleOvalLeftIcon },
+        { value: 'chat', label: t('Live Chat'), icon: InboxIcon },
+        { value: 'transcript', label: t('Transcript'), icon: DocumentTextIcon },
+    ];
+
     const [query, setQuery] = useState('');
     const [selectedOption, setSelectedOption] = useState<Option>(options[0]);
     const [placeholder, setPlaceholder] = useState(t('Search comments...'));
@@ -69,7 +71,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({ onSearch }
             <form onSubmit={handleSubmit} className="flex items-center p-2 relative" aria-label={t('Search form')}>
                 <SelectBox
                     options={options}
-                    selectedOption={selectedOption}
+                    selectedOption={options.find(option => option.value === selectedOption.value)!}
                     setSelectedOption={setSelectedOption}
                     buttonClassName={'rounded-l-lg'}
                     aria-label={t('Select search category')}
