@@ -3,6 +3,7 @@ import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import SelectBox from '../../shared/components/SelectBox/SelectBox';
 import { Option } from '../../../types/utilityTypes';
 import { useTranslation } from 'react-i18next';
+import {getSettings, saveSettings} from "../utils/settingsUtils";
 
 const ThemeSetting: React.FC = () => {
     const { t } = useTranslation();
@@ -13,19 +14,25 @@ const ThemeSetting: React.FC = () => {
     ];
 
     const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
-        const savedTheme = localStorage.getItem('theme');
-        return themeOptions.find(option => option.value === savedTheme) || themeOptions[0];
+        const settings = getSettings();
+        return themeOptions.find(option => option.value === (settings.theme || 'light')) || themeOptions[0];
     });
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        const currentTheme = selectedTheme.value;
+    const applyTheme = (theme: string) => {
+        const settings = getSettings();
+        settings.theme = theme;
+        saveSettings(settings);
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+    };
 
-        if (savedTheme !== currentTheme) {
-            localStorage.setItem('theme', selectedTheme.value);
-            document.documentElement.setAttribute('data-theme', selectedTheme.value);
-        }
+    useEffect(() => {
+        applyTheme(selectedTheme.value);
     }, [selectedTheme]);
+
+    useEffect(() => {
+        const settings = getSettings();
+        applyTheme(settings.theme || 'light');
+    }, []);
 
     return (
         <div className="mb-4">
