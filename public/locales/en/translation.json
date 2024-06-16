@@ -84,5 +84,23 @@
   "Small": "Small",
   "Medium": "Medium",
   "Large": "Large",
-  "Extra Large": "Extra Large"
+  "Extra Large": "Extra Large",
+  "timeUnits": {
+    "second": "second",
+    "seconds": "seconds",
+    "minute": "minute",
+    "minutes": "minutes",
+    "hour": "hour",
+    "hours": "hours",
+    "day": "day",
+    "days": "days",
+    "week": "week",
+    "weeks": "weeks",
+    "month": "month",
+    "months": "months",
+    "year": "year",
+    "years": "years",
+    "ago": "ago",
+    "format": "{{value}} {{unit}} {{ago}}"
+  }
 }

@@ -84,5 +84,23 @@
   "Small": "Kişke",
   "Medium": "Orta",
   "Large": "Balaban",
-  "Extra Large": "Beg balaban"
+  "Extra Large": "Beg balaban",
+  "timeUnits": {
+    "second": "секунд",
+    "seconds": "секунд",
+    "minute": "минута",
+    "minutes": "минута",
+    "hour": "саат",
+    "hours": "саат",
+    "day": "күн",
+    "days": "күн",
+    "week": "апта",
+    "weeks": "апта",
+    "month": "ай",
+    "months": "ай",
+    "year": "жыл",
+    "years": "жыл",
+    "ago": "бұрын",
+    "format": "{{value}} {{unit}} {{ago}}"
+  }
 }
