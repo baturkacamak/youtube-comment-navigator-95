@@ -34,7 +34,7 @@ const App: React.FC = () => {
     useHandleUrlChange();
 
     return (
-        <div className="relative flex overflow-x-hidden">
+        <div className="relative flex overflow-hidden">
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div
