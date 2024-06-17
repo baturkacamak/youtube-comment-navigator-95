@@ -35,7 +35,7 @@ const useAppState = () => {
     useEffect(() => {
         const fetchBookmarkedComments = async () => {
             const bookmarks = await retrieveDataFromDB('bookmarks');
-            dispatch(setBookmarkedComments(bookmarks || []));
+            dispatch(setBookmarkedComments(bookmarks.data || []));
         };
 
         fetchBookmarkedComments(); // Fetch bookmarks on initial load
