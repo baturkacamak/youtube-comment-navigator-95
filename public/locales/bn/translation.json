@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "বুকমার্ক যোগ করা হয়েছে: ",
-  "Bookmark": "বুকমার্ক"
+  "Bookmark": "বুকমার্ক",
+  "extensionName": {
+    "message": "YouTube মন্তব্য নেভিগেটর 95"
+  },
+  "extensionDescription": {
+    "message": "নস্টালজিক 90-এর দশকের অনুভূতি নিয়ে YouTube মন্তব্য অনুসন্ধান এবং ফিল্টার করুন।"
+  }
 }

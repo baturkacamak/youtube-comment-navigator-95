@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bukot hiyaara ta: ",
-  "Bookmark": "Bukot"
+  "Bookmark": "Bukot",
+  "extensionName": {
+    "message": "ڕێبەری لێدوانەکانی YouTube 95"
+  },
+  "extensionDescription": {
+    "message": "گەڕان و هەڵبژاردنی لێدوانەکانی YouTube بە شێوەیەکی نوستالژی نێوانەکانی 90."
+  }
 }

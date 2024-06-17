@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Marcador adicionado em: ",
-  "Bookmark": "Marcador"
+  "Bookmark": "Marcador",
+  "extensionName": {
+    "message": "Navegador de Comentários do YouTube 95"
+  },
+  "extensionDescription": {
+    "message": "Pesquise e filtre comentários do YouTube com uma vibe nostálgica dos anos 90."
+  }
 }

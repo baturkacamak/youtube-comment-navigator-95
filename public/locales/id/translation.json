@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Penanda ditambahkan pada: ",
-  "Bookmark": "Penanda"
+  "Bookmark": "Penanda",
+  "extensionName": {
+    "message": "Navigator Komentar YouTube 95"
+  },
+  "extensionDescription": {
+    "message": "Cari dan saring komentar YouTube dengan nuansa nostalgia tahun 90-an."
+  }
 }

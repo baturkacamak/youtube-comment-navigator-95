@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "ਬੁਕਮਾਰਕ 'ਤੇ ਜੋੜਿਆ ਗਿਆ: ",
-  "Bookmark": "ਬੁਕਮਾਰਕ"
+  "Bookmark": "ਬੁਕਮਾਰਕ",
+  "extensionName": {
+    "message": "YouTube ਟਿੱਪਣੀ ਨੈਵੀਗੇਟਰ 95"
+  },
+  "extensionDescription": {
+    "message": "ਨੋਸਟੈਲਜਿਕ 90 ਦੇ ਮਹਿਸੂਸ ਨਾਲ YouTube ਟਿੱਪਣੀਆਂ ਖੋਜੋ ਅਤੇ ਫਿਲਟਰ ਕਰੋ।"
+  }
 }

@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Záložka pridaná: ",
-  "Bookmark": "Záložka"
+  "Bookmark": "Záložka",
+  "extensionName": {
+    "message": "YouTube Komentár Navigator 95"
+  },
+  "extensionDescription": {
+    "message": "Vyhľadávajte a filtrujte komentáre na YouTube s nostalgickým nádychom 90. rokov."
+  }
 }

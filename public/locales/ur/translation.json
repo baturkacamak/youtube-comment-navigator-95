@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "بک مارک شامل کیا گیا: ",
-  "Bookmark": "بک مارک"
+  "Bookmark": "بک مارک",
+  "extensionName": {
+    "message": "یوٹیوب تبصرہ نیویگیٹر 95"
+  },
+  "extensionDescription": {
+    "message": "YouTube کے تبصروں کو تلاش کریں اور فلٹر کریں، 90 کی دہائی کے پرانی یادوں کے ساتھ۔"
+  }
 }

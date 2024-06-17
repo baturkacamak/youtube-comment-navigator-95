@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Könyvjelző hozzáadva: ",
-  "Bookmark": "Könyvjelző"
+  "Bookmark": "Könyvjelző",
+  "extensionName": {
+    "message": "YouTube Kommentár Navigátor 95"
+  },
+  "extensionDescription": {
+    "message": "Keresés és szűrés YouTube hozzászólásokkal, nosztalgikus 90-es évek hangulatával."
+  }
 }

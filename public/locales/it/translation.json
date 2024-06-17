@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Segnalibro aggiunto il: ",
-  "Bookmark": "Segnalibro"
+  "Bookmark": "Segnalibro",
+  "extensionName": {
+    "message": "Navigatore di Commenti YouTube 95"
+  },
+  "extensionDescription": {
+    "message": "Cerca e filtra i commenti di YouTube con un tocco nostalgico degli anni '90."
+  }
 }

@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Đã thêm dấu trang vào: ",
-  "Bookmark": "Dấu trang"
+  "Bookmark": "Dấu trang",
+  "extensionName": {
+    "message": "Trình Điều Hướng Bình Luận YouTube 95"
+  },
+  "extensionDescription": {
+    "message": "Tìm kiếm và lọc các bình luận trên YouTube với cảm giác hoài niệm của thập niên 90."
+  }
 }

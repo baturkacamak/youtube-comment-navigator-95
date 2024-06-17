@@ -104,5 +104,11 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "ブックマーク追加日: ",
-  "Bookmark": "ブックマーク"
+  "Bookmark": "ブックマーク",
+  "extensionName": {
+    "message": "YouTube コメントナビゲーター 95"
+  },
+  "extensionDescription": {
+    "message": "懐かしい90年代の雰囲気でYouTubeコメントを検索およびフィルタリングします。"
+  }
 }
