@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Закладка добавлена: ",
-  "Bookmark": "Закладка",
-  "extensionName": {
-    "message": "Навигатор комментариев YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "Ищите и фильтруйте комментарии на YouTube с ностальгическим настроением 90-х."
-  }
+  "Bookmark": "Закладка"
 }

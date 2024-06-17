@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "புத்தகம் சேர்க்கப்பட்டது: ",
-  "Bookmark": "புத்தகம்",
-  "extensionName": {
-    "message": "YouTube கருத்து நெவிகேட்டர் 95"
-  },
-  "extensionDescription": {
-    "message": "90களின் பழைய நினைவுகளை கொண்ட YouTube கருத்துக்களை தேடி வடிகட்டி."
-  }
+  "Bookmark": "புத்தகம்"
 }

@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Penanda ditambahake ing: ",
-  "Bookmark": "Penanda",
-  "extensionName": {
-    "message": "Navigator Komentar YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "Golek lan nyaring komentar YouTube kanthi getaran nostalgia 90-an."
-  }
+  "Bookmark": "Penanda"
 }

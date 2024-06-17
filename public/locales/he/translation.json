@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "סימנייה נוספה בתאריך: ",
-  "Bookmark": "סימנייה",
-  "extensionName": {
-    "message": "מנווט תגובות YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "חפש וסנן תגובות YouTube עם ניחוח נוסטלגי של שנות ה-90."
-  }
+  "Bookmark": "סימנייה"
 }

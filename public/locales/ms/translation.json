@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Penanda ditambah pada: ",
-  "Bookmark": "Penanda",
-  "extensionName": {
-    "message": "Navigator Komen YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "Cari dan tapis komen YouTube dengan suasana nostalgia 90-an."
-  }
+  "Bookmark": "Penanda"
 }

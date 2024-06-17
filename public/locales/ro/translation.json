@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Marcaj adăugat la: ",
-  "Bookmark": "Marcaj",
-  "extensionName": {
-    "message": "Navigator de Comentarii YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "Căutați și filtrați comentariile YouTube cu un vibe nostalgic din anii '90."
-  }
+  "Bookmark": "Marcaj"
 }

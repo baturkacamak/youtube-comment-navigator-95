@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Obeleživač dodan: ",
-  "Bookmark": "Obeleživač",
-  "extensionName": {
-    "message": "YouTube Коментатор Навигатор 95"
-  },
-  "extensionDescription": {
-    "message": "Претражите и филтрирајте YouTube коментаре са носталгичним духом 90-их."
-  }
+  "Bookmark": "Obeleživač"
 }

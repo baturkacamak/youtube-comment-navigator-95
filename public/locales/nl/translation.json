@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bladwijzer toegevoegd op: ",
-  "Bookmark": "Bladwijzer",
-  "extensionName": {
-    "message": "YouTube Comment Navigator 95"
-  },
-  "extensionDescription": {
-    "message": "Zoek en filter YouTube-reacties met een nostalgische jaren 90-sfeer."
-  }
+  "Bookmark": "Bladwijzer"
 }

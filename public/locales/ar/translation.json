@@ -104,11 +104,5 @@
     "format": "{{ago}} {{value}} {{unit}}"
   },
   "Bookmark added on: ": "تمت الإضافة في: ",
-  "Bookmark": "إشارة مرجعية",
-  "extensionName": {
-    "message": "مستعرض تعليقات YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "ابحث وقم بتصفية تعليقات YouTube مع لمسة من الحنين إلى التسعينات."
-  }
+  "Bookmark": "إشارة مرجعية"
 }

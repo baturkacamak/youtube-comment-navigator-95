@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "添加书签于: ",
-  "Bookmark": "书签",
-  "extensionName": {
-    "message": "YouTube 评论导航器 95"
-  },
-  "extensionDescription": {
-    "message": "以怀旧的90年代风格搜索和筛选YouTube评论。"
-  }
+  "Bookmark": "书签"
 }

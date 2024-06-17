@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bogmærke tilføjet den: ",
-  "Bookmark": "Bogmærke",
-  "extensionName": {
-    "message": "YouTube Kommentar Navigator 95"
-  },
-  "extensionDescription": {
-    "message": "Søg og filtrer YouTube-kommentarer med en nostalgisk 90'er-stemning."
-  }
+  "Bookmark": "Bogmærke"
 }

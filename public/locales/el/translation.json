@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Προστέθηκε σελιδοδείκτης στις: ",
-  "Bookmark": "Σελιδοδείκτης",
-  "extensionName": {
-    "message": "Πλοηγός Σχολίων YouTube 95"
-  },
-  "extensionDescription": {
-    "message": "Αναζήτηση και φιλτράρισμα σχολίων YouTube με μια νοσταλγική αίσθηση δεκαετίας 90."
-  }
+  "Bookmark": "Σελιδοδείκτης"
 }

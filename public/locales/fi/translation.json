@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Kirjanmerkki lisätty: ",
-  "Bookmark": "Kirjanmerkki",
-  "extensionName": {
-    "message": "YouTube Kommenttinavigaattori 95"
-  },
-  "extensionDescription": {
-    "message": "Etsi ja suodata YouTube-kommentteja nostalgisella 90-luvun tunnelmalla."
-  }
+  "Bookmark": "Kirjanmerkki"
 }

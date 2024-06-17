@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Idinagdag ang bookmark noong: ",
-  "Bookmark": "Bookmark",
-  "extensionName": {
-    "message": "YouTube Komento Navigator 95"
-  },
-  "extensionDescription": {
-    "message": "Maghanap at i-filter ang mga komento sa YouTube na may nostalgic na 90s na vibe."
-  }
+  "Bookmark": "Bookmark"
 }

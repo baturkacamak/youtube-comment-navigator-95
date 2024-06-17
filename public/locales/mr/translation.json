@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "वाचन चिन्ह जोडले: ",
-  "Bookmark": "वाचन चिन्ह",
-  "extensionName": {
-    "message": "YouTube टिप्पणी नेव्हिगेटर 95"
-  },
-  "extensionDescription": {
-    "message": "यूट्यूब टिप्पण्या शोधा आणि फिल्टर करा, 90 च्या दशकातील जुन्या आठवणींसह."
-  }
+  "Bookmark": "वाचन चिन्ह"
 }

@@ -104,11 +104,5 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bookmark added on: ",
-  "Bookmark": "Bookmark",
-  "extensionName": {
-    "message": "YouTube Comment Navigator 95"
-  },
-  "extensionDescription": {
-    "message": "Search and filter YouTube comments with a nostalgic 90s vibe."
-  }
+  "Bookmark": "Bookmark"
 }
