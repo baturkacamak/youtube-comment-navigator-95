@@ -45,6 +45,6 @@ fi
 
 # Create the zip file excluding *.map files and specified directories/files
 echo -e "${BLUE}📦 Creating zip file '$ZIP_NAME' excluding *.map files and specified directories/files...${NC}"
-zip -r "$ZIP_NAME" "$BUILD_DIR" -x "*.map" "$BUILD_DIR/example-comments/*" "$BUILD_DIR/icon.png"
+zip -r "$ZIP_NAME" "$BUILD_DIR" -x "*.map" "$BUILD_DIR/example-comments/*" "$BUILD_DIR/icon.png" "$BUILD_DIR/icon.webp"
 
 echo -e "${GREEN}✅ Build directory '$BUILD_DIR' has been zipped into '$ZIP_NAME' excluding map files and specified directories/files.${NC}"
