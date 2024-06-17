@@ -12,7 +12,10 @@ export function openDatabaseConnection(dbName: string = DEFAULT_DB_NAME, storeNa
             }
         };
         request.onsuccess = (event: Event) => resolve((event.target as IDBOpenDBRequest).result);
-        request.onerror = (event: Event) => reject((event.target as IDBOpenDBRequest).error);
+        request.onerror = (event: Event) => {
+            console.error(`Failed to open database: ${dbName}`, (event.target as IDBOpenDBRequest).error);
+            reject((event.target as IDBOpenDBRequest).error);
+        };
     });
 }
 
@@ -29,11 +32,20 @@ export const retrieveDataFromDB = async (
     return new Promise((resolve, reject) => {
         const transaction = getObjectStoreTransaction(db, storeName, 'readonly');
         const request = transaction.get(key);
-        request.onsuccess = () => resolve(request.result ? request.result.data : null);
-        request.onerror = (event: Event) => reject((event.target as IDBRequest).error);
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve(request.result);
+            } else {
+                console.warn(`No data found for key: ${key}`);
+                resolve(null);
+            }
+        };
+        request.onerror = (event: Event) => {
+            console.error(`Failed to retrieve data for key: ${key}`, (event.target as IDBRequest).error);
+            reject((event.target as IDBRequest).error);
+        };
     });
 };
-
 
 export const isCacheValid = (cachedData: any, cacheDuration: number = DEFAULT_CACHE_EXPIRATION_DURATION): boolean => {
     if (!cachedData) return false;
@@ -76,7 +88,10 @@ export const storeDataInDB = async (
         const transaction = getObjectStoreTransaction(db, storeName, 'readwrite');
         const request = transaction.put(dataEntry);
         request.onsuccess = () => resolve();
-        request.onerror = (event: Event) => reject((event.target as IDBRequest).error);
+        request.onerror = (event: Event) => {
+            console.error(`Failed to store data for key: ${key}`, (event.target as IDBRequest).error);
+            reject((event.target as IDBRequest).error);
+        };
     });
 };
 
@@ -90,6 +105,9 @@ export const removeDataFromDB = async (
         const transaction = getObjectStoreTransaction(db, storeName, 'readwrite');
         const request = transaction.delete(key);
         request.onsuccess = () => resolve();
-        request.onerror = (event: Event) => reject((event.target as IDBRequest).error);
+        request.onerror = (event: Event) => {
+            console.error(`Failed to remove data for key: ${key}`, (event.target as IDBRequest).error);
+            reject((event.target as IDBRequest).error);
+        };
     });
 };
