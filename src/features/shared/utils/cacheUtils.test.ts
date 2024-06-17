@@ -1,5 +1,3 @@
-// indexedDB.test.ts
-
 import {
     openDatabaseConnection,
     retrieveDataFromDB,
@@ -61,5 +59,62 @@ describe('IndexedDB Utility Functions', () => {
 
         const cachedData = await getCachedDataIfValid(TEST_KEY, DEFAULT_CACHE_EXPIRATION_DURATION, TEST_DB_NAME, TEST_STORE_NAME);
         expect(cachedData).toBeNull();
+    });
+
+    test('should handle retrieval of non-existent data gracefully', async () => {
+        const retrievedData = await retrieveDataFromDB('nonExistentKey', TEST_DB_NAME, TEST_STORE_NAME);
+        expect(retrievedData).toBeNull();
+    });
+
+    test('should log error when failing to open database', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidDBName = '';
+        try {
+            await openDatabaseConnection(invalidDBName, TEST_STORE_NAME);
+        } catch (error) {
+            expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Failed to open database'), expect.anything());
+        }
+
+        (console.error as jest.Mock).mockRestore();
+    });
+
+    test('should log error when failing to store data', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidStoreName = '';
+        try {
+            await storeDataInDB(TEST_KEY, TEST_DATA, true, TEST_DB_NAME, invalidStoreName);
+        } catch (error) {
+            expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Failed to store data for key'), expect.anything());
+        }
+
+        (console.error as jest.Mock).mockRestore();
+    });
+
+    test('should log error when failing to retrieve data', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidStoreName = '';
+        try {
+            await retrieveDataFromDB(TEST_KEY, TEST_DB_NAME, invalidStoreName);
+        } catch (error) {
+            expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Failed to retrieve data for key'), expect.anything());
+        }
+
+        (console.error as jest.Mock).mockRestore();
+    });
+
+    test('should log error when failing to remove data', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
+        const invalidStoreName = '';
+        try {
+            await removeDataFromDB(TEST_KEY, TEST_DB_NAME, invalidStoreName);
+        } catch (error) {
+            expect(console.error).toHaveBeenCalledWith(expect.stringContaining('Failed to remove data for key'), expect.anything());
+        }
+
+        (console.error as jest.Mock).mockRestore();
     });
 });
