@@ -28,3 +28,7 @@ yarn-error.log*
 /.idea/php.xml
 /.idea/vcs.xml
 /.idea/youtube-comment-navigator-95.iml
+/public/example-comments/
+/public/icon.png
+/public/icon.webp
+/bin/
