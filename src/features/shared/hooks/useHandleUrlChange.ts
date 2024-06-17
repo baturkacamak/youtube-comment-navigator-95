@@ -1,10 +1,11 @@
 // src/hooks/useHandleUrlChange.ts
 import {useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {resetState, setInitialComments, updateCommentsData} from '../../../store/store';
+import {resetState, setBookmarkedComments, setInitialComments, updateCommentsData} from '../../../store/store';
 import {fetchContinuationTokenFromRemote} from '../../comments/services/fetchContinuationData';
 import {fetchCommentsFromRemote} from '../../comments/services/remoteFetch';
 import useUrlChange from './useUrlChange';
+import {retrieveDataFromDB} from "../utils/cacheUtils";
 
 const useHandleUrlChange = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,8 @@ const useHandleUrlChange = () => {
         dispatch(resetState());
         const continuationToken = await fetchContinuationTokenFromRemote();
         await fetchCommentsFromRemote(handleFetchedComments, signal, false, continuationToken);
+        const bookmarks = await retrieveDataFromDB('bookmarks');
+        dispatch(setBookmarkedComments(bookmarks.data || []));
     });
 };
 
