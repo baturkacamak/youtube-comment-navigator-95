@@ -20,7 +20,7 @@ const useLoadComments = (bypassCache = false) => {
             dispatch(updateCommentsData({ comments, isLoading: false }));
             dispatch(setInitialComments(comments));
         };
-        await fetchComments(handleFetchedComments);
+        await fetchComments(handleFetchedComments, bypassCache);
     };
 
     const loadChatReplies = async () => {

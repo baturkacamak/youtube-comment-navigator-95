@@ -60,7 +60,7 @@ export const fetchCommentsFromRemote = async (
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
         const cachedData = await getCachedDataIfValid(LOCAL_STORAGE_KEY);
 
-        if (cachedData) {
+        if (!bypassCache && cachedData) {
             onCommentsFetched(cachedData.items);
             return;
         }
