@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Záložka pridaná: ",
-  "Bookmark": "Záložka"
+  "Bookmark": "Záložka",
+  "If you enjoy using this extension, please": "Ak si užívate používanie tohto rozšírenia, prosím",
+  "rate it on the Chrome Web Store": "ohodnoťte ho v Chrome Web Store"
 }

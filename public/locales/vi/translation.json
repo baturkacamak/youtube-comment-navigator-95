@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Đã thêm dấu trang vào: ",
-  "Bookmark": "Dấu trang"
+  "Bookmark": "Dấu trang",
+  "If you enjoy using this extension, please": "Nếu bạn thích sử dụng tiện ích mở rộng này, vui lòng",
+  "rate it on the Chrome Web Store": "đánh giá nó trên Chrome Web Store"
 }

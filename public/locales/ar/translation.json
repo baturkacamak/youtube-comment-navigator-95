@@ -104,5 +104,7 @@
     "format": "{{ago}} {{value}} {{unit}}"
   },
   "Bookmark added on: ": "تمت الإضافة في: ",
-  "Bookmark": "إشارة مرجعية"
+  "Bookmark": "إشارة مرجعية",
+  "If you enjoy using this extension, please": "إذا كنت تستمتع باستخدام هذا الملحق، من فضلك",
+  "rate it on the Chrome Web Store": "قيّمه على متجر Chrome الإلكتروني"
 }

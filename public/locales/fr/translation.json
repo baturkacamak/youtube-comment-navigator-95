@@ -104,5 +104,7 @@
     "format": "{{ago}} {{value}} {{unit}}"
   },
   "Bookmark added on: ": "Signet ajouté le: ",
-  "Bookmark": "Signet"
+  "Bookmark": "Signet",
+  "If you enjoy using this extension, please": "Si vous aimez utiliser cette extension, veuillez",
+  "rate it on the Chrome Web Store": "la noter sur le Chrome Web Store"
 }

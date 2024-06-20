@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "ਬੁਕਮਾਰਕ 'ਤੇ ਜੋੜਿਆ ਗਿਆ: ",
-  "Bookmark": "ਬੁਕਮਾਰਕ"
+  "Bookmark": "ਬੁਕਮਾਰਕ",
+  "If you enjoy using this extension, please": "ਜੇ ਤੁਸੀਂ ਇਸ ਐਕਸਟੈਂਸ਼ਨ ਦਾ ਵਰਤੋਂ ਕਰਦੇ ਹੋ, ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ",
+  "rate it on the Chrome Web Store": "ਇਸਨੂੰ Chrome Web Store ਤੇ ਰੇਟ ਕਰੋ"
 }

@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bukot hiyaara ta: ",
-  "Bookmark": "Bukot"
+  "Bookmark": "Bukot",
+  "If you enjoy using this extension, please": "आपण या विस्ताराचा वापर करून आनंद घेत असाल तर, कृपया",
+  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याचे रेटिंग द्या"
 }

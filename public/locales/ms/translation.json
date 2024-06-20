@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Penanda ditambah pada: ",
-  "Bookmark": "Penanda"
+  "Bookmark": "Penanda",
+  "If you enjoy using this extension, please": "Jika anda menikmati menggunakan sambungan ini, sila",
+  "rate it on the Chrome Web Store": "beri penilaian di Chrome Web Store"
 }

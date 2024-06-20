@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "ブックマーク追加日: ",
-  "Bookmark": "ブックマーク"
+  "Bookmark": "ブックマーク",
+  "If you enjoy using this extension, please": "この拡張機能を気に入っていただけた場合は、ぜひ",
+  "rate it on the Chrome Web Store": "Chrome ウェブストアで評価してください"
 }

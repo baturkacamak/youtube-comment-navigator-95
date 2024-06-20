@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "वाचन चिन्ह जोडले: ",
-  "Bookmark": "वाचन चिन्ह"
+  "Bookmark": "वाचन चिन्ह",
+  "If you enjoy using this extension, please": "जर तुम्हाला या विस्ताराचा वापर करायला आवडत असेल, तर कृपया",
+  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याला रेट करा"
 }

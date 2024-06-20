@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Yer imi eklendi: ",
-  "Bookmark": "Yer imi"
+  "Bookmark": "Yer imi",
+  "If you enjoy using this extension, please": "Bu uzantıyı kullanmaktan memnun kalıyorsanız, lütfen",
+  "rate it on the Chrome Web Store": "Chrome Web Mağazasında derecelendirin"
 }

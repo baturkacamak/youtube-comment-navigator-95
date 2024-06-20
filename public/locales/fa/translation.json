@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "نشانه‌گذاری شده در: ",
-  "Bookmark": "نشانه‌گذاری"
+  "Bookmark": "نشانه‌گذاری",
+  "If you enjoy using this extension, please": "اگر از استفاده از این افزونه لذت می‌برید، لطفاً",
+  "rate it on the Chrome Web Store": "آن را در فروشگاه Chrome امتیاز دهید"
 }

@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Idinagdag ang bookmark noong: ",
-  "Bookmark": "Bookmark"
+  "Bookmark": "Bookmark",
+  "If you enjoy using this extension, please": "Kung nasisiyahan ka sa paggamit ng extension na ito, mangyaring",
+  "rate it on the Chrome Web Store": "i-rate ito sa Chrome Web Store"
 }

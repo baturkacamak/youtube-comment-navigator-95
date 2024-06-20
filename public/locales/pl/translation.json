@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Zakładka dodana dnia: ",
-  "Bookmark": "Zakładka"
+  "Bookmark": "Zakładka",
+  "If you enjoy using this extension, please": "Jeśli podoba Ci się to rozszerzenie, proszę",
+  "rate it on the Chrome Web Store": "oceń je w Chrome Web Store"
 }

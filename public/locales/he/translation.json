@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "סימנייה נוספה בתאריך: ",
-  "Bookmark": "סימנייה"
+  "Bookmark": "סימנייה",
+  "If you enjoy using this extension, please": "אם אתה נהנה להשתמש בתוסף זה, בבקשה",
+  "rate it on the Chrome Web Store": "דרג אותו בחנות האינטרנט של Chrome"
 }

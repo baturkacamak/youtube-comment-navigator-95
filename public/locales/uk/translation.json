@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Додано в закладки: ",
-  "Bookmark": "Закладка"
+  "Bookmark": "Закладка",
+  "If you enjoy using this extension, please": "Якщо вам подобається використовувати це розширення, будь ласка",
+  "rate it on the Chrome Web Store": "оцініть його в Chrome Web Store"
 }

@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "북마크 추가 날짜: ",
-  "Bookmark": "북마크"
+  "Bookmark": "북마크",
+  "If you enjoy using this extension, please": "이 확장 프로그램을 사용하여 즐기신다면,",
+  "rate it on the Chrome Web Store": "Chrome 웹 스토어에서 평가해 주세요"
 }

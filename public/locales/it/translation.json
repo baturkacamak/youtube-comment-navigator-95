@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Segnalibro aggiunto il: ",
-  "Bookmark": "Segnalibro"
+  "Bookmark": "Segnalibro",
+  "If you enjoy using this extension, please": "Se ti piace usare questa estensione, per favore",
+  "rate it on the Chrome Web Store": "valutala sul Chrome Web Store"
 }

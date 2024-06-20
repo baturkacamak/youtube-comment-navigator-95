@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "বুকমার্ক যোগ করা হয়েছে: ",
-  "Bookmark": "বুকমার্ক"
+  "Bookmark": "বুকমার্ক",
+  "If you enjoy using this extension, please": "আপনি যদি এই এক্সটেনশনটি ব্যবহার করে আনন্দ পান, তাহলে",
+  "rate it on the Chrome Web Store": "Chrome ওয়েব স্টোরে এটি রেট করুন"
 }

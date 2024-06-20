@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "బుక్‌మార్క్ జోడించిన తేదీ: ",
-  "Bookmark": "బుక్‌మార్క్"
+  "Bookmark": "బుక్‌మార్క్",
+  "If you enjoy using this extension, please": "మీరు ఈ విస్తరణను ఉపయోగించడానికి ఆనందిస్తే, దయచేసి",
+  "rate it on the Chrome Web Store": "దానిని Chrome వెబ్ స్టోర్‌లో రేట్ చేయండి"
 }

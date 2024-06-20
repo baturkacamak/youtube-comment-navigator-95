@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "புத்தகம் சேர்க்கப்பட்டது: ",
-  "Bookmark": "புத்தகம்"
+  "Bookmark": "புத்தகம்",
+  "If you enjoy using this extension, please": "நீங்கள் இந்த நீட்டிப்பைப் பயன்படுத்த விரும்பினால், தயவுசெய்து",
+  "rate it on the Chrome Web Store": "அதை Chrome வலைக்கடையில் மதிப்பீடு செய்யுங்கள்"
 }

@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bladwijzer toegevoegd op: ",
-  "Bookmark": "Bladwijzer"
+  "Bookmark": "Bladwijzer",
+  "If you enjoy using this extension, please": "Als u geniet van het gebruik van deze extensie, wilt u dan",
+  "rate it on the Chrome Web Store": "beoordeel het in de Chrome Web Store"
 }

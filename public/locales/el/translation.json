@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Προστέθηκε σελιδοδείκτης στις: ",
-  "Bookmark": "Σελιδοδείκτης"
+  "Bookmark": "Σελιδοδείκτης",
+  "If you enjoy using this extension, please": "Αν σας αρέσει αυτή η επέκταση, παρακαλώ",
+  "rate it on the Chrome Web Store": "βαθμολογήστε την στο Chrome Web Store"
 }

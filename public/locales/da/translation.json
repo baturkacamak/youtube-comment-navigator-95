@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Bogmærke tilføjet den: ",
-  "Bookmark": "Bogmærke"
+  "Bookmark": "Bogmærke",
+  "If you enjoy using this extension, please": "Hvis du nyder at bruge denne udvidelse, bedes du",
+  "rate it on the Chrome Web Store": "bedømme den på Chrome Web Store"
 }

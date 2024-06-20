@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Lesezeichen hinzugefügt am: ",
-  "Bookmark": "Lesezeichen"
+  "Bookmark": "Lesezeichen",
+  "If you enjoy using this extension, please": "Wenn Ihnen diese Erweiterung gefällt, bitte",
+  "rate it on the Chrome Web Store": "bewerten Sie sie im Chrome Web Store"
 }

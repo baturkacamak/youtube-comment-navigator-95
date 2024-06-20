@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Obeleživač dodan: ",
-  "Bookmark": "Obeleživač"
+  "Bookmark": "Obeleživač",
+  "If you enjoy using this extension, please": "Ако уживате у коришћењу овог проширења, молимо вас",
+  "rate it on the Chrome Web Store": "оцените га на Chrome Web Store"
 }

@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Penanda ditambahake ing: ",
-  "Bookmark": "Penanda"
+  "Bookmark": "Penanda",
+  "If you enjoy using this extension, please": "Yen sampeyan seneng nggunakake ekstensi iki, monggo",
+  "rate it on the Chrome Web Store": "nuli menehi rating ing Chrome Web Store"
 }

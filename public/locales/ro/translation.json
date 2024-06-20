@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "Marcaj adăugat la: ",
-  "Bookmark": "Marcaj"
+  "Bookmark": "Marcaj",
+  "If you enjoy using this extension, please": "Dacă vă place să utilizați această extensie, vă rugăm",
+  "rate it on the Chrome Web Store": "evaluați-o în Chrome Web Store"
 }

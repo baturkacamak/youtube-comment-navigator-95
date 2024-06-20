@@ -104,5 +104,7 @@
     "format": "{{value}} {{unit}} {{ago}}"
   },
   "Bookmark added on: ": "添加书签于: ",
-  "Bookmark": "书签"
+  "Bookmark": "书签",
+  "If you enjoy using this extension, please": "如果您喜欢使用此扩展程序，请",
+  "rate it on the Chrome Web Store": "在 Chrome 网上应用店上评价它"
 }
