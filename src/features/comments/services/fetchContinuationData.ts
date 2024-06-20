@@ -61,35 +61,24 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
             body: JSON.stringify({
                 context: {
                     client: {
-                        // hl: "en",
-                        // gl: "ES",
-                        // remoteHost: "149.100.25.33",
                         deviceMake: "",
                         deviceModel: "",
-                        // visitorData: visitorData,
                         userAgent: navigator.userAgent,
                         clientName: clientName,
                         clientVersion: clientVersion,
                         osName: navigator.platform,
                         osVersion: "",
                         originalUrl: referrer,
-                        // screenPixelDensity: window.devicePixelRatio,
                         platform: "DESKTOP",
                         clientFormFactor: "UNKNOWN_FORM_FACTOR",
-                        // configInfo: {
-                        //     appInstallData: "CNjhh7MGELDusAUQzfiwBRCmmrAFEOPRsAUQy_KwBRDX6a8FEKzqsAUQ26-vBRDK-bAFEOLUrgUQi_KwBRDr6P4SEIjjrwUQzuuwBRDUoa8FEJaVsAUQo-2wBRDS-LAFEL22rgUQq_uwBRCJ6K4FEKKSsAUQkIz_EhC-irAFEPPrsAUQgqL_EhCDv7AFEMf9sAUQhIWvBRDX9bAFEPjSsAUQlp__EhCXg7AFEIiHsAUQoviwBRDPqLAFELHcsAUQxv-wBRDZya8FELWx_xIQ2OWwBRDs9rAFELn4sAUQyPiwBRDjrf8SEJT8sAUQyK7_EhD8hbAFEJPvsAUQ0-GvBRD96rAFEMzfrgUQrNiwBRCi6LAFEKXC_hIQvZmwBRD7q_8SENbnsAUQydewBRCD368FEPvasAUQ6sOvBRCO2rAFEM_4sAUQgfuwBRDJ968FEParsAUQ7_awBRC3768FEP_ksAUQ86GwBRCn47AFEKKBsAUQoOiwBRCa8K8FENCNsAUQ_PCwBRD-8LAFEMCw_xIQq--wBRDViLAFEJCysAUQ3oj_EhDuoq8FELersAUQiuywBRDd6P4SEK3jsAUQ192wBRDvzbAFELfq_hIQqtiwBRDl9LAFEM3XsAUQ9KuwBRCC9rAFENXdsAUQvvmvBRCLz7AFEI_EsAUQ4eywBRCNzLAFEOuTrgUQntCwBRD3sf8SEKiasAUQ-vCwBRDy7LAFKiBDQU1TRWhVSm9MMndETkhrQnFDUTlBdkwxQVFkQnc9PQ%3D%3D"
-                        // },
                         screenDensityFloat: window.devicePixelRatio,
                         userInterfaceTheme: "USER_INTERFACE_THEME_DARK",
                         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                        // browserName: "Edge Chromium",
                         browserVersion: clientVersion,
                         acceptHeader: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                        // deviceExperimentId: "ChxOek0zTnpRME1qUTNOakk0TlRrMk56TTVPQT09ENjhh7MGGNjhh7MG",
                         screenWidthPoints: window.innerWidth,
                         screenHeightPoints: window.innerHeight,
                         utcOffsetMinutes: new Date().getTimezoneOffset() * -1,
-                        // memoryTotalKbytes: navigator.deviceMemory ? navigator.deviceMemory * 1024 : undefined,
                         clientScreen: "WATCH",
                         mainAppWebInfo: {
                             graftUrl: `/watch?v=${videoId}`,
@@ -106,16 +95,12 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
                         internalExperimentFlags: [],
                         consistencyTokenJars: []
                     },
-                    clickTracking: {
-                        // clickTrackingParams: "CIMBEKQwGBAiEwiG5_qpv8eGAxWbIgYAHTdJD5QyB3JlbGF0ZWRIpZCk5q79m9_XAZoBBQgBEPgd"
-                    },
                     adSignalsInfo: {
                         params: [
                             { key: "dt", value: String(Date.now()) },
                             { key: "flash", value: "0" },
                             { key: "frm", value: "0" },
                             { key: "u_tz", value: String(new Date().getTimezoneOffset() * -1) },
-                            // { key: "u_his", value: String(history.length) },
                             { key: "u_h", value: String(window.innerHeight) },
                             { key: "u_w", value: String(window.innerWidth) },
                             { key: "u_ah", value: String(window.screen.availHeight) },
