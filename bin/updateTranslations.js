@@ -1,48 +1,34 @@
 const fs = require('fs');
 const path = require('path');
 
-const translations = {};
+const translations = {
+};
 
 const localesDir = path.join(__dirname, '../public/locales');
 
-fs.readdir(localesDir, (err, files) => {
-    if (err) {
-        console.error('Error reading locales directory:', err);
-        return;
+if (!fs.existsSync(localesDir)) {
+    fs.mkdirSync(localesDir);
+}
+
+Object.keys(translations).forEach(lang => {
+    const langDir = path.join(localesDir, lang);
+    if (!fs.existsSync(langDir)) {
+        fs.mkdirSync(langDir);
     }
 
-    files.forEach(file => {
-        const langDir = path.join(localesDir, file);
-        const translationFilePath = path.join(langDir, 'translation.json');
+    const messagesFilePath = path.join(langDir, 'translation.json');
+    let existingTranslations = {};
 
-        fs.readFile(translationFilePath, 'utf8', (err, data) => {
-            if (err) {
-                console.error(`Error reading translation file for ${file}:`, err);
-                return;
-            }
+    if (fs.existsSync(messagesFilePath)) {
+        existingTranslations = JSON.parse(fs.readFileSync(messagesFilePath, 'utf8'));
+    }
 
-            let jsonData;
-            try {
-                jsonData = JSON.parse(data);
-            } catch (err) {
-                console.error(`Error parsing JSON for ${file}:`, err);
-                return;
-            }
+    const updatedTranslations = {
+        ...existingTranslations,
+        ...translations[lang]
+    };
 
-            if (translations[file]) {
-                jsonData = { ...jsonData, ...translations[file] };
-
-                fs.writeFile(translationFilePath, JSON.stringify(jsonData, null, 2), 'utf8', err => {
-                    if (err) {
-                        console.error(`Error writing translation file for ${file}:`, err);
-                        return;
-                    }
-
-                    console.log(`Updated translation file for ${file}`);
-                });
-            } else {
-                console.warn(`No translations found for ${file}`);
-            }
-        });
-    });
+    fs.writeFileSync(messagesFilePath, JSON.stringify(updatedTranslations, null, 2), 'utf8');
 });
+
+console.log('Translations created successfully.');
