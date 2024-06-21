@@ -9,15 +9,6 @@ export interface BoxProps {
     darkBorderColor?: string;
 }
 
-export interface LoadingSectionProps {
-    onLoadComments: (bypassCache?: boolean) => void;
-    onLoadChat: () => void;
-    onLoadTranscript: () => void;
-    onLoadAll: (bypassCache?: boolean) => void;
-    repliesCount: number;
-    transcriptsCount: number;
-}
-
 export interface TooltipProps {
     text: string;
     children: React.ReactNode;
