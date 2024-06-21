@@ -8,7 +8,10 @@ export const transformComment = (comment: any): Comment => {
     const payload = comment.payload?.commentEntityPayload;
     const author = payload?.author?.displayName || 'Unknown';
     const content = payload?.properties?.content?.content || 'No content';
-    const likes = convertLikesToNumber(payload?.toolbar?.likeCountLiked || 0);
+    let likes = payload?.toolbar?.likeCountNotliked || 0;
+    if (likes === ' ') {
+        likes = 0;
+    }
     const published = payload?.properties?.publishedTime || 'Unknown';
     const publishedDate = published !== 'Unknown' ? timeAgoToDate(published).getTime() : Date.now();
     const authorAvatarUrl = payload?.author?.avatarThumbnailUrl || 'Unknown';
