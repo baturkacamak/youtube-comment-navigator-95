@@ -48,7 +48,7 @@ const App: React.FC = () => {
                 },
                 content: (
                     <>
-                        <div className="bg-white dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
@@ -82,7 +82,7 @@ const App: React.FC = () => {
                 },
                 content: (
                     <>
-                        <div className="bg-white dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+                        <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
