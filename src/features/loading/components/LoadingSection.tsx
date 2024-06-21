@@ -6,47 +6,42 @@ import {
     InboxIcon
 } from '@heroicons/react/24/outline';
 import Button from "../../shared/components/Button";
-import { LoadingSectionProps } from "../../../types/layoutTypes";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
+import useLoadComments from "../../comments/hooks/useLoadComments";
 
-const LoadingSection: React.FC<LoadingSectionProps> = ({
-                                                           onLoadComments,
-                                                           onLoadChat,
-                                                           onLoadTranscript,
-                                                           onLoadAll,
-                                                           repliesCount,
-                                                           transcriptsCount
-                                                       }) => {
+const LoadingSection = () => {
+    const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadComments();
+
     const { t } = useTranslation();
     const commentsCount = useSelector((state: RootState) => state.comments.length);
 
     return (
         <div className="grid grid-cols-2 gap-2" aria-label={t('Loading Section')}>
             <Button
-                onClick={() => onLoadComments(true)}
+                onClick={() => loadComments(true)}
                 icon={ChatBubbleOvalLeftIcon}
-                label={t('Load Comments ({{count}})', { count: commentsCount })}
+                label={t('Load Comments')}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
                 aria-label={t('Load Comments ({{count}})', { count: commentsCount })}
             />
             <Button
-                onClick={onLoadChat}
+                onClick={loadChatReplies}
                 icon={InboxIcon}
-                label={t('Load Chat', { count: repliesCount })}
+                label={t('Load Chat')}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Chat', { count: repliesCount })}
+                aria-label={t('Load Chat')}
             />
             <Button
-                onClick={onLoadTranscript}
+                onClick={loadTranscript}
                 icon={DocumentTextIcon}
-                label={t('Load Transcript', { count: transcriptsCount })}
+                label={t('Load Transcript')}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Transcript', { count: transcriptsCount })}
+                aria-label={t('Load Transcript')}
             />
             <Button
-                onClick={() => onLoadAll(true)}
+                onClick={() => loadAll(true)}
                 icon={ClipboardDocumentListIcon}
                 label={t('Load All')}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
