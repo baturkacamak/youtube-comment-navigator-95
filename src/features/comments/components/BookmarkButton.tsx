@@ -55,7 +55,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
     };
 
     return (
-        <Tooltip text={bookmarkAddedDate ? t('Bookmark added on: ') + bookmarkAddedDate : t('Bookmark')}>
+        <Tooltip text={bookmarkAddedDate ? t('Bookmark added on: ') + bookmarkAddedDate : ''}>
             <button
                 onClick={handleBookmark}
                 className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'}`}
