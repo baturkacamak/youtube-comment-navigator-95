@@ -27,16 +27,20 @@ const useAppState = () => {
     const { handleSearch } = useSearchComments();
     const { initialLoadCompleted } = useComments();
 
+    const fetchBookmarkedComments = useCallback(async () => {
+        const bookmarks = await retrieveDataFromDB('bookmarks');
+        dispatch(setBookmarkedComments(bookmarks.data || []));
+    }, [dispatch]);
+
+    useEffect(() => {
+        fetchBookmarkedComments();
+    }, [fetchBookmarkedComments]);
+
     useEffect(() => {
         if (activeTab === 'bookmarks') {
-            const fetchBookmarkedComments = async () => {
-                const bookmarks = await retrieveDataFromDB('bookmarks');
-                dispatch(setBookmarkedComments(bookmarks.data || []));
-            };
-
             fetchBookmarkedComments();
         }
-    }, [activeTab, dispatch]);
+    }, [activeTab, fetchBookmarkedComments]);
 
     const filteredAndSortedComments = useMemo(() => {
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
