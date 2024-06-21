@@ -16,7 +16,7 @@ export interface Filters {
     minLength: number;
     maxLength: number;
     extendedSearch: boolean;
-    keyword: string; // Add the missing keyword property here
+    keyword: string;
 }
 
 export interface FilterState extends Filters {}
@@ -59,15 +59,6 @@ export interface SelectBoxProps {
 export interface ControlPanelProps {
     filters: any;
     setFilters: (filters: any) => void;
-    onLoadComments: (bypassCache?: boolean) => Promise<void>;
-    onLoadChat: () => Promise<void>;
-    onLoadTranscript: () => Promise<void>;
-    onLoadAll: (bypassCache?: boolean) => Promise<void>;
-    repliesCount: number;
-    transcriptsCount: number;
-    openSettings: () => void;
-    toggleBookmarkedComments: () => void;
-    showBookmarkedComments: boolean;
 }
 
 export interface AdvancedSortingProps {
