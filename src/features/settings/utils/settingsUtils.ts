@@ -3,6 +3,8 @@ export const getSettings = (): any => {
     return savedSettings ? JSON.parse(savedSettings) : {};
 };
 
-export const saveSettings = (settings: any): void => {
-    localStorage.setItem('settings', JSON.stringify(settings));
+export const saveSettings = (newSettings: any): void => {
+    const currentSettings = getSettings();
+    const updatedSettings = { ...currentSettings, ...newSettings };
+    localStorage.setItem('settings', JSON.stringify(updatedSettings));
 };
