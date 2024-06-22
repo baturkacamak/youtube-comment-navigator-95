@@ -16,7 +16,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
     };
 
     return (
-        <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-1" aria-label={`Radio filter for ${name}`} role="radio" aria-checked={selectedValue === value}>
+        <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-2 cursor-pointer" aria-label={`Radio filter for ${name}`} role="radio" aria-checked={selectedValue === value}>
             <div className="relative">
                 <input
                     type="radio"
@@ -28,13 +28,11 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
                     aria-checked={selectedValue === value}
                     aria-label={name}
                 />
-                <div className={`h-5 w-5 border-2 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out transform ${selectedValue === value ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400 scale-110' : 'bg-white border-gray-400 dark:border-gray-600 scale-100'}`}>
-                    {selectedValue === value && (
-                        <div className="w-2.5 h-2.5 bg-white rounded-full" />
-                    )}
+                <div className={`h-5 w-5 border-2 rounded-full flex items-center justify-center transition-all duration-300 ease-in-out ${selectedValue === value ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400 scale-110' : 'bg-white dark:bg-gray-700 border-gray-400 dark:border-gray-600'}`}>
+
                 </div>
             </div>
-            <div className="ml-3 flex items-center">
+            <div className="ml-3 flex items-center space-x-2">
                 {icon}
                 <span className="truncate">{label}</span>
                 {selectedValue === value && (
