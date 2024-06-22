@@ -4,6 +4,7 @@ import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
 import CommentList from './features/comments/components/CommentList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
+import Transcript from './features/transcripts/components/Transcript'; // Import the Transcript component
 import useAppState from './features/shared/hooks/useAppState';
 import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
 import './styles/App.scss';
@@ -66,7 +67,7 @@ const App: React.FC = () => {
                 label: t('Transcript'),
                 icon: DocumentTextIcon,
             },
-            content: <p>Transcript content goes here...</p>,
+            content: <Transcript />, // Include the Transcript component here
         },
         {
             title: {
