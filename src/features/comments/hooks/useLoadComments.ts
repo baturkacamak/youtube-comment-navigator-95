@@ -1,15 +1,15 @@
 import { useDispatch } from 'react-redux';
+
+import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/fetchComments';
 import {
-    setComments,
-    setCommentsCount,
+    setComments, setCommentsCount,
+    setInitialComments,
     setLoading,
     setReplies,
-    setTranscripts,
-    setTranscriptsCount,
     setRepliesCount,
-    updateCommentsData, setInitialComments
-} from '../../../store/store';
-import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/fetchComments';
+    setTranscripts, setTranscriptsCount,
+    updateCommentsData
+} from "../../../store/store";
 
 const useLoadComments = (bypassCache = false) => {
     const dispatch = useDispatch();
