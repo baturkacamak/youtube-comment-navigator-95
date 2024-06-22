@@ -61,7 +61,7 @@ export const fetchCommentsFromRemote = async (
         const cachedData = await getCachedDataIfValid(LOCAL_STORAGE_KEY);
 
         if (!bypassCache && cachedData) {
-            onCommentsFetched(cachedData.items);
+            onCommentsFetched(cachedData?.items || cachedData);
             return;
         }
 
