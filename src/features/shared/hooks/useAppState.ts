@@ -1,13 +1,15 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RootState } from '../../../types/rootState';
-import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {RootState} from '../../../types/rootState';
+import {setBookmarkedComments, setFilters, setShowBookmarked} from '../../../store/store';
 import useComments from '../../comments/hooks/useComments';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import useSearchComments from '../../comments/hooks/useSearchComments';
-import { Filters } from '../../../types/filterTypes';
-import { retrieveDataFromDB } from '../utils/cacheUtils';
+import {Filters} from '../../../types/filterTypes';
+import {retrieveDataFromDB} from '../utils/cacheUtils';
+import {extractYouTubeVideoIdFromUrl} from '../utils/extractYouTubeVideoIdFromUrl';
+import useTranscript from '../../transcripts/hooks/useTranscript';
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -20,11 +22,13 @@ const useAppState = () => {
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const repliesCount = useSelector((state: RootState) => state.repliesCount);
     const transcriptsCount = useSelector((state: RootState) => state.transcriptsCount);
+    const transcripts = useSelector((state: RootState) => state.transcripts);
 
-    const { sortComments } = useSortedComments(false);
-    const { filterComments } = useFilteredComments(false);
-    const { handleSearch } = useSearchComments();
-    const { initialLoadCompleted } = useComments();
+    const {sortComments} = useSortedComments(false);
+    const {filterComments} = useFilteredComments(false);
+    const {handleSearch} = useSearchComments();
+    const {initialLoadCompleted} = useComments();
+    const {loadTranscript} = useTranscript();
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await retrieveDataFromDB('bookmarks');
@@ -48,6 +52,10 @@ const useAppState = () => {
         }
     }, [activeTab, fetchBookmarkedComments, filters.keyword]);
 
+    useEffect(() => {
+        loadTranscript(); // Load transcript when videoId is available
+    }, [loadTranscript]);
+
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
@@ -68,6 +76,7 @@ const useAppState = () => {
         isLoading,
         repliesCount,
         transcriptsCount,
+        transcripts,
         initialLoadCompleted,
         handleSearch,
         filteredAndSortedComments,
