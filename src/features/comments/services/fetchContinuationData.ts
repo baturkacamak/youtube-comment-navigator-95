@@ -22,8 +22,6 @@ export const fetchContinuationData = (ytInitialData: any, isFetchingReply: boole
             return null;
         }
 
-        console.log("Continuation data fetched:", continuationData);
-
         return continuationData;
     } catch (err) {
         if (err instanceof Error) {
