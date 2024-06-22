@@ -9,7 +9,7 @@ const SettingsInfo: React.FC = () => {
     const {t} = useTranslation();
 
     return (
-        <div className="text-sm text-gray-600 dark:text-gray-400 mt-4 space-y-4">
+        <div className="text-sm text-gray-600 dark:text-gray-400 space-y-4">
             <hr className="mb-4"/>
             <p className="flex items-center">
                 <InformationCircleIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400"/>

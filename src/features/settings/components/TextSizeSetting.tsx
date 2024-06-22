@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { getSettings } from "../utils/settingsUtils";
-import {setTextSize} from "../../../store/store";
+import { setTextSize } from "../../../store/store";
 
 const TextSizeSetting: React.FC = () => {
     const { t } = useTranslation();
@@ -30,15 +30,15 @@ const TextSizeSetting: React.FC = () => {
     };
 
     return (
-        <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Text Size')}</label>
+        <>
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-200 mr-2">{t('Text Size')}</label>
             <SelectBox
                 options={textSizeOptions}
                 selectedOption={textSizeOptions.find(option => option.value === textSize)!}
                 setSelectedOption={handleTextSizeChange}
                 buttonClassName="w-full rounded-lg"
             />
-        </div>
+        </>
     );
 };
 

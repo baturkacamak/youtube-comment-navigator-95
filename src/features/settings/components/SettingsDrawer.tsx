@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { XMarkIcon, FunnelIcon, ArrowsUpDownIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { SettingsDrawerProps } from "../../../types/layoutTypes";
+import React, {useEffect, useState} from 'react';
+import {XMarkIcon} from '@heroicons/react/24/outline';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
+import {SettingsDrawerProps} from "../../../types/layoutTypes";
 import NotificationBubble from '../../shared/components/NotificationBubble';
 import ThemeSetting from './ThemeSetting';
 import TextSizeSetting from './TextSizeSetting';
 import LanguageSetting from './LanguageSetting';
 import SettingsInfo from './SettingsInfo';
-import ToggleButton from '../../shared/components/ToggleButton';
+import ShowFiltersSortsToggle from './ShowFiltersSortsToggle';
 import LoadingSection from "../../loading/components/LoadingSection";
-import { RootState } from '../../../types/rootState';
-import { getSettings } from "../utils/settingsUtils";
-import {setShowFiltersSorts} from "../../../store/store";
+import {RootState} from '../../../types/rootState';
 
 const useGoogleDrive = () => {
     return {
@@ -24,9 +22,9 @@ const useGoogleDrive = () => {
     };
 };
 
-const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
-    const { t } = useTranslation();
-    const { isSignedIn, signIn, signOut, saveFile, loadFile } = useGoogleDrive();
+const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
+    const {t} = useTranslation();
+    const {isSignedIn, signIn, signOut, saveFile, loadFile} = useGoogleDrive();
     const [showNotification, setShowNotification] = useState(false);
     const dispatch = useDispatch();
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
@@ -37,15 +35,6 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
             return () => clearTimeout(timer);
         }
     }, [showNotification]);
-
-    useEffect(() => {
-        const settings = getSettings();
-        dispatch(setShowFiltersSorts(settings.showFiltersSorts ?? true));
-    }, [dispatch]);
-
-    const handleToggleFiltersSorts = () => {
-        dispatch(setShowFiltersSorts(!showFiltersSorts));
-    };
 
     return (
         <>
@@ -70,26 +59,36 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
                                 className="text-gray-800 dark:text-gray-200 hover:text-teal-600 dark:hover:text-teal-400"
                                 aria-label={t('Close settings')}
                             >
-                                <XMarkIcon className="w-6 h-6" />
+                                <XMarkIcon className="w-6 h-6"/>
                             </button>
                         </div>
-                        <div id="settings-description" className="space-y-6">
-                            <ThemeSetting />
-                            <TextSizeSetting />
-                            <LanguageSetting />
-                            <ToggleButton
-                                isChecked={showFiltersSorts}
-                                onToggle={handleToggleFiltersSorts}
-                                label={t('Show Filters & Sorts')}
-                            />
-                            <LoadingSection />
+                        <div id="settings-description" className="space-y-2">
+                            <div
+                                className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <ThemeSetting/>
+                            </div>
+                            <div
+                                className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <TextSizeSetting/>
+                            </div>
+                            <div
+                                className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <LanguageSetting/>
+                            </div>
+                            <div
+                                className="flex items-center justify-between mb-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <ShowFiltersSortsToggle/>
+                            </div>
                         </div>
                     </div>
-                    <SettingsInfo />
+                    <div className="my-4">
+                        <LoadingSection/>
+                    </div>
+                    <SettingsInfo/>
                 </div>
                 <div className="flex-1" onClick={onClose}></div>
             </div>
-            {showNotification && <NotificationBubble message={t('Settings saved!')} position="bottom-left" />}
+            {showNotification && <NotificationBubble message={t('Settings saved!')} position="bottom-left"/>}
         </>
     );
 };

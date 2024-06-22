@@ -46,8 +46,8 @@ const LanguageSetting: React.FC = () => {
     }, []);
 
     return (
-        <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-800 dark:text-gray-200 mb-1">{t('Language')}</label>
+        <>
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-200 mr-2 select-none">{t('Language')}</label>
             <SelectBox
                 options={languageOptions}
                 selectedOption={selectedLanguage}
@@ -56,7 +56,7 @@ const LanguageSetting: React.FC = () => {
                 isSearchable={true}
                 DefaultIcon={LanguageIcon}
             />
-        </div>
+        </>
     );
 };
 
