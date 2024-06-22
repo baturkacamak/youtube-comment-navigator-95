@@ -28,8 +28,6 @@ const App: React.FC = () => {
         filteredAndSortedComments,
         isLoading,
         setFiltersCallback,
-        showBookmarked,
-        toggleShowBookmarked,
         setActiveTab,
         commentCount, // Destructure commentCount
     } = useAppState();

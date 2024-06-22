@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 interface TabTitle {
     id: string;
-    label: string;
+    label: string | JSX.Element;
     icon: React.ElementType;
 }
 
@@ -35,7 +35,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
 
     return (
         <>
-            <div className="flex justify-start mt-4 space-x-2">
+            <div className="flex justify-start space-x-2">
                 {tabs.map((tab) => (
                     <button
                         key={tab.title.id}
@@ -44,31 +44,31 @@ const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
                         } focus:outline-none hover:text-teal-400`}
                         onClick={() => handleTabClick(tab.title.id)}
                     >
-                        <tab.title.icon className="w-5 h-5"/>
+                        <tab.title.icon className="w-5 h-5" />
                         {tab.title.label}
                         {activeTab === tab.title.id && (
                             <motion.div
                                 layoutId="underline"
                                 className="absolute bottom-0 left-0 right-0 h-0.5 bg-teal-600 dark:bg-teal-400"
                                 initial={false}
-                                animate={{opacity: 1, scaleX: 1}}
-                                transition={{type: 'spring', stiffness: 300, damping: 20}}
+                                animate={{ opacity: 1, scaleX: 1 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                             />
                         )}
                     </button>
                 ))}
             </div>
-            <hr className="h-px -mt-2 bg-gray-300 dark:bg-gray-600"/>
+            <hr className="h-px -mt-2 bg-gray-300 dark:bg-gray-600" />
             <AnimatePresence mode="wait">
                 {tabs.map((tab) => (
                     activeTab === tab.title.id && (
                         <motion.div
                             key={tab.title.id}
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            exit={{opacity: 0, y: -20}}
-                            transition={{duration: 0.3}}
-                            className="py-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="pt-4"
                         >
                             {tab.content}
                         </motion.div>

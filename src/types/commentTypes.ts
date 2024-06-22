@@ -3,6 +3,7 @@ import React from "react";
 export interface Comment {
     author: string;
     likes: number;
+    viewLikes: string;
     content: string;
     published: string;
     publishedDate: number;

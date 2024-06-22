@@ -31,7 +31,7 @@ const Box: React.FC<BoxProps> = ({
     return (
         <div
             className={classNames(
-                "px-4 transition-colors duration-500 rounded-lg shadow-md",
+                "p-4 transition-colors duration-500 rounded-lg shadow-md",
                 {
                     [bgColor]: !/^#|rgb/.test(bgColor),
                     [darkBgColor]: !/^#|rgb/.test(darkBgColor),

@@ -35,7 +35,7 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center">
                     <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-                    <span className="text-sm font-bold" aria-label={t('Likes')}>{comment.likes}</span>
+                    <span className="text-sm font-bold" aria-label={t('Likes')}>{comment.viewLikes || comment.likes}</span>
                 </div>
                 <div className="flex items-center">
                     <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />

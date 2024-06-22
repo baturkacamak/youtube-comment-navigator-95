@@ -4,14 +4,34 @@ import timeAgoToDate from "./timeAgoToDate";
 
 const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/;
 
-export const transformComment = (comment: any): Comment => {
+export const transformComment = (comment: any): {
+    author: any;
+    authorAvatarUrl: any;
+    authorMemberSince: any;
+    commentParentId: any;
+    authorChannelId: any;
+    published: any;
+    replyLevel: any;
+    isMember: any;
+    hasLinks: any;
+    content: any;
+    hasTimestamp: boolean;
+    isAuthorContentCreator: any;
+    replyCount: number;
+    commentId: any;
+    authorBadgeUrl: any;
+    viewLikes: any;
+    publishedDate: number;
+    likes: number
+} => {
     const payload = comment.payload?.commentEntityPayload;
     const author = payload?.author?.displayName || 'Unknown';
     const content = payload?.properties?.content?.content || 'No content';
-    let likes = payload?.toolbar?.likeCountNotliked || 0;
-    if (likes === ' ') {
-        likes = 0;
+    let viewLikes = payload?.toolbar?.likeCountNotliked || 0;
+    if (viewLikes === ' ') {
+        viewLikes = 0;
     }
+    const likes = convertLikesToNumber(viewLikes);
     const published = payload?.properties?.publishedTime || 'Unknown';
     const publishedDate = published !== 'Unknown' ? timeAgoToDate(published).getTime() : Date.now();
     const authorAvatarUrl = payload?.author?.avatarThumbnailUrl || 'Unknown';
@@ -32,9 +52,10 @@ export const transformComment = (comment: any): Comment => {
     return {
         author,
         likes,
+        viewLikes,
         content,
         published,
-        publishedDate,  // Store as ISO string
+        publishedDate,
         authorAvatarUrl,
         isAuthorContentCreator,
         authorChannelId,

@@ -16,6 +16,7 @@ const mockProps: CommentActionsProps = {
         publishedDate: new Date('2024-06-14T12:00:00Z').getTime(), // Convert to timestamp
         published: '2024-06-14',
         likes: 10,
+        viewLikes: "24k",
         replyCount: 2,
         isAuthorContentCreator: true,
         isDonated: true,
