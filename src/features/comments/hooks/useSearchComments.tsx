@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState, setComments, setCommentsCount, setFilters } from '../../../store/store';
 import useSortedComments from "./useSortedComments";
 import { Comment } from "../../../types/commentTypes";
+import { RootState } from "../../../types/rootState";
+import { setComments, setCommentsCount, setFilters, setBookmarkedComments } from "../../../store/store";
 
 const useSearchComments = () => {
   const dispatch = useDispatch();
@@ -14,17 +15,26 @@ const useSearchComments = () => {
   const handleSearch = (keyword: string) => {
     dispatch(setFilters({ ...filters, keyword }));
 
-    const commentsToSearch = showBookmarked ? bookmarkedComments : originalComments;
+    const commentsToSearch = originalComments;
+    const bookmarksToSearch = bookmarkedComments;
+
+    const filterAndSort = (comments: Comment[]) => {
+      const filteredComments = comments.filter((comment: Comment) =>
+          comment.content.toLowerCase().includes(keyword.toLowerCase())
+      );
+      return sortComments(filteredComments, filters.sortBy, filters.sortOrder);
+    };
 
     if (keyword.trim() === '') {
       dispatch(setComments(commentsToSearch));
+      dispatch(setBookmarkedComments(bookmarksToSearch));
       dispatch(setCommentsCount(commentsToSearch.length));
     } else {
-      const filteredComments = commentsToSearch.filter((comment: Comment) =>
-          comment.content.toLowerCase().includes(keyword.toLowerCase())
-      );
-      const sortedAndFilteredComments = sortComments(filteredComments, filters.sortBy, filters.sortOrder);
+      const sortedAndFilteredComments = filterAndSort(commentsToSearch);
+      const sortedAndFilteredBookmarks = filterAndSort(bookmarksToSearch);
+
       dispatch(setComments(sortedAndFilteredComments));
+      dispatch(setBookmarkedComments(sortedAndFilteredBookmarks));
       dispatch(setCommentsCount(sortedAndFilteredComments.length));
     }
   };
