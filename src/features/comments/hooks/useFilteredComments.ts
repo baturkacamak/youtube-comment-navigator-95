@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setComments } from '../../../store/store';
 import { Comment } from "../../../types/commentTypes";
+import {setComments} from "../../../store/store";
 
 const useFilteredComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();

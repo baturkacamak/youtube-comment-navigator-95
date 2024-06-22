@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { Comment } from "../../../types/commentTypes";
 import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils";
-import { setBookmarkedComments } from '../../../store/store';
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from '../../shared/components/Tooltip';
+import {setBookmarkedComments} from "../../../store/store";
 
 interface BookmarkButtonProps {
     comment: Comment;
