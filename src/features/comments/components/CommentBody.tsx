@@ -1,5 +1,5 @@
 import React from 'react';
-import { parseTimestamps } from '../utils/parseTimestamps';
+import { parseTimestamps } from '../../shared/utils/parseTimestamps';
 import { highlightText } from '../utils/highlightText';
 import { splitTextByNewlines } from '../utils/splitTextByNewlines';
 import { CommentContentProps } from "../../../types/commentTypes";
