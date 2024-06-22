@@ -14,4 +14,10 @@ export interface RootState {
     textSize: string;
     showBookmarked: boolean;
     bookmarkedComments: any[];
+    isUrlChanged: boolean;
+    settings: {
+        textSize: string;
+        showFiltersSorts: boolean;
+    };
 }
+
