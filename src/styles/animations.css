@@ -330,3 +330,37 @@
 .spin-once {
     animation: spin 0.5s ease-in-out 1;
 }
+
+/* Custom animations for toggle button */
+
+@keyframes toggle-on-animation {
+    0% {
+        transform: translateX(1px) scale(0.9);
+    }
+    50% {
+        transform: translateX(3px) scale(1.1);
+    }
+    100% {
+        transform: translateX(6px) scale(1);
+    }
+}
+
+@keyframes toggle-off-animation {
+    0% {
+        transform: translateX(6px) scale(1.1);
+    }
+    50% {
+        transform: translateX(3px) scale(0.9);
+    }
+    100% {
+        transform: translateX(1px) scale(1);
+    }
+}
+
+.toggle-on {
+    animation: toggle-on-animation 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-off {
+    animation: toggle-off-animation 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
