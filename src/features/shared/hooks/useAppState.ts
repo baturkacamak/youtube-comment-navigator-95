@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RootState } from '../../../types/rootState';
-import { setFilters, setShowBookmarked, setBookmarkedComments } from '../../../store/store';
+import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
 import useComments from '../../comments/hooks/useComments';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
@@ -11,9 +11,8 @@ import { retrieveDataFromDB } from '../utils/cacheUtils';
 
 const useAppState = () => {
     const dispatch = useDispatch();
-    const [activeTab, setActiveTab] = useState('comments'); // New state for active tab
+    const [activeTab, setActiveTab] = useState('comments');
 
-    // Using individual useSelector calls to avoid unnecessary re-renders
     const comments = useSelector((state: RootState) => state.comments);
     const filters = useSelector((state: RootState) => state.filters);
     const isLoading = useSelector((state: RootState) => state.isLoading);
@@ -29,7 +28,9 @@ const useAppState = () => {
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await retrieveDataFromDB('bookmarks');
-        dispatch(setBookmarkedComments(bookmarks.data || []));
+        if (bookmarks) {
+            dispatch(setBookmarkedComments(bookmarks.data || []));
+        }
     }, [dispatch]);
 
     useEffect(() => {
@@ -38,11 +39,17 @@ const useAppState = () => {
 
     useEffect(() => {
         if (activeTab === 'bookmarks') {
-            fetchBookmarkedComments();
+            if (filters.keyword.trim() === '') {
+                fetchBookmarkedComments();
+            }
+            dispatch(setShowBookmarked(true));
+        } else {
+            dispatch(setShowBookmarked(false));
         }
-    }, [activeTab, fetchBookmarkedComments]);
+    }, [activeTab, fetchBookmarkedComments, filters.keyword]);
 
     const filteredAndSortedComments = useMemo(() => {
+        if (!filters) return [];
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
         return filterComments(sortComments(commentsToUse, filters.sortBy, filters.sortOrder), filters);
     }, [filters, sortComments, filterComments, comments, activeTab, bookmarkedComments]);
@@ -67,7 +74,7 @@ const useAppState = () => {
         setFiltersCallback,
         showBookmarked,
         toggleShowBookmarked,
-        activeTab, // Return the active tab
+        activeTab,
         setActiveTab,
         commentCount: comments.length
     };
