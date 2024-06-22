@@ -8,6 +8,7 @@ import { retrieveDataFromDB, storeDataInDB } from "../../shared/utils/cacheUtils
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from '../../shared/components/Tooltip';
 import {setBookmarkedComments} from "../../../store/store";
+import {getVideoTitle} from "../../shared/utils/getVideoTitle";
 
 interface BookmarkButtonProps {
     comment: Comment;
@@ -33,12 +34,6 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment, commentId }) =
         };
         checkBookmarkStatus();
     }, [bookmarkedComments, commentId]);
-
-    const getVideoTitle = () => {
-        const titleElement = document.querySelector('yt-formatted-string.ytd-watch-metadata');
-        let videoTitle = titleElement?.textContent || document.title.replace(' - YouTube', '');
-        return videoTitle;
-    };
 
     const handleBookmark = async () => {
         let updatedBookmarks;
