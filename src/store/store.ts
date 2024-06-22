@@ -1,7 +1,8 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../types/rootState'; // Adjust the path as necessary
 import { Comment } from '../types/commentTypes'; // Adjust the path as necessary
-import { FilterState } from '../types/filterTypes'; // Adjust the path as necessary
+import { FilterState } from '../types/filterTypes';
+import {saveSettings} from "../features/settings/utils/settingsUtils"; // Adjust the path as necessary
 
 const initialState: RootState = {
     originalComments: [],
@@ -29,7 +30,12 @@ const initialState: RootState = {
     transcriptsCount: 0,
     textSize: 'text-base',
     showBookmarked: false,
-    bookmarkedComments: []
+    isUrlChanged: false,
+    bookmarkedComments: [],
+    settings: {
+        textSize: 'text-base',
+        showFiltersSorts: true,
+    }
 };
 
 const commentsSlice = createSlice({
@@ -64,7 +70,8 @@ const commentsSlice = createSlice({
             state.transcriptsCount = action.payload;
         },
         setTextSize: (state, action: PayloadAction<string>) => {
-            state.textSize = action.payload;
+            state.settings.textSize = action.payload;
+            saveSettings({ textSize: state.settings.textSize });
         },
         updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
             const { comments, isLoading } = action.payload;
@@ -77,6 +84,14 @@ const commentsSlice = createSlice({
         },
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
             state.bookmarkedComments = action.payload;
+        },
+        setIsUrlChanged: (state, action: PayloadAction<boolean>) => { // New action
+            state.isUrlChanged = action.payload;
+        },
+        setShowFiltersSorts: (state, action: PayloadAction<boolean>) => { // New action
+            state.settings.showFiltersSorts = action.payload;
+            saveSettings({ showFiltersSorts: state.settings.showFiltersSorts });
+
         },
         resetState: () => initialState,
     },
@@ -96,7 +111,9 @@ export const {
     updateCommentsData,
     resetState,
     setShowBookmarked,
-    setBookmarkedComments
+    setBookmarkedComments,
+    setIsUrlChanged,
+    setShowFiltersSorts // Export the new action
 } = commentsSlice.actions;
 
 const store = configureStore({
