@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -9,15 +9,17 @@ import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
 import './styles/App.scss';
 import NavigationHeader from "./features/navigation-header/components/NavigationHeader";
 import Box from "./features/shared/components/Box";
-import {useTranslation} from "react-i18next";
-import {BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon} from '@heroicons/react/24/outline';
+import { useTranslation } from "react-i18next";
+import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } from '@heroicons/react/24/outline';
 import Tabs from "./features/shared/components/Tabs";
-import {useSelector} from 'react-redux';
-import {RootState} from "./types/rootState";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from "./types/rootState";
 
 const App: React.FC = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts); // Use selector hook
+    const dispatch = useDispatch(); // Use dispatch hook
 
     const openSettings = () => setIsSettingsOpen(true);
     const closeSettings = () => setIsSettingsOpen(false);
@@ -38,64 +40,67 @@ const App: React.FC = () => {
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
 
     const tabs = [
-            {
-                title: {
-                    id: 'comments',
-                    label: `${t('Comments')} (${commentCount})`, // Include comment count in the label
-                    icon: ChatBubbleOvalLeftIcon,
-                },
-                content: (
-                    <>
+        {
+            title: {
+                id: 'comments',
+                label: `${t('Comments')} (${commentCount})`, // Include comment count in the label
+                icon: ChatBubbleOvalLeftIcon,
+            },
+            content: (
+                <>
+                    {showFiltersSorts && (
                         <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
                             />
                         </div>
-                        <CommentList comments={filteredAndSortedComments} isLoading={isLoading}/>
-                    </>
-                ),
+                    )}
+                    <CommentList comments={filteredAndSortedComments} isLoading={isLoading} />
+                </>
+            ),
+        },
+        {
+            title: {
+                id: 'transcript',
+                label: t('Transcript'),
+                icon: DocumentTextIcon,
             },
-            {
-                title: {
-                    id: 'transcript',
-                    label: t('Transcript'),
-                    icon: DocumentTextIcon,
-                },
-                content: <p>Transcript content goes here...</p>,
+            content: <p>Transcript content goes here...</p>,
+        },
+        {
+            title: {
+                id: 'livechat',
+                label: t('Live Chat'),
+                icon: InboxIcon,
             },
-            {
-                title: {
-                    id: 'livechat',
-                    label: t('Live Chat'),
-                    icon: InboxIcon,
-                },
-                content: <p>Live chat content goes here...</p>,
+            content: <p>Live chat content goes here...</p>,
+        },
+        {
+            title: {
+                id: 'bookmarks',
+                label: `${t('Bookmarks')} (${bookmarkCount})`,
+                icon: BookmarkIcon,
             },
-            {
-                title: {
-                    id: 'bookmarks',
-                    label: `${t('Bookmarks')} (${bookmarkCount})`,
-                    icon: BookmarkIcon,
-                },
-                content: (
-                    <>
+            content: (
+                <>
+                    {showFiltersSorts && (
                         <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
                             />
                         </div>
-                        <BookmarkedComments comments={filteredAndSortedComments}/>
-                    </>
-                ),
-            },
-        ]
-    ;
+                    )}
+                    <BookmarkedComments comments={filteredAndSortedComments} />
+                </>
+            ),
+        },
+    ];
 
     return (
         <div className="relative flex overflow-hidden">
-            <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings}/>
+            <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
@@ -109,11 +114,11 @@ const App: React.FC = () => {
                     <NavigationHeader
                         openSettings={openSettings}
                     />
-                    <hr className="border border-solid border-gray-400 dark:border-gray-600"/>
-                    <SearchBar onSearch={handleSearch}/>
+                    <hr className="border border-solid border-gray-400 dark:border-gray-600" />
+                    <SearchBar onSearch={handleSearch} />
                 </Box>
                 <Box className="flex flex-col w-full gap-2">
-                    <Tabs tabs={tabs} onTabChange={setActiveTab}/>
+                    <Tabs tabs={tabs} onTabChange={setActiveTab} />
                 </Box>
             </div>
         </div>
