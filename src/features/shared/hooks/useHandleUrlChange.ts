@@ -1,11 +1,16 @@
-// src/hooks/useHandleUrlChange.ts
 import {useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {resetState, setBookmarkedComments, setInitialComments, updateCommentsData} from '../../../store/store';
 import {fetchContinuationTokenFromRemote} from '../../comments/services/fetchContinuationData';
 import {fetchCommentsFromRemote} from '../../comments/services/remoteFetch';
 import useUrlChange from './useUrlChange';
 import {retrieveDataFromDB} from "../utils/cacheUtils";
+import {
+    resetState,
+    setBookmarkedComments,
+    setInitialComments,
+    setIsUrlChanged,
+    updateCommentsData
+} from "../../../store/store";
 
 const useHandleUrlChange = () => {
     const dispatch = useDispatch();
@@ -17,6 +22,7 @@ const useHandleUrlChange = () => {
     };
 
     useUrlChange(async () => {
+        dispatch(setIsUrlChanged(true));
         if (abortController.current) {
             abortController.current.abort();
         }
