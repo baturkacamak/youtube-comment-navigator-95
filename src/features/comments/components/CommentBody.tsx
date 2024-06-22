@@ -8,7 +8,7 @@ import { RootState } from "../../../types/rootState";
 
 const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
     const keyword = useSelector((state: RootState) => state.filters.keyword);
-    const textSize = useSelector((state: RootState) => state.textSize);
+    const textSize = useSelector((state: RootState) => state.settings.textSize);
 
     const splitText = splitTextByNewlines(content);
     const timestampedText = parseTimestamps(splitText, handleTimestampClick);
