@@ -16,6 +16,7 @@ const useFilteredComments = (initialLoadCompleted: boolean) => {
             if (filters.links && !comment.hasLinks) return false;
             if (filters.members && !comment.isMember) return false;
             if (filters.donated && !comment.isDonated) return false;
+            if (filters.creator && !comment.isAuthorContentCreator) return false;
             return true;
         });
     };

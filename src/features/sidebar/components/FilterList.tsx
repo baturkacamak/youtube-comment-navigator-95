@@ -1,5 +1,5 @@
 import React from 'react';
-import { ClockIcon, GiftIcon, HeartIcon, LinkIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import {ClockIcon, GiftIcon, HeartIcon, LinkIcon, UserGroupIcon, UserIcon} from '@heroicons/react/24/outline';
 import CheckboxFilter from '../../shared/components/CheckboxFilter';
 import useAnimation from '../../shared/hooks/useAnimation';
 import { FilterListProps } from "../../../types/filterTypes";
@@ -21,6 +21,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
         { name: 'links', label: t('Links'), icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} /> },
         { name: 'members', label: t('Members'), icon: <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} /> },
         { name: 'donated', label: t('Donated'), icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} /> },
+        { name: 'creator', label: t('Creator'), icon: <UserIcon className={`w-5 h-5 mr-2 ${getAnimationClass('creator', 'jello')}`} /> },
     ];
 
     return (

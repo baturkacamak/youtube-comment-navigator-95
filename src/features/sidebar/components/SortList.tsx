@@ -5,7 +5,7 @@ import {
     ChatBubbleLeftRightIcon,
     ClockIcon,
     HandThumbUpIcon,
-    UserIcon
+    UserIcon, UsersIcon
 } from '@heroicons/react/24/outline';
 import RadioFilter from '../../shared/components/RadioFilter';
 import useAnimation from '../../shared/hooks/useAnimation';
@@ -62,7 +62,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
         {
             name: 'Author',
             label: t('Author'),
-            icon: <UserIcon className={`w-5 h-5 mr-2 ${getAnimationClass('author', 'rubberBand')}`} />,
+            icon: <UsersIcon className={`w-5 h-5 mr-2 ${getAnimationClass('author', 'rubberBand')}`} />,
             value: 'author'
         },
         {
