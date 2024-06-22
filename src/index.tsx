@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
 import { Provider } from 'react-redux';
-import store from './store/store';
 import { isLocalEnvironment } from "./features/shared/utils/environmentVariables";
 import './i18n';
 import { getLanguageDirection } from './i18n';
-import i18n from './i18n'; // Import i18n to access the current language
+import i18n from './i18n';
+import store from "./store/store"; // Import i18n to access the current language
 
 const rootElement = document.getElementById('youtube-comment-navigator-app') as HTMLElement;
 
