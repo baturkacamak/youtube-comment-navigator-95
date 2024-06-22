@@ -1,9 +1,9 @@
 import {useCallback, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {setComments} from '../../../store/store';
 import {debounce} from '../../shared/utils/debounce';
 
 import {Comment} from "../../../types/commentTypes";
+import {setComments} from "../../../store/store";
 
 const useSortedComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();
