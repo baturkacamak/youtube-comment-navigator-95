@@ -8,8 +8,8 @@ import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import useSearchContent from './useSearchContent';
 import {Filters} from '../../../types/filterTypes';
 import {retrieveDataFromDB} from '../utils/cacheUtils';
-import {extractYouTubeVideoIdFromUrl} from '../utils/extractYouTubeVideoIdFromUrl';
 import useTranscript from '../../transcripts/hooks/useTranscript';
+import {calculateFilteredWordCount} from "../utils/calculateWordCount";
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -21,14 +21,14 @@ const useAppState = () => {
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const repliesCount = useSelector((state: RootState) => state.repliesCount);
-    const transcriptsCount = useSelector((state: RootState) => state.transcriptsCount);
     const transcripts = useSelector((state: RootState) => state.transcripts);
+    const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
 
-    const {sortComments} = useSortedComments(false);
-    const {filterComments} = useFilteredComments(false);
-    const {handleSearch} = useSearchContent();
-    const {initialLoadCompleted} = useComments();
-    const {loadTranscript} = useTranscript();
+    const { sortComments } = useSortedComments(false);
+    const { filterComments } = useFilteredComments(false);
+    const { handleSearch } = useSearchContent();
+    const { initialLoadCompleted } = useComments();
+    const { loadTranscript } = useTranscript();
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await retrieveDataFromDB('bookmarks');
@@ -53,7 +53,7 @@ const useAppState = () => {
     }, [activeTab, fetchBookmarkedComments, filters.keyword]);
 
     useEffect(() => {
-        loadTranscript(); // Load transcript when videoId is available
+        loadTranscript();
     }, [loadTranscript]);
 
     const filteredAndSortedComments = useMemo(() => {
@@ -70,12 +70,13 @@ const useAppState = () => {
         dispatch(setShowBookmarked(!showBookmarked));
     }, [dispatch, showBookmarked]);
 
+    const transcriptWordCount = calculateFilteredWordCount(filteredTranscripts, filters.keyword);
+
     return {
         comments,
         filters,
         isLoading,
         repliesCount,
-        transcriptsCount,
         transcripts,
         initialLoadCompleted,
         handleSearch,
@@ -85,7 +86,8 @@ const useAppState = () => {
         toggleShowBookmarked,
         activeTab,
         setActiveTab,
-        commentCount: comments.length
+        commentCount: comments.length,
+        transcriptWordCount
     };
 };
 

@@ -1,8 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../types/rootState";
 import useSortedComments from "../../comments/hooks/useSortedComments";
-import { Comment } from "../../../types/commentTypes";
-import { RootState } from "../../../types/rootState";
-import { setComments, setCommentsCount, setFilters, setBookmarkedComments, setFilteredTranscripts } from "../../../store/store";
+import {
+  setBookmarkedComments,
+  setComments,
+  setCommentsCount,
+  setFilteredTranscripts,
+  setFilters, setTranscriptsCount
+} from "../../../store/store";
+import {calculateFilteredWordCount} from "../utils/calculateWordCount";
+import {Comment} from "../../../types/commentTypes";
+
 
 const useSearchContent = () => {
   const dispatch = useDispatch();
@@ -18,11 +26,11 @@ const useSearchContent = () => {
 
     const commentsToSearch = originalComments;
     const bookmarksToSearch = bookmarkedComments;
-    const transcriptsToSearch = originalTranscripts; // Assuming you have this state
+    const transcriptsToSearch = originalTranscripts;
 
     const filterAndSortComments = (comments: Comment[]) => {
       const filteredComments = comments.filter((comment: Comment) =>
-          comment.content.toLowerCase().includes(keyword.toLowerCase())
+          comment?.content.toLowerCase().includes(keyword.toLowerCase())
       );
       return sortComments(filteredComments, filters.sortBy, filters.sortOrder);
     };
@@ -37,7 +45,7 @@ const useSearchContent = () => {
       dispatch(setComments(commentsToSearch));
       dispatch(setBookmarkedComments(bookmarksToSearch));
       dispatch(setCommentsCount(commentsToSearch.length));
-      dispatch(setFilteredTranscripts(transcriptsToSearch)); // Use original transcripts when no search
+      dispatch(setFilteredTranscripts(transcriptsToSearch));
     } else {
       const sortedAndFilteredComments = filterAndSortComments(commentsToSearch);
       const sortedAndFilteredBookmarks = filterAndSortComments(bookmarksToSearch);
@@ -47,6 +55,9 @@ const useSearchContent = () => {
       dispatch(setBookmarkedComments(sortedAndFilteredBookmarks));
       dispatch(setCommentsCount(sortedAndFilteredComments.length));
       dispatch(setFilteredTranscripts(filteredTranscripts));
+
+      const filteredWordCount = calculateFilteredWordCount(filteredTranscripts, keyword);
+      dispatch(setTranscriptsCount(filteredWordCount));
     }
   };
 

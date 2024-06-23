@@ -26,7 +26,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     const transcriptTextWithoutTimestamps = transcripts.map(entry => entry.text).join('\n');
 
     return (
-        <div className="flex items-center mb-4 gap-4">
+        <div className="flex items-center gap-4">
             <TimestampToggle
                 includeTimestamps={includeTimestamps}
                 setIncludeTimestamps={setIncludeTimestamps}

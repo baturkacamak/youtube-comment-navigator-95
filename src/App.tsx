@@ -20,8 +20,8 @@ import {calculateWordCount} from "./features/shared/utils/calculateWordCount";
 const App: React.FC = () => {
     const { t } = useTranslation();
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts); // Use selector hook
-    const dispatch = useDispatch(); // Use dispatch hook
+    const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
+    const dispatch = useDispatch();
 
     const openSettings = () => setIsSettingsOpen(true);
     const closeSettings = () => setIsSettingsOpen(false);
@@ -33,25 +33,20 @@ const App: React.FC = () => {
         isLoading,
         setFiltersCallback,
         setActiveTab,
-        commentCount, // Destructure commentCount
+        commentCount,
+        transcriptWordCount, // Destructure transcriptWordCount
     } = useAppState();
 
     useHandleUrlChange();
 
-    // Get the bookmark count from the Redux state
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
-
-    // Get the transcript from the Redux state
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
-
-    // Calculate the word count for the transcript
-    const transcriptWordCount = calculateWordCount(filteredTranscripts);
 
     const tabs = [
         {
             title: {
                 id: 'comments',
-                label: `${t('Comments')} (${commentCount})`, // Include comment count in the label
+                label: `${t('Comments')} (${commentCount})`,
                 icon: ChatBubbleOvalLeftIcon,
             },
             content: (
@@ -71,10 +66,10 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'transcript',
-                label: `${t('Transcript')} (${transcriptWordCount})`, // Include the word count in the label
+                label: `${t('Transcript')} (${transcriptWordCount})`,
                 icon: DocumentTextIcon,
             },
-            content: <Transcript transcripts={filteredTranscripts} />, // Include the Transcript component here
+            content: <Transcript transcripts={filteredTranscripts} />,
         },
         {
             title: {
