@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { setLoading, setTranscripts, setTranscriptsCount } from '../../../store/store';
+import {setFilteredTranscripts, setLoading, setTranscripts, setTranscriptsCount} from '../../../store/store';
 import { fetchTranscript } from '../services/fetchTranscript';
 
 const useLoadTranscripts = () => {
@@ -12,6 +12,7 @@ const useLoadTranscripts = () => {
             const transcriptData = await fetchTranscript();
             if (transcriptData) {
                 dispatch(setTranscripts(transcriptData.items));
+                dispatch(setFilteredTranscripts(transcriptData.items));
                 dispatch(setTranscriptsCount(transcriptData.totalDuration));
             }
             dispatch(setLoading(false));

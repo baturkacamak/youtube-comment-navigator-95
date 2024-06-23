@@ -1,18 +1,22 @@
-// src/features/transcripts/components/Transcript.tsx
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../types/rootState';
-import { formatTime } from '../utils/formatTime';
-import { parseTimestamps } from '../../shared/utils/parseTimestamps';
+import React, {useState} from 'react';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../../types/rootState';
+import {formatTime} from '../utils/formatTime';
 import handleTimestampClick from "../../comments/utils/handleTimestampClick";
 import ActionButtons from './ActionButtons';
 import BookmarkButton from './buttons/BookmarkButton';
+import {highlightText} from '../../shared/utils/highlightText';
+import {parseTimestamps} from "../../shared/utils/parseTimestamps";
 
-const Transcript: React.FC = () => {
-    const transcripts = useSelector((state: RootState) => state.transcripts);
+interface TranscriptProps {
+    transcripts: any[];
+}
+
+const Transcript: React.FC<TranscriptProps> = ({transcripts}) => {
     const textSize = useSelector((state: RootState) => state.settings.textSize);
-    const [includeTimestamps, setIncludeTimestamps] = useState(true);
-    const [selectedLanguage, setSelectedLanguage] = useState({ value: 'en', label: 'English' });
+    const keyword = useSelector((state: RootState) => state.filters.keyword);
+    const [includeTimestamps, setIncludeTtimestamps] = useState(true);
+    const [selectedLanguage, setSelectedLanguage] = useState({value: 'en', label: 'English'});
     const [bookmarkedLines, setBookmarkedLines] = useState<number[]>([]);
     const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
 
@@ -26,19 +30,24 @@ const Transcript: React.FC = () => {
         });
     };
 
+    const handleLineClick = (index: number) => {
+        toggleBookmark(index);
+    };
+
     return (
         <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow" aria-live="polite" aria-label="Transcript">
             <div className="sticky top-0 bg-white dark:bg-gray-800 z-10">
                 <ActionButtons
                     transcripts={transcripts}
                     includeTimestamps={includeTimestamps}
-                    setIncludeTimestamps={setIncludeTimestamps}
+                    setIncludeTimestamps={setIncludeTtimestamps}
                     selectedLanguage={selectedLanguage}
                     setSelectedLanguage={setSelectedLanguage}
                 />
             </div>
             {transcripts.length === 0 ? (
-                <p className={`text-gray-600 dark:text-gray-400 ${textSize}`} aria-live="assertive" aria-label="No transcript available">
+                <p className={`text-gray-600 dark:text-gray-400 ${textSize}`} aria-live="assertive"
+                   aria-label="No transcript available">
                     No transcript available.
                 </p>
             ) : (
@@ -46,7 +55,7 @@ const Transcript: React.FC = () => {
                     {transcripts.map((entry, index) => (
                         <li
                             key={index}
-                            className={`mb-2 flex items-center transition-all duration-300 ease-in-out ${textSize}`}
+                            className={`mb-2 flex items-center ${textSize} ${bookmarkedLines.includes(index) ? 'bg-teal-200 dark:bg-gray-600' : ''}`}
                             aria-label={`Transcript entry at ${formatTime(entry.start)}`}
                             onMouseEnter={() => setHoveredLineIndex(index)}
                             onMouseLeave={() => setHoveredLineIndex(null)}
@@ -58,14 +67,20 @@ const Transcript: React.FC = () => {
                                 >
                                     {parseTimestamps([formatTime(entry.start)], handleTimestampClick)}
                                 </span>
-                                <span className={`text-gray-800 dark:text-gray-200 min-w-96 ${index % 2 === 0 ? 'text-black' : 'text-gray-700'}`}>
-                                    {entry.text}
+                                <div
+                                    className="flex-1 pb-2 -mb-2 inline-flex items-center"
+                                    onClick={() => handleLineClick(index)}
+                                >
+                                <span
+                                    className={`text-gray-800 dark:text-gray-200 min-w-96 ${index % 2 === 0 ? 'text-black' : 'text-gray-700'}`}>
+                                    {highlightText(entry.text, keyword)}
                                 </span>
-                                <BookmarkButton
-                                    isBookmarked={bookmarkedLines.includes(index)}
-                                    onToggleBookmark={() => toggleBookmark(index)}
-                                    isVisible={hoveredLineIndex === index || bookmarkedLines.includes(index)}
-                                />
+                                    <BookmarkButton
+                                        isBookmarked={bookmarkedLines.includes(index)}
+                                        onToggleBookmark={() => toggleBookmark(index)}
+                                        isVisible={hoveredLineIndex === index || bookmarkedLines.includes(index)}
+                                    />
+                                </div>
                             </div>
                         </li>
                     ))}

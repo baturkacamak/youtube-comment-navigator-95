@@ -2,7 +2,7 @@ import {useCallback, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchTranscript} from '../services/fetchTranscript';
 import {RootState} from '../../../types/rootState';
-import {setLoading, setTranscripts, setTranscriptsCount} from '../../../store/store';
+import {setFilteredTranscripts, setLoading, setTranscripts, setTranscriptsCount} from '../../../store/store';
 
 const useTranscript = () => {
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const useTranscript = () => {
         const transcriptData = await fetchTranscript();
         if (transcriptData) {
             dispatch(setTranscripts(transcriptData.items));
+            dispatch(setFilteredTranscripts(transcriptData.items));
             dispatch(setTranscriptsCount(transcriptData.totalDuration));
         }
         dispatch(setLoading(false));
