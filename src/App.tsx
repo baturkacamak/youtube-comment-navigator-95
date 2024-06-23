@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
 import CommentList from './features/comments/components/CommentList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
-import Transcript from './features/transcripts/components/Transcript'; // Import the Transcript component
+import Transcript from './features/transcripts/components/Transcript'; // Import the Transcript component and word count function
 import useAppState from './features/shared/hooks/useAppState';
 import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
 import './styles/App.scss';
@@ -15,6 +15,7 @@ import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } fro
 import Tabs from "./features/shared/components/Tabs";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "./types/rootState";
+import {calculateWordCount} from "./features/shared/utils/calculateWordCount";
 
 const App: React.FC = () => {
     const { t } = useTranslation();
@@ -40,6 +41,12 @@ const App: React.FC = () => {
     // Get the bookmark count from the Redux state
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
 
+    // Get the transcript from the Redux state
+    const transcripts = useSelector((state: RootState) => state.transcripts);
+
+    // Calculate the word count for the transcript
+    const transcriptWordCount = calculateWordCount(transcripts);
+
     const tabs = [
         {
             title: {
@@ -64,7 +71,7 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'transcript',
-                label: t('Transcript'),
+                label: `${t('Transcript')} (${transcriptWordCount})`, // Include the word count in the label
                 icon: DocumentTextIcon,
             },
             content: <Transcript />, // Include the Transcript component here
