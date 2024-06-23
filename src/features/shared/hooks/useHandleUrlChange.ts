@@ -6,11 +6,13 @@ import useUrlChange from './useUrlChange';
 import {retrieveDataFromDB} from "../utils/cacheUtils";
 import {
     resetState,
-    setBookmarkedComments,
+    setBookmarkedComments, setFilteredTranscripts,
     setInitialComments,
-    setIsUrlChanged,
+    setIsUrlChanged, setTranscripts,
     updateCommentsData
 } from "../../../store/store";
+import {fetchTranscriptFromRemote, fetchCaptionTrackBaseUrl} from "../../transcripts/services/remoteFetch";
+import {extractYouTubeVideoIdFromUrl} from "../utils/extractYouTubeVideoIdFromUrl";
 
 const useHandleUrlChange = () => {
     const dispatch = useDispatch();
@@ -34,6 +36,15 @@ const useHandleUrlChange = () => {
         await fetchCommentsFromRemote(handleFetchedComments, signal, false, continuationToken);
         const bookmarks = await retrieveDataFromDB('bookmarks');
         dispatch(setBookmarkedComments(bookmarks.data || []));
+
+        const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
+        if (captionTrackBaseUrl) {
+            const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
+            if (transcriptData) {
+                dispatch(setTranscripts(transcriptData.items));
+                dispatch(setFilteredTranscripts(transcriptData.items));
+            }
+        }
     });
 };
 
