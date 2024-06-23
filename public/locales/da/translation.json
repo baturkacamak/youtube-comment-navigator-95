@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Bogmærke tilføjet den: ",
   "Bookmark": "Bogmærke",
   "If you enjoy using this extension, please": "Hvis du nyder at bruge denne udvidelse, bedes du",
-  "rate it on the Chrome Web Store": "bedømme den på Chrome Web Store"
+  "rate it on the Chrome Web Store": "bedømme den på Chrome Web Store",
+  "Include Timestamps": "Inkluder tidsstempler",
+  "Exclude Timestamps": "Udelad tidsstempler",
+  "Download": "Hent",
+  "Print": "Udskriv",
+  "Share": "Del",
+  "E-mail": "E-mail",
+  "Select Language": "Vælg sprog",
+  "Translate to:": "Oversæt til:",
+  "Bookmarks": "Bogmærker",
+  "Show Filters & Sorts": "Vis filtre og sorter",
+  "Load Comments": "Indlæs kommentarer",
+  "Filter by creator": "Filtrer efter skaber"
 }

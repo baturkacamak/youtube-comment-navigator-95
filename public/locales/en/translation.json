@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Bookmark added on: ",
   "Bookmark": "Bookmark",
   "If you enjoy using this extension, please": "If you enjoy using this extension, please",
-  "rate it on the Chrome Web Store": "rate it on the Chrome Web Store"
+  "rate it on the Chrome Web Store": "rate it on the Chrome Web Store",
+  "Include Timestamps": "Include Timestamps",
+  "Exclude Timestamps": "Exclude Timestamps",
+  "Download": "Download",
+  "Print": "Print",
+  "Share": "Share",
+  "E-mail": "E-mail",
+  "Select Language": "Select Language",
+  "Translate to:": "Translate to:",
+  "Bookmarks": "Bookmarks",
+  "Show Filters & Sorts": "Show Filters & Sorts",
+  "Load Comments": "Load Comments",
+  "Filter by creator": "Filter by creator"
 }

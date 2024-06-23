@@ -106,5 +106,17 @@
   "Bookmark added on: ": "添加书签于: ",
   "Bookmark": "书签",
   "If you enjoy using this extension, please": "如果您喜欢使用此扩展程序，请",
-  "rate it on the Chrome Web Store": "在 Chrome 网上应用店上评价它"
+  "rate it on the Chrome Web Store": "在 Chrome 网上应用店上评价它",
+  "Include Timestamps": "包括时间戳",
+  "Exclude Timestamps": "排除时间戳",
+  "Download": "下载",
+  "Print": "打印",
+  "Share": "分享",
+  "E-mail": "电子邮件",
+  "Select Language": "选择语言",
+  "Translate to:": "翻译成：",
+  "Bookmarks": "书签",
+  "Show Filters & Sorts": "显示过滤器和排序",
+  "Load Comments": "加载评论",
+  "Filter by creator": "按创建者过滤"
 }

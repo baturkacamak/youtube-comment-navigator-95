@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Segnalibro aggiunto il: ",
   "Bookmark": "Segnalibro",
   "If you enjoy using this extension, please": "Se ti piace usare questa estensione, per favore",
-  "rate it on the Chrome Web Store": "valutala sul Chrome Web Store"
+  "rate it on the Chrome Web Store": "valutala sul Chrome Web Store",
+  "Include Timestamps": "Includi timestamp",
+  "Exclude Timestamps": "Escludi timestamp",
+  "Download": "Scarica",
+  "Print": "Stampa",
+  "Share": "Condividi",
+  "E-mail": "E-mail",
+  "Select Language": "Seleziona lingua",
+  "Translate to:": "Traduci in:",
+  "Bookmarks": "Segnalibri",
+  "Show Filters & Sorts": "Mostra filtri e ordinamenti",
+  "Load Comments": "Carica commenti",
+  "Filter by creator": "Filtra per creatore"
 }

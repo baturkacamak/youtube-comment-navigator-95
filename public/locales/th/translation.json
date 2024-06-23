@@ -106,5 +106,17 @@
   "Bookmark added on: ": "บุ๊กมาร์กที่เพิ่มเมื่อ: ",
   "Bookmark": "บุ๊กมาร์ก",
   "If you enjoy using this extension, please": "หากคุณสนุกกับการใช้ส่วนขยายนี้ โปรด",
-  "rate it on the Chrome Web Store": "ให้คะแนนมันใน Chrome Web Store"
+  "rate it on the Chrome Web Store": "ให้คะแนนมันใน Chrome Web Store",
+  "Include Timestamps": "รวมการประทับเวลา",
+  "Exclude Timestamps": "ยกเว้นการประทับเวลา",
+  "Download": "ดาวน์โหลด",
+  "Print": "พิมพ์",
+  "Share": "แบ่งปัน",
+  "E-mail": "อีเมล",
+  "Select Language": "เลือกภาษา",
+  "Translate to:": "แปลเป็น:",
+  "Bookmarks": "ที่คั่นหน้า",
+  "Show Filters & Sorts": "แสดงตัวกรองและการเรียงลำดับ",
+  "Load Comments": "โหลดความคิดเห็น",
+  "Filter by creator": "กรองโดยผู้สร้าง"
 }

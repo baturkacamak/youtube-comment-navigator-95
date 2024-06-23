@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Zakładka dodana dnia: ",
   "Bookmark": "Zakładka",
   "If you enjoy using this extension, please": "Jeśli podoba Ci się to rozszerzenie, proszę",
-  "rate it on the Chrome Web Store": "oceń je w Chrome Web Store"
+  "rate it on the Chrome Web Store": "oceń je w Chrome Web Store",
+  "Include Timestamps": "Uwzględnij znaczniki czasu",
+  "Exclude Timestamps": "Wyklucz znaczniki czasu",
+  "Download": "Pobierz",
+  "Print": "Drukuj",
+  "Share": "Udostępnij",
+  "E-mail": "E-mail",
+  "Select Language": "Wybierz język",
+  "Translate to:": "Przetłumacz na:",
+  "Bookmarks": "Zakładki",
+  "Show Filters & Sorts": "Pokaż filtry i sortowanie",
+  "Load Comments": "Załaduj komentarze",
+  "Filter by creator": "Filtruj według twórcy"
 }

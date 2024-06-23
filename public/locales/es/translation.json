@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Marcador añadido el: ",
   "Bookmark": "Marcador",
   "If you enjoy using this extension, please": "Si disfrutas usando esta extensión, por favor",
-  "rate it on the Chrome Web Store": "califícala en Chrome Web Store"
+  "rate it on the Chrome Web Store": "califícala en Chrome Web Store",
+  "Include Timestamps": "Incluir marcas de tiempo",
+  "Exclude Timestamps": "Excluir marcas de tiempo",
+  "Download": "Descargar",
+  "Print": "Imprimir",
+  "Share": "Compartir",
+  "E-mail": "Correo electrónico",
+  "Select Language": "Seleccionar idioma",
+  "Translate to:": "Traducir a:",
+  "Bookmarks": "Marcadores",
+  "Show Filters & Sorts": "Mostrar filtros y ordenar",
+  "Load Comments": "Cargar comentarios",
+  "Filter by creator": "Filtrar por creador"
 }

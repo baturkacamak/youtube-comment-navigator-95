@@ -106,5 +106,17 @@
   "Bookmark added on: ": "نشانه‌گذاری شده در: ",
   "Bookmark": "نشانه‌گذاری",
   "If you enjoy using this extension, please": "اگر از استفاده از این افزونه لذت می‌برید، لطفاً",
-  "rate it on the Chrome Web Store": "آن را در فروشگاه Chrome امتیاز دهید"
+  "rate it on the Chrome Web Store": "آن را در فروشگاه Chrome امتیاز دهید",
+  "Include Timestamps": "شامل زمان‌بندی‌ها باشد",
+  "Exclude Timestamps": "زمان‌بندی‌ها را حذف کنید",
+  "Download": "دانلود",
+  "Print": "چاپ",
+  "Share": "اشتراک گذاری",
+  "E-mail": "ایمیل",
+  "Select Language": "انتخاب زبان",
+  "Translate to:": "ترجمه به:",
+  "Bookmarks": "نشانه‌ها",
+  "Show Filters & Sorts": "نمایش فیلترها و مرتب‌سازی",
+  "Load Comments": "بارگیری نظرات",
+  "Filter by creator": "فیلتر بر اساس سازنده"
 }

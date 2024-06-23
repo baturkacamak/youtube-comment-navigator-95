@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Закладка добавлена: ",
   "Bookmark": "Закладка",
   "If you enjoy using this extension, please": "Если вам нравится использовать это расширение, пожалуйста",
-  "rate it on the Chrome Web Store": "оцените его в Chrome Web Store"
+  "rate it on the Chrome Web Store": "оцените его в Chrome Web Store",
+  "Include Timestamps": "Включить метки времени",
+  "Exclude Timestamps": "Исключить метки времени",
+  "Download": "Скачать",
+  "Print": "Печать",
+  "Share": "Поделиться",
+  "E-mail": "Электронная почта",
+  "Select Language": "Выбрать язык",
+  "Translate to:": "Перевести на:",
+  "Bookmarks": "Закладки",
+  "Show Filters & Sorts": "Показать фильтры и сортировки",
+  "Load Comments": "Загрузить комментарии",
+  "Filter by creator": "Фильтр по создателю"
 }

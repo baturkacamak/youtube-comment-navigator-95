@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Marcaj adăugat la: ",
   "Bookmark": "Marcaj",
   "If you enjoy using this extension, please": "Dacă vă place să utilizați această extensie, vă rugăm",
-  "rate it on the Chrome Web Store": "evaluați-o în Chrome Web Store"
+  "rate it on the Chrome Web Store": "evaluați-o în Chrome Web Store",
+  "Include Timestamps": "Includeți marcaje temporale",
+  "Exclude Timestamps": "Excludeți marcaje temporale",
+  "Download": "Descărcare",
+  "Print": "Imprimare",
+  "Share": "Partajare",
+  "E-mail": "E-mail",
+  "Select Language": "Selectați limba",
+  "Translate to:": "Traduceți în:",
+  "Bookmarks": "Marcaje",
+  "Show Filters & Sorts": "Afișați filtrele și sortările",
+  "Load Comments": "Încărcați comentarii",
+  "Filter by creator": "Filtrați după creator"
 }

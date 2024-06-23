@@ -38,7 +38,7 @@
   "Load Comments ({{count}})": "Tağa kop yorum yükle ({{count}})",
   "Load More Comments ({{remainingComments}} remaining)": "Tağa kop yorum yükle ({{remainingComments}} kaldı)",
   "Loading Section": "Bölüm yükleniyatır",
-  "Load Comments": "Yorumlarnı Yükle",
+  "Load Comments": "Muat Komentar",
   "Load Chat": "Sobetni Yükle",
   "Load Transcript": "Transkript Yükle",
   "Load All": "Epsini Yükle",
@@ -106,5 +106,16 @@
   "Bookmark added on: ": "Bukot hiyaara ta: ",
   "Bookmark": "Bukot",
   "If you enjoy using this extension, please": "आपण या विस्ताराचा वापर करून आनंद घेत असाल तर, कृपया",
-  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याचे रेटिंग द्या"
+  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याचे रेटिंग द्या",
+  "Include Timestamps": "Kalebet Cap Wektu",
+  "Exclude Timestamps": "Kecualikan Cap Wektu",
+  "Download": "Unduh",
+  "Print": "Cetak",
+  "Share": "Bagikan",
+  "E-mail": "Email",
+  "Select Language": "Pilih Bahasa",
+  "Translate to:": "Terjemahkan ke:",
+  "Bookmarks": "Penanda",
+  "Show Filters & Sorts": "Tampilkan Filter & Urutkan",
+  "Filter by creator": "Filter menurut pembuat"
 }

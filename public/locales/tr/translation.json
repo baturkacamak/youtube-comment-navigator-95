@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Yer imi eklendi: ",
   "Bookmark": "Yer imi",
   "If you enjoy using this extension, please": "Bu uzantıyı kullanmaktan memnun kalıyorsanız, lütfen",
-  "rate it on the Chrome Web Store": "Chrome Web Mağazasında derecelendirin"
+  "rate it on the Chrome Web Store": "Chrome Web Mağazasında derecelendirin",
+  "Include Timestamps": "Zaman damgalarını dahil et",
+  "Exclude Timestamps": "Zaman damgalarını hariç tut",
+  "Download": "İndir",
+  "Print": "Yazdır",
+  "Share": "Paylaş",
+  "E-mail": "E-posta",
+  "Select Language": "Dil Seçin",
+  "Translate to:": "Çevir:",
+  "Bookmarks": "Yer imleri",
+  "Show Filters & Sorts": "Filtreleri ve Sıralamaları Göster",
+  "Load Comments": "Yorumları Yükle",
+  "Filter by creator": "Yaratan kişiye göre filtrele"
 }

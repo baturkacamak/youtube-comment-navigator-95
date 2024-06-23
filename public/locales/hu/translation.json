@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Könyvjelző hozzáadva: ",
   "Bookmark": "Könyvjelző",
   "If you enjoy using this extension, please": "Ha élvezi ezt a bővítményt, kérem",
-  "rate it on the Chrome Web Store": "értékelje a Chrome Web Store-ban"
+  "rate it on the Chrome Web Store": "értékelje a Chrome Web Store-ban",
+  "Include Timestamps": "Időbélyegek beillesztése",
+  "Exclude Timestamps": "Időbélyegek kizárása",
+  "Download": "Letöltés",
+  "Print": "Nyomtatás",
+  "Share": "Megosztás",
+  "E-mail": "E-mail",
+  "Select Language": "Válasszon nyelvet",
+  "Translate to:": "Fordítás nyelvre:",
+  "Bookmarks": "Könyvjelzők",
+  "Show Filters & Sorts": "Szűrők és rendezések megjelenítése",
+  "Load Comments": "Megjegyzések betöltése",
+  "Filter by creator": "Szűrés alkotó szerint"
 }

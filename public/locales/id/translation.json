@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Penanda ditambahkan pada: ",
   "Bookmark": "Penanda",
   "If you enjoy using this extension, please": "Jika Anda menikmati menggunakan ekstensi ini, silakan",
-  "rate it on the Chrome Web Store": "beri nilai di Chrome Web Store"
+  "rate it on the Chrome Web Store": "beri nilai di Chrome Web Store",
+  "Include Timestamps": "Sertakan Cap Waktu",
+  "Exclude Timestamps": "Kecualikan Cap Waktu",
+  "Download": "Unduh",
+  "Print": "Cetak",
+  "Share": "Bagikan",
+  "E-mail": "Email",
+  "Select Language": "Pilih Bahasa",
+  "Translate to:": "Terjemahkan ke:",
+  "Bookmarks": "Penanda",
+  "Show Filters & Sorts": "Tampilkan Filter & Urutkan",
+  "Load Comments": "Muat Komentar",
+  "Filter by creator": "Filter menurut pembuat"
 }

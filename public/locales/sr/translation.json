@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Obeleživač dodan: ",
   "Bookmark": "Obeleživač",
   "If you enjoy using this extension, please": "Ако уживате у коришћењу овог проширења, молимо вас",
-  "rate it on the Chrome Web Store": "оцените га на Chrome Web Store"
+  "rate it on the Chrome Web Store": "оцените га на Chrome Web Store",
+  "Include Timestamps": "Укључи временске ознаке",
+  "Exclude Timestamps": "Искључи временске ознаке",
+  "Download": "Преузимање",
+  "Print": "Штампа",
+  "Share": "Дели",
+  "E-mail": "Е-пошта",
+  "Select Language": "Изаберите језик",
+  "Translate to:": "Преведи на:",
+  "Bookmarks": "Обележивачи",
+  "Show Filters & Sorts": "Прикажи филтере и сортирања",
+  "Load Comments": "Учитај коментаре",
+  "Filter by creator": "Филтрирај по креатору"
 }

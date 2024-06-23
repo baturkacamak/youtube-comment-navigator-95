@@ -106,5 +106,17 @@
   "Bookmark added on: ": "북마크 추가 날짜: ",
   "Bookmark": "북마크",
   "If you enjoy using this extension, please": "이 확장 프로그램을 사용하여 즐기신다면,",
-  "rate it on the Chrome Web Store": "Chrome 웹 스토어에서 평가해 주세요"
+  "rate it on the Chrome Web Store": "Chrome 웹 스토어에서 평가해 주세요",
+  "Include Timestamps": "타임스탬프 포함",
+  "Exclude Timestamps": "타임스탬프 제외",
+  "Download": "다운로드",
+  "Print": "인쇄",
+  "Share": "공유",
+  "E-mail": "이메일",
+  "Select Language": "언어 선택",
+  "Translate to:": "번역:",
+  "Bookmarks": "북마크",
+  "Show Filters & Sorts": "필터 및 정렬 표시",
+  "Load Comments": "댓글 불러오기",
+  "Filter by creator": "작성자별 필터"
 }

@@ -106,5 +106,17 @@
   "Bookmark added on: ": "புத்தகம் சேர்க்கப்பட்டது: ",
   "Bookmark": "புத்தகம்",
   "If you enjoy using this extension, please": "நீங்கள் இந்த நீட்டிப்பைப் பயன்படுத்த விரும்பினால், தயவுசெய்து",
-  "rate it on the Chrome Web Store": "அதை Chrome வலைக்கடையில் மதிப்பீடு செய்யுங்கள்"
+  "rate it on the Chrome Web Store": "அதை Chrome வலைக்கடையில் மதிப்பீடு செய்யுங்கள்",
+  "Include Timestamps": "நேரக்குறிகளைச் சேர்க்கவும்",
+  "Exclude Timestamps": "நேரக்குறிகளை தவிர்க்கவும்",
+  "Download": "பதிவிறக்கவும்",
+  "Print": "அச்சிடுக",
+  "Share": "பகிர்",
+  "E-mail": "மின்னஞ்சல்",
+  "Select Language": "மொழியைத் தேர்ந்தெடுக்கவும்",
+  "Translate to:": "மொழிபெயர்க்கவும்:",
+  "Bookmarks": "புத்தகக்குறிகள்",
+  "Show Filters & Sorts": "வடிகள் & வரிசைப்படுத்தலைக் காண்பிக்கவும்",
+  "Load Comments": "கருத்துகளை ஏற்றவும்",
+  "Filter by creator": "உருவாக்குனரின் அடிப்படையில் வடிக"
 }

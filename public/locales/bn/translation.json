@@ -106,5 +106,17 @@
   "Bookmark added on: ": "বুকমার্ক যোগ করা হয়েছে: ",
   "Bookmark": "বুকমার্ক",
   "If you enjoy using this extension, please": "আপনি যদি এই এক্সটেনশনটি ব্যবহার করে আনন্দ পান, তাহলে",
-  "rate it on the Chrome Web Store": "Chrome ওয়েব স্টোরে এটি রেট করুন"
+  "rate it on the Chrome Web Store": "Chrome ওয়েব স্টোরে এটি রেট করুন",
+  "Include Timestamps": "সময় স্ট্যাম্প অন্তর্ভুক্ত করুন",
+  "Exclude Timestamps": "সময় স্ট্যাম্প বাদ দিন",
+  "Download": "ডাউনলোড",
+  "Print": "প্রিন্ট",
+  "Share": "শেয়ার",
+  "E-mail": "ই-মেইল",
+  "Select Language": "ভাষা নির্বাচন করুন",
+  "Translate to:": "অনুবাদ করুন:",
+  "Bookmarks": "বুকমার্কস",
+  "Show Filters & Sorts": "ফিল্টার এবং সাজান দেখান",
+  "Load Comments": "মন্তব্য লোড করুন",
+  "Filter by creator": "স্রষ্টা দ্বারা ফিল্টার করুন"
 }

@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Kirjanmerkki lisätty: ",
   "Bookmark": "Kirjanmerkki",
   "If you enjoy using this extension, please": "Jos nautit tämän laajennuksen käytöstä, ole hyvä",
-  "rate it on the Chrome Web Store": "arvostele se Chrome Web Storessa"
+  "rate it on the Chrome Web Store": "arvostele se Chrome Web Storessa",
+  "Include Timestamps": "Sisällytä aikaleimat",
+  "Exclude Timestamps": "Poista aikaleimat",
+  "Download": "Lataa",
+  "Print": "Tulosta",
+  "Share": "Jaa",
+  "E-mail": "Sähköposti",
+  "Select Language": "Valitse kieli",
+  "Translate to:": "Käännä kielelle:",
+  "Bookmarks": "Kirjanmerkit",
+  "Show Filters & Sorts": "Näytä suodattimet ja lajittelu",
+  "Load Comments": "Lataa kommentit",
+  "Filter by creator": "Suodata luojan mukaan"
 }

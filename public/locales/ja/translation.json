@@ -106,5 +106,17 @@
   "Bookmark added on: ": "ブックマーク追加日: ",
   "Bookmark": "ブックマーク",
   "If you enjoy using this extension, please": "この拡張機能を気に入っていただけた場合は、ぜひ",
-  "rate it on the Chrome Web Store": "Chrome ウェブストアで評価してください"
+  "rate it on the Chrome Web Store": "Chrome ウェブストアで評価してください",
+  "Include Timestamps": "タイムスタンプを含める",
+  "Exclude Timestamps": "タイムスタンプを除外する",
+  "Download": "ダウンロード",
+  "Print": "印刷",
+  "Share": "共有",
+  "E-mail": "Eメール",
+  "Select Language": "言語を選択",
+  "Translate to:": "翻訳する：",
+  "Bookmarks": "ブックマーク",
+  "Show Filters & Sorts": "フィルターと並べ替えを表示",
+  "Load Comments": "コメントを読み込む",
+  "Filter by creator": "作成者でフィルタリング"
 }

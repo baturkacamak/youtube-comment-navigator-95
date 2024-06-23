@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Додано в закладки: ",
   "Bookmark": "Закладка",
   "If you enjoy using this extension, please": "Якщо вам подобається використовувати це розширення, будь ласка",
-  "rate it on the Chrome Web Store": "оцініть його в Chrome Web Store"
+  "rate it on the Chrome Web Store": "оцініть його в Chrome Web Store",
+  "Include Timestamps": "Включити часові мітки",
+  "Exclude Timestamps": "Виключити часові мітки",
+  "Download": "Завантажити",
+  "Print": "Друк",
+  "Share": "Поділитися",
+  "E-mail": "Електронна пошта",
+  "Select Language": "Вибрати мову",
+  "Translate to:": "Перекласти на:",
+  "Bookmarks": "Закладки",
+  "Show Filters & Sorts": "Показати фільтри та сортування",
+  "Load Comments": "Завантажити коментарі",
+  "Filter by creator": "Фільтрувати за творцем"
 }

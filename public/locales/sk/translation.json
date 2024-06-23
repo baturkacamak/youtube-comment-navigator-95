@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Záložka pridaná: ",
   "Bookmark": "Záložka",
   "If you enjoy using this extension, please": "Ak si užívate používanie tohto rozšírenia, prosím",
-  "rate it on the Chrome Web Store": "ohodnoťte ho v Chrome Web Store"
+  "rate it on the Chrome Web Store": "ohodnoťte ho v Chrome Web Store",
+  "Include Timestamps": "Zahrnúť časové pečiatky",
+  "Exclude Timestamps": "Vylúčiť časové pečiatky",
+  "Download": "Stiahnuť",
+  "Print": "Tlačiť",
+  "Share": "Zdieľať",
+  "E-mail": "E-mail",
+  "Select Language": "Vybrať jazyk",
+  "Translate to:": "Preložiť do:",
+  "Bookmarks": "Záložky",
+  "Show Filters & Sorts": "Zobraziť filtre a zoradenie",
+  "Load Comments": "Načítať komentáre",
+  "Filter by creator": "Filtrovať podľa tvorcu"
 }

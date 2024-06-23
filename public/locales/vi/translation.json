@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Đã thêm dấu trang vào: ",
   "Bookmark": "Dấu trang",
   "If you enjoy using this extension, please": "Nếu bạn thích sử dụng tiện ích mở rộng này, vui lòng",
-  "rate it on the Chrome Web Store": "đánh giá nó trên Chrome Web Store"
+  "rate it on the Chrome Web Store": "đánh giá nó trên Chrome Web Store",
+  "Include Timestamps": "Bao gồm dấu thời gian",
+  "Exclude Timestamps": "Loại trừ dấu thời gian",
+  "Download": "Tải xuống",
+  "Print": "In",
+  "Share": "Chia sẻ",
+  "E-mail": "E-mail",
+  "Select Language": "Chọn ngôn ngữ",
+  "Translate to:": "Dịch sang:",
+  "Bookmarks": "Dấu trang",
+  "Show Filters & Sorts": "Hiển thị bộ lọc và sắp xếp",
+  "Load Comments": "Tải bình luận",
+  "Filter by creator": "Lọc theo người tạo"
 }

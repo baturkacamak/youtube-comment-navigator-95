@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Lesezeichen hinzugefügt am: ",
   "Bookmark": "Lesezeichen",
   "If you enjoy using this extension, please": "Wenn Ihnen diese Erweiterung gefällt, bitte",
-  "rate it on the Chrome Web Store": "bewerten Sie sie im Chrome Web Store"
+  "rate it on the Chrome Web Store": "bewerten Sie sie im Chrome Web Store",
+  "Include Timestamps": "Zeitstempel einfügen",
+  "Exclude Timestamps": "Zeitstempel ausschließen",
+  "Download": "Herunterladen",
+  "Print": "Drucken",
+  "Share": "Teilen",
+  "E-mail": "E-Mail",
+  "Select Language": "Sprache auswählen",
+  "Translate to:": "Übersetzen in:",
+  "Bookmarks": "Lesezeichen",
+  "Show Filters & Sorts": "Filter und Sortierungen anzeigen",
+  "Load Comments": "Kommentare laden",
+  "Filter by creator": "Nach Ersteller filtern"
 }

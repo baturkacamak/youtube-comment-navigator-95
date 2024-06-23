@@ -106,5 +106,17 @@
   "Bookmark added on: ": "تمت الإضافة في: ",
   "Bookmark": "إشارة مرجعية",
   "If you enjoy using this extension, please": "إذا كنت تستمتع باستخدام هذا الملحق، من فضلك",
-  "rate it on the Chrome Web Store": "قيّمه على متجر Chrome الإلكتروني"
+  "rate it on the Chrome Web Store": "قيّمه على متجر Chrome الإلكتروني",
+  "Include Timestamps": "تضمين الطوابع الزمنية",
+  "Exclude Timestamps": "استبعاد الطوابع الزمنية",
+  "Download": "تحميل",
+  "Print": "طباعة",
+  "Share": "مشاركة",
+  "E-mail": "البريد الإلكتروني",
+  "Select Language": "اختر اللغة",
+  "Translate to:": "ترجمة إلى:",
+  "Bookmarks": "المرجعية",
+  "Show Filters & Sorts": "إظهار الفلاتر والترتيب",
+  "Load Comments": "تحميل التعليقات",
+  "Filter by creator": "تصفية حسب المنشئ"
 }

@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Προστέθηκε σελιδοδείκτης στις: ",
   "Bookmark": "Σελιδοδείκτης",
   "If you enjoy using this extension, please": "Αν σας αρέσει αυτή η επέκταση, παρακαλώ",
-  "rate it on the Chrome Web Store": "βαθμολογήστε την στο Chrome Web Store"
+  "rate it on the Chrome Web Store": "βαθμολογήστε την στο Chrome Web Store",
+  "Include Timestamps": "Συμπερίληψη χρονικών σημάνσεων",
+  "Exclude Timestamps": "Αποκλεισμός χρονικών σημάνσεων",
+  "Download": "Λήψη",
+  "Print": "Εκτύπωση",
+  "Share": "Κοινοποίηση",
+  "E-mail": "Ηλεκτρονικό ταχυδρομείο",
+  "Select Language": "Επιλέξτε γλώσσα",
+  "Translate to:": "Μετάφραση σε:",
+  "Bookmarks": "Σελιδοδείκτες",
+  "Show Filters & Sorts": "Εμφάνιση φίλτρων και ταξινόμησης",
+  "Load Comments": "Φόρτωση σχολίων",
+  "Filter by creator": "Φίλτρο ανά δημιουργό"
 }

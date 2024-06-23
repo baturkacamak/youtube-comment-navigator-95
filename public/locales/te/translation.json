@@ -106,5 +106,17 @@
   "Bookmark added on: ": "బుక్‌మార్క్ జోడించిన తేదీ: ",
   "Bookmark": "బుక్‌మార్క్",
   "If you enjoy using this extension, please": "మీరు ఈ విస్తరణను ఉపయోగించడానికి ఆనందిస్తే, దయచేసి",
-  "rate it on the Chrome Web Store": "దానిని Chrome వెబ్ స్టోర్‌లో రేట్ చేయండి"
+  "rate it on the Chrome Web Store": "దానిని Chrome వెబ్ స్టోర్‌లో రేట్ చేయండి",
+  "Include Timestamps": "సమయ ముద్రలను చేర్చండి",
+  "Exclude Timestamps": "సమయ ముద్రలను మినహాయించండి",
+  "Download": "డౌన్లోడ్",
+  "Print": "ముద్రణ",
+  "Share": "షేర్ చేయండి",
+  "E-mail": "ఇమెయిల్",
+  "Select Language": "భాషను ఎంచుకోండి",
+  "Translate to:": "అనువదించు:",
+  "Bookmarks": "బుక్‌మార్క్‌లు",
+  "Show Filters & Sorts": "వడపోతలు మరియు క్రమబద్ధీకరణను చూపించు",
+  "Load Comments": "వ్యాఖ్యలను లోడ్ చేయండి",
+  "Filter by creator": "సృష్టికర్త ఆధారంగా వడపోత"
 }

@@ -106,5 +106,17 @@
   "Bookmark added on: ": "वाचन चिन्ह जोडले: ",
   "Bookmark": "वाचन चिन्ह",
   "If you enjoy using this extension, please": "जर तुम्हाला या विस्ताराचा वापर करायला आवडत असेल, तर कृपया",
-  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याला रेट करा"
+  "rate it on the Chrome Web Store": "Chrome वेब स्टोअरवर याला रेट करा",
+  "Include Timestamps": "टाइम स्टॅम्प समाविष्ट करा",
+  "Exclude Timestamps": "टाइम स्टॅम्प वगळा",
+  "Download": "डाउनलोड",
+  "Print": "मुद्रण",
+  "Share": "शेअर",
+  "E-mail": "ई-मेल",
+  "Select Language": "भाषा निवडा",
+  "Translate to:": "मध्ये अनुवाद करा:",
+  "Bookmarks": "बुकमार्क्स",
+  "Show Filters & Sorts": "फिल्टर आणि क्रमवारी दर्शवा",
+  "Load Comments": "टिप्पण्या लोड करा",
+  "Filter by creator": "निर्मात्यानुसार फिल्टर करा"
 }

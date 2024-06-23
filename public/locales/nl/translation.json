@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Bladwijzer toegevoegd op: ",
   "Bookmark": "Bladwijzer",
   "If you enjoy using this extension, please": "Als u geniet van het gebruik van deze extensie, wilt u dan",
-  "rate it on the Chrome Web Store": "beoordeel het in de Chrome Web Store"
+  "rate it on the Chrome Web Store": "beoordeel het in de Chrome Web Store",
+  "Include Timestamps": "Tijdstempels opnemen",
+  "Exclude Timestamps": "Tijdstempels uitsluiten",
+  "Download": "Downloaden",
+  "Print": "Afdrukken",
+  "Share": "Delen",
+  "E-mail": "E-mail",
+  "Select Language": "Selecteer taal",
+  "Translate to:": "Vertalen naar:",
+  "Bookmarks": "Bladwijzers",
+  "Show Filters & Sorts": "Toon filters en sorteren",
+  "Load Comments": "Reacties laden",
+  "Filter by creator": "Filter op maker"
 }

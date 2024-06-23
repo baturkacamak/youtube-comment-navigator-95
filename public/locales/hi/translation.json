@@ -106,5 +106,17 @@
   "Bookmark added on: ": "बुकमार्क जोड़ा गया: ",
   "Bookmark": "बुकमार्क",
   "If you enjoy using this extension, please": "यदि आप इस एक्सटेंशन का उपयोग करके आनंद लेते हैं, कृपया",
-  "rate it on the Chrome Web Store": "इसे Chrome वेब स्टोर पर रेट करें"
+  "rate it on the Chrome Web Store": "इसे Chrome वेब स्टोर पर रेट करें",
+  "Include Timestamps": "समय स्टैम्प शामिल करें",
+  "Exclude Timestamps": "समय स्टैम्प को बाहर करें",
+  "Download": "डाउनलोड",
+  "Print": "प्रिंट",
+  "Share": "साझा करें",
+  "E-mail": "ई-मेल",
+  "Select Language": "भाषा चुनें",
+  "Translate to:": "में अनुवाद करें:",
+  "Bookmarks": "बुकमार्क्स",
+  "Show Filters & Sorts": "फ़िल्टर और सॉर्ट दिखाएं",
+  "Load Comments": "टिप्पणियाँ लोड करें",
+  "Filter by creator": "निर्माता द्वारा फ़िल्टर करें"
 }

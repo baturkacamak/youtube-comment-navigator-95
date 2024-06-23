@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Idinagdag ang bookmark noong: ",
   "Bookmark": "Bookmark",
   "If you enjoy using this extension, please": "Kung nasisiyahan ka sa paggamit ng extension na ito, mangyaring",
-  "rate it on the Chrome Web Store": "i-rate ito sa Chrome Web Store"
+  "rate it on the Chrome Web Store": "i-rate ito sa Chrome Web Store",
+  "Include Timestamps": "Isama ang mga Timestamp",
+  "Exclude Timestamps": "Ibukod ang mga Timestamp",
+  "Download": "I-download",
+  "Print": "I-print",
+  "Share": "Ibahagi",
+  "E-mail": "E-mail",
+  "Select Language": "Piliin ang Wika",
+  "Translate to:": "Isalin sa:",
+  "Bookmarks": "Mga Bookmark",
+  "Show Filters & Sorts": "Ipakita ang mga Filter at Pagbukud-bukurin",
+  "Load Comments": "Mag-load ng mga Komento",
+  "Filter by creator": "I-filter ayon sa tagalikha"
 }

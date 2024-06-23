@@ -106,5 +106,17 @@
   "Bookmark added on: ": "Signet ajouté le: ",
   "Bookmark": "Signet",
   "If you enjoy using this extension, please": "Si vous aimez utiliser cette extension, veuillez",
-  "rate it on the Chrome Web Store": "la noter sur le Chrome Web Store"
+  "rate it on the Chrome Web Store": "la noter sur le Chrome Web Store",
+  "Include Timestamps": "Inclure les horodatages",
+  "Exclude Timestamps": "Exclure les horodatages",
+  "Download": "Télécharger",
+  "Print": "Imprimer",
+  "Share": "Partager",
+  "E-mail": "E-mail",
+  "Select Language": "Sélectionner la langue",
+  "Translate to:": "Traduire en:",
+  "Bookmarks": "Signets",
+  "Show Filters & Sorts": "Afficher les filtres et les tris",
+  "Load Comments": "Charger les commentaires",
+  "Filter by creator": "Filtrer par créateur"
 }

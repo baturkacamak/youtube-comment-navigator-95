@@ -106,5 +106,17 @@
   "Bookmark added on: ": "סימנייה נוספה בתאריך: ",
   "Bookmark": "סימנייה",
   "If you enjoy using this extension, please": "אם אתה נהנה להשתמש בתוסף זה, בבקשה",
-  "rate it on the Chrome Web Store": "דרג אותו בחנות האינטרנט של Chrome"
+  "rate it on the Chrome Web Store": "דרג אותו בחנות האינטרנט של Chrome",
+  "Include Timestamps": "כלול חותמות זמן",
+  "Exclude Timestamps": "הוצא חותמות זמן",
+  "Download": "הורדה",
+  "Print": "הדפסה",
+  "Share": "שתף",
+  "E-mail": "אימייל",
+  "Select Language": "בחר שפה",
+  "Translate to:": "תרגם ל:",
+  "Bookmarks": "סימניות",
+  "Show Filters & Sorts": "הצג מסננים ומיונים",
+  "Load Comments": "טען תגובות",
+  "Filter by creator": "סנן לפי יוצר"
 }
