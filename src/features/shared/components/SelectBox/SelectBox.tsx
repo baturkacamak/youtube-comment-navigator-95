@@ -24,8 +24,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     const searchRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        // Translate the options when the component mounts or when the options change
-        const translatedOptions = options.map(option => ({
+        // Exclude the placeholder option when the dropdown is open
+        const displayedOptions = options.filter(option => option.value !== '');
+        const translatedOptions = displayedOptions.map(option => ({
             ...option,
             label: option.label
         }));
@@ -37,10 +38,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         setHighlightedIndex(index);
         setIsOpen(false);
         setSearchTerm('');
-        setFilteredOptions(options.map(option => ({
-            ...option,
-            label: option.label
-        })));
+        // Reset filtered options to exclude the placeholder
+        const displayedOptions = options.filter(option => option.value !== '');
+        setFilteredOptions(displayedOptions);
     };
 
     const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -58,10 +58,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
                 setSelectedOption(filteredOptions[highlightedIndex]);
                 setIsOpen(false);
                 setSearchTerm('');
-                setFilteredOptions(options.map(option => ({
-                    ...option,
-                    label: option.label
-                })));
+                // Reset filtered options to exclude the placeholder
+                const displayedOptions = options.filter(option => option.value !== '');
+                setFilteredOptions(displayedOptions);
                 break;
             case 'Escape':
                 event.preventDefault();
@@ -99,7 +98,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         if (isSearchable) {
             const normalizedSearchTerm = normalizeString(searchTerm);
             const filtered = options.filter(option =>
-                normalizeString(option.label).includes(normalizedSearchTerm)
+                option.value !== '' && normalizeString(option.label).includes(normalizedSearchTerm)
             );
             setFilteredOptions(filtered);
             setHighlightedIndex(0);
