@@ -35,7 +35,8 @@ const initialState: RootState = {
     settings: {
         textSize: 'text-base',
         showFiltersSorts: true,
-    }
+    },
+    filteredTranscripts: [],
 };
 
 const commentsSlice = createSlice({
@@ -91,7 +92,9 @@ const commentsSlice = createSlice({
         setShowFiltersSorts: (state, action: PayloadAction<boolean>) => { // New action
             state.settings.showFiltersSorts = action.payload;
             saveSettings({ showFiltersSorts: state.settings.showFiltersSorts });
-
+        },
+        setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
+            state.filteredTranscripts = action.payload;
         },
         resetState: () => initialState,
     },
@@ -113,7 +116,8 @@ export const {
     setShowBookmarked,
     setBookmarkedComments,
     setIsUrlChanged,
-    setShowFiltersSorts // Export the new action
+    setShowFiltersSorts ,
+    setFilteredTranscripts
 } = commentsSlice.actions;
 
 const store = configureStore({
