@@ -12,11 +12,10 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
     const textSize = useSelector((state: RootState) => state.settings.textSize);
     const [includeTimestamps, setIncludeTtimestamps] = useState(true);
     const [selectedLanguage, setSelectedLanguage] = useState({ value: 'en', label: 'English' });
-    const [bookmarkedLines, setBookmarkedLines] = useState<number[]>([]);
     const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
 
     return (
-        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow" aria-live="polite" aria-label="Transcript">
+        <div className="dark:bg-gray-800" aria-live="polite" aria-label="Transcript">
             <div className="sticky top-0 bg-white dark:bg-gray-800 z-10">
                 <ActionButtons
                     transcripts={transcripts}
@@ -38,10 +37,8 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
                             entry={entry}
                             index={index}
                             includeTimestamps={includeTimestamps}
-                            bookmarkedLines={bookmarkedLines}
                             hoveredLineIndex={hoveredLineIndex}
                             setHoveredLineIndex={setHoveredLineIndex}
-                            setBookmarkedLines={setBookmarkedLines}
                         />
                     ))}
                 </ul>

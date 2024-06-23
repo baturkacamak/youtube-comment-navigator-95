@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import classNames from 'classnames';
-
 import { TooltipProps } from "../../../types/layoutTypes";
 
 const Tooltip: React.FC<TooltipProps> = ({ text, children, className, bgColor = 'bg-black', textColor = 'text-white' }) => {
@@ -33,17 +32,17 @@ const Tooltip: React.FC<TooltipProps> = ({ text, children, className, bgColor = 
     }, []);
 
     return (
-        <div ref={wrapperRef} className="relative group" aria-describedby="tooltip">
+        <div ref={wrapperRef} className="relative group inline-flex items-center" aria-describedby="tooltip">
             {children}
             {text && (
                 <div role="tooltip" className={classNames(
-                    "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10",
+                    "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-2 py-1 text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10 pointer-events-none",
                     bgColor,
                     textColor,
                     className
                 )}>
                     {text}
-                    <div className={classNames("absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2", bgColor, className)} style={{ clipPath: 'polygon(100% 0, 0 0, 50% 100%)' }}></div>
+                    <div className={classNames("absolute top-full left-1/2 transform -translate-x-1/2 w-2 h-2 pointer-events-none", bgColor, className)} style={{ clipPath: 'polygon(100% 0, 0 0, 50% 100%)' }}></div>
                 </div>
             )}
         </div>

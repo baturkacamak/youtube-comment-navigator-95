@@ -11,7 +11,6 @@ export interface RootState {
     commentsCount: number;
     repliesCount: number;
     transcriptsCount: number;
-    textSize: string;
     showBookmarked: boolean;
     bookmarkedComments: any[];
     isUrlChanged: boolean;
@@ -20,5 +19,6 @@ export interface RootState {
         showFiltersSorts: boolean;
     };
     filteredTranscripts: any[];
+    bookmarkedLines: any[]
 }
 
