@@ -13,6 +13,8 @@ const extractContinuationToken = (continuationItems: any[]) => {
     ).find((token: string | undefined) => token);
 };
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     const replies: any[] = [];
 
@@ -73,6 +75,8 @@ export const fetchCommentsFromRemote = async (
             if (signal?.aborted) {
                 return;
             }
+
+            await delay(50);
 
             allComments = [];
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, null);

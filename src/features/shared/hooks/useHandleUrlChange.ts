@@ -32,11 +32,10 @@ const useHandleUrlChange = () => {
         const signal = abortController.current.signal;
 
         dispatch(resetState());
-        const continuationToken = await fetchContinuationTokenFromRemote();
-        await fetchCommentsFromRemote(handleFetchedComments, signal, false, continuationToken);
         const bookmarks = await retrieveDataFromDB('bookmarks');
-        dispatch(setBookmarkedComments(bookmarks.data || []));
-
+        if (bookmarks) {
+            dispatch(setBookmarkedComments(bookmarks?.data || []));
+        }
         const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
         if (captionTrackBaseUrl) {
             const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
@@ -45,6 +44,8 @@ const useHandleUrlChange = () => {
                 dispatch(setFilteredTranscripts(transcriptData.items));
             }
         }
+        const continuationToken = await fetchContinuationTokenFromRemote();
+        await fetchCommentsFromRemote(handleFetchedComments, signal, false, continuationToken);
     });
 };
 

@@ -42,10 +42,13 @@ const useComments = () => {
                     dispatch(setInitialComments(tempCachedData.items));
                 }
 
-                let initialComments: Comment[] = tempCachedData?.items || [];
+                let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
+
                 await fetchCommentsIncrementally((comments) => {
                     if (signal.aborted) return;
-                    dispatch(updateCommentsData({comments: comments, isLoading: false}));
+
+                    dispatch(updateCommentsData({ comments: comments, isLoading: false }));
+
                     initialComments.push(...comments);
                 }, signal, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
 

@@ -33,7 +33,7 @@ const useAppState = () => {
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await retrieveDataFromDB('bookmarks');
         if (bookmarks) {
-            dispatch(setBookmarkedComments(bookmarks.data || []));
+            dispatch(setBookmarkedComments(bookmarks?.data || []));
         }
     }, [dispatch]);
 
