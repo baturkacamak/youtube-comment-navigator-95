@@ -1,6 +1,6 @@
 import React from 'react';
 import { parseTimestamps } from '../../shared/utils/parseTimestamps';
-import { highlightText } from '../utils/highlightText';
+import { highlightText } from '../../shared/utils/highlightText';
 import { splitTextByNewlines } from '../utils/splitTextByNewlines';
 import { CommentContentProps } from "../../../types/commentTypes";
 import { useSelector } from 'react-redux';

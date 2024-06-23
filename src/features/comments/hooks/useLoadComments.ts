@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 
 import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/fetchComments';
 import {
-    setComments, setCommentsCount,
+    setComments, setCommentsCount, setFilteredTranscripts,
     setInitialComments,
     setLoading,
     setReplies,
@@ -41,6 +41,7 @@ const useLoadComments = (bypassCache = false) => {
         const data = await fetchTranscript();
         if (data && data.items) {
             dispatch(setTranscripts(data.items));
+            dispatch(setFilteredTranscripts(data.items));
             dispatch(setTranscriptsCount(data.items.length));
         } else {
             dispatch(setTranscripts([]));
