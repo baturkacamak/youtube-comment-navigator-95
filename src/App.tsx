@@ -42,10 +42,10 @@ const App: React.FC = () => {
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
 
     // Get the transcript from the Redux state
-    const transcripts = useSelector((state: RootState) => state.transcripts);
+    const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
 
     // Calculate the word count for the transcript
-    const transcriptWordCount = calculateWordCount(transcripts);
+    const transcriptWordCount = calculateWordCount(filteredTranscripts);
 
     const tabs = [
         {
@@ -74,7 +74,7 @@ const App: React.FC = () => {
                 label: `${t('Transcript')} (${transcriptWordCount})`, // Include the word count in the label
                 icon: DocumentTextIcon,
             },
-            content: <Transcript />, // Include the Transcript component here
+            content: <Transcript transcripts={filteredTranscripts} />, // Include the Transcript component here
         },
         {
             title: {
@@ -82,7 +82,7 @@ const App: React.FC = () => {
                 label: t('Live Chat'),
                 icon: InboxIcon,
             },
-            content: <p>Live chat content goes here...</p>,
+            content: <p>Live chat content will be here...</p>,
         },
         {
             title: {
