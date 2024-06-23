@@ -63,7 +63,8 @@ class AssetInjector {
         if (!document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`)) {
             const script = document.createElement('script');
             script.src = chrome.runtime.getURL(jsFileName);
-            script.onload = () => {};
+            script.onload = () => {
+            };
             script.onerror = () => {
                 console.error('Error loading React app script:', script.src);
             };
@@ -84,7 +85,7 @@ class AssetInjector {
             document.head.appendChild(script);
 
             // Notify React app that the translation has been loaded
-            window.postMessage({ type: 'LANGUAGE_LOADED', payload: { language: locale } }, '*');
+            window.postMessage({type: 'LANGUAGE_LOADED', payload: {language: locale}}, '*');
         } catch (error) {
             console.error(`Error fetching locale file for ${locale}:`, error);
         }
@@ -93,9 +94,9 @@ class AssetInjector {
     handleMessage(event) {
         if (event.source !== window) return; // Only accept messages from the same window
 
-        const { type, payload } = event.data;
+        const {type, payload} = event.data;
         if (type === 'CHANGE_LANGUAGE') {
-            const { language } = payload;
+            const {language} = payload;
             this.injectTranslation(language);
         }
     }
@@ -199,7 +200,7 @@ class YouTubeCommentNavigator {
      * Checks for the presence of the comments section at regular intervals and injects the React app when found.
      * This function is used to ensure that the app is injected as soon as the comments section becomes available.
      */
-    checkAndInjectWithInterval() {
+    checkAndInjectWithInterval(isUrlChanged = false) {
         const intervalId = setInterval(async () => {
             if (!DOMHelper.isVideoWatchPage()) {
                 clearInterval(intervalId);
@@ -208,6 +209,9 @@ class YouTubeCommentNavigator {
             if (document.getElementById(this.commentsSectionId)) {
                 clearInterval(intervalId);
                 await this.checkAndInject();
+                if (isUrlChanged) {
+                    window.postMessage({type: 'URL_CHANGE_TO_VIDEO', url: window.location.href}, '*');
+                }
             }
         }, 2000);
     }
@@ -236,10 +240,7 @@ class YouTubeCommentNavigator {
      * Removes the existing app and reinjects it if the new URL is a YouTube watch page.
      */
     async onUrlChange() {
-        this.checkAndInjectWithInterval();
-        if (DOMHelper.isVideoWatchPage()) {
-            window.postMessage({type: 'URL_CHANGE_TO_VIDEO', url: window.location.href}, '*');
-        }
+        this.checkAndInjectWithInterval(true);
     }
 }
 
