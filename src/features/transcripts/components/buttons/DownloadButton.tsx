@@ -2,12 +2,15 @@ import React from 'react';
 import { DocumentArrowDownIcon } from '@heroicons/react/24/outline';
 import { getVideoTitle } from "../../../shared/utils/getVideoTitle";
 import { extractYouTubeVideoIdFromUrl } from '../../../shared/utils/extractYouTubeVideoIdFromUrl';
+import { useTranslation } from 'react-i18next';
 
 interface DownloadButtonProps {
     transcriptText: string;
 }
 
 const DownloadButton: React.FC<DownloadButtonProps> = ({ transcriptText }) => {
+    const { t } = useTranslation();
+
     const getFormattedFileName = () => {
         const baseName = 'transcript';
         const videoTitle = getVideoTitle();
@@ -32,7 +35,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ transcriptText }) => {
         <button onClick={handleDownloadTranscript}
                 className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300">
             <DocumentArrowDownIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
-            <span className="text-sm">Download</span>
+            <span className="text-sm">{t('Download')}</span>
         </button>
     );
 };

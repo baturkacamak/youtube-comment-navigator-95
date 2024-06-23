@@ -1,13 +1,14 @@
-// src/features/transcripts/components/buttons/ShareButton.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { ShareIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { AiOutlineWhatsApp } from 'react-icons/ai';
+import { useTranslation } from 'react-i18next';
 
 interface ShareButtonProps {
     textToShare: string;
 }
 
 const ShareButton: React.FC<ShareButtonProps> = ({ textToShare }) => {
+    const { t } = useTranslation();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +32,6 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare }) => {
                 console.error('Error sharing', error);
             }
         } else {
-            // Fallback for browsers that do not support the Web Share API
             try {
                 await navigator.clipboard.writeText(text);
                 alert('Transcript text copied to clipboard. You can share it manually.');
@@ -71,7 +71,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare }) => {
                 className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
             >
                 <ShareIcon className="w-5 h-5 mr-1" aria-hidden="true" />
-                <span className="text-sm">Share</span>
+                <span className="text-sm">{t('Share')}</span>
             </button>
             {isOpen && (
                 <div
@@ -84,16 +84,15 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare }) => {
                         className="flex items-center w-full px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-300"
                     >
                         <EnvelopeIcon className="w-5 h-5 mr-2" aria-hidden="true" />
-                        <span className="text-sm">Email</span>
+                        <span className="text-sm">{t('E-mail')}</span>
                     </button>
                     <button
                         onClick={handleWhatsAppShare}
                         className="flex items-center w-full px-4 py-2 text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-300"
                     >
                         <AiOutlineWhatsApp className="w-5 h-5 mr-2" aria-hidden="true" />
-                        <span className="text-sm">WhatsApp</span>
+                        <span className="text-sm">Whatsapp</span>
                     </button>
-                    {/* Add more share options here */}
                 </div>
             )}
         </div>

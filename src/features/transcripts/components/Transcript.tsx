@@ -15,8 +15,8 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
     const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
 
     return (
-        <div className="dark:bg-gray-800" aria-live="polite" aria-label="Transcript">
-            <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-800 mb-4 z-10">
+        <div className="dark:bg-gray-800 rounded" aria-live="polite" aria-label="Transcript">
+            <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10">
                 <ActionButtons
                     transcripts={transcripts}
                     includeTimestamps={includeTimestamps}
