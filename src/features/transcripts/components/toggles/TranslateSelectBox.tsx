@@ -3,6 +3,7 @@ import SelectBox from "../../../shared/components/SelectBox/SelectBox";
 import { LanguageIcon } from '@heroicons/react/24/outline';
 
 const languages = [
+    { value: '', label: 'Select Language' },
     { value: 'af', label: 'Afrikaans' },
     { value: 'ak', label: 'Akan' },
     { value: 'sq', label: 'Shqip' },
