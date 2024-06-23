@@ -19,5 +19,6 @@ export interface RootState {
         textSize: string;
         showFiltersSorts: boolean;
     };
+    filteredTranscripts: any[];
 }
 
