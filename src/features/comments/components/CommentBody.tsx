@@ -11,7 +11,7 @@ const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampCl
     const textSize = useSelector((state: RootState) => state.settings.textSize);
 
     const splitText = splitTextByNewlines(content);
-    const timestampedText = parseTimestamps(splitText, handleTimestampClick);
+    const timestampedText = parseTimestamps({content: splitText, handleTimestampClick});
     const highlightedText = highlightText(timestampedText, keyword);
 
     return (

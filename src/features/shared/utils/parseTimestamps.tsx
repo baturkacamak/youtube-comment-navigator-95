@@ -1,9 +1,16 @@
 import React from 'react';
 
-export const parseTimestamps = (
-    content: (string | JSX.Element)[],
-    handleTimestampClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
-) => {
+interface ParseTimestampsProps {
+    content: (string | JSX.Element)[];
+    handleTimestampClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+    timestampColor?: string; // Added prop for timestamp color
+}
+
+export const parseTimestamps = ({
+                                    content,
+                                    handleTimestampClick,
+                                    timestampColor = "text-blue-500" // Default color
+                                }: ParseTimestampsProps) => {
     const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/g;
     const elements: (JSX.Element | string)[] = [];
 
@@ -25,7 +32,7 @@ export const parseTimestamps = (
                         href="#"
                         data-timestamp={timestamp}
                         onClick={handleTimestampClick}
-                        className="text-blue-500 hover:underline"
+                        className={`${timestampColor} hover:underline`} // Use the timestampColor prop
                     >
                         {timestamp}
                     </a>

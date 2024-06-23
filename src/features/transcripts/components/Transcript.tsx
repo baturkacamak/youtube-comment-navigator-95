@@ -54,7 +54,7 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
                     {transcripts.map((entry, index) => (
                         <li
                             key={index}
-                            className={`mb-2 flex items-center rounded-lg ${textSize} ${bookmarkedLines.includes(index) ? 'bg-teal-200 dark:bg-gray-600' : ''}`}
+                            className={`mb-2 flex items-center rounded-lg ${textSize} ${bookmarkedLines.includes(index) ? 'bg-teal-200 dark:bg-gray-600' : index % 2 === 0 ? 'bg-gray-100 dark:bg-gray-700' : 'bg-white dark:bg-gray-800'}`}
                             aria-label={`Transcript entry at ${formatTime(entry.start)}`}
                             onMouseEnter={() => setHoveredLineIndex(index)}
                             onMouseLeave={() => setHoveredLineIndex(null)}
@@ -62,10 +62,10 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
                         >
                             <div className="flex items-center w-full">
                                 <span
-                                    className={`bg-red-100 text-sm font-medium rounded text-red-600 dark:bg-red-800 dark:text-red-200 px-2 py-1 ${includeTimestamps ? '' : 'select-none'} mr-2`}
+                                    className={`bg-red-100 text-sm font-medium rounded text-red-600 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 ${includeTimestamps ? '' : 'select-none'} mr-2`}
                                     aria-hidden="true"
                                 >
-                                    {parseTimestamps([formatTime(entry.start)], handleTimestampClick)}
+                                    {parseTimestamps({ content: [formatTime(entry.start)], handleTimestampClick, timestampColor: "dark:text-gray-900" })}
                                 </span>
                                 <div
                                     className="flex-1 pb-2 -mb-2 inline-flex items-center"
@@ -80,8 +80,9 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
                                     aria-pressed={bookmarkedLines.includes(index)}
                                     aria-label={`Transcript text: ${entry.text}`}
                                 >
-                                    <span className={`text-gray-800 dark:text-gray-200 min-w-96 cursor-text ${index % 2 === 0 ? 'text-black' : 'text-gray-700'}`}
-                                          onClick={(e) => e.stopPropagation()}>
+                                    <span
+                                        className={`text-gray-800 dark:text-gray-300 min-w-96 cursor-text ${index % 2 === 0 ? 'text-black' : 'pl-2 text-gray-700'}`}
+                                        onClick={(e) => e.stopPropagation()}>
                                         {highlightText(entry.text, keyword)}
                                     </span>
                                     <BookmarkButton
