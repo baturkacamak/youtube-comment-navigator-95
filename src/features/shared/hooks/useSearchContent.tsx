@@ -10,6 +10,7 @@ import {
 } from "../../../store/store";
 import {calculateFilteredWordCount} from "../utils/calculateWordCount";
 import {Comment} from "../../../types/commentTypes";
+import {normalizeString} from "../utils/normalizeString";
 
 
 const useSearchContent = () => {
@@ -24,20 +25,22 @@ const useSearchContent = () => {
   const handleSearch = (keyword: string) => {
     dispatch(setFilters({ ...filters, keyword }));
 
+    const normalizedKeyword = normalizeString(keyword);
+
     const commentsToSearch = originalComments;
     const bookmarksToSearch = bookmarkedComments;
     const transcriptsToSearch = originalTranscripts;
 
     const filterAndSortComments = (comments: Comment[]) => {
       const filteredComments = comments.filter((comment: Comment) =>
-          comment?.content.toLowerCase().includes(keyword.toLowerCase())
+          normalizeString(comment?.content).includes(normalizedKeyword)
       );
       return sortComments(filteredComments, filters.sortBy, filters.sortOrder);
     };
 
     const filterTranscripts = (transcripts: any[]) => {
       return transcripts.filter((entry: any) =>
-          entry.text.toLowerCase().includes(keyword.toLowerCase())
+          normalizeString(entry.text).includes(normalizedKeyword)
       );
     };
 

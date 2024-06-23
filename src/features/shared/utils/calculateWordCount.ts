@@ -1,3 +1,5 @@
+import {normalizeString} from "./normalizeString";
+
 interface TranscriptEntry {
     start: number;
     text: string;
@@ -10,10 +12,10 @@ export const calculateWordCount = (transcripts: TranscriptEntry[]): number => {
 };
 
 export const calculateFilteredWordCount = (transcripts: TranscriptEntry[], keyword: string): number => {
-    const lowercasedKeyword = keyword.toLowerCase();
+    const normalizedKeyword = normalizeString(keyword);
     return transcripts.reduce((count, entry) => {
         const wordArray = entry.text.split(/\s+/);
-        const filteredWordArray = wordArray.filter(word => word.toLowerCase().includes(lowercasedKeyword));
+        const filteredWordArray = wordArray.filter(word => normalizeString(word).includes(normalizedKeyword));
         return count + filteredWordArray.length;
     }, 0);
 };
