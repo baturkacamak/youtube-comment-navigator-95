@@ -1,11 +1,12 @@
-// src/features/transcripts/services/remoteFetch.ts
-import { processTranscriptData, ProcessedTranscript } from '../utils/processTranscriptData';
-import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import {ProcessedTranscript, processTranscriptData} from '../utils/processTranscriptData';
+
+declare var ytInitialPlayerResponse: any;
 
 export const fetchTranscriptFromRemote = async (): Promise<ProcessedTranscript | null> => {
     try {
-        const videoId = extractYouTubeVideoIdFromUrl();
-        const response = await fetch(`https://www.youtube.com/api/timedtext?v=${videoId}&lang=en`);
+        const captionTrackBaseUrl = ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl;
+        const response = await fetch(`${captionTrackBaseUrl}&fmt=json3`);
+
         if (!response.ok) {
             throw new Error("Failed to fetch transcript from remote");
         }

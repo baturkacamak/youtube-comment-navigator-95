@@ -52,10 +52,6 @@ const useAppState = () => {
         }
     }, [activeTab, fetchBookmarkedComments, filters.keyword]);
 
-    useEffect(() => {
-        loadTranscript();
-    }, [loadTranscript]);
-
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
