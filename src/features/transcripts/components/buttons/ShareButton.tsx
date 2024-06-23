@@ -75,7 +75,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare }) => {
             </button>
             {isOpen && (
                 <div
-                    className={`absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-10 transition-transform duration-300 ease-in-out ${
+                    className={`absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-10 shadow transition-transform duration-300 ease-in-out ${
                         isOpen ? 'transform scale-100 opacity-100' : 'transform scale-95 opacity-0'
                     }`}
                 >
