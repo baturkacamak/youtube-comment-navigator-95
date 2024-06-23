@@ -5,7 +5,7 @@ import {setBookmarkedComments, setFilters, setShowBookmarked} from '../../../sto
 import useComments from '../../comments/hooks/useComments';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
-import useSearchComments from '../../comments/hooks/useSearchComments';
+import useSearchContent from './useSearchContent';
 import {Filters} from '../../../types/filterTypes';
 import {retrieveDataFromDB} from '../utils/cacheUtils';
 import {extractYouTubeVideoIdFromUrl} from '../utils/extractYouTubeVideoIdFromUrl';
@@ -26,7 +26,7 @@ const useAppState = () => {
 
     const {sortComments} = useSortedComments(false);
     const {filterComments} = useFilteredComments(false);
-    const {handleSearch} = useSearchComments();
+    const {handleSearch} = useSearchContent();
     const {initialLoadCompleted} = useComments();
     const {loadTranscript} = useTranscript();
 

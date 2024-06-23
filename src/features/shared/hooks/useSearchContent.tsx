@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import useSortedComments from "./useSortedComments";
+import useSortedComments from "../../comments/hooks/useSortedComments";
 import { Comment } from "../../../types/commentTypes";
 import { RootState } from "../../../types/rootState";
 import { setComments, setCommentsCount, setFilters, setBookmarkedComments, setFilteredTranscripts } from "../../../store/store";
 
-const useSearchComments = () => {
+const useSearchContent = () => {
   const dispatch = useDispatch();
   const originalComments = useSelector((state: RootState) => state.originalComments);
   const originalTranscripts = useSelector((state: RootState) => state.transcripts);
@@ -53,4 +53,4 @@ const useSearchComments = () => {
   return { handleSearch };
 };
 
-export default useSearchComments;
+export default useSearchContent;

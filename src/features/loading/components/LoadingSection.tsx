@@ -9,10 +9,10 @@ import Button from "../../shared/components/Button";
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
-import useLoadComments from "../../comments/hooks/useLoadComments";
+import useLoadContent from "../../shared/hooks/useLoadContent";
 
 const LoadingSection = () => {
-    const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadComments();
+    const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadContent();
 
     const { t } = useTranslation();
     const commentsCount = useSelector((state: RootState) => state.comments.length);

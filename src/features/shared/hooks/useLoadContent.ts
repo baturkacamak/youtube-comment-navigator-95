@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import { fetchComments, fetchChatReplies, fetchTranscript } from '../services/fetchComments';
+import { fetchComments, fetchChatReplies, fetchTranscript } from '../../comments/services/fetchComments';
 import {
     setComments, setCommentsCount, setFilteredTranscripts,
     setInitialComments,
@@ -11,7 +11,7 @@ import {
     updateCommentsData
 } from "../../../store/store";
 
-const useLoadComments = (bypassCache = false) => {
+const useLoadContent = (bypassCache = false) => {
     const dispatch = useDispatch();
 
     const loadComments = async (bypassCache = false) => {
@@ -78,4 +78,4 @@ const useLoadComments = (bypassCache = false) => {
     };
 };
 
-export default useLoadComments;
+export default useLoadContent;
