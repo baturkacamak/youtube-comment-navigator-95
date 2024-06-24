@@ -1,17 +1,17 @@
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../types/rootState";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../types/rootState";
 import useSortedComments from "../../comments/hooks/useSortedComments";
 import {
   setBookmarkedComments,
   setComments,
   setCommentsCount,
   setFilteredTranscripts,
-  setFilters, setTranscriptsCount
+  setFilters,
+  setTranscriptsCount
 } from "../../../store/store";
-import {calculateFilteredWordCount} from "../utils/calculateWordCount";
-import {Comment} from "../../../types/commentTypes";
-import {normalizeString} from "../utils/normalizeString";
-
+import { calculateFilteredWordCount } from "../utils/calculateWordCount";
+import { Comment } from "../../../types/commentTypes";
+import { normalizeString } from "../utils/normalizeString";
 
 const useSearchContent = () => {
   const dispatch = useDispatch();
@@ -32,10 +32,35 @@ const useSearchContent = () => {
     const transcriptsToSearch = originalTranscripts;
 
     const filterAndSortComments = (comments: Comment[]) => {
-      const filteredComments = comments.filter((comment: Comment) =>
-          normalizeString(comment?.content).includes(normalizedKeyword)
-      );
-      return sortComments(filteredComments, filters.sortBy, filters.sortOrder);
+      const filteredCommentsMap = new Map<string, Comment>();
+
+      comments.forEach(comment => {
+        if (normalizeString(comment.content).includes(normalizedKeyword)) {
+          filteredCommentsMap.set(comment.commentId, comment);
+          if (comment.commentParentId) {
+            const parentComment = comments.find(c => c.commentId === comment.commentParentId);
+            if (parentComment) {
+              filteredCommentsMap.set(parentComment.commentId, {
+                ...parentComment,
+                showRepliesDefault: true
+              });
+            }
+          }
+        }
+      });
+
+      const filteredComments = Array.from(filteredCommentsMap.values());
+      // Reorder the comments to ensure parents come before their replies
+      const reorderedComments = filteredComments.sort((a, b) => {
+        if (a.commentParentId === b.commentId) {
+          return 1; // 'a' is a reply to 'b', so 'a' should come after 'b'
+        } else if (b.commentParentId === a.commentId) {
+          return -1; // 'b' is a reply to 'a', so 'b' should come after 'a'
+        } else {
+          return 0; // No direct parent-child relationship, keep the existing order
+        }
+      });
+      return sortComments(reorderedComments, filters.sortBy, filters.sortOrder);
     };
 
     const filterTranscripts = (transcripts: any[]) => {

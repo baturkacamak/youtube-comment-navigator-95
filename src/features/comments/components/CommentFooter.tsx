@@ -24,7 +24,8 @@ const CommentFooter: React.FC<CommentActionsProps> = ({
                                                           showReplies,
                                                           setShowReplies,
                                                           handleCopyToClipboard,
-                                                          copySuccess
+                                                          copySuccess,
+                                                          showRepliesDefault, // Add this prop
                                                       }) => {
     const { t } = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();

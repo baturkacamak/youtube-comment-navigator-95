@@ -19,13 +19,16 @@ const CommentItem: React.FC<CommentItemProps> = ({
                                                      darkBorderColor,
                                                      videoTitle,
                                                      videoThumbnailUrl,
+                                                     showRepliesDefault, // Add this prop
                                                  }) => {
     const { t } = useTranslation();
     const [copySuccess, setCopySuccess] = useState(false);
-    const [showReplies, setShowReplies] = useState(false);
+    const [showReplies, setShowReplies] = useState(comment.showRepliesDefault || false); // Initialize based on showRepliesDefault
     const [repliesHeight, setRepliesHeight] = useState('0px');
     const repliesRef = useRef<HTMLDivElement>(null);
     const parentCommentRef = useRef<HTMLDivElement>(null);
+
+
 
     useEffect(() => {
         if (showReplies && repliesRef.current) {
@@ -92,6 +95,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                             setShowReplies={setShowReplies}
                             handleCopyToClipboard={handleCopy}
                             copySuccess={copySuccess}
+                            showRepliesDefault={comment.showRepliesDefault} // Pass the prop to CommentFooter
                         />
                     </div>
                 </div>

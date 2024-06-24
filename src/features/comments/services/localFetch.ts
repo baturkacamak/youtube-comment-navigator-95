@@ -34,7 +34,6 @@ const fetchCommentsFromLocalIncrementally = async (
             const comment = await response.json();
             const processedComments = processRawJsonCommentsData([comment]);
             onCommentsFetched(processedComments.items);
-            await new Promise(resolve => setTimeout(resolve, 500));
         } catch (error) {
             if (signal?.aborted) {
                 console.log(`Fetch aborted for ${file}`);

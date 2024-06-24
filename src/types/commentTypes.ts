@@ -25,6 +25,7 @@ export interface Comment {
     videoTitle?: string;
     videoId?: string;
     bookmarkAddedDate?: string;
+    showRepliesDefault?: boolean;
 }
 
 export interface CommentActionsProps {
@@ -35,6 +36,7 @@ export interface CommentActionsProps {
     setShowReplies: (show: boolean) => void;
     handleCopyToClipboard: () => void;
     copySuccess: boolean;
+    showRepliesDefault?: boolean;
 }
 
 export interface CommentContentProps {
@@ -56,6 +58,7 @@ export interface CommentItemProps {
     darkBorderColor?: string;
     videoTitle?: string;
     videoThumbnailUrl?: string;
+    showRepliesDefault?: boolean;
 }
 
 export interface CommentListProps {
