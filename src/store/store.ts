@@ -1,7 +1,7 @@
-import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState } from '../types/rootState'; // Adjust the path as necessary
-import { Comment } from '../types/commentTypes'; // Adjust the path as necessary
-import { FilterState } from '../types/filterTypes';
+import {configureStore, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {RootState} from '../types/rootState'; // Adjust the path as necessary
+import {Comment} from '../types/commentTypes'; // Adjust the path as necessary
+import {FilterState} from '../types/filterTypes';
 import {saveSettings} from "../features/settings/utils/settingsUtils";
 import {storeDataInDB} from "../features/shared/utils/cacheUtils"; // Adjust the path as necessary
 
@@ -47,6 +47,8 @@ const initialState: RootState = {
     // Other state properties
     showBookmarked: false,
     isUrlChanged: false,
+
+    transcriptSelectedLanguage: {value: '', label: 'Select Language'},
 };
 
 const commentsSlice = createSlice({
@@ -70,7 +72,7 @@ const commentsSlice = createSlice({
             state.filteredTranscripts = action.payload;
         },
         updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
-            const { comments, isLoading } = action.payload;
+            const {comments, isLoading} = action.payload;
             state.comments = [...state.comments, ...comments];
             state.isLoading = isLoading;
             state.commentsCount = state.comments.length;
@@ -107,7 +109,7 @@ const commentsSlice = createSlice({
         },
         setTextSize: (state, action: PayloadAction<string>) => {
             state.settings.textSize = action.payload;
-            saveSettings({ textSize: state.settings.textSize });
+            saveSettings({textSize: state.settings.textSize});
         },
         setShowBookmarked: (state, action: PayloadAction<boolean>) => {
             state.showBookmarked = action.payload;
@@ -117,7 +119,11 @@ const commentsSlice = createSlice({
         },
         setShowFiltersSorts: (state, action: PayloadAction<boolean>) => {
             state.settings.showFiltersSorts = action.payload;
-            saveSettings({ showFiltersSorts: state.settings.showFiltersSorts });
+            saveSettings({showFiltersSorts: state.settings.showFiltersSorts});
+        },
+
+        setTranscriptSelectedLanguage: (state, action: PayloadAction<{ value: string, label: string }>) => {
+            state.transcriptSelectedLanguage = action.payload;
         },
 
         // Reset action
@@ -152,7 +158,7 @@ export const {
     setShowBookmarked,
     setIsUrlChanged,
     setShowFiltersSorts,
-
+    setTranscriptSelectedLanguage,
     // Reset action
     resetState,
 } = commentsSlice.actions;
@@ -162,6 +168,6 @@ const store = configureStore({
 });
 
 export default store;
-export type { RootState }; // Export RootState type for useSelector
+export type {RootState}; // Export RootState type for useSelector
 
 

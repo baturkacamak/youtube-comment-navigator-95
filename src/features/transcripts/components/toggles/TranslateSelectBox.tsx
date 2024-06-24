@@ -1,18 +1,16 @@
 import React from 'react';
 import SelectBox from "../../../shared/components/SelectBox/SelectBox";
-import {LanguageIcon} from '@heroicons/react/24/outline';
-import {useTranslation} from "react-i18next";
+import { LanguageIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from 'react-redux';
+import {RootState} from "../../../../types/rootState";
+import {setTranscriptSelectedLanguage} from "../../../../store/store";
 
-interface TranslateSelectBoxProps {
-    selectedLanguage: { value: string, label: string };
-    setSelectedLanguage: (option: { value: string, label: string }) => void;
-}
+const TranslateSelectBox: React.FC = () => {
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const selectedLanguage = useSelector((state: RootState) => state.transcriptSelectedLanguage);
 
-const TranslateSelectBox: React.FC<TranslateSelectBoxProps> = ({
-                                                                   selectedLanguage,
-                                                                   setSelectedLanguage,
-                                                               }) => {
-    const {t} = useTranslation();
     const languages = [
         {value: '', label: t('Select Language')},
         {value: 'af', label: 'Afrikaans'},
@@ -141,20 +139,25 @@ const TranslateSelectBox: React.FC<TranslateSelectBoxProps> = ({
         {value: 'zu', label: 'isiZulu'},
     ];
 
+    const handleLanguageChange = (option: { value: string, label: string }) => {
+        dispatch(setTranscriptSelectedLanguage(option));
+    };
+
     return (
         <div className="inline-flex items-center gap-2">
-            <label
-                className="text-sm font-medium text-gray-800 dark:text-gray-200 select-none">{t('Translate to:')}</label>
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-200 select-none">
+                {t('Translate to:')}
+            </label>
             <SelectBox
                 options={languages}
                 selectedOption={selectedLanguage}
-                setSelectedOption={setSelectedLanguage}
+                setSelectedOption={handleLanguageChange}
                 buttonClassName="w-full rounded-lg"
                 isSearchable={true}
                 DefaultIcon={LanguageIcon}
             />
         </div>
-    )
+    );
 };
 
 export default TranslateSelectBox;

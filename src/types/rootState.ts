@@ -1,4 +1,4 @@
-import { Comment } from "./commentTypes";
+import {Comment} from "./commentTypes";
 import {FilterState} from "./filterTypes"; // Adjust the path as necessary
 
 export interface RootState {
@@ -19,6 +19,7 @@ export interface RootState {
         showFiltersSorts: boolean;
     };
     filteredTranscripts: any[];
-    bookmarkedLines: any[]
+    bookmarkedLines: any[],
+    transcriptSelectedLanguage: { value: string, label: string };
 }
 

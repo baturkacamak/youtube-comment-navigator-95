@@ -44,10 +44,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 textToShare={includeTimestamps ? transcriptTextWithTimestamps : transcriptTextWithoutTimestamps}
             />
             <div className="ml-auto">
-                <TranslateSelectBox
-                    selectedLanguage={selectedLanguage}
-                    setSelectedLanguage={setSelectedLanguage}
-                />
+                <TranslateSelectBox/>
             </div>
         </div>
     );
