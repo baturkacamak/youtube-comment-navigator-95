@@ -11,7 +11,7 @@ export const parseTimestamps = ({
                                     handleTimestampClick,
                                     timestampColor = "text-blue-500" // Default color
                                 }: ParseTimestampsProps) => {
-    const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/g;
+    const timestampRegex = /\b(\d{1,3}):([0-5]\d):([0-5]\d)\b|\b(\d{1,3}):([0-5]\d)\b/g;
     const elements: (JSX.Element | string)[] = [];
 
     content.forEach((part, index) => {
