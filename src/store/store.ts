@@ -9,6 +9,7 @@ const initialState: RootState = {
     // Settings and filters
     settings: {
         textSize: 'text-base',
+        fontFamily: 'Arial, sans-serif',
         showFiltersSorts: true,
     },
     filters: {
@@ -121,6 +122,10 @@ const commentsSlice = createSlice({
             state.settings.showFiltersSorts = action.payload;
             saveSettings({showFiltersSorts: state.settings.showFiltersSorts});
         },
+        setFontFamily: (state, action: PayloadAction<string>) => {
+            state.settings.fontFamily = action.payload;
+            saveSettings({fontFamily: state.settings.fontFamily});
+        },
 
         setTranscriptSelectedLanguage: (state, action: PayloadAction<{ value: string, label: string }>) => {
             state.transcriptSelectedLanguage = action.payload;
@@ -158,6 +163,8 @@ export const {
     setShowBookmarked,
     setIsUrlChanged,
     setShowFiltersSorts,
+    setFontFamily,
+
     setTranscriptSelectedLanguage,
     // Reset action
     resetState,
