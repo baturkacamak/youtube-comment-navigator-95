@@ -2,11 +2,11 @@
 import { ProcessedTranscript, processTranscriptData } from '../utils/processTranscriptData';
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 
-declare var ytInitialPlayerResponse: any;
 
-export const fetchTranscriptFromRemote = async (captionTrackBaseUrl: string): Promise<ProcessedTranscript | null> => {
+export const fetchTranscriptFromRemote = async (captionTrackBaseUrl: string, language: string = ''): Promise<ProcessedTranscript | null> => {
     try {
-        const response = await fetch(`${captionTrackBaseUrl}&fmt=json3`);
+        const url = language ? `${captionTrackBaseUrl}&fmt=json3&tlang=${language}` : `${captionTrackBaseUrl}&fmt=json3`;
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error("Failed to fetch transcript from remote");
         }
@@ -24,7 +24,6 @@ export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
 
         const hl = navigator.language || 'en';
         const gl = 'TR';
-
         const payload = {
             context: {
                 client: {

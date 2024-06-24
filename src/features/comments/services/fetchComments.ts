@@ -23,10 +23,3 @@ export const fetchChatReplies = async (pageToken = '') => {
         items: []
     };
 };
-
-export const fetchTranscript = async (pageToken = '') => {
-    // This is a dummy function that returns an empty list of transcript
-    return {
-        items: []
-    };
-};

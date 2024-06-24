@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 
-import { fetchComments, fetchChatReplies, fetchTranscript } from '../../comments/services/fetchComments';
+import { fetchComments, fetchChatReplies } from '../../comments/services/fetchComments';
 import {
     setComments, setCommentsCount, setFilteredTranscripts,
     setInitialComments,
@@ -10,6 +10,7 @@ import {
     setTranscripts, setTranscriptsCount,
     updateCommentsData
 } from "../../../store/store";
+import {fetchTranscript} from "../../transcripts/services/fetchTranscript";
 
 const useLoadContent = (bypassCache = false) => {
     const dispatch = useDispatch();
