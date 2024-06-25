@@ -4,6 +4,7 @@ export interface Comment {
     author: string;
     likes: number;
     viewLikes: string;
+    likeAction?: string;
     content: string;
     published: string;
     publishedDate: number;

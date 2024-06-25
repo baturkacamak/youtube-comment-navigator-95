@@ -29,10 +29,12 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
     return comments.map((comment) => {
         const commentSurfaceKey = comment.commentViewModel?.commentSurfaceKey;
         const toolbarStateKey = comment.commentViewModel?.toolbarStateKey || false;
+        const toolbarSurfaceKey = comment.commentViewModel?.toolbarSurfaceKey || false;
 
         let isDonated = false;
         let donationAmount = '';
         let isHearted = false;
+        let likeAction = '';
 
         if (commentSurfaceKey) {
             const matchingMutation = allComments.find((mutation) => mutation.entityKey === commentSurfaceKey);
@@ -50,11 +52,19 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
             }
         }
 
+        if (toolbarSurfaceKey) {
+            const matchingToolbarSurface = allComments.find((mutation) => mutation.entityKey === toolbarSurfaceKey);
+            if (matchingToolbarSurface) {
+                likeAction = matchingToolbarSurface.payload?.engagementToolbarSurfaceEntityPayload?.likeCommand?.innertubeCommand?.performCommentActionEndpoint?.action || '';
+            }
+        }
+
         return {
             ...comment,
             isDonated,
             donationAmount,
             isHearted,
+            likeAction,
         };
     });
 };
