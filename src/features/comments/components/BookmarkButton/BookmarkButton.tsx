@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { BookmarkIcon, BookmarkSlashIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,6 +24,8 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
     const [isNoteInputVisible, setIsNoteInputVisible] = useState(false);
     const [note, setNote] = useState('');
     const [isProcessing, setIsProcessing] = useState(false); // Flag to indicate if a save operation is in progress
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const bookmarkButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const checkBookmarkStatus = () => {
@@ -58,6 +60,10 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 note: ''
             };
             updatedBookmarks = [...bookmarkedComments, bookmarkedComment];
+            if (bookmarkButtonRef.current) {
+                const rect = bookmarkButtonRef.current.getBoundingClientRect();
+                setPosition({ top: rect.bottom, left: rect.left });
+            }
             setIsNoteInputVisible(true);
         }
         await storeDataInDB('bookmarks', updatedBookmarks);
@@ -68,6 +74,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
     return (
         <div className="relative">
             <button
+                ref={bookmarkButtonRef}
                 onClick={handleBookmark}
                 disabled={isProcessing} // Disable the button while processing
                 className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'} ${isProcessing ? 'cursor-not-allowed opacity-50' : ''}`}
@@ -88,6 +95,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                     setIsNoteInputVisible={setIsNoteInputVisible}
                     isNoteInputVisible={isNoteInputVisible}
                     setNote={setNote}
+                    position={position}
                 />
             )}
         </div>

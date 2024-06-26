@@ -11,6 +11,7 @@ interface NoteInputModalProps {
     setIsNoteInputVisible: (visible: boolean) => void;
     comment: Comment;
     isNoteInputVisible: boolean; // Add this prop
+    position: { top: number, left: number };
 }
 
 const NoteInputModal: React.FC<NoteInputModalProps> = ({
@@ -18,6 +19,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                                                            setIsNoteInputVisible,
                                                            isNoteInputVisible,
                                                            comment,
+                                                           position,
                                                        }) => {
     const { t } = useTranslation();
     const [isHovered, setIsHovered] = useState(false);
@@ -105,7 +107,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
         >
             <div
                 className={`fixed mt-2 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-10 cursor-move`}
-                style={{ overflow: 'hidden' }}
+                style={{ top: position.top, left: position.left, overflow: 'hidden' }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => {
                     setIsHovered(false);
