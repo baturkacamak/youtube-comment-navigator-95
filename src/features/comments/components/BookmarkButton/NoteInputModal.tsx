@@ -6,7 +6,7 @@ import { Comment } from "../../../../types/commentTypes";
 import useNoteHandler from '../../hooks/useNoteHandler';
 
 interface NoteInputModalProps {
-    note: string;
+    note: string | undefined;
     setNote: (note: string) => void;
     setIsNoteInputVisible: (visible: boolean) => void;
     comment: Comment;
@@ -47,7 +47,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
         isSaving,
         handleInputChange,
         saveNote
-    } = useNoteHandler(initialNote, comment, setIsNoteInputVisible, handleExtraLogic);
+    } = useNoteHandler(comment, setIsNoteInputVisible, handleExtraLogic);
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -63,7 +63,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     }, [isSaving]);
 
     useEffect(() => {
-        if (initialLoadRef.current && note.trim() === '') {
+        if (initialLoadRef.current && note?.trim() === '') {
             startCountdown();
         }
     }, []);
@@ -71,7 +71,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     const startHideTimeout = () => {
         clearTimeout(timeoutRef.current!);
         timeoutRef.current = setTimeout(() => {
-            if (!isHovered && !textareaRef.current?.matches(':focus') && initialLoadRef.current && note.trim() === '') {
+            if (!isHovered && !textareaRef.current?.matches(':focus') && initialLoadRef.current && note?.trim() === '') {
                 setIsNoteInputVisible(false);
             }
         }, 3000);
@@ -147,7 +147,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                 </div>
 
                 <div
-                    className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}
+                    className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note?.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}
                 >
                     <ClockIcon className="w-4 h-4 mr-1" />
                     {t('This modal will close in')} {countdown} {t('seconds')}

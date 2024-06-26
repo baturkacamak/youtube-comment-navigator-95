@@ -1,23 +1,24 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { PencilIcon } from '@heroicons/react/24/outline';
-import debounce from 'lodash/debounce';
-import { useTranslation } from 'react-i18next';
+import React, {useEffect, useState} from 'react';
+import {PencilIcon} from '@heroicons/react/24/outline';
+import {useTranslation} from 'react-i18next';
+import useNoteHandler from "../hooks/useNoteHandler";
+import {Comment} from "../../../types/commentTypes";
 
 interface CommentNoteProps {
-    note: string;
-    saveNote: (note: string) => void;
+    comment: Comment;
 }
 
-const CommentNote: React.FC<CommentNoteProps> = ({ note: initialNote, saveNote }) => {
-    const { t } = useTranslation();
-    const [note, setNote] = useState(initialNote);
-    const [isEditingNote, setIsEditingNote] = useState(false);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const noteRef = useRef(initialNote);
-
-    useEffect(() => {
+const CommentNote: React.FC<CommentNoteProps> = ({comment}) => {
+    const {t} = useTranslation();
+    const {
+        note,
+        textareaRef,
+        handleInputChange,
+    } = useNoteHandler(comment, () => {
         adjustTextareaHeight();
-    }, [note]);
+    });
+
+    const [isEditingNote, setIsEditingNote] = useState(false);
 
     const adjustTextareaHeight = () => {
         if (textareaRef.current) {
@@ -26,18 +27,9 @@ const CommentNote: React.FC<CommentNoteProps> = ({ note: initialNote, saveNote }
         }
     };
 
-    const handleNoteChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newNote = e.target.value;
-        setNote(newNote);
-        noteRef.current = newNote;
-        debouncedSaveNote();
-    };
-
-    const debouncedSaveNote = useRef(
-        debounce(() => {
-            saveNote(noteRef.current);
-        }, 1000)
-    ).current;
+    useEffect(() => {
+        adjustTextareaHeight();
+    }, [note]);
 
     return (
         <div
@@ -50,7 +42,7 @@ const CommentNote: React.FC<CommentNoteProps> = ({ note: initialNote, saveNote }
             <textarea
                 ref={textareaRef}
                 value={note}
-                onChange={handleNoteChange}
+                onChange={handleInputChange}
                 onBlur={() => setIsEditingNote(false)}
                 readOnly={!isEditingNote}
                 className={`flex-1 border min-h-4 max-h-36 rounded resize-none overflow-hidden overflow-y-auto transition-all duration-300 ${
@@ -64,4 +56,3 @@ const CommentNote: React.FC<CommentNoteProps> = ({ note: initialNote, saveNote }
 };
 
 export default CommentNote;
-
