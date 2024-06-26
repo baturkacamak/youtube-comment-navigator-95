@@ -1,10 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { PencilIcon, CheckCircleIcon, ClockIcon } from '@heroicons/react/24/outline';
+import React, {useEffect, useRef, useState} from 'react';
+import {CheckCircleIcon, ClockIcon, PencilIcon} from '@heroicons/react/24/outline';
 import Draggable from 'react-draggable';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import debounce from 'lodash/debounce';
-import { Comment } from "../../../../types/commentTypes";
-import {initial} from "lodash";
+import {Comment} from "../../../../types/commentTypes";
 
 interface NoteInputModalProps {
     note: string;
@@ -23,12 +22,12 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                                                            setIsNoteInputVisible,
                                                            saveNote,
                                                            comment,
-                                                           isNoteInputVisible, // Add this prop
                                                        }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const savingRef = useRef<HTMLDivElement>(null);
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const [isHovered, setIsHovered] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const countdownRef = useRef<NodeJS.Timeout | null>(null);
     const initialLoadRef = useRef(true);
@@ -114,10 +113,20 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     ).current;
 
     return (
-        <Draggable handle=".handle">
+        <Draggable
+            onStart={() => {
+                clearInterval(countdownRef.current!);
+                setIsDragging(true);
+            }}
+            onStop={() => {
+                if (textareaRef.current) {
+                    textareaRef.current.focus();
+                }
+            }}
+        >
             <div
-                className={`fixed mt-2 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-10 cursor-move transition-all duration-500 ease-in-out ${isNoteInputVisible ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}`}
-                style={{ overflow: 'hidden' }}
+                className={`fixed mt-2 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-10 cursor-move`}
+                style={{overflow: 'hidden'}}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => {
                     setIsHovered(false);
@@ -125,9 +134,10 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                 }}
             >
                 <div className="flex justify-between items-center mb-2 handle">
-                    <span className="text-sm font-semibold dark:text-gray-300 flex items-center">
-                        <PencilIcon className="w-4 h-4 mr-1" />
-                        {t('Add a note')} - <span className="text-gray-500 pl-px text-xs">{comment.content.slice(0, 20)}...</span>
+                    <span className="text-sm font-semibold dark:text-gray-300 flex items-center select-user">
+                        <PencilIcon className="w-4 h-4 mr-1"/>
+                        {t('Add a note')} - <span
+                        className="text-gray-500 pl-px text-xs">{comment.content.slice(0, 20)}...</span>
                     </span>
                     <button
                         onClick={() => {
@@ -149,20 +159,19 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                 />
                 <div
                     ref={savingRef}
-                    className={`flex items-center transition-all duration-500 ease-in-out ${
+                    className={`flex items-center transition-all duration-500 ease-in-out select-user ${
                         isSaving ? 'opacity-100 max-h-10 py-4' : 'opacity-0 max-h-0'
                     }`}
-                    style={{ maxHeight: isSaving ? savingHeight : 0 }}
+                    style={{maxHeight: isSaving ? savingHeight : 0}}
                 >
-                    <CheckCircleIcon className="w-4 h-4 mr-1" />
+                    <CheckCircleIcon className="w-4 h-4 mr-1"/>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('Saved')}</p>
                 </div>
-                {initialLoadRef.current && note.trim() === '' && (
-                    <div className="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center">
-                        <ClockIcon className="w-4 h-4 mr-1" />
-                        {t('This modal will close in')} {countdown} {t('seconds')}
-                    </div>
-                )}
+
+                <div className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}>
+                    <ClockIcon className="w-4 h-4 mr-1"/>
+                    {t('This modal will close in')} {countdown} {t('seconds')}
+                </div>
             </div>
         </Draggable>
     );

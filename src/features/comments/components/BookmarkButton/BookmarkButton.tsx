@@ -94,7 +94,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 )}
                 <span className="text-sm">{t('Bookmark')}</span>
             </button>
-            {isBookmarked && (
+            {isBookmarked && isNoteInputVisible && (
                 <NoteInputModal
                     note={note}
                     comment={comment}
