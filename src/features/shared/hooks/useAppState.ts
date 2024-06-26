@@ -1,15 +1,15 @@
-import {useDispatch, useSelector} from 'react-redux';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {RootState} from '../../../types/rootState';
-import {setBookmarkedComments, setFilters, setShowBookmarked} from '../../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { RootState } from '../../../types/rootState';
+import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
 import useComments from '../../comments/hooks/useComments';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import useSearchContent from './useSearchContent';
-import {Filters} from '../../../types/filterTypes';
-import {retrieveDataFromDB} from '../utils/cacheUtils';
+import { Filters } from '../../../types/filterTypes';
+import { retrieveDataFromDB } from '../utils/cacheUtils';
 import useTranscript from '../../transcripts/hooks/useTranscript';
-import {calculateFilteredWordCount} from "../utils/calculateWordCount";
+import { calculateFilteredWordCount } from "../utils/calculateWordCount";
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -55,7 +55,10 @@ const useAppState = () => {
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
-        return filterComments(sortComments(commentsToUse, filters.sortBy, filters.sortOrder), filters);
+        return filterComments(
+            sortComments(commentsToUse, filters.sortBy, filters.sortOrder, activeTab === 'bookmarks'),
+            filters
+        );
     }, [filters, sortComments, filterComments, comments, activeTab, bookmarkedComments]);
 
     const setFiltersCallback = useCallback((filters: Filters) => {

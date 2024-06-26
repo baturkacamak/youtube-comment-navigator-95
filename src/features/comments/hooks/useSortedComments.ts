@@ -12,8 +12,15 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
     const previousSortByRef = useRef<string | null>(null);
     const previousSortOrderRef = useRef<string | null>(null);
 
-    const sortComments = (comments: Comment[], sortBy: string, sortOrder: string) => {
+    const sortComments = (comments: Comment[], sortBy: string, sortOrder: string, isBookmarkTab: boolean = false) => {
         const sortedComments = [...comments];
+        if (isBookmarkTab) {
+            sortedComments.sort((a, b) => {
+                const dateA = new Date(a.bookmarkAddedDate || '').getTime();
+                const dateB = new Date(b.bookmarkAddedDate || '').getTime();
+                return dateB - dateA;
+            });
+        }
         switch (sortBy) {
             case 'date':
                 sortedComments.sort((a, b) => {
