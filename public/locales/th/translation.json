@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "แสดงตัวกรองและการเรียงลำดับ",
   "Load Comments": "โหลดความคิดเห็น",
   "Filter by creator": "กรองโดยผู้สร้าง",
-  "Select Font": "เลือกแบบอักษร"
+  "Select Font": "เลือกแบบอักษร",
+  "Add a note": "เพิ่มบันทึก",
+  "Type your note here... (optional)": "พิมพ์บันทึกของคุณที่นี่... (ตัวเลือก)",
+  "Saved": "บันทึกแล้ว",
+  "Bookmarked on:": "บุ๊คมาร์คเมื่อ:"
 }

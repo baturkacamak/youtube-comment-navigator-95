@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "フィルターと並べ替えを表示",
   "Load Comments": "コメントを読み込む",
   "Filter by creator": "作成者でフィルタリング",
-  "Select Font": "フォントを選択"
+  "Select Font": "フォントを選択",
+  "Add a note": "ノートを追加",
+  "Type your note here... (optional)": "ここにノートを入力...（オプション）",
+  "Saved": "保存済み",
+  "Bookmarked on:": "ブックマークに追加:"
 }

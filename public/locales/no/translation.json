@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Vis filtre og sorter",
   "Load Comments": "Last inn kommentarer",
   "Filter by creator": "Filtrer etter skaper",
-  "Select Font": "Velg skrifttype"
+  "Select Font": "Velg skrifttype",
+  "Add a note": "Legg til en merknad",
+  "Type your note here... (optional)": "Skriv inn merknaden din her... (valgfritt)",
+  "Saved": "Lagret",
+  "Bookmarked on:": "Bokmerket på:"
 }

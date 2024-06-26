@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "显示过滤器和排序",
   "Load Comments": "加载评论",
   "Filter by creator": "按创建者过滤",
-  "Select Font": "选择字体"
+  "Select Font": "选择字体",
+  "Add a note": "添加备注",
+  "Type your note here... (optional)": "在此输入您的备注...（可选）",
+  "Saved": "已保存",
+  "Bookmarked on:": "书签于:"
 }

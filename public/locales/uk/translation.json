@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Показати фільтри та сортування",
   "Load Comments": "Завантажити коментарі",
   "Filter by creator": "Фільтрувати за творцем",
-  "Select Font": "Виберіть шрифт"
+  "Select Font": "Виберіть шрифт",
+  "Add a note": "Додати нотатку",
+  "Type your note here... (optional)": "Введіть свою нотатку тут... (необов'язково)",
+  "Saved": "Збережено",
+  "Bookmarked on:": "Додано в закладки:"
 }

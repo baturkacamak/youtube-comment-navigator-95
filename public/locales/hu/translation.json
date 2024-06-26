@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Szűrők és rendezések megjelenítése",
   "Load Comments": "Megjegyzések betöltése",
   "Filter by creator": "Szűrés alkotó szerint",
-  "Select Font": "Betűtípus kiválasztása"
+  "Select Font": "Betűtípus kiválasztása",
+  "Add a note": "Jegyzet hozzáadása",
+  "Type your note here... (optional)": "Írja be a jegyzetet ide... (opcionális)",
+  "Saved": "Mentve",
+  "Bookmarked on:": "Könyvjelzőzve:"
 }

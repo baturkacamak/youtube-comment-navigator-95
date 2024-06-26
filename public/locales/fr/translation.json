@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Afficher les filtres et les tris",
   "Load Comments": "Charger les commentaires",
   "Filter by creator": "Filtrer par créateur",
-  "Select Font": "Sélectionner la police"
+  "Select Font": "Sélectionner la police",
+  "Add a note": "Ajouter une note",
+  "Type your note here... (optional)": "Tapez votre note ici... (optionnel)",
+  "Saved": "Enregistré",
+  "Bookmarked on:": "Ajouté aux favoris le :"
 }

@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "إظهار الفلاتر والترتيب",
   "Load Comments": "تحميل التعليقات",
   "Filter by creator": "تصفية حسب المنشئ",
-  "Select Font": "اختر الخط"
+  "Select Font": "اختر الخط",
+  "Add a note": "أضف ملاحظة",
+  "Type your note here... (optional)": "اكتب ملاحظتك هنا... (اختياري)",
+  "Saved": "تم الحفظ",
+  "Bookmarked on:": "تم الإشارة عليه في:"
 }

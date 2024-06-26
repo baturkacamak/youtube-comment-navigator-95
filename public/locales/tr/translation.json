@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Filtreleri ve Sıralamaları Göster",
   "Load Comments": "Yorumları Yükle",
   "Filter by creator": "Yaratan kişiye göre filtrele",
-  "Select Font": "Yazı Tipini Seç"
+  "Select Font": "Yazı Tipini Seç",
+  "Add a note": "Not ekle",
+  "Type your note here... (optional)": "Notunuzu buraya yazın... (isteğe bağlı)",
+  "Saved": "Kaydedildi",
+  "Bookmarked on:": "Yer imine eklendi:"
 }

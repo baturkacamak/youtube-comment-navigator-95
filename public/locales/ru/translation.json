@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Показать фильтры и сортировки",
   "Load Comments": "Загрузить комментарии",
   "Filter by creator": "Фильтр по создателю",
-  "Select Font": "Выбрать шрифт"
+  "Select Font": "Выбрать шрифт",
+  "Add a note": "Добавить заметку",
+  "Type your note here... (optional)": "Введите свою заметку здесь... (необязательно)",
+  "Saved": "Сохранено",
+  "Bookmarked on:": "Добавлено в закладки:"
 }

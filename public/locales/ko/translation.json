@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "필터 및 정렬 표시",
   "Load Comments": "댓글 불러오기",
   "Filter by creator": "작성자별 필터",
-  "Select Font": "글꼴 선택"
+  "Select Font": "글꼴 선택",
+  "Add a note": "메모 추가",
+  "Type your note here... (optional)": "여기에 메모를 입력하세요... (선택 사항)",
+  "Saved": "저장됨",
+  "Bookmarked on:": "북마크 됨:"
 }

@@ -119,5 +119,9 @@
   "Show Filters & Sorts": "Näytä suodattimet ja lajittelu",
   "Load Comments": "Lataa kommentit",
   "Filter by creator": "Suodata luojan mukaan",
-  "Select Font": "Valitse fontti"
+  "Select Font": "Valitse fontti",
+  "Add a note": "Lisää muistiinpano",
+  "Type your note here... (optional)": "Kirjoita muistiinpanosi tähän... (valinnainen)",
+  "Saved": "Tallennettu",
+  "Bookmarked on:": "Kirjanmerkkinä:"
 }
