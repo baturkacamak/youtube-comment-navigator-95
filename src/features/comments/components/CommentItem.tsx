@@ -57,12 +57,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
     const bookmarkTimestamp = comment.bookmarkAddedDate ? new Date(comment.bookmarkAddedDate).getTime() : null;
 
-    const saveNote = (newNote: string) => {
-        // Add logic to save the note to the database or state
-        console.log('Note saved:', newNote);
-        // Example save function: saveNoteToDB(comment.commentId, newNote);
-    };
-
     return (
         <Box
             className={`flex flex-col rounded-lg mb-4 shadow-lg ${className}`}
@@ -107,17 +101,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     </div>
                 </div>
                 {comment.note && (
-                    <CommentNote note={comment.note} saveNote={saveNote} />
+                    <CommentNote  comment={comment}/>
                 )}
                 <CommentFooter
                     comment={comment}
-                    commentId={comment.commentId}
-                    replyCount={comment.replyCount}
                     showReplies={showReplies}
                     setShowReplies={setShowReplies}
                     handleCopyToClipboard={handleCopy}
                     copySuccess={copySuccess}
-                    showRepliesDefault={comment.showRepliesDefault} // Pass the prop to CommentFooter
                 />
             </div>
             {Number(comment.replyCount) > 0 && (
