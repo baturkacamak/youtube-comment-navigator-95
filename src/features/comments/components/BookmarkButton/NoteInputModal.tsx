@@ -1,13 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {CheckCircleIcon, ClockIcon, PencilIcon} from '@heroicons/react/24/outline';
+import React, { useState, useRef, useEffect } from 'react';
+import { CheckCircleIcon, ClockIcon, PencilIcon } from '@heroicons/react/24/outline';
 import Draggable from 'react-draggable';
-import {useTranslation} from 'react-i18next';
-import debounce from 'lodash/debounce';
-import {Comment} from "../../../../types/commentTypes";
-import {useDispatch, useSelector} from 'react-redux';
-import {storeDataInDB} from "../../../shared/utils/cacheUtils";
-import {setBookmarkedComments} from "../../../../store/store";
-import {RootState} from "../../../../types/rootState";
+import { useTranslation } from 'react-i18next';
+import { Comment } from "../../../../types/commentTypes";
+import useNoteHandler from '../../hooks/useNoteHandler';
 
 interface NoteInputModalProps {
     note: string;
@@ -18,15 +14,12 @@ interface NoteInputModalProps {
 }
 
 const NoteInputModal: React.FC<NoteInputModalProps> = ({
-                                                           note,
-                                                           setNote,
+                                                           note: initialNote,
                                                            setIsNoteInputVisible,
                                                            isNoteInputVisible,
                                                            comment,
                                                        }) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
-    const savingRef = useRef<HTMLDivElement>(null);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [isHovered, setIsHovered] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -34,37 +27,38 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     const initialLoadRef = useRef(true);
     const initialTextareaHeight = 'h-11';
     const [textareaHeight, setTextareaHeight] = useState(initialTextareaHeight);
-    const [savingHeight, setSavingHeight] = useState(0);
     const initialCountDown = 5;
     const [countdown, setCountdown] = useState(initialCountDown);
-    const noteRef = useRef(note);
-    const dispatch = useDispatch();
-    const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
-    const [isSaving, setIsSaving] = useState(false);
 
+    const handleExtraLogic = (newNote: string) => {
+        initialLoadRef.current = false;
+        setTextareaHeight('h-32');
+        clearInterval(countdownRef.current!);
+
+        if (newNote.length === 0) {
+            setTextareaHeight(initialTextareaHeight);
+        }
+    };
+
+    const {
+        note,
+        textareaRef,
+        savingRef,
+        isSaving,
+        handleInputChange,
+        saveNote
+    } = useNoteHandler(initialNote, comment, setIsNoteInputVisible, handleExtraLogic);
 
     useEffect(() => {
         if (textareaRef.current) {
             textareaRef.current.focus();
         }
         startHideTimeout();
-        // Add keydown event listener
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                saveNote(); // Save the note before closing
-                setIsNoteInputVisible(false);
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
     }, []);
 
     useEffect(() => {
         if (savingRef.current) {
-            setSavingHeight(savingRef.current.scrollHeight);
+            savingRef.current.style.height = `${savingRef.current.scrollHeight}px`;
         }
     }, [isSaving]);
 
@@ -97,38 +91,6 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
         }, 1000);
     };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const newNote = e.target.value;
-        setNote(newNote);
-        noteRef.current = newNote;
-        debouncedSaveNote();
-        initialLoadRef.current = false;
-        setTextareaHeight('h-32');
-        clearInterval(countdownRef.current!);
-
-        if (newNote.length === 0) {
-            setTextareaHeight(initialTextareaHeight);
-        }
-    };
-
-    const debouncedSaveNote = useRef(
-        debounce(() => {
-            saveNote();
-        }, 1000)
-    ).current;
-
-    const saveNote = async () => {
-        setIsSaving(true);
-        const updatedBookmarks = bookmarkedComments.map((bookmark: Comment) =>
-            bookmark.commentId === comment.commentId ? {...bookmark, note: noteRef.current} : bookmark
-        );
-        await storeDataInDB('bookmarks', updatedBookmarks);
-        dispatch(setBookmarkedComments(updatedBookmarks));
-        setTimeout(() => {
-            setIsSaving(false);
-        }, 2000);
-    };
-
     return (
         <Draggable
             onStart={() => {
@@ -143,7 +105,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
         >
             <div
                 className={`fixed mt-2 p-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded shadow-lg z-10 cursor-move`}
-                style={{overflow: 'hidden'}}
+                style={{ overflow: 'hidden' }}
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => {
                     setIsHovered(false);
@@ -152,9 +114,8 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
             >
                 <div className="flex justify-between items-center mb-2 handle">
                     <span className="text-sm font-semibold dark:text-gray-300 flex items-center select-user">
-                        <PencilIcon className="w-4 h-4 mr-1"/>
-                        {t('Add a note')} - <span
-                        className="text-gray-500 pl-px text-xs">{comment.content.slice(0, 20)}...</span>
+                        <PencilIcon className="w-4 h-4 mr-1" />
+                        {t('Add a note')} - <span className="text-gray-500 pl-px text-xs">{comment.content.slice(0, 20)}...</span>
                     </span>
                     <button
                         onClick={() => {
@@ -179,15 +140,16 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                     className={`flex items-center transition-all duration-500 ease-in-out select-user ${
                         isSaving ? 'opacity-100 max-h-10 py-4' : 'opacity-0 max-h-0'
                     }`}
-                    style={{maxHeight: isSaving ? savingHeight : 0}}
+                    style={{ maxHeight: isSaving ? savingRef.current?.scrollHeight : 0 }}
                 >
-                    <CheckCircleIcon className="w-4 h-4 mr-1"/>
+                    <CheckCircleIcon className="w-4 h-4 mr-1" />
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('Saved')}</p>
                 </div>
 
                 <div
-                    className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}>
-                    <ClockIcon className="w-4 h-4 mr-1"/>
+                    className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}
+                >
+                    <ClockIcon className="w-4 h-4 mr-1" />
                     {t('This modal will close in')} {countdown} {t('seconds')}
                 </div>
             </div>
