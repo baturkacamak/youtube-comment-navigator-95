@@ -18,7 +18,7 @@ const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampCl
     return (
         <p
             className={`${textSize} mb-2 transition-all duration-300 ease-in-out`}
-            style={{ fontFamily }} // Apply the selected font
+            style={{ fontFamily }}
             aria-live="polite"
         >
             {highlightedText}

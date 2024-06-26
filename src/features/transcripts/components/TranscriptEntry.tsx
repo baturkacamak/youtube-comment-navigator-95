@@ -1,10 +1,10 @@
 import React from 'react';
-import { formatTime } from '../utils/formatTime';
+import {formatTime} from '../utils/formatTime';
 import handleTimestampClick from "../../comments/utils/handleTimestampClick";
-import { highlightText } from '../../shared/utils/highlightText';
-import { parseTimestamps } from "../../shared/utils/parseTimestamps";
-import { RootState } from '../../../types/rootState';
-import { useSelector } from 'react-redux';
+import {highlightText} from '../../shared/utils/highlightText';
+import {parseTimestamps} from "../../shared/utils/parseTimestamps";
+import {RootState} from '../../../types/rootState';
+import {useSelector} from 'react-redux';
 
 interface TranscriptEntryProps {
     entry: any;
@@ -23,6 +23,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
                                                          }) => {
     const textSize = useSelector((state: RootState) => state.settings.textSize);
     const keyword = useSelector((state: RootState) => state.filters.keyword);
+    const fontFamily = useSelector((state: RootState) => state.settings.fontFamily); // Get the selected font
 
     return (
         <li
@@ -52,6 +53,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
                 >
                     <span
                         className={`text-gray-800 dark:text-gray-300 min-w-96 cursor-text ${index % 2 === 0 ? 'text-black' : 'pl-2 text-gray-700'}`}
+                        style={{fontFamily}}
                         onClick={(e) => e.stopPropagation()}
                     >
                         {highlightText(entry.text, keyword)}
