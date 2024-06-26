@@ -9,7 +9,8 @@ import handleTimestampClick from '../utils/handleTimestampClick';
 import { CommentItemProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
-import { BookmarkIcon, PencilIcon } from '@heroicons/react/24/outline';
+import { BookmarkIcon } from '@heroicons/react/24/outline';
+import CommentNote from './CommentNote';
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -56,6 +57,12 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
     const bookmarkTimestamp = comment.bookmarkAddedDate ? new Date(comment.bookmarkAddedDate).getTime() : null;
 
+    const saveNote = (newNote: string) => {
+        // Add logic to save the note to the database or state
+        console.log('Note saved:', newNote);
+        // Example save function: saveNoteToDB(comment.commentId, newNote);
+    };
+
     return (
         <Box
             className={`flex flex-col rounded-lg mb-4 shadow-lg ${className}`}
@@ -100,10 +107,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     </div>
                 </div>
                 {comment.note && (
-                    <div className="mt-2 p-3 bg-teal-100 dark:bg-teal-700 rounded-md flex items-start">
-                        <PencilIcon className="w-5 h-5 text-teal-800 dark:text-teal-400 mr-2 mt-1" />
-                        <p className="italic text-teal-800 dark:text-teal-400">{t('Note:')} {comment.note}</p>
-                    </div>
+                    <CommentNote note={comment.note} saveNote={saveNote} />
                 )}
                 <CommentFooter
                     comment={comment}
