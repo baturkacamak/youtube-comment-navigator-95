@@ -8,6 +8,8 @@ import { handleCopyToClipboard } from '../utils/clipboard';
 import handleTimestampClick from '../utils/handleTimestampClick';
 import { CommentItemProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
+import getFormattedDate from "../../settings/utils/getFormattedDate";
+import { BookmarkIcon, PencilIcon } from '@heroicons/react/24/outline';
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -27,8 +29,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
     const [repliesHeight, setRepliesHeight] = useState('0px');
     const repliesRef = useRef<HTMLDivElement>(null);
     const parentCommentRef = useRef<HTMLDivElement>(null);
-
-
 
     useEffect(() => {
         if (showReplies && repliesRef.current) {
@@ -54,9 +54,11 @@ const CommentItem: React.FC<CommentItemProps> = ({
     const isSticky = useSticky(parentCommentRef, showReplies);
     const videoUrl = `https://www.youtube.com/watch?v=${comment.videoId}`;
 
+    const bookmarkTimestamp = comment.bookmarkAddedDate ? new Date(comment.bookmarkAddedDate).getTime() : null;
+
     return (
         <Box
-            className={`flex flex-col p-4 rounded-lg mb-4 shadow-md ${className}`}
+            className={`flex flex-col p-4 rounded-lg mb-4 shadow-lg ${className}`}
             bgColor={bgColor}
             darkBgColor={darkBgColor}
             borderColor={borderColor}
@@ -71,15 +73,15 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 aria-labelledby={`comment-content-${comment.commentId}`}
                 aria-describedby={`comment-footer-${comment.commentId}`}
             >
-                <div className="flex items-start w-full">
+                <div className="flex items-start w-full relative">
                     {videoThumbnailUrl && (
                         <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-                            <img src={videoThumbnailUrl} alt="Video Thumbnail" className="w-16 h-9 mr-4" />
+                            <img src={videoThumbnailUrl} alt="Video Thumbnail" className="w-20 h-12 mr-4 rounded-lg" />
                         </a>
                     )}
                     <div className="flex-1">
                         {videoTitle && (
-                            <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold mb-2 block">
+                            <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="text-md font-semibold mb-2 block hover:underline">
                                 {videoTitle}
                             </a>
                         )}
@@ -87,18 +89,32 @@ const CommentItem: React.FC<CommentItemProps> = ({
                             content={comment.content}
                             handleTimestampClick={handleTimestampClick}
                         />
-                        <CommentFooter
-                            comment={comment}
-                            commentId={comment.commentId}
-                            replyCount={comment.replyCount}
-                            showReplies={showReplies}
-                            setShowReplies={setShowReplies}
-                            handleCopyToClipboard={handleCopy}
-                            copySuccess={copySuccess}
-                            showRepliesDefault={comment.showRepliesDefault} // Pass the prop to CommentFooter
-                        />
+                        {bookmarkTimestamp && (
+                            <div className="absolute -top-4 -right-4 p-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-bl-lg rounded-tr-lg shadow-lg">
+                                <div className="flex items-center">
+                                    <BookmarkIcon className="w-5 h-5 mr-2" />
+                                    <p className="text-sm">{t('Bookmarked on:')} {getFormattedDate(bookmarkTimestamp)}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
+                {comment.note && (
+                    <div className="mt-2 p-3 bg-teal-100 dark:bg-teal-700 rounded-md flex items-start">
+                        <PencilIcon className="w-5 h-5 text-teal-800 dark:text-teal-400 mr-2 mt-1" />
+                        <p className="italic text-teal-800 dark:text-teal-400">{t('Note:')} {comment.note}</p>
+                    </div>
+                )}
+                <CommentFooter
+                    comment={comment}
+                    commentId={comment.commentId}
+                    replyCount={comment.replyCount}
+                    showReplies={showReplies}
+                    setShowReplies={setShowReplies}
+                    handleCopyToClipboard={handleCopy}
+                    copySuccess={copySuccess}
+                    showRepliesDefault={comment.showRepliesDefault} // Pass the prop to CommentFooter
+                />
             </div>
             {Number(comment.replyCount) > 0 && (
                 <CommentReplies

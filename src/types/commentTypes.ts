@@ -27,6 +27,7 @@ export interface Comment {
     videoId?: string;
     bookmarkAddedDate?: string;
     showRepliesDefault?: boolean;
+    note?: string;
 }
 
 export interface CommentActionsProps {
