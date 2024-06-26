@@ -7,7 +7,7 @@ import { RootState } from "../../../types/rootState";
 import { Comment } from "../../../types/commentTypes";
 
 const useNoteHandler = (comment: Comment, setIsNoteInputVisible: (visible: boolean) => void, handleExtraLogic?: (newNote: string) => void) => {
-    const [note, setNote] = useState(comment.note);
+    const [note, setNote] = useState(comment?.note || '');
     const noteRef = useRef(comment.note);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const savingRef = useRef<HTMLDivElement>(null);
