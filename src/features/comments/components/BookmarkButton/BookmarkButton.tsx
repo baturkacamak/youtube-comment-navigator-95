@@ -23,7 +23,6 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
     const [bookmarkAddedDate, setBookmarkAddedDate] = useState<string | null>(null);
     const [isNoteInputVisible, setIsNoteInputVisible] = useState(false);
     const [note, setNote] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false); // Flag to indicate if a save operation is in progress
 
     useEffect(() => {
@@ -66,18 +65,6 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
         setIsProcessing(false);
     }, 300);
 
-    const saveNote = async (newNote: string) => {
-        setIsSaving(true);
-        const updatedBookmarks = bookmarkedComments.map((bookmark: Comment) =>
-            bookmark.commentId === comment.commentId ? { ...bookmark, note: newNote } : bookmark
-        );
-        await storeDataInDB('bookmarks', updatedBookmarks);
-        dispatch(setBookmarkedComments(updatedBookmarks));
-        setTimeout(() => {
-            setIsSaving(false);
-        }, 2000);
-    };
-
     return (
         <div className="relative">
             <button
@@ -98,11 +85,9 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 <NoteInputModal
                     note={note}
                     comment={comment}
-                    isSaving={isSaving}
                     setIsNoteInputVisible={setIsNoteInputVisible}
                     isNoteInputVisible={isNoteInputVisible}
                     setNote={setNote}
-                    saveNote={saveNote}
                 />
             )}
         </div>

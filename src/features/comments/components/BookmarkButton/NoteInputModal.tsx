@@ -4,13 +4,15 @@ import Draggable from 'react-draggable';
 import {useTranslation} from 'react-i18next';
 import debounce from 'lodash/debounce';
 import {Comment} from "../../../../types/commentTypes";
+import {useDispatch, useSelector} from 'react-redux';
+import {storeDataInDB} from "../../../shared/utils/cacheUtils";
+import {setBookmarkedComments} from "../../../../store/store";
+import {RootState} from "../../../../types/rootState";
 
 interface NoteInputModalProps {
     note: string;
     setNote: (note: string) => void;
-    isSaving: boolean;
     setIsNoteInputVisible: (visible: boolean) => void;
-    saveNote: (note: string) => void;
     comment: Comment;
     isNoteInputVisible: boolean; // Add this prop
 }
@@ -18,9 +20,8 @@ interface NoteInputModalProps {
 const NoteInputModal: React.FC<NoteInputModalProps> = ({
                                                            note,
                                                            setNote,
-                                                           isSaving,
                                                            setIsNoteInputVisible,
-                                                           saveNote,
+                                                           isNoteInputVisible,
                                                            comment,
                                                        }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -37,6 +38,10 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     const initialCountDown = 5;
     const [countdown, setCountdown] = useState(initialCountDown);
     const noteRef = useRef(note);
+    const dispatch = useDispatch();
+    const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
+    const [isSaving, setIsSaving] = useState(false);
+
 
     useEffect(() => {
         if (textareaRef.current) {
@@ -46,7 +51,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
         // Add keydown event listener
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
-                saveNote(noteRef.current); // Save the note before closing
+                saveNote(); // Save the note before closing
                 setIsNoteInputVisible(false);
             }
         };
@@ -108,9 +113,21 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
 
     const debouncedSaveNote = useRef(
         debounce(() => {
-            saveNote(noteRef.current);
+            saveNote();
         }, 1000)
     ).current;
+
+    const saveNote = async () => {
+        setIsSaving(true);
+        const updatedBookmarks = bookmarkedComments.map((bookmark: Comment) =>
+            bookmark.commentId === comment.commentId ? {...bookmark, note: noteRef.current} : bookmark
+        );
+        await storeDataInDB('bookmarks', updatedBookmarks);
+        dispatch(setBookmarkedComments(updatedBookmarks));
+        setTimeout(() => {
+            setIsSaving(false);
+        }, 2000);
+    };
 
     return (
         <Draggable
@@ -141,7 +158,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                     </span>
                     <button
                         onClick={() => {
-                            saveNote(noteRef.current);
+                            saveNote();
                             setIsNoteInputVisible(false);
                         }}
                         className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -168,7 +185,8 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('Saved')}</p>
                 </div>
 
-                <div className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}>
+                <div
+                    className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}>
                     <ClockIcon className="w-4 h-4 mr-1"/>
                     {t('This modal will close in')} {countdown} {t('seconds')}
                 </div>
