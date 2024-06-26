@@ -58,7 +58,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
 
     return (
         <Box
-            className={`flex flex-col p-4 rounded-lg mb-4 shadow-lg ${className}`}
+            className={`flex flex-col rounded-lg mb-4 shadow-lg ${className}`}
             bgColor={bgColor}
             darkBgColor={darkBgColor}
             borderColor={borderColor}
