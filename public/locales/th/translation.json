@@ -123,5 +123,6 @@
   "Add a note": "เพิ่มบันทึก",
   "Type your note here... (optional)": "พิมพ์บันทึกของคุณที่นี่... (ตัวเลือก)",
   "Saved": "บันทึกแล้ว",
-  "Bookmarked on:": "บุ๊คมาร์คเมื่อ:"
+  "Bookmarked on:": "บุ๊คมาร์คเมื่อ:",
+  "This modal will close in COUNTDOWN seconds": "โมดัลนี้จะปิดใน {{countdown}} วินาที"
 }

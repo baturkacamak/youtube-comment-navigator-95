@@ -123,5 +123,6 @@
   "Add a note": "메모 추가",
   "Type your note here... (optional)": "여기에 메모를 입력하세요... (선택 사항)",
   "Saved": "저장됨",
-  "Bookmarked on:": "북마크 됨:"
+  "Bookmarked on:": "북마크 됨:",
+  "This modal will close in COUNTDOWN seconds": "이 모달은 {{countdown}} 초 후에 닫힙니다"
 }

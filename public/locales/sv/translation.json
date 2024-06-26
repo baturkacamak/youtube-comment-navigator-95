@@ -123,5 +123,6 @@
   "Add a note": "Lägg till en anteckning",
   "Type your note here... (optional)": "Skriv din anteckning här... (valfritt)",
   "Saved": "Sparad",
-  "Bookmarked on:": "Bokmärkt den:"
+  "Bookmarked on:": "Bokmärkt den:",
+  "This modal will close in COUNTDOWN seconds": "Detta modal kommer att stängas om {{countdown}} sekunder"
 }

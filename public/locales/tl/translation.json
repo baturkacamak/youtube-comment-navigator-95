@@ -123,5 +123,6 @@
   "Add a note": "Magdagdag ng tala",
   "Type your note here... (optional)": "I-type ang iyong tala dito... (opsyonal)",
   "Saved": "Nai-save",
-  "Bookmarked on:": "Naka-bookmark noong:"
+  "Bookmarked on:": "Naka-bookmark noong:",
+  "This modal will close in COUNTDOWN seconds": "Isasara ang modal na ito sa loob ng {{countdown}} segundo"
 }

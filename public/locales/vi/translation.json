@@ -123,5 +123,6 @@
   "Add a note": "Thêm ghi chú",
   "Type your note here... (optional)": "Nhập ghi chú của bạn ở đây... (tùy chọn)",
   "Saved": "Đã lưu",
-  "Bookmarked on:": "Được đánh dấu vào:"
+  "Bookmarked on:": "Được đánh dấu vào:",
+  "This modal will close in COUNTDOWN seconds": "Modal này sẽ đóng trong {{countdown}} giây"
 }

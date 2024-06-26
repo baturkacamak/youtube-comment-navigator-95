@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { CheckCircleIcon, ClockIcon, PencilIcon } from '@heroicons/react/24/outline';
 import Draggable from 'react-draggable';
-import { useTranslation } from 'react-i18next';
+import {Trans, useTranslation} from 'react-i18next';
 import { Comment } from "../../../../types/commentTypes";
 import useNoteHandler from '../../hooks/useNoteHandler';
 
@@ -152,7 +152,9 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
                     className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note?.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}
                 >
                     <ClockIcon className="w-4 h-4 mr-1" />
-                    {t('This modal will close in')} {countdown} {t('seconds')}
+                    <Trans i18nKey="This modal will close in COUNTDOWN seconds" values={{ countdown }}>
+                        This modal will close in {{ countdown }} seconds
+                    </Trans>
                 </div>
             </div>
         </Draggable>

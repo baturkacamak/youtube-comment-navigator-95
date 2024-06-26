@@ -123,5 +123,6 @@
   "Add a note": "Adăugați o notă",
   "Type your note here... (optional)": "Tastați nota dvs. aici... (opțional)",
   "Saved": "Salvat",
-  "Bookmarked on:": "Marcat pe:"
+  "Bookmarked on:": "Marcat pe:",
+  "This modal will close in COUNTDOWN seconds": "Acest modal se va închide în {{countdown}} secunde"
 }

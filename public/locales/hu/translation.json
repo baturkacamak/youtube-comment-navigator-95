@@ -123,5 +123,6 @@
   "Add a note": "Jegyzet hozzáadása",
   "Type your note here... (optional)": "Írja be a jegyzetet ide... (opcionális)",
   "Saved": "Mentve",
-  "Bookmarked on:": "Könyvjelzőzve:"
+  "Bookmarked on:": "Könyvjelzőzve:",
+  "This modal will close in COUNTDOWN seconds": "Ez a modal {{countdown}} másodperc múlva bezárul"
 }

@@ -123,5 +123,6 @@
   "Add a note": "Legg til en merknad",
   "Type your note here... (optional)": "Skriv inn merknaden din her... (valgfritt)",
   "Saved": "Lagret",
-  "Bookmarked on:": "Bokmerket på:"
+  "Bookmarked on:": "Bokmerket på:",
+  "This modal will close in COUNTDOWN seconds": "Denne modalen vil lukkes om {{countdown}} sekunder"
 }

@@ -123,5 +123,6 @@
   "Add a note": "ノートを追加",
   "Type your note here... (optional)": "ここにノートを入力...（オプション）",
   "Saved": "保存済み",
-  "Bookmarked on:": "ブックマークに追加:"
+  "Bookmarked on:": "ブックマークに追加:",
+  "This modal will close in COUNTDOWN seconds": "このモーダルは{{countdown}}秒で閉じます"
 }

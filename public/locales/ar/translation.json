@@ -123,5 +123,6 @@
   "Add a note": "أضف ملاحظة",
   "Type your note here... (optional)": "اكتب ملاحظتك هنا... (اختياري)",
   "Saved": "تم الحفظ",
-  "Bookmarked on:": "تم الإشارة عليه في:"
+  "Bookmarked on:": "تم الإشارة عليه في:",
+  "This modal will close in COUNTDOWN seconds": "سيغلق هذا النافذة في {{countdown}} ثواني"
 }

@@ -123,5 +123,6 @@
   "Add a note": "添加备注",
   "Type your note here... (optional)": "在此输入您的备注...（可选）",
   "Saved": "已保存",
-  "Bookmarked on:": "书签于:"
+  "Bookmarked on:": "书签于:",
+  "This modal will close in COUNTDOWN seconds": "此模态窗口将在{{countdown}}秒后关闭"
 }

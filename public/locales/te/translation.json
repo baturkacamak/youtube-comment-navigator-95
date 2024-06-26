@@ -123,5 +123,6 @@
   "Add a note": "గమనికను జోడించండి",
   "Type your note here... (optional)": "మీ గమనికను ఇక్కడ టైప్ చేయండి... (ఐచ్ఛికం)",
   "Saved": "సేవ్ చేయబడింది",
-  "Bookmarked on:": "బుక్మార్క్ చేయబడింది:"
+  "Bookmarked on:": "బుక్మార్క్ చేయబడింది:",
+  "This modal will close in COUNTDOWN seconds": "ఈ మోడల్ {{countdown}} సెకన్లలో మూసివేయబడుతుంది"
 }

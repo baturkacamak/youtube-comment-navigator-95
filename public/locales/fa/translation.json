@@ -123,5 +123,6 @@
   "Add a note": "اضافه کردن یادداشت",
   "Type your note here... (optional)": "یادداشت خود را اینجا بنویسید... (اختیاری)",
   "Saved": "ذخیره شد",
-  "Bookmarked on:": "نشان شده در:"
+  "Bookmarked on:": "نشان شده در:",
+  "This modal will close in COUNTDOWN seconds": "این مدال در {{countdown}} ثانیه بسته خواهد شد"
 }

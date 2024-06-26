@@ -123,5 +123,6 @@
   "Add a note": "Додати нотатку",
   "Type your note here... (optional)": "Введіть свою нотатку тут... (необов'язково)",
   "Saved": "Збережено",
-  "Bookmarked on:": "Додано в закладки:"
+  "Bookmarked on:": "Додано в закладки:",
+  "This modal will close in COUNTDOWN seconds": "Це модальне вікно закриється через {{countdown}} секунд"
 }

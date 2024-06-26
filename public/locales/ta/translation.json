@@ -123,5 +123,6 @@
   "Add a note": "ஒரு குறிப்பைச் சேர்க்கவும்",
   "Type your note here... (optional)": "உங்கள் குறிப்பை இங்கே type செய்யவும்... (விருப்பம்)",
   "Saved": "சேமிக்கப்பட்டது",
-  "Bookmarked on:": "புத்தகக் குறியீட்டில்:"
+  "Bookmarked on:": "புத்தகக் குறியீட்டில்:",
+  "This modal will close in COUNTDOWN seconds": "இந்த மொத்தல் {{countdown}} விநாடிகளில் மூடப்படும்"
 }

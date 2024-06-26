@@ -123,5 +123,6 @@
   "Add a note": "Προσθήκη σημείωσης",
   "Type your note here... (optional)": "Πληκτρολογήστε τη σημείωσή σας εδώ... (προαιρετικά)",
   "Saved": "Αποθηκεύτηκε",
-  "Bookmarked on:": "Αποθηκεύτηκε στα:"
+  "Bookmarked on:": "Αποθηκεύτηκε στα:",
+  "This modal will close in COUNTDOWN seconds": "Αυτό το παράθυρο θα κλείσει σε {{countdown}} δευτερόλεπτα"
 }

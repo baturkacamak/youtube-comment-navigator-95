@@ -123,5 +123,6 @@
   "Add a note": "Aggiungi una nota",
   "Type your note here... (optional)": "Scrivi qui la tua nota... (opzionale)",
   "Saved": "Salvato",
-  "Bookmarked on:": "Segnalibro il:"
+  "Bookmarked on:": "Segnalibro il:",
+  "This modal will close in COUNTDOWN seconds": "Questo modal si chiuderà in {{countdown}} secondi"
 }

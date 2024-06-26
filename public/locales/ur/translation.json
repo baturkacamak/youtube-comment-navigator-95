@@ -123,5 +123,6 @@
   "Add a note": "ایک نوٹ شامل کریں",
   "Type your note here... (optional)": "اپنا نوٹ یہاں لکھیں... (اختیاری)",
   "Saved": "محفوظ کر لیا",
-  "Bookmarked on:": "بک مارک کیا گیا:"
+  "Bookmarked on:": "بک مارک کیا گیا:",
+  "This modal will close in COUNTDOWN seconds": "یہ موڈل {{countdown}} سیکنڈ میں بند ہو جائے گا"
 }

@@ -123,5 +123,6 @@
   "Add a note": "הוסף הערה",
   "Type your note here... (optional)": "כתוב את ההערה שלך כאן... (אופציונלי)",
   "Saved": "נשמר",
-  "Bookmarked on:": "סומן בסימניה בתאריך:"
+  "Bookmarked on:": "סומן בסימניה בתאריך:",
+  "This modal will close in COUNTDOWN seconds": "חלון זה ייסגר בעוד {{countdown}} שניות"
 }

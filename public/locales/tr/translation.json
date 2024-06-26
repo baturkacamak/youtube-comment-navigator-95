@@ -123,5 +123,6 @@
   "Add a note": "Not ekle",
   "Type your note here... (optional)": "Notunuzu buraya yazın... (isteğe bağlı)",
   "Saved": "Kaydedildi",
-  "Bookmarked on:": "Yer imine eklendi:"
+  "Bookmarked on:": "Yer imine eklendi:",
+  "This modal will close in COUNTDOWN seconds": "Bu modal {{countdown}} saniye içinde kapanacak"
 }

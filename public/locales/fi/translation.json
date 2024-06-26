@@ -123,5 +123,6 @@
   "Add a note": "Lisää muistiinpano",
   "Type your note here... (optional)": "Kirjoita muistiinpanosi tähän... (valinnainen)",
   "Saved": "Tallennettu",
-  "Bookmarked on:": "Kirjanmerkkinä:"
+  "Bookmarked on:": "Kirjanmerkkinä:",
+  "This modal will close in COUNTDOWN seconds": "Tämä modal-ikkuna sulkeutuu {{countdown}} sekunnissa"
 }

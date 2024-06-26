@@ -123,5 +123,6 @@
   "Add a note": "একটি নোট যোগ করুন",
   "Type your note here... (optional)": "এখানে আপনার নোট লিখুন... (ঐচ্ছিক)",
   "Saved": "সংরক্ষিত",
-  "Bookmarked on:": "বুকমার্ক করা হয়েছে:"
+  "Bookmarked on:": "বুকমার্ক করা হয়েছে:",
+  "This modal will close in COUNTDOWN seconds": "এই মডালটি {{countdown}} সেকেন্ডে বন্ধ হবে"
 }

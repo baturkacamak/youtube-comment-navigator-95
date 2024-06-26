@@ -123,5 +123,6 @@
   "Add a note": "Přidat poznámku",
   "Type your note here... (optional)": "Zadejte svou poznámku zde... (volitelně)",
   "Saved": "Uloženo",
-  "Bookmarked on:": "Záložka:"
+  "Bookmarked on:": "Záložka:",
+  "This modal will close in COUNTDOWN seconds": "Tento modální okno se zavře za {{countdown}} sekund"
 }

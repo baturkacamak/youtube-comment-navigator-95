@@ -123,5 +123,6 @@
   "Add a note": "Een notitie toevoegen",
   "Type your note here... (optional)": "Typ je notitie hier... (optioneel)",
   "Saved": "Opgeslagen",
-  "Bookmarked on:": "Bladwijzer gemaakt op:"
+  "Bookmarked on:": "Bladwijzer gemaakt op:",
+  "This modal will close in COUNTDOWN seconds": "Deze modal wordt over {{countdown}} seconden gesloten"
 }

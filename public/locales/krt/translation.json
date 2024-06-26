@@ -122,5 +122,6 @@
   "Add a note": "Tambahkan catatan",
   "Type your note here... (optional)": "Tulis catatanmu di sini... (opsional)",
   "Saved": "Disimpan",
-  "Bookmarked on:": "Ditandai pada:"
+  "Bookmarked on:": "Ditandai pada:",
+  "This modal will close in COUNTDOWN seconds": "Modal ini akan ditutup dalam {{countdown}} detik"
 }
