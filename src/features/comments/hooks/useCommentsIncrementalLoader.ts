@@ -5,10 +5,10 @@ import {Comment} from '../../../types/commentTypes'; // Import the Comment type
 import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
-import {setComments, setInitialComments, updateCommentsData} from "../../../store/store";
+import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
 
 
-const useComments = () => {
+const useCommentsIncrementalLoader = () => {
     const dispatch = useDispatch();
     const initialLoadCompleted = useRef(false);
     const abortController = useRef(new AbortController());
@@ -26,7 +26,7 @@ const useComments = () => {
                 const finalCachedData = await getCachedDataIfValid(FINAL_CACHE_KEY);
 
                 if (finalCachedData) {
-                    dispatch(setInitialComments(finalCachedData));
+                    dispatch(setOriginalComments(finalCachedData));
                     dispatch(updateCommentsData({comments: finalCachedData, isLoading: false}));
                     initialLoadCompleted.current = true;
                     return;
@@ -39,7 +39,7 @@ const useComments = () => {
                 const continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || undefined;
 
                 if (tempCachedData && continuationToken) {
-                    dispatch(setInitialComments(tempCachedData.items));
+                    dispatch(setOriginalComments(tempCachedData.items));
                 }
 
                 let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
@@ -52,7 +52,7 @@ const useComments = () => {
                     initialComments.push(...comments);
                 }, signal, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
 
-                dispatch(setInitialComments(initialComments)); // Pass the array directly
+                dispatch(setOriginalComments(initialComments)); // Pass the array directly
                 initialLoadCompleted.current = true;
             } catch (error) {
                 if (error instanceof Error) {
@@ -78,4 +78,4 @@ const useComments = () => {
     return {initialLoadCompleted: initialLoadCompleted.current};
 };
 
-export default useComments;
+export default useCommentsIncrementalLoader;
