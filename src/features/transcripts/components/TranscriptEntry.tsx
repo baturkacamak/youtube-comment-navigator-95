@@ -28,7 +28,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
     return (
         <li
             key={index}
-            className={`mb-2 flex items-center rounded-lg ${textSize} ${index % 2 === 0 ? 'bg-gray-200 dark:bg-gray-700' : 'bg-gray-100 dark:bg-gray-800'}`}
+            className={`mb-2 flex items-center rounded-lg ${textSize} ${index % 2 === 0 ? 'bg-gray-100 dark:bg-gray-700' : 'bg-slate-50 dark:bg-gray-800'}`}
             aria-label={`Transcript entry at ${formatTime(entry.start)}`}
             onMouseEnter={() => setHoveredLineIndex(index)}
             onMouseLeave={() => setHoveredLineIndex(null)}
@@ -36,7 +36,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
         >
             <div className="flex items-center w-full">
                 <span
-                    className={`bg-red-100 text-sm font-medium rounded text-red-600 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 ${includeTimestamps ? '' : 'select-none'} mr-2`}
+                    className={`bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 ${includeTimestamps ? '' : 'select-none'} mr-2`}
                     aria-hidden="true"
                 >
                     {parseTimestamps({

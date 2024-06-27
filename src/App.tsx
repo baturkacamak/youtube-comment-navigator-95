@@ -52,7 +52,7 @@ const App: React.FC = () => {
             content: (
                 <>
                     {showFiltersSorts && (
-                        <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+                        <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
@@ -88,7 +88,7 @@ const App: React.FC = () => {
             content: (
                 <>
                     {showFiltersSorts && (
-                        <div className="bg-gray-100 dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+                        <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
@@ -102,7 +102,7 @@ const App: React.FC = () => {
     ];
 
     return (
-        <div className="relative flex overflow-hidden">
+        <div className="relative flex overflow-x-hidden overflow-y-auto transition-max-h ease-in-out duration-300 max-h-screen">
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div
@@ -113,14 +113,14 @@ const App: React.FC = () => {
             <div
                 className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${isSettingsOpen ? 'blur-sm -ml-80 left-80' : 'ml-0 left-0'}`}
             >
-                <Box className="flex flex-col w-full gap-2" aria-label={t('Control Panel')}>
+                <Box className="flex flex-col w-full gap-2" aria-label={t('Control Panel')} borderColor={'border-transparent'}>
                     <NavigationHeader
                         openSettings={openSettings}
                     />
                     <hr className="border border-solid border-gray-400 dark:border-gray-600" />
                     <SearchBar onSearch={handleSearch} />
                 </Box>
-                <Box className="flex flex-col w-full gap-2">
+                <Box className="flex flex-col w-full gap-2"  borderColor={'border-transparent'}>
                     <Tabs tabs={tabs} onTabChange={setActiveTab} />
                 </Box>
             </div>

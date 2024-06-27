@@ -20,7 +20,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
                         key={`${reply.commentId}-${index}`}
                         comment={reply}
                         className="ml-10"
-                        bgColor={index % 2 === 0 ? 'bg-teal-100' : 'bg-teal-200'}
+                        bgColor={index % 2 === 0 ? 'bg-neutral-100' : 'bg-gray-100'}
                         darkBgColor={index % 2 === 0 ? 'dark:bg-teal-700' : 'dark:bg-teal-900'}
                         borderColor="border-gray-300"
                         darkBorderColor="dark:border-gray-600"

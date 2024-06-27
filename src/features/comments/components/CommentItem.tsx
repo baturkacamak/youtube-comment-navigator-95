@@ -91,7 +91,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                             handleTimestampClick={handleTimestampClick}
                         />
                         {bookmarkTimestamp && (
-                            <div className="absolute -top-4 -right-4 p-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-bl-lg rounded-tr-lg shadow-lg">
+                            <div className="absolute -top-4 -right-4 p-2 bg-slate-400 text-white rounded-bl-lg rounded-tr-lg shadow-lg">
                                 <div className="flex items-center">
                                     <BookmarkIcon className="w-5 h-5 mr-2" />
                                     <p className="text-sm">{t('Bookmarked on:')} {getFormattedDate(bookmarkTimestamp)}</p>

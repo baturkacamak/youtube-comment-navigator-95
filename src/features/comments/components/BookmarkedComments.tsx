@@ -40,7 +40,7 @@ const BookmarkedComments: React.FC<BookmarkedCommentsProps> = ({ comments }) => 
                             comment={comment}
                             replies={[]} // Add logic to fetch and display replies if necessary
                             className={`text-gray-800 dark:text-gray-200 ${index % 2 === 0 ? 'bg-teal-100 dark:bg-teal-700' : 'bg-teal-200 dark:bg-teal-900'}`}
-                            bgColor={index % 2 === 0 ? 'bg-teal-100' : 'bg-teal-200'}
+                            bgColor={index % 2 === 0 ? 'bg-gradient-to-r from-zinc-50 to-zinc-100' : 'bg-gradient-to-r from-stone-50 to-stone-100'}
                             darkBgColor={index % 2 === 0 ? 'dark:bg-teal-700' : 'dark:bg-teal-900'}
                             borderColor="border-gray-300"
                             darkBorderColor="dark:border-gray-600"

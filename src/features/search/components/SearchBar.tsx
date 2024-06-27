@@ -79,13 +79,13 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
                 placeholder={placeholder}
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="flex-grow p-2 bg-teal-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300 ease-in-out"
+                className="flex-grow p-2 bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 transition-all duration-300 ease-in-out"
                 aria-label={placeholder}
             />
             <button
                 type="button"
                 onClick={handleClear}
-                className={`absolute right-10 p-2 bg-teal-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out ${
+                className={`absolute right-10 p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out ${
                     query ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
                 }`}
                 style={{transformOrigin: 'right'}}
@@ -95,7 +95,7 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
             </button>
             <button
                 type="submit"
-                className="p-2 bg-teal-700 dark:bg-gray-800 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className="p-2 bg-stone-500 dark:bg-gray-800 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                 aria-label={t('Submit search')}
             >
                 <MagnifyingGlassIcon className="w-5 h-5"/>
