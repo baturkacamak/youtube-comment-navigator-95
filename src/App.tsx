@@ -102,7 +102,7 @@ const App: React.FC = () => {
     ];
 
     return (
-        <div className="relative flex overflow-x-hidden overflow-y-auto transition-max-h ease-in-out duration-300 max-h-screen">
+        <div className="relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar">
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div

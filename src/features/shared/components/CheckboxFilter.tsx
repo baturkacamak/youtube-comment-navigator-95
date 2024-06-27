@@ -19,7 +19,7 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({ name, icon, value, chec
                     aria-disabled={disabled}
                     aria-label={name}
                 />
-                <div className={`h-5 w-5 border-2 rounded-md flex items-center justify-center transition-transform duration-300 ease-in-out transform ${checked ? 'bg-teal-600 dark:bg-teal-400 border-teal-600 dark:border-teal-400 scale-110' : 'bg-white border-gray-400 dark:border-gray-600 scale-100'}`}>
+                <div className={`h-5 w-5 border border-solid rounded-md flex items-center justify-center transition-transform duration-300 ease-in-out transform ${checked ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-400 scale-110' : 'bg-white border-gray-500 dark:border-gray-600 scale-100'}`}>
                     {checked && (
                         <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"></path>
