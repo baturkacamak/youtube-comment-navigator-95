@@ -35,7 +35,6 @@ export const generateRequestOptions = async ({ continue: continueToken, windowOb
     windowObj: any
 }, isFetchingReply: boolean = false) => {
     try {
-
         const ytcfg = windowObj.ytcfg;
         const ytcfgData = ytcfg?.data_;
         const feedbackData = ytcfgData?.GOOGLE_FEEDBACK_PRODUCT_DATA;
@@ -100,6 +99,7 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
         return [];
     }
 
+    // First request to get initial data
     const response = await fetch(`https://www.youtube.com/youtubei/v1/next`, {
         ...requestOptions,
         signal,
@@ -110,5 +110,38 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
         throw new Error("Network response was not ok");
     }
 
-    return await response.json();
+    const initialData = await response.json();
+
+    // Extract the new continuation token from the initial response
+    const newContinuationToken = initialData.onResponseReceivedEndpoints?.[0]?.reloadContinuationItemsCommand?.continuationItems?.[0]?.commentsHeaderRenderer?.sortMenu?.sortFilterSubMenuRenderer?.subMenuItems?.[1]?.serviceEndpoint?.continuationCommand?.token;
+
+    if (!newContinuationToken) {
+        console.error("Failed to extract new continuation token from the initial response.");
+        return initialData;
+    }
+
+    // Second request with the new continuation token
+    const newRequestOptions = await generateRequestOptions({
+        continue: newContinuationToken,
+        windowObj,
+    }, isFetchingReply);
+
+    if (!newRequestOptions) {
+        console.error("Failed to generate request options for the second request.");
+        return initialData;
+    }
+
+    const newResponse = await fetch(`https://www.youtube.com/youtubei/v1/next`, {
+        ...newRequestOptions,
+        signal,
+        cache: "no-store"
+    });
+
+    if (!newResponse.ok) {
+        throw new Error("Network response was not ok for the second request");
+    }
+
+    const newData = await newResponse.json();
+
+    return newData;
 };
