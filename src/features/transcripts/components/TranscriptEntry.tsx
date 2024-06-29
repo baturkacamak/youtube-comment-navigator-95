@@ -1,6 +1,6 @@
 import React from 'react';
 import {formatTime} from '../utils/formatTime';
-import handleTimestampClick from "../../comments/utils/handleTimestampClick";
+import handleClickTimestamp from "../../comments/utils/comments/handleClickTimestamp";
 import {highlightText} from '../../shared/utils/highlightText';
 import {parseTimestamps} from "../../shared/utils/parseTimestamps";
 import {RootState} from '../../../types/rootState';
@@ -41,7 +41,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
                 >
                     {parseTimestamps({
                         content: [formatTime(entry.start)],
-                        handleTimestampClick,
+                        handleTimestampClick: handleClickTimestamp,
                         timestampColor: "dark:text-gray-900"
                     })}
                 </span>

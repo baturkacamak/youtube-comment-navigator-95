@@ -1,4 +1,4 @@
-export const handleCopyToClipboard = (
+export const copyToClipboard = (
     text: string,
     onSuccess: () => void,
     onError: (error: any) => void

@@ -57,7 +57,7 @@ describe('CommentFooter', () => {
         expect(screen.queryByText('Copy')).not.toBeInTheDocument();
     });
 
-    it('calls handleCopyToClipboard when copy button is clicked', () => {
+    it('calls copyToClipboard when copy button is clicked', () => {
         render(<CommentFooter {...mockProps} />);
         fireEvent.click(screen.getByLabelText('Copy to clipboard'));
         expect(mockProps.handleCopyToClipboard).toHaveBeenCalled();

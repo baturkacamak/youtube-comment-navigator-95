@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 
-const handleTimestampClick = (event: MouseEvent<HTMLAnchorElement>) => {
+const handleClickTimestamp = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const timestamp = event.currentTarget.getAttribute('data-timestamp');
     if (timestamp) {
@@ -17,4 +17,4 @@ const handleTimestampClick = (event: MouseEvent<HTMLAnchorElement>) => {
     }
 };
 
-export default handleTimestampClick;
+export default handleClickTimestamp;

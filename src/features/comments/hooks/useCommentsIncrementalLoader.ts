@@ -1,11 +1,11 @@
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {fetchCommentsIncrementally} from "../services/localFetch";
 import {Comment} from '../../../types/commentTypes'; // Import the Comment type
 import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
+import {fetchCommentsIncrementally} from "../services/commentsService";
 
 
 const useCommentsIncrementalLoader = () => {

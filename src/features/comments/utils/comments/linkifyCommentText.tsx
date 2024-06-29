@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const linkifyText = (text: string): (JSX.Element | string)[] => {
+export const linkifyCommentText = (text: string): (JSX.Element | string)[] => {
     const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     const elements: (JSX.Element | string)[] = [];
     let lastIndex = 0;

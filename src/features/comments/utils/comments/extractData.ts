@@ -1,4 +1,4 @@
-import {ExtractOptions} from "../../../types/utilityTypes";
+import {ExtractOptions} from "../../../../types/utilityTypes";
 
 type ExtractPaths = string[][];
 

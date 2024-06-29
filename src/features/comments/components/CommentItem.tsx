@@ -4,8 +4,8 @@ import CommentFooter from './CommentFooter';
 import CommentReplies from './CommentReplies';
 import CommentBody from './CommentBody';
 import useSticky from '../../shared/hooks/useSticky';
-import { handleCopyToClipboard } from '../utils/clipboard';
-import handleTimestampClick from '../utils/handleTimestampClick';
+import { copyToClipboard } from '../utils/clipboard/copyToClipboard';
+import handleClickTimestamp from '../utils/comments/handleClickTimestamp';
 import { CommentItemProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
@@ -40,7 +40,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
     }, [showReplies, replies]);
 
     const handleCopy = () => {
-        handleCopyToClipboard(
+        copyToClipboard(
             comment.content,
             () => {
                 setCopySuccess(true);
@@ -88,7 +88,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                         )}
                         <CommentBody
                             content={comment.content}
-                            handleTimestampClick={handleTimestampClick}
+                            handleTimestampClick={handleClickTimestamp}
                         />
                         {bookmarkTimestamp && (
                             <div className="absolute -top-4 -right-4 p-2 bg-slate-400 text-white rounded-bl-lg rounded-tr-lg shadow-lg">

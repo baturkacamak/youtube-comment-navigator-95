@@ -1,4 +1,4 @@
-import {handleCopyToClipboard} from "./clipboard";
+import {copyToClipboard} from "./copyToClipboard";
 
 describe('handleCopyToClipboard', () => {
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe('handleCopyToClipboard', () => {
             },
         });
 
-        await handleCopyToClipboard('sample text', onSuccess, onError);
+        await copyToClipboard('sample text', onSuccess, onError);
 
         expect(mockWriteText).toHaveBeenCalledWith('sample text');
         expect(onSuccess).toHaveBeenCalled();
@@ -33,7 +33,7 @@ describe('handleCopyToClipboard', () => {
             },
         });
 
-        await handleCopyToClipboard('sample text', onSuccess, onError);
+        await copyToClipboard('sample text', onSuccess, onError);
 
         expect(mockWriteText).toHaveBeenCalledWith('sample text');
         expect(onSuccess).not.toHaveBeenCalled();

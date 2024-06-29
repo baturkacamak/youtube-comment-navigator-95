@@ -1,4 +1,4 @@
-const timeAgoToDate = (timeAgo: string): Date => {
+const convertTimeAgoToDate = (timeAgo: string): Date => {
     const now = new Date();
     const [value, unit] = timeAgo.split(' ');
 
@@ -41,4 +41,4 @@ const timeAgoToDate = (timeAgo: string): Date => {
     return date;
 };
 
-export default timeAgoToDate;
+export default convertTimeAgoToDate;

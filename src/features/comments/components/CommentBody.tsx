@@ -1,7 +1,7 @@
 import React from 'react';
 import { parseTimestamps } from '../../shared/utils/parseTimestamps';
 import { highlightText } from '../../shared/utils/highlightText';
-import { splitTextByNewlines } from '../utils/splitTextByNewlines';
+import { splitTextByNewlines } from '../utils/formatting/splitTextByNewlines';
 import { CommentContentProps } from "../../../types/commentTypes";
 import { useSelector } from 'react-redux';
 import { RootState } from "../../../types/rootState";

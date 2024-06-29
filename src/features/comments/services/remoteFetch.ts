@@ -1,4 +1,3 @@
-import {processRawJsonCommentsData} from "../utils/utils";
 import {fetchCommentJsonDataFromRemote} from "./youtubeComments";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../shared/utils/cacheUtils";
@@ -7,7 +6,8 @@ import {CommentData} from "../../../types/commentTypes";
 import {wildCardSearch} from "../../shared/utils/wildCardSearch";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {delay} from "../../shared/utils/delay";
-import {removeDuplicateComments} from "../utils/removeDuplicateComments";
+import {removeDuplicateComments} from "../utils/comments/removeDuplicateComments";
+import {processRawJsonCommentsData} from "../utils/comments/retrieveYouTubeCommentPaths";
 
 const extractContinuationToken = (continuationItems: any[]) => {
     return continuationItems.map((continuationItem: any) =>

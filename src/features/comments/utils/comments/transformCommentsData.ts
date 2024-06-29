@@ -1,10 +1,10 @@
-import {Comment} from "../../../types/commentTypes";
-import convertLikesToNumber from "./convertLikesToNumber";
-import timeAgoToDate from "./timeAgoToDate";
+import {Comment} from "../../../../types/commentTypes";
+import convertLikesToNumber from "../formatting/convertLikesToNumber";
+import convertTimeAgoToDate from "../formatting/convertTimeAgoToDate";
 
 const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/;
 
-export const transformComment = (comment: any): {
+export const transformCommentsData = (comment: any): {
     author: any;
     authorAvatarUrl: any;
     authorMemberSince: any;
@@ -33,7 +33,7 @@ export const transformComment = (comment: any): {
     }
     const likes = convertLikesToNumber(viewLikes);
     const published = payload?.properties?.publishedTime || 'Unknown';
-    const publishedDate = published !== 'Unknown' ? timeAgoToDate(published).getTime() : Date.now();
+    const publishedDate = published !== 'Unknown' ? convertTimeAgoToDate(published).getTime() : Date.now();
     const authorAvatarUrl = payload?.author?.avatarThumbnailUrl || 'Unknown';
     const isAuthorContentCreator = payload?.author?.isCreator || false;
     const authorChannelId = payload?.author?.channelId || 'Unknown';
