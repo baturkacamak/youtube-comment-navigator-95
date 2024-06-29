@@ -28,13 +28,3 @@ export const fetchCommentsFromLocalIncrementally = async (
         }
     }
 };
-
-export const fetchCommentsFromLocal = async () => {
-    try {
-        const data = await fetchCommentFiles(commentFiles);
-        return processRawJsonCommentsData(data);
-    } catch (error) {
-        console.error('Error fetching comments from local:', error);
-        return { items: [] };
-    }
-};

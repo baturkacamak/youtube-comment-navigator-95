@@ -5,7 +5,7 @@ import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
-import {fetchCommentsIncrementally} from "../services/commentsService";
+import {fetchComments} from "../services/fetchComments";
 
 
 const useCommentsIncrementalLoader = () => {
@@ -44,13 +44,13 @@ const useCommentsIncrementalLoader = () => {
 
                 let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
 
-                await fetchCommentsIncrementally((comments) => {
+                await fetchComments((comments) => {
                     if (signal.aborted) return;
 
                     dispatch(updateCommentsData({ comments: comments, isLoading: false }));
 
                     initialComments = comments;
-                }, signal, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
+                }, byPassCache, continuationToken, signal); // Pass the signal and continuation token to the fetch function
 
                 dispatch(setOriginalComments(initialComments)); // Pass the array directly
                 initialLoadCompleted.current = true;
