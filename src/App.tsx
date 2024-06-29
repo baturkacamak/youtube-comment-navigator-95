@@ -33,7 +33,6 @@ const App: React.FC = () => {
         isLoading,
         setFiltersCallback,
         setActiveTab,
-        commentCount,
         transcriptWordCount, // Destructure transcriptWordCount
     } = useAppState();
 

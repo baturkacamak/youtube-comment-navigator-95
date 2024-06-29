@@ -4,10 +4,8 @@ import useSortedComments from "../../comments/hooks/useSortedComments";
 import {
   setBookmarkedComments,
   setComments,
-  setCommentsCount,
   setFilteredTranscripts,
   setFilters,
-  setTranscriptsCount
 } from "../../../store/store";
 import { calculateFilteredWordCount } from "../utils/calculateWordCount";
 import { Comment } from "../../../types/commentTypes";
@@ -72,7 +70,6 @@ const useSearchContent = () => {
     if (keyword.trim() === '') {
       dispatch(setComments(commentsToSearch));
       dispatch(setBookmarkedComments(bookmarksToSearch));
-      dispatch(setCommentsCount(commentsToSearch.length));
       dispatch(setFilteredTranscripts(transcriptsToSearch));
     } else {
       const sortedAndFilteredComments = filterAndSortComments(commentsToSearch);
@@ -81,11 +78,9 @@ const useSearchContent = () => {
 
       dispatch(setComments(sortedAndFilteredComments));
       dispatch(setBookmarkedComments(sortedAndFilteredBookmarks));
-      dispatch(setCommentsCount(sortedAndFilteredComments.length));
       dispatch(setFilteredTranscripts(filteredTranscripts));
 
       const filteredWordCount = calculateFilteredWordCount(filteredTranscripts, keyword);
-      dispatch(setTranscriptsCount(filteredWordCount));
     }
   };
 

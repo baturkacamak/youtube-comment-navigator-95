@@ -7,6 +7,7 @@ import {CommentData} from "../../../types/commentTypes";
 import {wildCardSearch} from "../../shared/utils/wildCardSearch";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {delay} from "../../shared/utils/delay";
+import {removeDuplicateComments} from "../utils/removeDuplicateComments";
 
 const extractContinuationToken = (continuationItems: any[]) => {
     return continuationItems.map((continuationItem: any) =>
@@ -114,15 +115,4 @@ export const fetchCommentsFromRemote = async (
         }
         console.error('Error fetching comments from remote:', error);
     }
-};
-
-const removeDuplicateComments = (comments: any[]) => {
-    const seenCommentIds = new Set();
-    return comments.filter(comment => {
-        if (seenCommentIds.has(comment.commentId)) {
-            return false;
-        }
-        seenCommentIds.add(comment.commentId);
-        return true;
-    });
 };

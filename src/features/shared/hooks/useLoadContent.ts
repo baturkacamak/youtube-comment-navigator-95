@@ -2,12 +2,11 @@ import { useDispatch } from 'react-redux';
 
 import { fetchComments, fetchChatReplies } from '../../comments/services/fetchComments';
 import {
-    setComments, setCommentsCount, setFilteredTranscripts,
+    setComments, setFilteredTranscripts,
     setOriginalComments,
     setLoading,
     setReplies,
-    setRepliesCount,
-    setTranscripts, setTranscriptsCount,
+    setTranscripts,
     updateCommentsData
 } from "../../../store/store";
 import {fetchTranscript} from "../../transcripts/services/fetchTranscript";
@@ -29,10 +28,8 @@ const useLoadContent = (bypassCache = false) => {
         const data = await fetchChatReplies();
         if (data && data.items) {
             dispatch(setReplies(data.items));
-            dispatch(setRepliesCount(data.items.length));
         } else {
             dispatch(setReplies([]));
-            dispatch(setRepliesCount(0));
         }
         dispatch(setLoading(false));
     };
@@ -43,10 +40,8 @@ const useLoadContent = (bypassCache = false) => {
         if (data && data.items) {
             dispatch(setTranscripts(data.items));
             dispatch(setFilteredTranscripts(data.items));
-            dispatch(setTranscriptsCount(data.items.length));
         } else {
             dispatch(setTranscripts([]));
-            dispatch(setTranscriptsCount(0));
         }
         dispatch(setLoading(false));
     };
@@ -60,9 +55,6 @@ const useLoadContent = (bypassCache = false) => {
                 ...(transcriptsData && transcriptsData.items ? transcriptsData.items : [])
             ];
             dispatch(setComments(allItems));
-            dispatch(setCommentsCount(comments.length));
-            dispatch(setRepliesCount(chatRepliesData && chatRepliesData.items ? chatRepliesData.items.length : 0));
-            dispatch(setTranscriptsCount(transcriptsData && transcriptsData.items ? transcriptsData.items.length : 0));
             dispatch(setLoading(false));
         };
 

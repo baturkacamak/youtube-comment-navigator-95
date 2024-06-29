@@ -40,11 +40,6 @@ const initialState: RootState = {
     bookmarkedLines: [],
     isLoading: true,
 
-    // Count-related properties
-    commentsCount: 0,
-    repliesCount: 0,
-    transcriptsCount: 0,
-
     // Other state properties
     showBookmarked: false,
     isUrlChanged: false,
@@ -76,20 +71,7 @@ const commentsSlice = createSlice({
             const {comments, isLoading} = action.payload;
             state.comments = comments;
             state.isLoading = isLoading;
-            state.commentsCount = state.comments.length;
         },
-
-        // Count-related actions
-        setCommentsCount: (state, action: PayloadAction<number>) => {
-            state.commentsCount = action.payload;
-        },
-        setRepliesCount: (state, action: PayloadAction<number>) => {
-            state.repliesCount = action.payload;
-        },
-        setTranscriptsCount: (state, action: PayloadAction<number>) => {
-            state.transcriptsCount = action.payload;
-        },
-
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
             state.bookmarkedComments = action.payload;
@@ -144,11 +126,6 @@ export const {
     setTranscripts,
     setFilteredTranscripts,
     updateCommentsData,
-
-    // Count-related actions
-    setCommentsCount,
-    setRepliesCount,
-    setTranscriptsCount,
 
     // Bookmark actions
     setBookmarkedComments,

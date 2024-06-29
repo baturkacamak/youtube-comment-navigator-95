@@ -20,7 +20,6 @@ const useAppState = () => {
     const isLoading = useSelector((state: RootState) => state.isLoading);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
-    const repliesCount = useSelector((state: RootState) => state.repliesCount);
     const transcripts = useSelector((state: RootState) => state.transcripts);
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
 
@@ -75,7 +74,6 @@ const useAppState = () => {
         comments,
         filters,
         isLoading,
-        repliesCount,
         transcripts,
         initialLoadCompleted,
         handleSearch,
@@ -85,7 +83,6 @@ const useAppState = () => {
         toggleShowBookmarked,
         activeTab,
         setActiveTab,
-        commentCount: filteredAndSortedComments.length,
         transcriptWordCount
     };
 };

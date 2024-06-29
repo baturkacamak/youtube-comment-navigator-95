@@ -8,9 +8,6 @@ export interface RootState {
     transcripts: any[];
     filters: FilterState;
     isLoading: boolean;
-    commentsCount: number;
-    repliesCount: number;
-    transcriptsCount: number;
     showBookmarked: boolean;
     bookmarkedComments: any[];
     isUrlChanged: boolean;

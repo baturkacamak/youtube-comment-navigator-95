@@ -3,6 +3,8 @@ import { fetchCommentFiles, processRawJsonCommentsData } from "../utils/utils";
 import {isLocalEnvironment} from "../../shared/utils/environmentVariables";
 import {fetchCommentsFromRemote} from "./remoteFetch";
 import {delay} from "../../shared/utils/delay";
+import {CommentData} from "../../../types/commentTypes";
+import {removeDuplicateComments} from "../utils/removeDuplicateComments";
 const commentFiles: string[] = [];
 for (let i = 1; i <= 34; i++) {
     commentFiles.push(`/example-comments/example-replies/scratch_${i}.json`);
@@ -25,6 +27,8 @@ const fetchCommentsFromLocalIncrementally = async (
     onCommentsFetched: (comments: any[]) => void,
     signal?: AbortSignal
 ) => {
+    let totalComments: CommentData[] = [];
+
     for (const file of commentFiles) {
         if (signal?.aborted) {
             return;
@@ -34,8 +38,10 @@ const fetchCommentsFromLocalIncrementally = async (
             const response = await fetch(file, { signal });
             const comment = await response.json();
             const processedComments = processRawJsonCommentsData([comment]);
-            onCommentsFetched(processedComments.items);
-            await delay(3000);
+            totalComments.push(...processedComments.items);
+            const uniqueTempComments = removeDuplicateComments(totalComments);
+            onCommentsFetched(uniqueTempComments);
+            await delay(500);
         } catch (error) {
             if (signal?.aborted) {
                 console.log(`Fetch aborted for ${file}`);
