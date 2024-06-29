@@ -1,9 +1,9 @@
 import {ContentItem} from "../../../types/commentTypes";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 
-export const fetchContinuationData = (ytInitialData: any, isFetchingReply: boolean = false) => {
+export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean = false) => {
     try {
-        const contents: ContentItem[] = ytInitialData?.contents?.twoColumnWatchNextResults?.results?.results?.contents || [];
+        const contents: ContentItem[] = data?.contents?.twoColumnWatchNextResults?.results?.results?.contents || [];
 
         // Check the first path
         let continuationData = contents
@@ -135,7 +135,7 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
 
         const result = await response.json();
 
-        return fetchContinuationData(result) || '';
+        return getContinuationTokenFromData(result) || '';
     } catch (error) {
         console.error('Error fetching continuation token:', error);
         return '';
