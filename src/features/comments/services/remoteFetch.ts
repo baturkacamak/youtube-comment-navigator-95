@@ -1,4 +1,4 @@
-import {fetchCommentJsonDataFromRemote} from "./youtubeComments";
+import {fetchCommentJsonDataFromRemote} from "./fetchCommentJsonDataFromRemote";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../shared/utils/cacheUtils";
 

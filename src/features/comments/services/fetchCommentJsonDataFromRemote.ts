@@ -1,14 +1,5 @@
 import {fetchContinuationTokenFromRemote} from './fetchContinuationData';
 
-const safelyExecute = (func: Function) => {
-    try {
-        return func();
-    } catch (error) {
-        console.error('Error executing function:', error);
-        return null;
-    }
-};
-
 export const generateRequestOptions = async ({ continue: continueToken, windowObj }: {
     continue: string,
     windowObj: any
