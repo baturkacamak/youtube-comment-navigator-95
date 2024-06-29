@@ -101,6 +101,18 @@ class AssetInjector {
         }
     }
 
+    removeAssets() {
+        this.removeCSS(this.mainCss);
+        this.removeJS(this.mainJs);
+    }
+
+    removeCSS(cssFileName) {
+        const link = document.querySelector(`link[href="${chrome.runtime.getURL(cssFileName)}"]`);
+        if (link) {
+            link.remove();
+        }
+    }
+
     removeJS(jsFileName) {
         const script = document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`);
         if (script) {
@@ -139,36 +151,13 @@ class URLChangeHandler {
     constructor(pubSub) {
         this.pubSub = pubSub;
         this.currentUrl = window.location.href;
-        this.eventDetails = new AbortController();
-        this.hookHistoryMethods();
         this.monitorUrlChange();
     }
-
-    hookHistoryMethods() {
-        const originalPushState = history.pushState;
-        const originalReplaceState = history.replaceState;
-
-        history.pushState = (...args) => {
-            originalPushState.apply(this, args);
-            window.dispatchEvent(new Event('urlchange'));
-        };
-
-        history.replaceState = (...args) => {
-            originalReplaceState.apply(this, args);
-            window.dispatchEvent(new Event('urlchange'));
-        };
-
-        window.addEventListener('popstate', () => {
-            window.dispatchEvent(new Event('urlchange'));
-        });
-    }
-
     async monitorUrlChange() {
         const handler = async () => {
             const newUrl = window.location.href;
             if (this.currentUrl !== newUrl) {
                 this.currentUrl = newUrl;
-                this.eventDetails.abort();
                 this.pubSub.publish('urlchange', newUrl);
             }
         };
@@ -182,10 +171,6 @@ class URLChangeHandler {
  * Handles the injection of a React application into the YouTube comments section.
  */
 class YouTubeCommentNavigator {
-    /**
-     * Initializes the YouTubeCommentNavigator instance.
-     * @param {PubSub} pubSub - An instance of the PubSub class for handling custom events.
-     */
     constructor(pubSub) {
         this.appContainerId = 'youtube-comment-navigator-app';
         this.commentsSectionId = 'comments';
@@ -196,14 +181,11 @@ class YouTubeCommentNavigator {
         this.setupInitialLoad();
     }
 
-    /**
-     * Checks for the presence of the comments section at regular intervals and injects the React app when found.
-     * This function is used to ensure that the app is injected as soon as the comments section becomes available.
-     */
     checkAndInjectWithInterval(isUrlChanged = false) {
         const intervalId = setInterval(async () => {
             if (!DOMHelper.isVideoWatchPage()) {
                 clearInterval(intervalId);
+                this.removeInjectedContent();
                 return;
             }
             if (document.getElementById(this.commentsSectionId)) {
@@ -216,31 +198,26 @@ class YouTubeCommentNavigator {
         }, 2000);
     }
 
-    /**
-     * Injects the React application into the YouTube comments section.
-     * Creates a new app container and injects the React app if the comments section is present.
-     */
     async checkAndInject() {
+        if (!DOMHelper.isVideoWatchPage()) return;
+
         const appContainer = DOMHelper.createAppContainer(this.commentsSectionId, this.appContainerId);
         if (appContainer) {
             await this.assetInjector.injectReactApp(appContainer);
         }
     }
 
-    /**
-     * Sets up the initial load by checking and injecting the React application.
-     * This function ensures that the app is injected on the initial page load.
-     */
     setupInitialLoad() {
         this.checkAndInjectWithInterval();
     }
 
-    /**
-     * Handles the URL change event.
-     * Removes the existing app and reinjects it if the new URL is a YouTube watch page.
-     */
     async onUrlChange() {
         this.checkAndInjectWithInterval(true);
+    }
+
+    removeInjectedContent() {
+        DOMHelper.removeAppContainer(this.appContainerId);
+        this.assetInjector.removeAssets();
     }
 }
 
