@@ -46,7 +46,7 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'comments',
-                label: `${t('Comments')} (${commentCount})`,
+                label: `${t('Comments')} (${filteredAndSortedComments.length})`,
                 icon: ChatBubbleOvalLeftIcon,
             },
             content: (

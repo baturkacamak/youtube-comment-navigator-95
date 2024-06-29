@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { fetchComments, fetchChatReplies } from '../../comments/services/fetchComments';
 import {
     setComments, setCommentsCount, setFilteredTranscripts,
-    setInitialComments,
+    setOriginalComments,
     setLoading,
     setReplies,
     setRepliesCount,
@@ -19,7 +19,7 @@ const useLoadContent = (bypassCache = false) => {
         dispatch(setLoading(true));
         const handleFetchedComments = (comments: any[]) => {
             dispatch(updateCommentsData({ comments, isLoading: false }));
-            dispatch(setInitialComments(comments));
+            dispatch(setOriginalComments(comments));
         };
         await fetchComments(handleFetchedComments, bypassCache);
     };

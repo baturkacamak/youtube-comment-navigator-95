@@ -49,7 +49,7 @@ const useCommentsIncrementalLoader = () => {
 
                     dispatch(updateCommentsData({ comments: comments, isLoading: false }));
 
-                    initialComments.push(...comments);
+                    initialComments = comments;
                 }, signal, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
 
                 dispatch(setOriginalComments(initialComments)); // Pass the array directly

@@ -6,14 +6,13 @@ import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../share
 import {CommentData} from "../../../types/commentTypes";
 import {wildCardSearch} from "../../shared/utils/wildCardSearch";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
+import {delay} from "../../shared/utils/delay";
 
 const extractContinuationToken = (continuationItems: any[]) => {
     return continuationItems.map((continuationItem: any) =>
         continuationItem.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token
     ).find((token: string | undefined) => token);
 };
-
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     const replies: any[] = [];
@@ -76,7 +75,7 @@ export const fetchCommentsFromRemote = async (
                 return;
             }
 
-            await delay(50);
+            await delay(100);
 
             allComments = [];
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, null);
@@ -91,17 +90,17 @@ export const fetchCommentsFromRemote = async (
             allComments.push(...replies);
 
             const processedData = processRawJsonCommentsData(allComments);
-            onCommentsFetched(processedData.items);
             totalComments.push(...processedData.items);
-
+            const uniqueTempComments = removeDuplicateComments(totalComments);
+            onCommentsFetched(uniqueTempComments);
             // Update temporary cache and continuation token
-            await storeDataInDB(TEMP_CACHE_KEY, processedData, true);
+            await storeDataInDB(TEMP_CACHE_KEY, uniqueTempComments, true);
             localStorage.setItem(CONTINUATION_TOKEN_KEY, token || '');
         } while (token);
 
-        const finalProcessedData = processRawJsonCommentsData(allComments);
-        if (finalProcessedData.items.length > 0) {
-            await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
+        const uniqueFinalComments = removeDuplicateComments(totalComments);
+        if (uniqueFinalComments.length > 0) {
+            await storeDataInDB(LOCAL_STORAGE_KEY, uniqueFinalComments, true);
         }
 
         // Clear temporary cache and continuation token
@@ -115,4 +114,15 @@ export const fetchCommentsFromRemote = async (
         }
         console.error('Error fetching comments from remote:', error);
     }
+};
+
+const removeDuplicateComments = (comments: any[]) => {
+    const seenCommentIds = new Set();
+    return comments.filter(comment => {
+        if (seenCommentIds.has(comment.commentId)) {
+            return false;
+        }
+        seenCommentIds.add(comment.commentId);
+        return true;
+    });
 };

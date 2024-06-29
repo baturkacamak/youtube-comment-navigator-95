@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RootState } from '../../../types/rootState';
 import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
-import useComments from '../../comments/hooks/useComments';
+import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import useSearchContent from './useSearchContent';
@@ -27,7 +27,7 @@ const useAppState = () => {
     const { sortComments } = useSortedComments(false);
     const { filterComments } = useFilteredComments(false);
     const { handleSearch } = useSearchContent();
-    const { initialLoadCompleted } = useComments();
+    const { initialLoadCompleted } = useCommentsIncrementalLoader();
     const { loadTranscript } = useTranscript();
 
     const fetchBookmarkedComments = useCallback(async () => {
@@ -85,7 +85,7 @@ const useAppState = () => {
         toggleShowBookmarked,
         activeTab,
         setActiveTab,
-        commentCount: comments.length,
+        commentCount: filteredAndSortedComments.length,
         transcriptWordCount
     };
 };

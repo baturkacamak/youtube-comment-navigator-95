@@ -7,7 +7,7 @@ import {retrieveDataFromDB} from "../utils/cacheUtils";
 import {
     resetState,
     setBookmarkedComments, setFilteredTranscripts,
-    setInitialComments,
+    setOriginalComments,
     setIsUrlChanged, setTranscripts,
     updateCommentsData
 } from "../../../store/store";
@@ -20,7 +20,7 @@ const useHandleUrlChange = () => {
 
     const handleFetchedComments = (comments: any[]) => {
         dispatch(updateCommentsData({comments, isLoading: false}));
-        dispatch(setInitialComments(comments));
+        dispatch(setOriginalComments(comments));
     };
 
     useUrlChange(async () => {

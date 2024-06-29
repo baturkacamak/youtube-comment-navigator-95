@@ -57,7 +57,7 @@ const commentsSlice = createSlice({
     initialState,
     reducers: {
         // Data fetching and setting actions
-        setInitialComments: (state, action: PayloadAction<Comment[]>) => {
+        setOriginalComments: (state, action: PayloadAction<Comment[]>) => {
             state.originalComments = action.payload;
         },
         setComments: (state, action: PayloadAction<Comment[]>) => {
@@ -74,7 +74,7 @@ const commentsSlice = createSlice({
         },
         updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
             const {comments, isLoading} = action.payload;
-            state.comments = [...state.comments, ...comments];
+            state.comments = comments;
             state.isLoading = isLoading;
             state.commentsCount = state.comments.length;
         },
@@ -138,7 +138,7 @@ const commentsSlice = createSlice({
 
 export const {
     // Data fetching and setting actions
-    setInitialComments,
+    setOriginalComments,
     setComments,
     setReplies,
     setTranscripts,

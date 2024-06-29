@@ -2,6 +2,7 @@
 import { fetchCommentFiles, processRawJsonCommentsData } from "../utils/utils";
 import {isLocalEnvironment} from "../../shared/utils/environmentVariables";
 import {fetchCommentsFromRemote} from "./remoteFetch";
+import {delay} from "../../shared/utils/delay";
 const commentFiles: string[] = [];
 for (let i = 1; i <= 34; i++) {
     commentFiles.push(`/example-comments/example-replies/scratch_${i}.json`);
@@ -34,6 +35,7 @@ const fetchCommentsFromLocalIncrementally = async (
             const comment = await response.json();
             const processedComments = processRawJsonCommentsData([comment]);
             onCommentsFetched(processedComments.items);
+            await delay(3000);
         } catch (error) {
             if (signal?.aborted) {
                 console.log(`Fetch aborted for ${file}`);
