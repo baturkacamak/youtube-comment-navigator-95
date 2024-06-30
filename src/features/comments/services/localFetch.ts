@@ -18,7 +18,6 @@ export const fetchCommentsFromLocalIncrementally = async (
             const response = await fetch(file, { signal });
             const comment = await response.json();
             handleFetchedComments([comment], onCommentsFetched, totalComments);
-            await delay(500);
         } catch (error) {
             if (signal?.aborted) {
                 console.log(`Fetch aborted for ${file}`);

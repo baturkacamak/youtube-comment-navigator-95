@@ -1,9 +1,8 @@
-import {useCallback, useRef} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {debounce} from '../../shared/utils/debounce';
-
-import {Comment} from "../../../types/commentTypes";
-import {setComments} from "../../../store/store";
+import { useCallback, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { debounce } from '../../shared/utils/debounce';
+import { Comment } from "../../../types/commentTypes";
+import { setComments } from "../../../store/store";
 
 const useSortedComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();
@@ -12,8 +11,34 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
     const previousSortByRef = useRef<string | null>(null);
     const previousSortOrderRef = useRef<string | null>(null);
 
+    const applyFilters = (comments: Comment[]) => {
+        return comments.filter(comment => {
+            const { likesThreshold, repliesLimit, wordCount, dateTimeRange } = filters;
+
+            const meetsLikes = comment.likes >= (likesThreshold.min || 0) &&
+                comment.likes <= (likesThreshold.max || Infinity);
+
+            const meetsReplies = comment.replyCount >= (repliesLimit.min || 0) &&
+                comment.replyCount <= (repliesLimit.max || Infinity);
+
+            const wordCountLength = comment.content.split(' ').length;
+            const meetsWordCount = (wordCount.min || 0) <= wordCountLength &&
+                wordCountLength <= (wordCount.max || Infinity);
+
+            const commentDate = new Date(comment.publishedDate);
+            const startDate = dateTimeRange.start ? new Date(dateTimeRange.start) : null;
+            const endDate = dateTimeRange.end ? new Date(dateTimeRange.end) : null;
+            const meetsDateRange = (!startDate || startDate <= commentDate) &&
+                (!endDate || endDate >= commentDate);
+
+            return meetsLikes && meetsReplies && meetsWordCount && meetsDateRange;
+        });
+    };
+
     const sortComments = (comments: Comment[], sortBy: string, sortOrder: string, isBookmarkTab: boolean = false) => {
-        const sortedComments = [...comments];
+        const filteredComments = applyFilters(comments);
+        const sortedComments = [...filteredComments];
+
         if (isBookmarkTab) {
             sortedComments.sort((a, b) => {
                 const dateA = new Date(a.bookmarkAddedDate || '').getTime();
@@ -21,16 +46,13 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
                 return dateB - dateA;
             });
         }
+
         switch (sortBy) {
             case 'date':
-                sortedComments.sort((a, b) => {
-                    return sortOrder === 'asc' ? a.publishedDate - b.publishedDate : b.publishedDate - a.publishedDate;
-                });
+                sortedComments.sort((a, b) => sortOrder === 'asc' ? a.publishedDate - b.publishedDate : b.publishedDate - a.publishedDate);
                 break;
             case 'likes':
-                sortedComments.sort((a, b) => {
-                    return sortOrder === 'asc' ? a.likes - b.likes : b.likes - a.likes;
-                });
+                sortedComments.sort((a, b) => sortOrder === 'asc' ? a.likes - b.likes : b.likes - a.likes);
                 break;
             case 'replies':
                 sortedComments.sort((a, b) => sortOrder === 'asc' ? a.replyCount - b.replyCount : b.replyCount - a.replyCount);
@@ -59,7 +81,7 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
         [dispatch]
     );
 
-    return {sortComments};
+    return { sortComments };
 };
 
 export default useSortedComments;

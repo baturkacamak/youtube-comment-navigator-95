@@ -19,3 +19,5 @@ export const calculateFilteredWordCount = (transcripts: TranscriptEntry[], keywo
         return count + filteredWordArray.length;
     }, 0);
 };
+
+

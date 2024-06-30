@@ -6,17 +6,25 @@ import {Option} from "./utilityTypes";
 export interface Filters {
     sortBy: string;
     sortOrder: string;
-    minLikes: number;
-    minDislikes: number;
-    startDate: string;
-    endDate: string;
-    user: string;
     verified: boolean;
     hasLinks: boolean;
-    minLength: number;
-    maxLength: number;
-    extendedSearch: boolean;
     keyword: string;
+    likesThreshold: {
+        min: number;
+        max: number;
+    };
+    repliesLimit: {
+        min: number;
+        max: number;
+    };
+    wordCount: {
+        min: number;
+        max: number;
+    };
+    dateTimeRange: {
+        start: string;
+        end: string;
+    };
 }
 
 export interface FilterState extends Filters {}

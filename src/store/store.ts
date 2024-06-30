@@ -14,18 +14,26 @@ const initialState: RootState = {
     },
     filters: {
         keyword: '',
-        minLikes: 0,
-        minDislikes: 0,
-        startDate: '',
-        endDate: '',
-        user: '',
         verified: false,
         hasLinks: false,
-        minLength: 0,
-        maxLength: Infinity,
-        extendedSearch: false,
         sortBy: '',
         sortOrder: '',
+        likesThreshold: {
+            min: 0,
+            max: Infinity,
+        },
+        repliesLimit: {
+            min: 0,
+            max: Infinity,
+        },
+        wordCount: {
+            min: 0,
+            max: Infinity,
+        },
+        dateTimeRange: {
+            start: '',
+            end: new Date().toISOString().slice(0, 16),
+        },
     },
 
     // Comments and transcripts data
