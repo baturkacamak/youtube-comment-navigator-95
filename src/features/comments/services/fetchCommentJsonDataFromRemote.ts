@@ -1,4 +1,34 @@
-import {fetchContinuationTokenFromRemote} from './fetchContinuationData';
+import { fetchContinuationData, fetchContinuationTokenFromRemote } from './fetchContinuationData';
+
+const safelyExecute = (func: Function) => {
+    try {
+        return func();
+    } catch (error) {
+        console.error('Error executing function:', error);
+        return null;
+    }
+};
+
+const getContinuationToken = async (
+    continueToken: string | null,
+    windowObj: any,
+    isFetchingReply: boolean,
+): Promise<string> => {
+    // If continueToken is provided and the URL has not changed, use it after cleanup
+    if (continueToken) {
+        return continueToken.replace(/(%3D)+$/g, '');
+    }
+
+    // Try to fetch continuation data from the initial window object
+    let continuation = fetchContinuationData(windowObj.ytInitialData, isFetchingReply);
+
+    // If no continuation data is found or URL has changed, fetch a new continuation token from remote
+    if (!continuation) {
+        continuation = await fetchContinuationTokenFromRemote();
+    }
+
+    return continuation;
+};
 
 export const generateRequestOptions = async ({ continue: continueToken, windowObj }: {
     continue: string,
@@ -16,12 +46,7 @@ export const generateRequestOptions = async ({ continue: continueToken, windowOb
             throw new Error("Invalid or missing YouTube configuration data.");
         }
 
-        // If continueToken is provided and the URL has not changed, use it after cleanup
-        if (continueToken) {
-            return continueToken.replace(/(%3D)+$/g, '');
-        }
-
-        const continuation = await fetchContinuationTokenFromRemote();
+        const continuation = await getContinuationToken(continueToken, windowObj, isFetchingReply);
 
         const requestOptions = {
             headers: {

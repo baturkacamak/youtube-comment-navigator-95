@@ -8109,15 +8109,15 @@
                 "isArtist": false
               },
               "toolbar": {
-                "likeCountLiked": "353",
-                "likeCountNotliked": "352",
+                "likeCountLiked": "353k",
+                "likeCountNotliked": "352k",
                 "replyCount": "32",
                 "creatorThumbnailUrl": "https://yt3.ggpht.com/c9Q-NjYGwvKOh2i-Jjn94aIFXXQNl20Y4O6a_IUQ5j36T9ZaUIBVnrHCBDkOc8Cqj3OwDQhkJA=s88-c-k-c0x00ffffff-no-rj",
                 "likeButtonA11y": "Like this comment along with 352 other people",
                 "engagementToolbarStyle": {
                   "value": "ENGAGEMENT_TOOLBAR_STYLE_VALUE_DEFAULT"
                 },
-                "likeCountA11y": "352 likes",
+                "likeCountA11y": "352k likes",
                 "replyCountA11y": "32 replies",
                 "likeInactiveTooltip": "Like",
                 "likeActiveTooltip": "Unlike",
