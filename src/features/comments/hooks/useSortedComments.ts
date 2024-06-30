@@ -35,6 +35,40 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
         });
     };
 
+    const calculateNormalized = (comment: Comment, maxValues: any) => {
+        const likeWeight = 0.3;
+        const replyWeight = 0.5;
+        const wordWeight = 0.2;
+
+        const normalizedLikes = comment.likes / maxValues.likes;
+        const normalizedReplies = comment.replyCount / maxValues.replies;
+        const normalizedWordCount = comment.content.split(' ').length / maxValues.wordCount;
+
+        return (normalizedLikes * likeWeight) + (normalizedReplies * replyWeight) + (normalizedWordCount * wordWeight);
+    };
+
+    const calculateWeightedZScore = (comment: Comment, stats: any) => {
+        const likeWeight = 0.3;
+        const replyWeight = 0.5;
+        const wordWeight = 0.2;
+
+        const zScore = (value: number, mean: number, stdDev: number) => (value - mean) / stdDev;
+
+        const likesZ = zScore(comment.likes, stats.likesMean, stats.likesStdDev);
+        const repliesZ = zScore(comment.replyCount, stats.repliesMean, stats.repliesStdDev);
+        const wordCountZ = zScore(comment.content.split(' ').length, stats.wordCountMean, stats.wordCountStdDev);
+
+        return (likesZ * likeWeight) + (repliesZ * replyWeight) + (wordCountZ * wordWeight);
+    };
+
+    const calculateBayesianAverage = (comment: Comment, avgValues: any, m = 5) => {
+        const totalEngagement = comment.likes + comment.replyCount;
+        const overallAverage = avgValues.likes + avgValues.replies;
+        const totalCount = comment.content.split(' ').length + m;
+
+        return ((totalEngagement + (m * overallAverage)) / totalCount);
+    };
+
     const sortComments = (comments: Comment[], sortBy: string, sortOrder: string, isBookmarkTab: boolean = false) => {
         const filteredComments = applyFilters(comments);
         const sortedComments = [...filteredComments];
@@ -65,6 +99,32 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
                 break;
             case 'random':
                 sortedComments.sort(() => Math.random() - 0.5);
+                break;
+            case 'normalized':
+                const maxValues = {
+                    likes: Math.max(...comments.map(c => c.likes)),
+                    replies: Math.max(...comments.map(c => c.replyCount)),
+                    wordCount: Math.max(...comments.map(c => c.content.split(' ').length))
+                };
+                sortedComments.sort((a, b) => sortOrder === 'asc' ? calculateNormalized(a, maxValues) - calculateNormalized(b, maxValues) : calculateNormalized(b, maxValues) - calculateNormalized(a, maxValues));
+                break;
+            case 'zscore':
+                const stats = {
+                    likesMean: comments.reduce((sum, c) => sum + c.likes, 0) / comments.length,
+                    likesStdDev: Math.sqrt(comments.map(c => Math.pow(c.likes - (comments.reduce((sum, c) => sum + c.likes, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length),
+                    repliesMean: comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length,
+                    repliesStdDev: Math.sqrt(comments.map(c => Math.pow(c.replyCount - (comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length),
+                    wordCountMean: comments.reduce((sum, c) => sum + c.content.split(' ').length, 0) / comments.length,
+                    wordCountStdDev: Math.sqrt(comments.map(c => Math.pow(c.content.split(' ').length - (comments.reduce((sum, c) => sum + c.content.split(' ').length, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length)
+                };
+                sortedComments.sort((a, b) => sortOrder === 'asc' ? calculateWeightedZScore(a, stats) - calculateWeightedZScore(b, stats) : calculateWeightedZScore(b, stats) - calculateWeightedZScore(a, stats));
+                break;
+            case 'bayesian':
+                const avgValues = {
+                    likes: comments.reduce((sum, c) => sum + c.likes, 0) / comments.length,
+                    replies: comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length
+                };
+                sortedComments.sort((a, b) => sortOrder === 'asc' ? calculateBayesianAverage(a, avgValues) - calculateBayesianAverage(b, avgValues) : calculateBayesianAverage(b, avgValues) - calculateBayesianAverage(a, avgValues));
                 break;
             default:
                 break;
