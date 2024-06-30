@@ -41,20 +41,18 @@ const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex gap-4 items-center">
-                <div className="flex gap-4">
-                    <ArrowsUpDownIcon className="w-6 h-6 text-black dark:text-white" aria-hidden="true"/>
-                    <SortList filters={filters} setFilters={setFilters}/>
-                </div>
+            <div className="flex gap-x-4 items-center justify-between flex-wrap">
+                <ArrowsUpDownIcon className="w-6 h-6 text-black dark:text-white" aria-hidden="true"/>
+                <SortList filters={filters} setFilters={setFilters}/>
             </div>
-            <div className="flex gap-4 items-center justify-between">
+            <div className="flex gap-4 items-center justify-between flex-wrap">
                 <div className="flex gap-4">
                     <FunnelIcon className="w-6 h-6 text-black dark:text-white" aria-hidden="true"/>
                     <FilterList filters={filters} setFilters={setFilters}/>
                 </div>
                 <button onClick={() => setShowAdvanced(!showAdvanced)}
                         className="flex items-center text-blue-500 hover:underline">
-                    {showAdvanced ? t('Hide Advanced Filters') : t('Show Advanced Filters')}
+                    {t('Advanced Filters')}
                     <ChevronDownIcon
                         className={`w-5 h-5 ml-1 transform transition-transform duration-500 ${showAdvanced ? 'rotate-180' : ''}`}
                         aria-hidden="true"
@@ -64,7 +62,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
             <div
                 ref={containerRef}
                 style={{maxHeight}}
-                className="transition-all duration-500 overflow-hidden"
+                className={`transition-all duration-500 overflow-hidden ${showAdvanced ? 'opacity-1' : 'opacity-0'}`}
             >
                 <AdvancedFilters/>
             </div>

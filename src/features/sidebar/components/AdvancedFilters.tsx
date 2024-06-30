@@ -48,7 +48,7 @@ const AdvancedFilters: React.FC = () => {
     };
 
     return (
-        <div className="bg-gray-800 rounded-lg shadow-lg mt-2 py-2">
+        <div className="bg-gray-800 rounded-lg shadow-lg ml-10">
             <div className="flex gap-6">
                 {/* Likes Filter */}
                 <div className="flex flex-col">
