@@ -16,8 +16,7 @@ const AdvancedFilters: React.FC = () => {
     const [dateTimeRange, setDateTimeRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
 
     useEffect(() => {
-        const today = new Date().toISOString().slice(0, 16);
-        setDateTimeRange({ start: '', end: today });
+        setDateTimeRange({ start: '', end: '' }); // Initialize end with current date and time
     }, []);
 
     const updateFilter = (key: keyof FilterState, value: any) => {
@@ -64,7 +63,7 @@ const AdvancedFilters: React.FC = () => {
                                 max={typeof likesThreshold.max === 'number' ? likesThreshold.max - 1 : undefined}
                                 value={likesThreshold.min}
                                 onChange={(e) => handleLikesThresholdChange('min', parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Min')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Min Likes')}</label>
@@ -75,7 +74,7 @@ const AdvancedFilters: React.FC = () => {
                                 min={likesThreshold.min + 1 || 1}
                                 value={likesThreshold.max === Infinity ? '' : likesThreshold.max}
                                 onChange={(e) => handleLikesThresholdChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Max')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Max Likes')}</label>
@@ -96,7 +95,7 @@ const AdvancedFilters: React.FC = () => {
                                 max={typeof repliesLimit.max === 'number' ? repliesLimit.max - 1 : undefined}
                                 value={repliesLimit.min}
                                 onChange={(e) => handleRepliesLimitChange('min', parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Min')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Min Replies')}</label>
@@ -107,7 +106,7 @@ const AdvancedFilters: React.FC = () => {
                                 min={repliesLimit.min + 1 || 1}
                                 value={repliesLimit.max === Infinity ? '' : repliesLimit.max}
                                 onChange={(e) => handleRepliesLimitChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Max')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Max Replies')}</label>
@@ -128,7 +127,7 @@ const AdvancedFilters: React.FC = () => {
                                 max={typeof wordCount.max === 'number' ? wordCount.max - 1 : undefined}
                                 value={wordCount.min}
                                 onChange={(e) => handleWordCountChange('min', parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Min')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Min Words')}</label>
@@ -139,7 +138,7 @@ const AdvancedFilters: React.FC = () => {
                                 min={wordCount.min + 1 || 1}
                                 value={wordCount.max === Infinity ? '' : wordCount.max}
                                 onChange={(e) => handleWordCountChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
                                 placeholder={t('Max')}
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Max Words')}</label>
@@ -158,7 +157,7 @@ const AdvancedFilters: React.FC = () => {
                                 type="datetime-local"
                                 value={dateTimeRange.start}
                                 onChange={(e) => handleDateTimeRangeChange('start', e.target.value)}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full transition-all ease-in-out duration-300"
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Start')}</label>
                         </div>
@@ -166,10 +165,10 @@ const AdvancedFilters: React.FC = () => {
                             <input
                                 type="datetime-local"
                                 value={dateTimeRange.end}
-                                min={dateTimeRange.start}
-                                max={new Date().toISOString().slice(0, 16)}
+                                min={dateTimeRange.start} // Ensure end cannot be before start
+                                max={new Date().toISOString().slice(0, 16)} // Current date and time
                                 onChange={(e) => handleDateTimeRangeChange('end', e.target.value)}
-                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full transition-all ease-in-out duration-300"
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('End')}</label>
                         </div>

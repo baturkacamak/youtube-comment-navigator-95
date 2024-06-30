@@ -138,7 +138,7 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
                 </button>
             </div>
             <div ref={containerRef} style={{maxHeight}}
-                 className={`flex w-full ml-10 gap-4 transition-all overflow-hidden duration-500 ${showAdvanced ? 'my-2 opacity-1' : 'm-0 opacity-0'}`}>
+                 className={`flex w-full overflow-hidden pl-10 gap-4 transition-all  duration-500 ${showAdvanced ? 'my-2 opacity-1' : 'm-0 opacity-0'}`}>
                 {advancedSortOptions.map(option => (
                     <div key={option.value}>
                         <RadioFilter

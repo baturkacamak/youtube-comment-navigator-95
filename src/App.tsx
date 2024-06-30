@@ -116,7 +116,7 @@ const App: React.FC = () => {
                     <NavigationHeader
                         openSettings={openSettings}
                     />
-                    <hr className="border border-solid border-gray-400 dark:border-gray-600" />
+                    <hr className="border border-solid border-gray-200 dark:border-gray-600" />
                     <SearchBar onSearch={handleSearch} />
                 </Box>
                 <Box className="flex flex-col w-full gap-2"  borderColor={'border-transparent'}>

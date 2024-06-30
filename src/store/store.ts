@@ -32,7 +32,7 @@ const initialState: RootState = {
         },
         dateTimeRange: {
             start: '',
-            end: new Date().toISOString().slice(0, 16),
+            end: '',
         },
     },
 
