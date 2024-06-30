@@ -124,5 +124,6 @@
   "Type your note here... (optional)": "Ukucajte svoju belešku ovde... (opciono)",
   "Saved": "Sačuvano",
   "Bookmarked on:": "Obeleženo:",
-  "This modal will close in COUNTDOWN seconds": "Ovaj modal će se zatvoriti za {{countdown}} sekundi"
+  "This modal will close in COUNTDOWN seconds": "Ovaj modal će se zatvoriti za {{countdown}} sekundi",
+  "Word Count": "Brojanje reči"
 }
