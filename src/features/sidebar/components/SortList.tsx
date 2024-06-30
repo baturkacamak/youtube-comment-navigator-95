@@ -56,7 +56,7 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
         },
         {
             name: 'Length',
-            label: t('Length'),
+            label: t('Word Count'),
             icon: <ChartBarIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`}/>,
             value: 'length'
         },
