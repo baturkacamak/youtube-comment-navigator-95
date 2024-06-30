@@ -60,6 +60,7 @@ const AdvancedFilters: React.FC = () => {
                         <input
                             type="number"
                             min="0"
+                            max={typeof likesThreshold.max === 'number' ? likesThreshold.max - 1 : undefined}
                             value={likesThreshold.min}
                             onChange={(e) => handleLikesThresholdChange('min', parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -67,7 +68,7 @@ const AdvancedFilters: React.FC = () => {
                         />
                         <input
                             type="number"
-                            min="0"
+                            min={likesThreshold.min + 1 || 1}
                             value={likesThreshold.max === Infinity ? '' : likesThreshold.max}
                             onChange={(e) => handleLikesThresholdChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -85,6 +86,7 @@ const AdvancedFilters: React.FC = () => {
                         <input
                             type="number"
                             min="0"
+                            max={typeof repliesLimit.max === 'number' ? repliesLimit.max - 1 : undefined}
                             value={repliesLimit.min}
                             onChange={(e) => handleRepliesLimitChange('min', parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -92,7 +94,7 @@ const AdvancedFilters: React.FC = () => {
                         />
                         <input
                             type="number"
-                            min="0"
+                            min={repliesLimit.min + 1 || 1}
                             value={repliesLimit.max === Infinity ? '' : repliesLimit.max}
                             onChange={(e) => handleRepliesLimitChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -110,6 +112,7 @@ const AdvancedFilters: React.FC = () => {
                         <input
                             type="number"
                             min="0"
+                            max={typeof wordCount.max === 'number' ? wordCount.max - 1 : undefined}
                             value={wordCount.min}
                             onChange={(e) => handleWordCountChange('min', parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -117,7 +120,7 @@ const AdvancedFilters: React.FC = () => {
                         />
                         <input
                             type="number"
-                            min="0"
+                            min={wordCount.min + 1 || 1}
                             value={wordCount.max === Infinity ? '' : wordCount.max}
                             onChange={(e) => handleWordCountChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
                             className="bg-gray-700 text-white rounded p-1 w-20"
@@ -145,6 +148,7 @@ const AdvancedFilters: React.FC = () => {
                             <input
                                 type="datetime-local"
                                 value={dateTimeRange.end}
+                                min={dateTimeRange.start}
                                 max={new Date().toISOString().slice(0, 16)}
                                 onChange={(e) => handleDateTimeRangeChange('end', e.target.value)}
                                 className="bg-gray-700 text-white rounded p-1 w-full"
