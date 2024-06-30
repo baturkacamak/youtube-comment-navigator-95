@@ -6,6 +6,7 @@ import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVid
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
 import {fetchCommentsIncrementally} from "../services/commentsService";
+import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationData";
 
 
 const useCommentsIncrementalLoader = () => {
@@ -36,7 +37,7 @@ const useCommentsIncrementalLoader = () => {
                 const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
                 const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
                 const tempCachedData = await getCachedDataIfValid(TEMP_CACHE_KEY);
-                const continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || undefined;
+                const continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || await fetchContinuationTokenFromRemote();
 
                 if (tempCachedData && continuationToken) {
                     dispatch(setOriginalComments(tempCachedData.items));

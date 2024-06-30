@@ -11,6 +11,7 @@ export const fetchCommentsIncrementally = async (
     if (isLocalEnvironment()) {
         await fetchCommentsFromLocalIncrementally(onCommentFetched, signal);
     } else {
+
         await fetchCommentsFromRemote(onCommentFetched, signal, byPassCache, continuationToken);
     }
 };
