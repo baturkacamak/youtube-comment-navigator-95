@@ -31,4 +31,18 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
         background: #555;
     }
+
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        -webkit-appearance: none;
+        appearance: none;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: default-button;
+            margin: 0;
+        }
+    }
+
 }

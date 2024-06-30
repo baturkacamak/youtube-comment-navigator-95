@@ -35,7 +35,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
 
     useEffect(() => {
         if (containerRef.current) {
-            setMaxHeight(showAdvanced ? `${containerRef.current.scrollHeight}px` : '0px');
+            setMaxHeight(showAdvanced ? `200px` : '0px');
         }
     }, [showAdvanced]);
 
@@ -51,7 +51,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
                     <FilterList filters={filters} setFilters={setFilters}/>
                 </div>
                 <button onClick={() => setShowAdvanced(!showAdvanced)}
-                        className="flex items-center text-blue-500 hover:underline">
+                        className="user-select flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300">
                     {t('Advanced Filters')}
                     <ChevronDownIcon
                         className={`w-5 h-5 ml-1 transform transition-transform duration-500 ${showAdvanced ? 'rotate-180' : ''}`}

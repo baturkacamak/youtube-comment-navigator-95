@@ -129,7 +129,7 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
             </div>
             <div className="inline-flex ml-auto">
                 <button onClick={() => setShowAdvanced(!showAdvanced)}
-                        className="flex items-center text-blue-500 hover:underline">
+                        className="user-select flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300">
                     {t('Advanced Sort Options')}
                     <ChevronDownIcon
                         className={`w-5 h-5 ml-1 transform transition-transform duration-500 ${showAdvanced ? 'rotate-180' : ''}`}
@@ -138,7 +138,7 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
                 </button>
             </div>
             <div ref={containerRef} style={{maxHeight}}
-                 className={`flex w-full ml-10 gap-4 transition-all duration-500 ${showAdvanced ? 'my-2 opacity-1' : 'm-0 opacity-0'}`}>
+                 className={`flex w-full ml-10 gap-4 transition-all overflow-hidden duration-500 ${showAdvanced ? 'my-2 opacity-1' : 'm-0 opacity-0'}`}>
                 {advancedSortOptions.map(option => (
                     <div key={option.value}>
                         <RadioFilter

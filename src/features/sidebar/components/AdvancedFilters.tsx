@@ -48,13 +48,13 @@ const AdvancedFilters: React.FC = () => {
     };
 
     return (
-        <div className="bg-gray-800 rounded-lg shadow-lg ml-10">
+        <div className="rounded-lg shadow-lg ml-10">
             <div className="flex gap-6">
                 {/* Likes Filter */}
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
-                        <HandThumbUpIcon className="w-5 h-5 text-white mr-2" />
-                        <label className="text-white font-medium">{t('Likes')}</label>
+                        <HandThumbUpIcon className="w-5 h-5 text-gray-800 dark:text-gray-200 mr-2" />
+                        <label className="text-gray-800 dark:text-gray-200 ">{t('Likes')}</label>
                     </div>
                     <div className="flex space-x-2">
                         <input
@@ -63,7 +63,7 @@ const AdvancedFilters: React.FC = () => {
                             max={typeof likesThreshold.max === 'number' ? likesThreshold.max - 1 : undefined}
                             value={likesThreshold.min}
                             onChange={(e) => handleLikesThresholdChange('min', parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Min')}
                         />
                         <input
@@ -71,7 +71,7 @@ const AdvancedFilters: React.FC = () => {
                             min={likesThreshold.min + 1 || 1}
                             value={likesThreshold.max === Infinity ? '' : likesThreshold.max}
                             onChange={(e) => handleLikesThresholdChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Max')}
                         />
                     </div>
@@ -79,8 +79,8 @@ const AdvancedFilters: React.FC = () => {
                 {/* Replies Filter */}
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-white mr-2" />
-                        <label className="text-white font-medium">{t('Replies')}</label>
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-gray-800 dark:text-gray-200 mr-2" />
+                        <label className="text-gray-800 dark:text-gray-200 ">{t('Replies')}</label>
                     </div>
                     <div className="flex space-x-2">
                         <input
@@ -89,7 +89,7 @@ const AdvancedFilters: React.FC = () => {
                             max={typeof repliesLimit.max === 'number' ? repliesLimit.max - 1 : undefined}
                             value={repliesLimit.min}
                             onChange={(e) => handleRepliesLimitChange('min', parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Min')}
                         />
                         <input
@@ -97,7 +97,7 @@ const AdvancedFilters: React.FC = () => {
                             min={repliesLimit.min + 1 || 1}
                             value={repliesLimit.max === Infinity ? '' : repliesLimit.max}
                             onChange={(e) => handleRepliesLimitChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Max')}
                         />
                     </div>
@@ -105,8 +105,8 @@ const AdvancedFilters: React.FC = () => {
                 {/* Word Count Filter */}
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
-                        <DocumentTextIcon className="w-5 h-5 text-white mr-2" />
-                        <label className="text-white font-medium">{t('Words')}</label>
+                        <DocumentTextIcon className="w-5 h-5 text-gray-800 dark:text-gray-200 mr-2" />
+                        <label className="text-gray-800 dark:text-gray-200 ">{t('Words')}</label>
                     </div>
                     <div className="flex space-x-2">
                         <input
@@ -115,7 +115,7 @@ const AdvancedFilters: React.FC = () => {
                             max={typeof wordCount.max === 'number' ? wordCount.max - 1 : undefined}
                             value={wordCount.min}
                             onChange={(e) => handleWordCountChange('min', parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Min')}
                         />
                         <input
@@ -123,7 +123,7 @@ const AdvancedFilters: React.FC = () => {
                             min={wordCount.min + 1 || 1}
                             value={wordCount.max === Infinity ? '' : wordCount.max}
                             onChange={(e) => handleWordCountChange('max', e.target.value === '' ? Infinity : parseInt(e.target.value))}
-                            className="bg-gray-700 text-white rounded p-1 w-20"
+                            className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20"
                             placeholder={t('Max')}
                         />
                     </div>
@@ -131,8 +131,8 @@ const AdvancedFilters: React.FC = () => {
                 {/* Date & Time Range Filter */}
                 <div className="flex flex-col">
                     <div className="flex items-center mb-1">
-                        <CalendarDaysIcon className="w-5 h-5 text-white mr-2" />
-                        <label className="text-white font-medium">{t('Date & Time Range')}</label>
+                        <CalendarDaysIcon className="w-5 h-5 text-gray-800 dark:text-gray-200 mr-2" />
+                        <label className="text-gray-800 dark:text-gray-200 ">{t('Date & Time Range')}</label>
                     </div>
                     <div className="flex space-x-2">
                         <div className="flex flex-col">
@@ -140,7 +140,7 @@ const AdvancedFilters: React.FC = () => {
                                 type="datetime-local"
                                 value={dateTimeRange.start}
                                 onChange={(e) => handleDateTimeRangeChange('start', e.target.value)}
-                                className="bg-gray-700 text-white rounded p-1 w-full"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full"
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('Start')}</label>
                         </div>
@@ -151,7 +151,7 @@ const AdvancedFilters: React.FC = () => {
                                 min={dateTimeRange.start}
                                 max={new Date().toISOString().slice(0, 16)}
                                 onChange={(e) => handleDateTimeRangeChange('end', e.target.value)}
-                                className="bg-gray-700 text-white rounded p-1 w-full"
+                                className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full"
                             />
                             <label className="text-gray-500 text-xs mt-1">{t('End')}</label>
                         </div>
