@@ -48,7 +48,7 @@ const getBaseColor = (color: string) => {
 // Inside the function where you set the colors
         case baseColors.defaultEven:
             return {
-                bgColor: 'bg-gradient-to-r from-zinc-50 to-zinc-100',
+                bgColor: 'bg-gradient-to-r from-slate-50 to-slate-100',
                 darkBgColor: 'dark:bg-gradient-to-r dark:from-gray-900 dark:to-teal-900',
                 borderColor: '',
                 darkBorderColor: 'dark:border-teal-700',
