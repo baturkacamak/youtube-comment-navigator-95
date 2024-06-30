@@ -124,5 +124,22 @@
   "Saved": "Kayıt etildi",
   "Bookmarked on:": "Yer imine eklendi:",
   "This modal will close in COUNTDOWN seconds": "Mınav modal {{countdown}} saniye içinde cabılacak",
-  "Word Count": "Jumlah Kata"
+  "Min": "En az",
+  "Max": "En kop",
+  "Start": "Başlangış",
+  "End": "Pitiş",
+  "Date & Time Range": "Tarihmen Sağat Aralıgı",
+  "Advanced Filters": "Kelişgen Piltreler",
+  "Normalized": "Normalleştirilgen",
+  "Weighted Z-Score": "Avurluklu Z-Puvanı",
+  "Bayesian Average": "Bayes Ortalama",
+  "Min Likes": "En az Begeni",
+  "Max Likes": "En kop Begeni",
+  "Advanced Sort Options": "Kelişgen Sıralama Seçenekleri",
+  "Words": "Kelime",
+  "Min Replies": "En az Yanıt",
+  "Max Replies": "En Kop Yanıt",
+  "Min Words": "En az Kelime",
+  "Max Words": "En Kop Kelime",
+  "Word Count": "Kelime Sayısı"
 }
