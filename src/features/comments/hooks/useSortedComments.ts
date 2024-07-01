@@ -1,19 +1,64 @@
-import { useCallback, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { debounce } from '../../shared/utils/debounce';
-import { Comment } from "../../../types/commentTypes";
-import { setComments } from "../../../store/store";
+import {useCallback, useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {debounce} from '../../shared/utils/debounce';
+import {Comment} from "../../../types/commentTypes";
+import {setComments} from "../../../store/store";
 
 const useSortedComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();
     const comments = useSelector((state: any) => state.comments);
     const filters = useSelector((state: any) => state.filters);
+
+    const getDefaultFilters = useCallback(() => ({
+        keyword: '',
+        verified: false,
+        hasLinks: false,
+        sortBy: '',
+        sortOrder: '',
+        likesThreshold: {
+            min: 0,
+            max: Infinity,
+        },
+        repliesLimit: {
+            min: 0,
+            max: Infinity,
+        },
+        wordCount: {
+            min: 0,
+            max: Infinity,
+        },
+        dateTimeRange: {
+            start: '',
+            end: '',
+        },
+    }), []);
+
     const previousSortByRef = useRef<string | null>(null);
     const previousSortOrderRef = useRef<string | null>(null);
 
+
     const applyFilters = (comments: Comment[]) => {
+        const defaultFilters = getDefaultFilters();
+
+        // Compare current filters with default filters
+        // Compare current filters with default filters for relevant keys only
+        const areFiltersDefault =
+            filters.likesThreshold.min === defaultFilters.likesThreshold.min &&
+            filters.likesThreshold.max === defaultFilters.likesThreshold.max &&
+            filters.repliesLimit.min === defaultFilters.repliesLimit.min &&
+            filters.repliesLimit.max === defaultFilters.repliesLimit.max &&
+            filters.wordCount.min === defaultFilters.wordCount.min &&
+            filters.wordCount.max === defaultFilters.wordCount.max &&
+            filters.dateTimeRange.start === defaultFilters.dateTimeRange.start &&
+            filters.dateTimeRange.end === defaultFilters.dateTimeRange.end;
+
+        if (areFiltersDefault) {
+            // Skip filtering
+            return comments;
+        }
+
         return comments.filter(comment => {
-            const { likesThreshold, repliesLimit, wordCount, dateTimeRange } = filters;
+            const {likesThreshold, repliesLimit, wordCount, dateTimeRange} = filters;
 
             const meetsLikes = comment.likes >= (likesThreshold.min || 0) &&
                 comment.likes <= (likesThreshold.max || Infinity);
@@ -141,7 +186,7 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
         [dispatch]
     );
 
-    return { sortComments };
+    return {sortComments};
 };
 
 export default useSortedComments;
