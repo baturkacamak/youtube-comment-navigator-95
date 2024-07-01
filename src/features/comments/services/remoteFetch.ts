@@ -75,9 +75,6 @@ export const fetchCommentsFromRemote = async (
             if (signal?.aborted) {
                 return;
             }
-
-            await delay(100);
-
             allComments = [];
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, null);
             allComments.push(rawJsonData);

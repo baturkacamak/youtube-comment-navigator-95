@@ -1,4 +1,4 @@
-import { fetchContinuationData, fetchContinuationTokenFromRemote } from './fetchContinuationData';
+import {fetchContinuationData, fetchContinuationTokenFromRemote} from './fetchContinuationData';
 
 const safelyExecute = (func: Function) => {
     try {
@@ -30,7 +30,7 @@ const getContinuationToken = async (
     return continuation;
 };
 
-export const generateRequestOptions = async ({ continue: continueToken, windowObj }: {
+export const generateRequestOptions = async ({continue: continueToken, windowObj}: {
     continue: string,
     windowObj: any
 }, isFetchingReply: boolean = false) => {
@@ -60,7 +60,7 @@ export const generateRequestOptions = async ({ continue: continueToken, windowOb
             },
             referrerPolicy: "strict-origin-when-cross-origin",
             body: JSON.stringify({
-                context: { client: clientContext },
+                context: {client: clientContext},
                 continuation: continuation
             }),
             method: "POST",
@@ -100,7 +100,7 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
     }
 
     // First request to get initial data
-    const response = await fetch(`https://www.youtube.com/youtubei/v1/next`, {
+    const response = await fetch(`https://www.youtube.com/youtubei/v1/next?replies=${isFetchingReply}`, {
         ...requestOptions,
         signal,
         cache: "no-store"
@@ -113,35 +113,6 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
     const initialData = await response.json();
 
     // Extract the new continuation token from the initial response
-    const newContinuationToken = initialData.onResponseReceivedEndpoints?.[0]?.reloadContinuationItemsCommand?.continuationItems?.[0]?.commentsHeaderRenderer?.sortMenu?.sortFilterSubMenuRenderer?.subMenuItems?.[1]?.serviceEndpoint?.continuationCommand?.token;
 
-    if (!newContinuationToken) {
-        console.error("Failed to extract new continuation token from the initial response.");
-        return initialData;
-    }
-
-    // Second request with the new continuation token
-    const newRequestOptions = await generateRequestOptions({
-        continue: newContinuationToken,
-        windowObj,
-    }, isFetchingReply);
-
-    if (!newRequestOptions) {
-        console.error("Failed to generate request options for the second request.");
-        return initialData;
-    }
-
-    const newResponse = await fetch(`https://www.youtube.com/youtubei/v1/next`, {
-        ...newRequestOptions,
-        signal,
-        cache: "no-store"
-    });
-
-    if (!newResponse.ok) {
-        throw new Error("Network response was not ok for the second request");
-    }
-
-    const newData = await newResponse.json();
-
-    return newData;
+    return initialData;
 };

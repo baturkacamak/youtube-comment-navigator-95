@@ -44,7 +44,7 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
 
         const videoId = extractYouTubeVideoIdFromUrl();
         const referrer = document.referrer;
-        const response = await fetch("https://www.youtube.com/youtubei/v1/next", {
+        const response = await fetch("https://www.youtube.com/youtubei/v1/next?fetchContinuationTokenFromRemote", {
             headers: {
                 accept: "*/*",
                 "accept-language": feedbackData?.accept_language || "en-US,en;q=0.9",
