@@ -10,28 +10,11 @@ import {ArrowsUpDownIcon, ChevronDownIcon, FunnelIcon} from "@heroicons/react/24
 
 const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
     const {t} = useTranslation();
-    const [showAdvanced, setShowAdvanced] = useState(true);
+    const [showAdvanced, setShowAdvanced] = useState(false);
     const [maxHeight, setMaxHeight] = useState('0px');
     const containerRef = useRef<HTMLDivElement>(null);
 
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
-
-    useEffect(() => {
-        if (!filters.initialized) {
-            setFilters({
-                ...filters,
-                sortBy: '',
-                sortOrder: 'desc',
-                minLikes: '',
-                startDate: '',
-                endDate: '',
-                user: '',
-                minLength: '',
-                maxLength: '',
-                initialized: true,
-            });
-        }
-    }, [filters, setFilters]);
 
     useEffect(() => {
         if (containerRef.current) {
