@@ -1,4 +1,4 @@
-import {fetchContinuationData, fetchContinuationTokenFromRemote} from './fetchContinuationData';
+import {getContinuationTokenFromData, fetchContinuationTokenFromRemote} from './fetchContinuationTokenFromRemote';
 
 const safelyExecute = (func: Function) => {
     try {
@@ -16,11 +16,11 @@ const getContinuationToken = async (
 ): Promise<string> => {
     // If continueToken is provided and the URL has not changed, use it after cleanup
     if (continueToken) {
-        return continueToken.replace(/(%3D)+$/g, '');
+        return continueToken;
     }
 
     // Try to fetch continuation data from the initial window object
-    let continuation = fetchContinuationData(windowObj.ytInitialData, isFetchingReply);
+    let continuation = getContinuationTokenFromData(windowObj.ytInitialData, isFetchingReply);
 
     // If no continuation data is found or URL has changed, fetch a new continuation token from remote
     if (!continuation) {
