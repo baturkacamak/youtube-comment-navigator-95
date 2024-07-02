@@ -15,6 +15,9 @@ const extractContinuationToken = (continuationItems: any[]) => {
     ).find((token: string | undefined) => token);
 };
 
+
+const pathCache: { [key: string]: string } = {};
+
 const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     const replies: any[] = [];
 
@@ -26,7 +29,12 @@ const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
         replies.push(replyData);
 
         // Check for more tokens within the fetched replyData
-        const moreTokens: string[] = wildCardSearch('**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token', replyData);
+        const moreTokens: string[] = wildCardSearch('**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token', replyData, pathCache['replyTokenPath']);
+
+        // Cache the path for continuation tokens if not already cached
+        if (!pathCache['replyTokenPath'] && moreTokens.length > 0) {
+            pathCache['replyTokenPath'] = '**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token';
+        }
 
         // Recursively fetch more replies if tokens are found
         if (moreTokens && moreTokens.length > 0) {
@@ -35,7 +43,12 @@ const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     };
 
     // Use the wildcard search to find all initial continuation tokens
-    const initialTokens: string[] = wildCardSearch('**.continuationItemRenderer.continuationEndpoint.continuationCommand.token', comment);
+    const initialTokens: string[] = wildCardSearch('**.continuationItemRenderer.continuationEndpoint.continuationCommand.token', comment, pathCache['initialTokenPath']);
+
+    // Cache the path for initial continuation tokens if not already cached
+    if (!pathCache['initialTokenPath'] && initialTokens.length > 0) {
+        pathCache['initialTokenPath'] = '**.continuationItemRenderer.continuationEndpoint.continuationCommand.token';
+    }
 
     if (initialTokens && initialTokens.length > 0) {
         // Fetch all initial replies and then recursively fetch more if needed
@@ -44,6 +57,7 @@ const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
 
     return replies;
 };
+
 
 export const fetchCommentsFromRemote = async (
     onCommentsFetched: (comments: any[]) => void,
@@ -92,8 +106,6 @@ export const fetchCommentsFromRemote = async (
             const uniqueTempComments = removeDuplicateComments(totalComments);
             onCommentsFetched(uniqueTempComments);
             // Update temporary cache and continuation token
-            await storeDataInDB(TEMP_CACHE_KEY, uniqueTempComments, true);
-            localStorage.setItem(CONTINUATION_TOKEN_KEY, token || '');
         } while (token);
 
         const uniqueFinalComments = removeDuplicateComments(totalComments);

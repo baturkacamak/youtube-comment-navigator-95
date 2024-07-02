@@ -6,34 +6,29 @@ type WildCardSearchPath = string;
  *
  * @param path - A string representing the path to search for. '**' acts as a wildcard.
  * @param obj - The object or array to search within.
+ * @param cachedPath - Optional cached path to use instead of performing a wildcard search.
  * @returns An array of values found at the specified path.
  */
-export const wildCardSearch = (path: WildCardSearchPath, obj: AnyObject | any[]): any[] => {
-    // Split the path string into an array of path elements
-    const pathArray = path.split('.');
+export const wildCardSearch = (path: WildCardSearchPath, obj: AnyObject | any[], cachedPath?: string): any[] => {
+    const pathArray = cachedPath ? cachedPath.split('.') : path.split('.');
 
     const search = (parsedPath: string[], obj: AnyObject | any[], results: any[]): void => {
         const [first, ...rest] = parsedPath;
 
-        // Base case: If no path elements are left, add the current object to results
         if (!first) {
             results.push(obj);
             return;
         }
 
-        // If the current path element is '**', perform a deep search
         if (first === '**') {
-            // Perform a deep search in both arrays and objects
             if (Array.isArray(obj)) {
                 for (const item of obj) {
-                    // Search with the same path and the remaining path
                     search(parsedPath, item, results);
                     search(rest, item, results);
                 }
             } else if (typeof obj === 'object' && obj !== null) {
                 for (const key in obj) {
                     if (obj.hasOwnProperty(key)) {
-                        // Search with the same path and the remaining path
                         search(parsedPath, (obj as AnyObject)[key], results);
                         search(rest, (obj as AnyObject)[key], results);
                     }
@@ -42,7 +37,6 @@ export const wildCardSearch = (path: WildCardSearchPath, obj: AnyObject | any[])
             return;
         }
 
-        // If the current object is an array, search each item for the next path element
         if (Array.isArray(obj)) {
             for (const item of obj) {
                 search(rest, item, results);
@@ -50,7 +44,6 @@ export const wildCardSearch = (path: WildCardSearchPath, obj: AnyObject | any[])
             return;
         }
 
-        // If the current object is an object, continue searching for the next path element
         if (typeof obj === 'object' && obj !== null) {
             if (first in obj) {
                 search(rest, (obj as AnyObject)[first], results);
