@@ -1,6 +1,6 @@
 import {useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {fetchContinuationTokenFromRemote} from '../../comments/services/fetchContinuationData';
+import {fetchContinuationTokenFromRemote} from '../../comments/services/fetchContinuationTokenFromRemote';
 import {fetchCommentsFromRemote} from '../../comments/services/remoteFetch';
 import useUrlChange from './useUrlChange';
 import {retrieveDataFromDB} from "../utils/cacheUtils";

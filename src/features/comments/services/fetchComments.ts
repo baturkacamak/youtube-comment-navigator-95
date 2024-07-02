@@ -3,7 +3,7 @@ import { fetchCommentsFromLocal } from './localFetch';
 import { fetchCommentsFromRemote } from './remoteFetch';
 
 import {isLocalEnvironment} from "../../shared/utils/environmentVariables";
-import {fetchContinuationTokenFromRemote} from "./fetchContinuationData";
+import {fetchContinuationTokenFromRemote} from "./fetchContinuationTokenFromRemote";
 
 export const fetchComments = async (
     onCommentsFetched: (comments: any[]) => void,

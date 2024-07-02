@@ -6,7 +6,7 @@ import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVid
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
 import {fetchCommentsIncrementally} from "../services/commentsService";
-import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationData";
+import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationTokenFromRemote";
 
 
 const useCommentsIncrementalLoader = () => {
