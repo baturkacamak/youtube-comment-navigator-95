@@ -20,20 +20,22 @@ const pathCache: { [key: string]: string } = {};
 
 const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     const replies: any[] = [];
+    const pathCache: { [key: string]: string } = {};
 
     const fetchRepliesRecursively = async (token: string) => {
         let cleanToken = token.replace(/(%3D%3D)+$/g, '');
-        let replyData: CommentData = await fetchCommentJsonDataFromRemote(cleanToken, windowObj, null, true);
+        let replyData: any = await fetchCommentJsonDataFromRemote(cleanToken, windowObj, null, true);
 
         // Add the fetched replyData to replies
         replies.push(replyData);
 
         // Check for more tokens within the fetched replyData
-        const moreTokens: string[] = wildCardSearch('**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token', replyData, pathCache['replyTokenPath']);
+        const result = wildCardSearch('**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token', replyData, pathCache['replyTokenPath']);
+        const moreTokens = result.values;
 
         // Cache the path for continuation tokens if not already cached
         if (!pathCache['replyTokenPath'] && moreTokens.length > 0) {
-            pathCache['replyTokenPath'] = '**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token';
+            pathCache['replyTokenPath'] = result.paths[0]; // Use the first discovered path
         }
 
         // Recursively fetch more replies if tokens are found
@@ -43,11 +45,12 @@ const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
     };
 
     // Use the wildcard search to find all initial continuation tokens
-    const initialTokens: string[] = wildCardSearch('**.continuationItemRenderer.continuationEndpoint.continuationCommand.token', comment, pathCache['initialTokenPath']);
+    const initialResult = wildCardSearch('**.continuationItemRenderer.continuationEndpoint.continuationCommand.token', comment, pathCache['initialTokenPath']);
+    const initialTokens = initialResult.values;
 
     // Cache the path for initial continuation tokens if not already cached
     if (!pathCache['initialTokenPath'] && initialTokens.length > 0) {
-        pathCache['initialTokenPath'] = '**.continuationItemRenderer.continuationEndpoint.continuationCommand.token';
+        pathCache['initialTokenPath'] = initialResult.paths[0]; // Use the first discovered path
     }
 
     if (initialTokens && initialTokens.length > 0) {
@@ -57,6 +60,7 @@ const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
 
     return replies;
 };
+
 
 
 export const fetchCommentsFromRemote = async (
