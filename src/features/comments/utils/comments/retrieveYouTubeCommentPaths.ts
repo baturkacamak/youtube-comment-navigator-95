@@ -64,11 +64,8 @@ export const processRawJsonCommentsData = (data: any[]) => {
         .filter((comment: any) => comment.payload?.commentEntityPayload)
         .map(transformCommentsData);
 
-    // Combine transformedComments with their corresponding commentViewModels
-    const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
-
     // Add donation and heart information to comments
-    const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
+    const commentsWithAdditionalInfo = addAdditionalInfoToComments(transformedComments, allComments);
 
     return {items: commentsWithAdditionalInfo};
 };
