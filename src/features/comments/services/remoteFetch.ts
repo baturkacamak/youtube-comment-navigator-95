@@ -3,64 +3,57 @@ import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVid
 import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../shared/utils/cacheUtils";
 
 import {CommentData} from "../../../types/commentTypes";
-import {wildCardSearch} from "../../shared/utils/wildCardSearch";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
-import {delay} from "../../shared/utils/delay";
-import {removeDuplicateComments} from "../utils/comments/removeDuplicateComments";
 import {processRawJsonCommentsData} from "../utils/comments/retrieveYouTubeCommentPaths";
 
-const extractContinuationToken = (continuationItems: any[]) => {
-    return continuationItems.map((continuationItem: any) =>
-        continuationItem.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token
-    ).find((token: string | undefined) => token);
+const extractContinuationToken = (continuationItems: any[]): string | null => {
+    if (!continuationItems || continuationItems.length === 0) {
+        return null;
+    }
+
+    // Get the token from the last item in the continuationItems array
+    const lastItem = continuationItems[continuationItems.length - 1];
+    return lastItem?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token || null;
+};
+
+const extractReplyContinuationTokens = (continuationItems: any[]): string[] | null => {
+    if (!continuationItems || continuationItems.length === 0) {
+        return null;
+    }
+
+    // Collect all valid tokens in an array when extracting replies
+    const tokens = continuationItems.map((continuationItem: any) =>
+        continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token
+    ).filter((token: string | undefined) => token !== undefined) as string[];
+
+    return tokens.length > 0 ? tokens : null;
 };
 
 
-const pathCache: { [key: string]: string } = {};
-
-const fetchReplies = async (comment: any, windowObj: any): Promise<any[]> => {
+const fetchReplies = async (rawJsonData: any, windowObj: any) => {
     const replies: any[] = [];
-    const pathCache: { [key: string]: string } = {};
 
     const fetchRepliesRecursively = async (token: string) => {
-        let cleanToken = token.replace(/(%3D%3D)+$/g, '');
-        let replyData: any = await fetchCommentJsonDataFromRemote(cleanToken, windowObj, null, true);
-
-        // Add the fetched replyData to replies
+        // Fetch data using the token and process it.
+        const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, null);
         replies.push(replyData);
 
-        // Check for more tokens within the fetched replyData
-        const result = wildCardSearch('**.continuationItemRenderer.button.buttonRenderer.command.continuationCommand.token', replyData, pathCache['replyTokenPath']);
-        const moreTokens = result.values;
-
-        // Cache the path for continuation tokens if not already cached
-        if (!pathCache['replyTokenPath'] && moreTokens.length > 0) {
-            pathCache['replyTokenPath'] = result.paths[0]; // Use the first discovered path
-        }
-
-        // Recursively fetch more replies if tokens are found
-        if (moreTokens && moreTokens.length > 0) {
-            await Promise.all(moreTokens.map(fetchRepliesRecursively));
-        }
+        // Extract new continuation items and tokens
+        const continuationItems = replyData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
+            || replyData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
+        const newToken = extractContinuationToken(continuationItems);
     };
 
-    // Use the wildcard search to find all initial continuation tokens
-    const initialResult = wildCardSearch('**.continuationItemRenderer.continuationEndpoint.continuationCommand.token', comment, pathCache['initialTokenPath']);
-    const initialTokens = initialResult.values;
+    const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
+        || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
+    const tokens = extractReplyContinuationTokens(continuationItems);
 
-    // Cache the path for initial continuation tokens if not already cached
-    if (!pathCache['initialTokenPath'] && initialTokens.length > 0) {
-        pathCache['initialTokenPath'] = initialResult.paths[0]; // Use the first discovered path
-    }
-
-    if (initialTokens && initialTokens.length > 0) {
-        // Fetch all initial replies and then recursively fetch more if needed
-        await Promise.all(initialTokens.map(fetchRepliesRecursively));
+    if (Array.isArray(tokens) && tokens.length > 0) {
+        await Promise.all(tokens.map(token => fetchRepliesRecursively(token)));
     }
 
     return replies;
 };
-
 
 
 export const fetchCommentsFromRemote = async (
@@ -86,36 +79,38 @@ export const fetchCommentsFromRemote = async (
         }
 
         let allComments: CommentData[] = [];
+        let processedData: { items: any[] } = {items: []};
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
         let totalComments: CommentData[] = [];
+
         do {
             if (signal?.aborted) {
                 return;
             }
+
+            // Reset allComments and processedData at the start of each iteration
             allComments = [];
+            processedData = {items: []};
+
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, null);
             allComments.push(rawJsonData);
-
-            const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
-                || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
-            token = extractContinuationToken(continuationItems);
 
             // Fetch replies for each comment
             const replies = await fetchReplies(rawJsonData, windowObj);
             allComments.push(...replies);
 
-            const processedData = processRawJsonCommentsData(allComments);
+            processedData = processRawJsonCommentsData(allComments);
+            onCommentsFetched(processedData.items);
             totalComments.push(...processedData.items);
-            const uniqueTempComments = removeDuplicateComments(totalComments);
-            onCommentsFetched(uniqueTempComments);
-            // Update temporary cache and continuation token
+
+            const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
+                || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
+            token = extractContinuationToken(continuationItems);
+
         } while (token);
 
-        const uniqueFinalComments = removeDuplicateComments(totalComments);
-        if (uniqueFinalComments.length > 0) {
-            await storeDataInDB(LOCAL_STORAGE_KEY, uniqueFinalComments, true);
-        }
+        await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
 
         // Clear temporary cache and continuation token
         await removeDataFromDB(TEMP_CACHE_KEY);
