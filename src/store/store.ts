@@ -77,7 +77,7 @@ const commentsSlice = createSlice({
         },
         updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
             const {comments, isLoading} = action.payload;
-            state.comments = comments;
+            state.comments.push(...comments);
             state.isLoading = isLoading;
         },
         // Bookmark actions
