@@ -150,12 +150,18 @@ class DOMHelper {
 class URLChangeHandler {
     constructor(pubSub) {
         this.pubSub = pubSub;
-        this.currentUrl = window.location.href;
+        this.currentUrl = this.getBaseUrl(window.location.href);
         this.monitorUrlChange();
     }
+
+    getBaseUrl(url) {
+        const urlObj = new URL(url);
+        return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+    };
+
     async monitorUrlChange() {
         const handler = async () => {
-            const newUrl = window.location.href;
+            const newUrl = this.getBaseUrl(window.location.href);
             if (this.currentUrl !== newUrl) {
                 this.currentUrl = newUrl;
                 this.pubSub.publish('urlchange', newUrl);
