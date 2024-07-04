@@ -79,6 +79,7 @@ export const fetchCommentsFromRemote = async (
 
         do {
             if (signal?.aborted) {
+                console.log(`Fetch aborted`);
                 return;
             }
 
