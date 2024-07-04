@@ -150,18 +150,23 @@ class DOMHelper {
 class URLChangeHandler {
     constructor(pubSub) {
         this.pubSub = pubSub;
-        this.currentUrl = this.getBaseUrl(window.location.href);
+        this.currentUrl = this.getRelevantUrl(window.location.href);
         this.monitorUrlChange();
     }
 
-    getBaseUrl(url) {
+    getRelevantUrl(url) {
         const urlObj = new URL(url);
-        return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
-    };
+        let baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
+        const videoId = urlObj.searchParams.get('v');
+        if (videoId) {
+            baseUrl += `?v=${videoId}`;
+        }
+        return baseUrl;
+    }
 
     async monitorUrlChange() {
         const handler = async () => {
-            const newUrl = this.getBaseUrl(window.location.href);
+            const newUrl = this.getRelevantUrl(window.location.href);
             if (this.currentUrl !== newUrl) {
                 this.currentUrl = newUrl;
                 this.pubSub.publish('urlchange', newUrl);
