@@ -22,9 +22,12 @@ const extractReplyContinuationTokens = (continuationItems: any[]): string[] | nu
     }
 
     // Collect all valid tokens in an array when extracting replies
-    const tokens = continuationItems.map((continuationItem: any) =>
-        continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token
+    const tokens = continuationItems.map((continuationItem: any) => {
+          return  continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token ||
+              continuationItem?.continuationItemRenderer?.button?.buttonRenderer?.command?.continuationCommand?.token;
+        }
     ).filter((token: string | undefined) => token !== undefined) as string[];
+
 
     return tokens.length > 0 ? tokens : null;
 };
@@ -41,7 +44,11 @@ const fetchReplies = async (rawJsonData: any, windowObj: any) => {
         // Extract new continuation items and tokens
         const continuationItems = replyData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
             || replyData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
-        const newToken = extractContinuationToken(continuationItems);
+        const newTokens = extractReplyContinuationTokens(continuationItems);
+
+        if (Array.isArray(newTokens) && newTokens.length > 0) {
+            await Promise.all(newTokens.map(token => fetchRepliesRecursively(token)));
+        }
     };
 
     const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
