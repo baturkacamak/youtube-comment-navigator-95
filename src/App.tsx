@@ -6,7 +6,7 @@ import CommentList from './features/comments/components/CommentList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
 import Transcript from './features/transcripts/components/Transcript'; // Import the Transcript component and word count function
 import useAppState from './features/shared/hooks/useAppState';
-import useHandleUrlChange from "./features/shared/hooks/useHandleUrlChange";
+import useFetchDataOnUrlChange from "./features/shared/hooks/urlChange/useFetchDataOnUrlChange";
 import './styles/App.scss';
 import NavigationHeader from "./features/navigation-header/components/NavigationHeader";
 import Box from "./features/shared/components/Box";
@@ -36,7 +36,7 @@ const App: React.FC = () => {
         transcriptWordCount, // Destructure transcriptWordCount
     } = useAppState();
 
-    useHandleUrlChange();
+    useFetchDataOnUrlChange();
 
     const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
