@@ -75,11 +75,6 @@ const commentsSlice = createSlice({
         setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
             state.filteredTranscripts = action.payload;
         },
-        updateCommentsData: (state, action: PayloadAction<{ comments: Comment[]; isLoading: boolean }>) => {
-            const {comments, isLoading} = action.payload;
-            state.comments.push(...comments);
-            state.isLoading = isLoading;
-        },
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
             state.bookmarkedComments = action.payload;
@@ -88,7 +83,6 @@ const commentsSlice = createSlice({
             state.bookmarkedLines = action.payload;
             storeDataInDB('bookmarkedLines', action.payload); // Save to DB whenever state changes
         },
-
         // Loading state action
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
@@ -133,7 +127,6 @@ export const {
     setReplies,
     setTranscripts,
     setFilteredTranscripts,
-    updateCommentsData,
 
     // Bookmark actions
     setBookmarkedComments,

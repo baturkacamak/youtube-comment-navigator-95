@@ -4,10 +4,9 @@ import {Comment} from '../../../types/commentTypes'; // Import the Comment type
 import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
-import {setComments, setOriginalComments, updateCommentsData} from "../../../store/store";
+import {setComments, setOriginalComments} from "../../../store/store";
 import {fetchCommentsIncrementally} from "../services/commentsService";
 import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationTokenFromRemote";
-
 
 const useCommentsIncrementalLoader = () => {
     const dispatch = useDispatch();
@@ -28,7 +27,7 @@ const useCommentsIncrementalLoader = () => {
 
                 if (finalCachedData) {
                     dispatch(setOriginalComments(finalCachedData));
-                    dispatch(updateCommentsData({comments: finalCachedData, isLoading: false}));
+                    dispatch(setComments(finalCachedData));
                     initialLoadCompleted.current = true;
                     return;
                 }
@@ -46,12 +45,9 @@ const useCommentsIncrementalLoader = () => {
                 let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
 
                 await fetchCommentsIncrementally((comments) => {
-                    if (signal.aborted) return;
-
-                    dispatch(updateCommentsData({ comments: comments, isLoading: false }));
-
+                    dispatch(setComments(comments));
                     initialComments = comments;
-                }, signal, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
+                }, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
 
                 dispatch(setOriginalComments(initialComments)); // Pass the array directly
                 initialLoadCompleted.current = true;

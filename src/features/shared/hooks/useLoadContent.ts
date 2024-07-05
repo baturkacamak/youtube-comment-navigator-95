@@ -7,7 +7,6 @@ import {
     setLoading,
     setReplies,
     setTranscripts,
-    updateCommentsData
 } from "../../../store/store";
 import {fetchTranscript} from "../../transcripts/services/fetchTranscript";
 
@@ -17,7 +16,7 @@ const useLoadContent = (bypassCache = false) => {
     const loadComments = async (bypassCache = false) => {
         dispatch(setLoading(true));
         const handleFetchedComments = (comments: any[]) => {
-            dispatch(updateCommentsData({ comments, isLoading: false }));
+            dispatch(setComments(comments));
             dispatch(setOriginalComments(comments));
         };
         await fetchComments(handleFetchedComments, bypassCache);
@@ -58,7 +57,7 @@ const useLoadContent = (bypassCache = false) => {
             dispatch(setLoading(false));
         };
 
-        const commentsData = await fetchComments(handleFetchedComments, bypassCache, undefined);
+        const commentsData = await fetchComments(handleFetchedComments, bypassCache);
         const chatRepliesData = await fetchChatReplies();
         const transcriptsData = await fetchTranscript();
     };
