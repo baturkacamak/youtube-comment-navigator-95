@@ -3,10 +3,11 @@ import {useDispatch} from 'react-redux';
 import {Comment} from '../../../types/commentTypes'; // Import the Comment type
 import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
+import {CACHE_KEYS, isLocalEnvironment} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments} from "../../../store/store";
-import {fetchCommentsIncrementally} from "../services/commentsService";
+import {fetchCommentsFromRemote} from "../services/remoteFetch"; // Import fetchCommentsFromRemote
 import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationTokenFromRemote";
+import {fetchCommentsFromLocalIncrementally} from "../services/localFetch";
 
 const useCommentsIncrementalLoader = () => {
     const dispatch = useDispatch();
@@ -18,7 +19,6 @@ const useCommentsIncrementalLoader = () => {
         const loadComments = async () => {
             try {
                 dispatch(setComments([]));
-                const signal = abortController.current.signal;
 
                 // Check for final cache
                 const videoId = extractYouTubeVideoIdFromUrl();
@@ -44,10 +44,22 @@ const useCommentsIncrementalLoader = () => {
 
                 let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
 
+                const fetchCommentsIncrementally = async (
+                    onCommentFetched: (comment: any[]) => void,
+                    byPassCache: boolean = false,
+                    continuationToken?: string
+                ) => {
+                    if (isLocalEnvironment()) {
+                        await fetchCommentsFromLocalIncrementally(onCommentFetched);
+                    } else {
+                        await fetchCommentsFromRemote(onCommentFetched, byPassCache, continuationToken);
+                    }
+                };
+
                 await fetchCommentsIncrementally((comments) => {
                     dispatch(setComments(comments));
                     initialComments = comments;
-                }, byPassCache, continuationToken); // Pass the signal and continuation token to the fetch function
+                }, byPassCache, continuationToken);
 
                 dispatch(setOriginalComments(initialComments)); // Pass the array directly
                 initialLoadCompleted.current = true;
