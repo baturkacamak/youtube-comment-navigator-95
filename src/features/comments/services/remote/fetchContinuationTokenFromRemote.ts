@@ -1,5 +1,5 @@
-import {ContentItem} from "../../../types/commentTypes";
-import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import {ContentItem} from "../../../../types/commentTypes";
+import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
 
 export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean = false) => {
     try {

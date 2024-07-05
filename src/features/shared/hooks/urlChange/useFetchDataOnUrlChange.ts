@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {fetchContinuationTokenFromRemote} from '../../../comments/services/fetchContinuationTokenFromRemote';
-import {fetchCommentsFromRemote} from '../../../comments/services/remoteFetch';
+import {fetchContinuationTokenFromRemote} from '../../../comments/services/remote/fetchContinuationTokenFromRemote';
+import {fetchCommentsFromRemote} from '../../../comments/services/remote/remoteFetch';
 import useDetectUrlChange from './useDetectUrlChange';
 import {retrieveDataFromDB} from "../../utils/cacheUtils";
 import {

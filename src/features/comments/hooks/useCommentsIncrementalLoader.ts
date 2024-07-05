@@ -5,9 +5,9 @@ import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import {CACHE_KEYS, isLocalEnvironment} from "../../shared/utils/environmentVariables";
 import {setComments, setOriginalComments} from "../../../store/store";
-import {fetchCommentsFromRemote} from "../services/remoteFetch"; // Import fetchCommentsFromRemote
-import {fetchContinuationTokenFromRemote} from "../services/fetchContinuationTokenFromRemote";
-import {fetchCommentsFromLocalIncrementally} from "../services/localFetch";
+import {fetchCommentsFromRemote} from "../services/remote/remoteFetch"; // Import fetchCommentsFromRemote
+import {fetchContinuationTokenFromRemote} from "../services/remote/fetchContinuationTokenFromRemote";
+import {fetchCommentsFromLocalIncrementally} from "../services/local/localFetch";
 
 const useCommentsIncrementalLoader = () => {
     const dispatch = useDispatch();

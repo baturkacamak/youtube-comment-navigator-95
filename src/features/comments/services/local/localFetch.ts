@@ -1,8 +1,8 @@
-import { delay } from "../../shared/utils/delay";
-import { CommentData } from "../../../types/commentTypes";
-import {handleFetchedComments} from "../utils/comments/handleFetchedComments";
-import {processRawJsonCommentsData} from "../utils/comments/retrieveYouTubeCommentPaths";
-import {fetchCommentFiles} from "../utils/comments/fetchCommentJsonFiles";
+import { delay } from "../../../shared/utils/delay";
+import { CommentData } from "../../../../types/commentTypes";
+import {handleFetchedComments} from "../../utils/comments/handleFetchedComments";
+import {processRawJsonCommentsData} from "../../utils/comments/retrieveYouTubeCommentPaths";
+import {fetchCommentFiles} from "../../utils/comments/fetchCommentJsonFiles";
 const commentFiles: string[] = Array.from({ length: 2 }, (_, i) => `/example-comments/example-replies/scratch_${i + 1}.json`);
 
 export const fetchCommentsFromLocalIncrementally = async (
