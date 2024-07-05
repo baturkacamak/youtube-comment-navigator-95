@@ -1,19 +1,16 @@
-import {fetchContinuationTokenFromRemote, getContinuationTokenFromData} from './fetchContinuationTokenFromRemote';
+import { fetchContinuationTokenFromRemote, getContinuationTokenFromData } from './fetchContinuationTokenFromRemote';
 
 const getContinuationToken = async (
     continueToken: string | null,
     windowObj: any,
     isFetchingReply: boolean,
 ): Promise<string> => {
-    // If continueToken is provided and the URL has not changed, use it after cleanup
     if (continueToken) {
         return continueToken;
     }
 
-    // Try to fetch continuation data from the initial window object
     let continuation = getContinuationTokenFromData(windowObj.ytInitialData, isFetchingReply);
 
-    // If no continuation data is found or URL has changed, fetch a new continuation token from remote
     if (!continuation) {
         continuation = await fetchContinuationTokenFromRemote();
     }
@@ -21,7 +18,7 @@ const getContinuationToken = async (
     return continuation;
 };
 
-export const generateRequestOptions = async ({continue: continueToken, windowObj}: {
+export const generateRequestOptions = async ({ continue: continueToken, windowObj }: {
     continue: string,
     windowObj: any
 }, isFetchingReply: boolean = false) => {
@@ -51,7 +48,7 @@ export const generateRequestOptions = async ({continue: continueToken, windowObj
             },
             referrerPolicy: "strict-origin-when-cross-origin",
             body: JSON.stringify({
-                context: {client: clientContext},
+                context: { client: clientContext },
                 continuation: continuation
             }),
             method: "POST",
@@ -79,21 +76,25 @@ export const generateRequestOptions = async ({continue: continueToken, windowObj
     }
 };
 
-export const fetchCommentJsonDataFromRemote = async (continueToken: string | null, windowObj: any, isFetchingReply: boolean = false) => {
+export const fetchCommentJsonDataFromRemote = async (
+    continueToken: string | null,
+    windowObj: any,
+    signal?: AbortSignal
+) => {
     const requestOptions = await generateRequestOptions({
         continue: continueToken || '', // Use empty string if continueToken is null
         windowObj,
-    }, isFetchingReply);
+    });
 
     if (!requestOptions) {
         console.error("Failed to generate request options.");
         return [];
     }
 
-    // First request to get initial data
-    const response = await fetch(`https://www.youtube.com/youtubei/v1/next?replies=${isFetchingReply}`, {
+    const response = await fetch(`https://www.youtube.com/youtubei/v1/next?replies=${signal !== undefined}`, {
         ...requestOptions,
-        cache: "no-store"
+        cache: "no-store",
+        signal, // Pass the signal here
     });
 
     if (!response.ok) {
@@ -101,8 +102,5 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
     }
 
     const initialData = await response.json();
-
-    // Extract the new continuation token from the initial response
-
     return initialData;
 };

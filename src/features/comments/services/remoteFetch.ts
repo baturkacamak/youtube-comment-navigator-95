@@ -1,10 +1,10 @@
-import {fetchCommentJsonDataFromRemote} from "./fetchCommentJsonDataFromRemote";
-import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {getCachedDataIfValid, removeDataFromDB} from "../../shared/utils/cacheUtils";
-import {CommentData} from "../../../types/commentTypes";
-import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
-import {processRawJsonCommentsData} from "../utils/comments/retrieveYouTubeCommentPaths";
-import {setIsLoading} from "../../../store/store";
+import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
+import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import { getCachedDataIfValid, removeDataFromDB } from "../../shared/utils/cacheUtils";
+import { CommentData } from "../../../types/commentTypes";
+import { CACHE_KEYS } from "../../shared/utils/environmentVariables";
+import { processRawJsonCommentsData } from "../utils/comments/retrieveYouTubeCommentPaths";
+import { setIsLoading } from "../../../store/store";
 
 const extractContinuationToken = (continuationItems: any[]): string | null => {
     if (!continuationItems || continuationItems.length === 0) {
@@ -58,12 +58,12 @@ const extractReplyContinuationTokens = (continuationItems: ContinuationItem[]): 
 };
 
 // Updated fetchRepliesJsonDataFromRemote function
-const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any): Promise<any[]> => {
+const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any, signal: AbortSignal): Promise<any[]> => {
     let replies: any[] = [];
 
     const fetchRepliesRecursively = async (tokens: string[]) => {
         for (const token of tokens) {
-            const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, true);
+            const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
 
             if (Array.isArray(replyData)) {
                 replies = [...replies, ...replyData];
@@ -92,12 +92,20 @@ const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any):
     return replies;
 };
 
+let currentAbortController = new AbortController();
+
 export const fetchCommentsFromRemote = async (
     onCommentsFetched: (comments: any[]) => void,
     bypassCache: boolean = false,
     continuationToken?: string
 ) => {
     try {
+        // Abort previous requests
+        currentAbortController.abort();
+        // Create a new AbortController for the new video
+        currentAbortController = new AbortController();
+        const signal = currentAbortController.signal;
+
         const videoId = extractYouTubeVideoIdFromUrl();
         if (!videoId) {
             throw new Error('Video ID not found');
@@ -114,7 +122,7 @@ export const fetchCommentsFromRemote = async (
         }
 
         let allComments: CommentData[] = [];
-        let processedData: { items: any[] } = {items: []};
+        let processedData: { items: any[] } = { items: [] };
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
         let totalComments: CommentData[] = [];
@@ -125,12 +133,12 @@ export const fetchCommentsFromRemote = async (
 
         do {
             allComments = [];
-            processedData = {items: []};
+            processedData = { items: [] };
 
-            const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj);
+            const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
             allComments.push(rawJsonData);
 
-            const replyRawJsonData = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj);
+            const replyRawJsonData = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
             allComments.push(...replyRawJsonData);
 
             processedData = processRawJsonCommentsData(allComments);
@@ -156,8 +164,6 @@ export const fetchCommentsFromRemote = async (
             await removeDataFromDB(TEMP_CACHE_KEY);
             localStorage.removeItem(CONTINUATION_TOKEN_KEY);
         }
-
-
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
             console.log('Fetch operation was aborted.');
