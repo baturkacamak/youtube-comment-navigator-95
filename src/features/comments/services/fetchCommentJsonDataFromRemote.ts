@@ -1,13 +1,4 @@
-import {getContinuationTokenFromData, fetchContinuationTokenFromRemote} from './fetchContinuationTokenFromRemote';
-
-const safelyExecute = (func: Function) => {
-    try {
-        return func();
-    } catch (error) {
-        console.error('Error executing function:', error);
-        return null;
-    }
-};
+import {fetchContinuationTokenFromRemote, getContinuationTokenFromData} from './fetchContinuationTokenFromRemote';
 
 const getContinuationToken = async (
     continueToken: string | null,
@@ -88,7 +79,7 @@ export const generateRequestOptions = async ({continue: continueToken, windowObj
     }
 };
 
-export const fetchCommentJsonDataFromRemote = async (continueToken: string | null, windowObj: any, signal: AbortSignal | null, isFetchingReply: boolean = false) => {
+export const fetchCommentJsonDataFromRemote = async (continueToken: string | null, windowObj: any, isFetchingReply: boolean = false) => {
     const requestOptions = await generateRequestOptions({
         continue: continueToken || '', // Use empty string if continueToken is null
         windowObj,
@@ -102,7 +93,6 @@ export const fetchCommentJsonDataFromRemote = async (continueToken: string | nul
     // First request to get initial data
     const response = await fetch(`https://www.youtube.com/youtubei/v1/next?replies=${isFetchingReply}`, {
         ...requestOptions,
-        signal,
         cache: "no-store"
     });
 

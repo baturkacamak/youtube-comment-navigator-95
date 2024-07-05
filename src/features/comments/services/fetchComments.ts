@@ -8,13 +8,12 @@ import {fetchContinuationTokenFromRemote} from "./fetchContinuationTokenFromRemo
 export const fetchComments = async (
     onCommentsFetched: (comments: any[]) => void,
     bypassCache = false,
-    signal?: AbortSignal
 ) => {
     if (isLocalEnvironment()) {
         return fetchCommentsFromLocal();
     } else {
         let continuation = await fetchContinuationTokenFromRemote();
-        return fetchCommentsFromRemote(onCommentsFetched, signal, bypassCache, continuation);
+        return fetchCommentsFromRemote(onCommentsFetched, bypassCache, continuation);
     }
 };
 

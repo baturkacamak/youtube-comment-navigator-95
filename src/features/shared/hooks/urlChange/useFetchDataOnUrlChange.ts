@@ -10,18 +10,15 @@ import {
     setFilteredTranscripts,
     setOriginalComments,
     setIsUrlChanged,
-    setTranscripts,
-    updateCommentsData
+    setTranscripts, setComments,
 } from "../../../../store/store";
 import { fetchTranscriptFromRemote, fetchCaptionTrackBaseUrl } from "../../../transcripts/services/remoteFetch";
 
 const useFetchDataOnUrlChange = () => {
     const dispatch = useDispatch();
-    const abortController = useRef<AbortController | null>(null);
 
     useDetectUrlChange(async () => {
         dispatch(setIsUrlChanged(true));
-        handleAbortController(abortController);
 
         dispatch(resetState());
 
@@ -29,14 +26,11 @@ const useFetchDataOnUrlChange = () => {
         await fetchAndSetTranscripts(dispatch);
 
         const continuationToken = await fetchContinuationTokenFromRemote();
-        if (abortController.current) {
             await fetchCommentsFromRemote(
                 (comments) => handleFetchedComments(comments, dispatch),
-                abortController.current.signal,
                 false,
                 continuationToken
             );
-        }
     });
 };
 
@@ -48,7 +42,7 @@ const handleAbortController = (abortControllerRef: React.MutableRefObject<AbortC
 };
 
 const handleFetchedComments = (comments: any[], dispatch: any) => {
-    dispatch(updateCommentsData({ comments, isLoading: false }));
+    dispatch(setComments( comments));
     dispatch(setOriginalComments(comments));
 };
 

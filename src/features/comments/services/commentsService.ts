@@ -4,14 +4,13 @@ import { isLocalEnvironment } from "../../shared/utils/environmentVariables";
 
 export const fetchCommentsIncrementally = async (
     onCommentFetched: (comment: any[]) => void,
-    signal?: AbortSignal,
     byPassCache: boolean = false,
     continuationToken?: string
 ) => {
     if (isLocalEnvironment()) {
-        await fetchCommentsFromLocalIncrementally(onCommentFetched, signal);
+        await fetchCommentsFromLocalIncrementally(onCommentFetched);
     } else {
 
-        await fetchCommentsFromRemote(onCommentFetched, signal, byPassCache, continuationToken);
+        await fetchCommentsFromRemote(onCommentFetched, byPassCache, continuationToken);
     }
 };
