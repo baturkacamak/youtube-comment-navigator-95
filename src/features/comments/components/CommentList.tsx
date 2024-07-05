@@ -6,10 +6,13 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
 import { Comment, CommentListProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
+import {useSelector} from "react-redux";
+import {RootState} from "../../../types/rootState";
 
-const CommentList: React.FC<CommentListProps> = ({ comments, isLoading }) => {
+const CommentList: React.FC<CommentListProps> = ({ comments}) => {
     const { t } = useTranslation();
     const [visibleCount, setVisibleCount] = useState(10);
+    const isLoading = useSelector((state: RootState) => state.isLoading);
 
     const loadMoreComments = () => {
         setVisibleCount(prevCount => prevCount + visibleCount);

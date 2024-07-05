@@ -65,7 +65,6 @@ export interface CommentItemProps {
 
 export interface CommentListProps {
     comments: Comment[];
-    isLoading: boolean;
 }
 
 export interface CommentRepliesProps {

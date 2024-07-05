@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdFromUrl';
-import { resetState } from "../../../../store/store";
+import {resetState, setIsLoading} from "../../../../store/store";
 import { useDispatch } from "react-redux";
 
 const useDetectUrlChange = (callback: () => Promise<void>) => {
@@ -23,6 +23,7 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
                     previousVideoId = currentVideoId;
                     await waitForVideoElement(currentVideoId);
                     console.log('URL changed, executing callback...');
+                    dispatch(setIsLoading(true));
                     await callback();
                 }
             } catch (error) {

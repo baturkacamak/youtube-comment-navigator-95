@@ -30,7 +30,6 @@ const App: React.FC = () => {
         filters,
         handleSearch,
         filteredAndSortedComments,
-        isLoading,
         setFiltersCallback,
         setActiveTab,
         transcriptWordCount, // Destructure transcriptWordCount
@@ -58,7 +57,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     )}
-                    <CommentList comments={filteredAndSortedComments} isLoading={isLoading} />
+                    <CommentList comments={filteredAndSortedComments}/>
                 </>
             ),
         },

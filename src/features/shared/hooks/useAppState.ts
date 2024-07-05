@@ -17,7 +17,6 @@ const useAppState = () => {
 
     const comments = useSelector((state: RootState) => state.comments);
     const filters = useSelector((state: RootState) => state.filters);
-    const isLoading = useSelector((state: RootState) => state.isLoading);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const transcripts = useSelector((state: RootState) => state.transcripts);
@@ -73,7 +72,6 @@ const useAppState = () => {
     return {
         comments,
         filters,
-        isLoading,
         transcripts,
         initialLoadCompleted,
         handleSearch,

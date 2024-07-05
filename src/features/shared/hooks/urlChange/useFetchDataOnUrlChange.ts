@@ -1,36 +1,35 @@
-import React, { useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { fetchContinuationTokenFromRemote } from '../../../comments/services/fetchContinuationTokenFromRemote';
-import { fetchCommentsFromRemote } from '../../../comments/services/remoteFetch';
+import React from 'react';
+import {useDispatch} from 'react-redux';
+import {fetchContinuationTokenFromRemote} from '../../../comments/services/fetchContinuationTokenFromRemote';
+import {fetchCommentsFromRemote} from '../../../comments/services/remoteFetch';
 import useDetectUrlChange from './useDetectUrlChange';
-import { retrieveDataFromDB } from "../../utils/cacheUtils";
+import {retrieveDataFromDB} from "../../utils/cacheUtils";
 import {
     resetState,
     setBookmarkedComments,
-    setFilteredTranscripts,
+    setComments,
+    setFilteredTranscripts, setIsLoading,
     setOriginalComments,
-    setIsUrlChanged,
-    setTranscripts, setComments,
+    setTranscripts,
 } from "../../../../store/store";
-import { fetchTranscriptFromRemote, fetchCaptionTrackBaseUrl } from "../../../transcripts/services/remoteFetch";
+import {fetchCaptionTrackBaseUrl, fetchTranscriptFromRemote} from "../../../transcripts/services/remoteFetch";
 
 const useFetchDataOnUrlChange = () => {
     const dispatch = useDispatch();
 
     useDetectUrlChange(async () => {
-        dispatch(setIsUrlChanged(true));
-
         dispatch(resetState());
 
         await fetchAndSetBookmarks(dispatch);
         await fetchAndSetTranscripts(dispatch);
 
         const continuationToken = await fetchContinuationTokenFromRemote();
-            await fetchCommentsFromRemote(
-                (comments) => handleFetchedComments(comments, dispatch),
-                false,
-                continuationToken
-            );
+        dispatch(setIsLoading(false));
+        await fetchCommentsFromRemote(
+            (comments) => handleFetchedComments(comments, dispatch),
+            false,
+            continuationToken
+        );
     });
 };
 
@@ -42,7 +41,7 @@ const handleAbortController = (abortControllerRef: React.MutableRefObject<AbortC
 };
 
 const handleFetchedComments = (comments: any[], dispatch: any) => {
-    dispatch(setComments( comments));
+    dispatch(setComments(comments));
     dispatch(setOriginalComments(comments));
 };
 

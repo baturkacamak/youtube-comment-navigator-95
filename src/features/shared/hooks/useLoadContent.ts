@@ -4,7 +4,7 @@ import { fetchComments, fetchChatReplies } from '../../comments/services/fetchCo
 import {
     setComments, setFilteredTranscripts,
     setOriginalComments,
-    setLoading,
+    setIsLoading,
     setReplies,
     setTranscripts,
 } from "../../../store/store";
@@ -14,7 +14,7 @@ const useLoadContent = (bypassCache = false) => {
     const dispatch = useDispatch();
 
     const loadComments = async (bypassCache = false) => {
-        dispatch(setLoading(true));
+        dispatch(setIsLoading(true));
         const handleFetchedComments = (comments: any[]) => {
             dispatch(setComments(comments));
             dispatch(setOriginalComments(comments));
@@ -23,18 +23,18 @@ const useLoadContent = (bypassCache = false) => {
     };
 
     const loadChatReplies = async () => {
-        dispatch(setLoading(true));
+        dispatch(setIsLoading(true));
         const data = await fetchChatReplies();
         if (data && data.items) {
             dispatch(setReplies(data.items));
         } else {
             dispatch(setReplies([]));
         }
-        dispatch(setLoading(false));
+        dispatch(setIsLoading(false));
     };
 
     const loadTranscript = async () => {
-        dispatch(setLoading(true));
+        dispatch(setIsLoading(true));
         const data = await fetchTranscript();
         if (data && data.items) {
             dispatch(setTranscripts(data.items));
@@ -42,11 +42,11 @@ const useLoadContent = (bypassCache = false) => {
         } else {
             dispatch(setTranscripts([]));
         }
-        dispatch(setLoading(false));
+        dispatch(setIsLoading(false));
     };
 
     const loadAll = async (bypassCache = false) => {
-        dispatch(setLoading(true));
+        dispatch(setIsLoading(true));
         const handleFetchedComments = (comments: any[]) => {
             const allItems = [
                 ...comments,
@@ -54,7 +54,7 @@ const useLoadContent = (bypassCache = false) => {
                 ...(transcriptsData && transcriptsData.items ? transcriptsData.items : [])
             ];
             dispatch(setComments(allItems));
-            dispatch(setLoading(false));
+            dispatch(setIsLoading(false));
         };
 
         const commentsData = await fetchComments(handleFetchedComments, bypassCache);

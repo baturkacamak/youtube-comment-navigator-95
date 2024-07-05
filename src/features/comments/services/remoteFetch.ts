@@ -1,9 +1,10 @@
 import {fetchCommentJsonDataFromRemote} from "./fetchCommentJsonDataFromRemote";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {getCachedDataIfValid, removeDataFromDB, storeDataInDB} from "../../shared/utils/cacheUtils";
+import {getCachedDataIfValid, removeDataFromDB} from "../../shared/utils/cacheUtils";
 import {CommentData} from "../../../types/commentTypes";
 import {CACHE_KEYS} from "../../shared/utils/environmentVariables";
 import {processRawJsonCommentsData} from "../utils/comments/retrieveYouTubeCommentPaths";
+import {setIsLoading} from "../../../store/store";
 
 const extractContinuationToken = (continuationItems: any[]): string | null => {
     if (!continuationItems || continuationItems.length === 0) {
@@ -63,15 +64,12 @@ const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any):
     const fetchRepliesRecursively = async (tokens: string[]) => {
         for (const token of tokens) {
             const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, true);
-            console.log('Fetched replyData:', replyData); // Debugging line
 
             if (Array.isArray(replyData)) {
                 replies = [...replies, ...replyData];
             } else {
                 replies.push(replyData);
             }
-
-            console.log('Replies after push:', replies); // Debugging line
 
             const continuationItems = replyData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
                 || replyData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
@@ -91,7 +89,6 @@ const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any):
         await fetchRepliesRecursively(initialTokens);
     }
 
-    console.log('Final replies:', replies); // Debugging line
     return replies;
 };
 
@@ -151,16 +148,15 @@ export const fetchCommentsFromRemote = async (
             token = extractContinuationToken(continuationItems);
         } while (token);
 
-        if (accumulatedComments.length > 0) {
-            onCommentsFetched(accumulatedComments);
-            totalComments.push(...accumulatedComments);
+        if (totalComments.length > 0) {
+            onCommentsFetched(totalComments);
+            // await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
+
+            // Clear temporary cache and continuation token
+            await removeDataFromDB(TEMP_CACHE_KEY);
+            localStorage.removeItem(CONTINUATION_TOKEN_KEY);
         }
 
-        // await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
-
-        // Clear temporary cache and continuation token
-        await removeDataFromDB(TEMP_CACHE_KEY);
-        localStorage.removeItem(CONTINUATION_TOKEN_KEY);
 
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {

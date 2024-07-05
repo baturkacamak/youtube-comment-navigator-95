@@ -50,7 +50,6 @@ const initialState: RootState = {
 
     // Other state properties
     showBookmarked: false,
-    isUrlChanged: false,
 
     transcriptSelectedLanguage: {value: '', label: 'Select Language'},
 };
@@ -84,7 +83,7 @@ const commentsSlice = createSlice({
             storeDataInDB('bookmarkedLines', action.payload); // Save to DB whenever state changes
         },
         // Loading state action
-        setLoading: (state, action: PayloadAction<boolean>) => {
+        setIsLoading: (state, action: PayloadAction<boolean>) => {
             state.isLoading = action.payload;
         },
 
@@ -98,9 +97,6 @@ const commentsSlice = createSlice({
         },
         setShowBookmarked: (state, action: PayloadAction<boolean>) => {
             state.showBookmarked = action.payload;
-        },
-        setIsUrlChanged: (state, action: PayloadAction<boolean>) => {
-            state.isUrlChanged = action.payload;
         },
         setShowFiltersSorts: (state, action: PayloadAction<boolean>) => {
             state.settings.showFiltersSorts = action.payload;
@@ -133,13 +129,12 @@ export const {
     setBookmarkedLines,
 
     // Loading state action
-    setLoading,
+    setIsLoading,
 
     // Filter and settings actions
     setFilters,
     setTextSize,
     setShowBookmarked,
-    setIsUrlChanged,
     setShowFiltersSorts,
     setFontFamily,
 
