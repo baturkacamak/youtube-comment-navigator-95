@@ -36,10 +36,12 @@ const useCommentsIncrementalLoader = () => {
                 const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
                 const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
                 const tempCachedData = await getCachedDataIfValid(TEMP_CACHE_KEY);
-                const continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || await fetchContinuationTokenFromRemote();
-
-                if (tempCachedData && continuationToken) {
-                    dispatch(setOriginalComments(tempCachedData.items));
+                let continuationToken = '';
+                if (!isLocalEnvironment()) {
+                    continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || await fetchContinuationTokenFromRemote();
+                    if (tempCachedData && continuationToken) {
+                        dispatch(setOriginalComments(tempCachedData.items));
+                    }
                 }
 
                 let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
