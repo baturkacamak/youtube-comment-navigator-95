@@ -10,10 +10,12 @@ import {
 } from '@heroicons/react/24/outline';
 import {Option} from "../../../types/utilityTypes";
 import {useTranslation} from 'react-i18next';
+import i18n from "i18next";
 
 
 const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) => {
     const {t} = useTranslation();
+    const isRtl = i18n.dir() === 'rtl';
 
     const options: Option[] = [
         {value: 'all', label: t('All'), icon: ClipboardDocumentListIcon},
@@ -85,17 +87,19 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
             <button
                 type="button"
                 onClick={handleClear}
-                className={`absolute right-10 p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out ${
+                className={`absolute p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out
+                 ${isRtl ? ' left-10 ': ' right-10 '}
+                 ${
                     query ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
                 }`}
-                style={{transformOrigin: 'right'}}
+                style={{transformOrigin: isRtl ? 'left' : 'right'}}
                 aria-label={t('Clear search')}
             >
                 <XCircleIcon className="w-5 h-5 text-red-500"/>
             </button>
             <button
                 type="submit"
-                className="p-2 bg-stone-500 dark:bg-gray-800 text-white rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                className={`p-2 bg-stone-500 dark:bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 ${isRtl ? 'rounded-l-lg ' : 'rounded-r-lg'}`}
                 aria-label={t('Submit search')}
             >
                 <MagnifyingGlassIcon className="w-5 h-5"/>

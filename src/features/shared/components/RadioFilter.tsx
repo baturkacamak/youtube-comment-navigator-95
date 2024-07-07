@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { ArrowPathIcon, ArrowUpIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import { RadioFilterProps } from "../../../types/filterTypes";
+import i18n from "i18next";
 
 const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, selectedValue, sortOrder, isRandom, onChange, onToggleSortOrder }) => {
     const [spin, setSpin] = useState(false);
     const { t } = useTranslation();
+    const isRtl = i18n.dir() === 'rtl';
 
     const handleRandomClick = () => {
         if (isRandom) {
@@ -31,13 +33,13 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
                 <div className={`h-5 w-5 border rounded-full border-solid flex items-center justify-center transition-all duration-300 ease-in-out ${selectedValue === value ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-100 scale-110' : 'bg-white dark:bg-white-700 border-gray-500 dark:border-gray-600'}`}>
                 </div>
             </div>
-            <div className="ml-3 flex items-center space-x-2">
+            <div className={`flex items-center space-x-2 ${isRtl ? 'mr-3' : 'ml-3'}`}>
                 {icon}
                 <span className="truncate">{label}</span>
                 {selectedValue === value && (
                     <button
                         onClick={isRandom ? handleRandomClick : onToggleSortOrder}
-                        className="ml-2 transition-transform duration-500 ease-in-out"
+                        className={`transition-transform duration-500 ease-in-out ${isRtl ? 'mr-2' : 'ml-2'}`}
                         aria-label={isRandom ? t('Randomize order') : t('Toggle sort order')}
                         aria-live="polite"
                     >

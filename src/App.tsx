@@ -16,9 +16,12 @@ import Tabs from "./features/shared/components/Tabs";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "./types/rootState";
 import {calculateWordCount} from "./features/shared/utils/calculateWordCount";
+import i18n from "i18next";
 
 const App: React.FC = () => {
     const { t } = useTranslation();
+    const isRtl = i18n.dir() === 'rtl';
+
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
     const dispatch = useDispatch();
@@ -99,8 +102,20 @@ const App: React.FC = () => {
         },
     ];
 
+    let drawerClass = 'ml-0 left-0';
+    if (isSettingsOpen) {
+        drawerClass = 'blur-sm -ml-80 left-80';
+    }
+
+    if (isRtl) {
+        drawerClass = 'mr-0 right-0';
+        if  (isSettingsOpen) {
+            drawerClass = 'blur-sm -mr-80 right-80';
+        }
+    }
+
     return (
-        <div className="relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar">
+        <div className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}>
             <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
             {isSettingsOpen && (
                 <div
@@ -109,7 +124,7 @@ const App: React.FC = () => {
                 />
             )}
             <div
-                className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${isSettingsOpen ? 'blur-sm -ml-80 left-80' : 'ml-0 left-0'}`}
+                className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${drawerClass}`}
             >
                 <Box className="flex flex-col w-full gap-2" aria-label={t('Control Panel')} borderColor={'border-transparent'}>
                     <NavigationHeader

@@ -6,6 +6,7 @@ import { normalizeString } from '../../utils/normalizeString';
 import SearchInput from './SearchInput';
 import OptionList from './OptionList';
 import { useTranslation } from 'react-i18next';
+import i18n from "i18next";
 
 const SelectBox: React.FC<SelectBoxProps> = ({
                                                  options,
@@ -22,6 +23,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     const [searchTerm, setSearchTerm] = useState('');
     const menuRef = useRef<HTMLDivElement>(null);
     const searchRef = useRef<HTMLInputElement>(null);
+    const isRtl = i18n.dir() === 'rtl';
 
     useEffect(() => {
         // Exclude the placeholder option when the dropdown is open

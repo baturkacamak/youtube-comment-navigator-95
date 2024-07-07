@@ -12,6 +12,7 @@ import ShowFiltersSortsToggle from './ShowFiltersSortsToggle';
 import LoadingSection from "../../loading/components/LoadingSection";
 import {RootState} from '../../../types/rootState';
 import FontSetting from "../FontSetting";
+import i18n from "i18next";
 
 const useGoogleDrive = () => {
     return {
@@ -29,6 +30,19 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
     const [showNotification, setShowNotification] = useState(false);
     const dispatch = useDispatch();
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
+    const isRtl = i18n.dir() === 'rtl';
+
+    let drawerClass = '-ml-80';
+    if (isOpen) {
+        drawerClass = 'ml-0';
+    }
+
+    if (isRtl) {
+        drawerClass = '-mr-80';
+        if (isOpen) {
+            drawerClass = 'mr-0';
+        }
+    }
 
     useEffect(() => {
         if (showNotification) {
@@ -41,7 +55,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
         <>
             <div
                 className={`relative inset-y-0 left-0 z-50 flex transition-all h-fit duration-500 ${
-                    isOpen ? 'ml-0' : '-ml-80'
+                    drawerClass
                 }`}
             >
                 <div
