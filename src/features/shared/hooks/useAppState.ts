@@ -3,13 +3,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RootState } from '../../../types/rootState';
 import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
-import useSortedComments from '../../comments/hooks/useSortedComments';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import useSearchContent from './useSearchContent';
 import { Filters } from '../../../types/filterTypes';
 import { retrieveDataFromDB } from '../utils/cacheUtils';
 import useTranscript from '../../transcripts/hooks/useTranscript';
 import { calculateFilteredWordCount } from "../utils/calculateWordCount";
+import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -54,7 +54,7 @@ const useAppState = () => {
         if (!filters) return [];
         const commentsToUse = activeTab === 'bookmarks' ? bookmarkedComments : comments;
         return filterComments(
-            sortComments(commentsToUse, filters.sortBy, filters.sortOrder, activeTab === 'bookmarks'),
+            sortComments(commentsToUse, filters.sortBy, filters.sortOrder),
             filters
         );
     }, [filters, sortComments, filterComments, comments, activeTab, bookmarkedComments]);

@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../types/rootState";
-import useSortedComments from "../../comments/hooks/useSortedComments";
 import {
   setBookmarkedComments,
   setComments,
@@ -10,6 +9,7 @@ import {
 import { calculateFilteredWordCount } from "../utils/calculateWordCount";
 import { Comment } from "../../../types/commentTypes";
 import { normalizeString } from "../utils/normalizeString";
+import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 
 const useSearchContent = () => {
   const dispatch = useDispatch();
