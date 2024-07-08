@@ -1,9 +1,8 @@
 import React from 'react';
-import {useDispatch} from 'react-redux';
-import {fetchContinuationTokenFromRemote} from '../../../comments/services/remote/fetchContinuationTokenFromRemote';
-import {fetchCommentsFromRemote} from '../../../comments/services/remote/remoteFetch';
+import { useDispatch } from 'react-redux';
+import { fetchContinuationTokenFromRemote } from '../../../comments/services/remote/fetchContinuationTokenFromRemote';
+import { fetchCommentsFromRemote } from '../../../comments/services/remote/remoteFetch';
 import useDetectUrlChange from './useDetectUrlChange';
-import {retrieveDataFromDB} from "../../utils/cacheUtils";
 import {
     resetState,
     setBookmarkedComments,
@@ -12,7 +11,8 @@ import {
     setOriginalComments,
     setTranscripts,
 } from "../../../../store/store";
-import {fetchCaptionTrackBaseUrl, fetchTranscriptFromRemote} from "../../../transcripts/services/remoteFetch";
+import { fetchCaptionTrackBaseUrl, fetchTranscriptFromRemote } from "../../../transcripts/services/remoteFetch";
+import {db} from "../../utils/database/database";
 
 const useFetchDataOnUrlChange = () => {
     const dispatch = useDispatch();
@@ -46,9 +46,9 @@ const handleFetchedComments = (comments: any[], dispatch: any) => {
 };
 
 const fetchAndSetBookmarks = async (dispatch: any) => {
-    const bookmarks = await retrieveDataFromDB('bookmarks');
+    const bookmarks = await db.comments.where('isBookmarked').equals(1).toArray();
     if (bookmarks) {
-        dispatch(setBookmarkedComments(bookmarks?.data || []));
+        dispatch(setBookmarkedComments(bookmarks));
     }
 };
 

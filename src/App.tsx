@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
 import CommentList from './features/comments/components/CommentList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
-import Transcript from './features/transcripts/components/Transcript'; // Import the Transcript component and word count function
+import Transcript from './features/transcripts/components/Transcript';
 import useAppState from './features/shared/hooks/useAppState';
 import useFetchDataOnUrlChange from "./features/shared/hooks/urlChange/useFetchDataOnUrlChange";
 import './styles/App.scss';
@@ -15,7 +15,6 @@ import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } fro
 import Tabs from "./features/shared/components/Tabs";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "./types/rootState";
-import {calculateWordCount} from "./features/shared/utils/calculateWordCount";
 import i18n from "i18next";
 
 const App: React.FC = () => {
@@ -35,12 +34,12 @@ const App: React.FC = () => {
         filteredAndSortedComments,
         setFiltersCallback,
         setActiveTab,
-        transcriptWordCount, // Destructure transcriptWordCount
+        transcriptWordCount,
+        filteredAndSortedBookmarks, // Destructure the new state
     } = useAppState();
 
     useFetchDataOnUrlChange();
 
-    const bookmarkCount = useSelector((state: RootState) => state.bookmarkedComments.length);
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
 
     const tabs = [
@@ -83,7 +82,7 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'bookmarks',
-                label: `${t('Bookmarks')} (${bookmarkCount})`,
+                label: `${t('Bookmarks')} (${filteredAndSortedBookmarks.length})`,
                 icon: BookmarkIcon,
             },
             content: (
@@ -96,7 +95,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     )}
-                    <BookmarkedComments comments={filteredAndSortedComments} />
+                    <BookmarkedComments comments={filteredAndSortedBookmarks} />
                 </>
             ),
         },
@@ -109,7 +108,7 @@ const App: React.FC = () => {
 
     if (isRtl) {
         drawerClass = 'mr-0 right-0';
-        if  (isSettingsOpen) {
+        if (isSettingsOpen) {
             drawerClass = 'blur-sm -mr-80 right-80';
         }
     }
@@ -133,7 +132,7 @@ const App: React.FC = () => {
                     <hr className="border border-solid border-gray-200 dark:border-gray-600" />
                     <SearchBar onSearch={handleSearch} />
                 </Box>
-                <Box className="flex flex-col w-full gap-2"  borderColor={'border-transparent'}>
+                <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
                     <Tabs tabs={tabs} onTabChange={setActiveTab} />
                 </Box>
             </div>

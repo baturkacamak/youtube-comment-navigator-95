@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
-import { storeDataInDB } from "../../shared/utils/cacheUtils";
 import { setBookmarkedComments } from "../../../store/store";
 import { RootState } from "../../../types/rootState";
 import { Comment } from "../../../types/commentTypes";
+import {db} from "../../shared/utils/database/database";
 
 const useNoteHandler = (comment: Comment, setIsNoteInputVisible: (visible: boolean) => void, handleExtraLogic?: (newNote: string) => void) => {
     const [note, setNote] = useState(comment?.note || '');
@@ -53,7 +53,13 @@ const useNoteHandler = (comment: Comment, setIsNoteInputVisible: (visible: boole
         const updatedBookmarks = bookmarkedComments.map((bookmark: Comment) =>
             bookmark.commentId === comment.commentId ? { ...bookmark, note: noteRef.current } : bookmark
         );
-        await storeDataInDB('bookmarks', updatedBookmarks);
+
+        // Update the note in the Dexie database
+        const bookmarkToUpdate = updatedBookmarks.find(bm => bm.commentId === comment.commentId);
+        if (bookmarkToUpdate) {
+            await db.comments.put(bookmarkToUpdate);
+        }
+
         dispatch(setBookmarkedComments(updatedBookmarks));
         setTimeout(() => {
             setIsSaving(false);

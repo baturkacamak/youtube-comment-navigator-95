@@ -1,13 +1,13 @@
-import {useEffect, useRef} from 'react';
-import {useDispatch} from 'react-redux';
-import {Comment} from '../../../types/commentTypes'; // Import the Comment type
-import {getCachedDataIfValid} from "../../shared/utils/cacheUtils";
-import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {CACHE_KEYS, isLocalEnvironment} from "../../shared/utils/environmentVariables";
-import {setComments, setOriginalComments} from "../../../store/store";
-import {fetchCommentsFromRemote} from "../services/remote/remoteFetch"; // Import fetchCommentsFromRemote
-import {fetchContinuationTokenFromRemote} from "../services/remote/fetchContinuationTokenFromRemote";
-import {fetchCommentsFromLocalIncrementally} from "../services/local/localFetch";
+import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { Comment } from '../../../types/commentTypes';
+import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import { CACHE_KEYS, isLocalEnvironment } from "../../shared/utils/environmentVariables";
+import { setComments, setOriginalComments } from "../../../store/store";
+import { fetchCommentsFromRemote } from "../services/remote/remoteFetch";
+import { fetchContinuationTokenFromRemote } from "../services/remote/fetchContinuationTokenFromRemote";
+import { fetchCommentsFromLocalIncrementally } from "../services/local/localFetch";
+import { db } from "../../shared/utils/database/database";
 
 const useCommentsIncrementalLoader = () => {
     const dispatch = useDispatch();
@@ -22,10 +22,9 @@ const useCommentsIncrementalLoader = () => {
 
                 // Check for final cache
                 const videoId = extractYouTubeVideoIdFromUrl();
-                const FINAL_CACHE_KEY = CACHE_KEYS.FINAL(videoId);
-                const finalCachedData = await getCachedDataIfValid(FINAL_CACHE_KEY);
+                const finalCachedData = await db.comments.where('videoId').equals(videoId).toArray();
 
-                if (finalCachedData) {
+                if (finalCachedData.length > 0) {
                     dispatch(setOriginalComments(finalCachedData));
                     dispatch(setComments(finalCachedData));
                     initialLoadCompleted.current = true;
@@ -35,16 +34,16 @@ const useCommentsIncrementalLoader = () => {
                 // Check for temporary cache and continuation token
                 const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
                 const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
-                const tempCachedData = await getCachedDataIfValid(TEMP_CACHE_KEY);
+                const tempCachedData = await db.comments.where('videoId').equals(TEMP_CACHE_KEY).toArray();
                 let continuationToken = '';
                 if (!isLocalEnvironment()) {
                     continuationToken = localStorage.getItem(CONTINUATION_TOKEN_KEY) || await fetchContinuationTokenFromRemote();
-                    if (tempCachedData && continuationToken) {
-                        dispatch(setOriginalComments(tempCachedData.items));
+                    if (tempCachedData.length > 0 && continuationToken) {
+                        dispatch(setOriginalComments(tempCachedData));
                     }
                 }
 
-                let initialComments: Comment[] = tempCachedData?.items ? [...tempCachedData.items] : [];
+                let initialComments: Comment[] = tempCachedData.length > 0 ? [...tempCachedData] : [];
 
                 const fetchCommentsIncrementally = async (
                     onCommentFetched: (comment: any[]) => void,
@@ -63,7 +62,7 @@ const useCommentsIncrementalLoader = () => {
                     initialComments = comments;
                 }, byPassCache, continuationToken);
 
-                dispatch(setOriginalComments(initialComments)); // Pass the array directly
+                dispatch(setOriginalComments(initialComments));
                 initialLoadCompleted.current = true;
             } catch (error) {
                 if (error instanceof Error) {
@@ -86,7 +85,7 @@ const useCommentsIncrementalLoader = () => {
         };
     }, [dispatch]);
 
-    return {initialLoadCompleted: initialLoadCompleted.current};
+    return { initialLoadCompleted: initialLoadCompleted.current };
 };
 
 export default useCommentsIncrementalLoader;

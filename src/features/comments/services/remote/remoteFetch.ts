@@ -1,10 +1,11 @@
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
 import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import { getCachedDataIfValid, removeDataFromDB } from "../../../shared/utils/cacheUtils";
-import { CommentData } from "../../../../types/commentTypes";
+import { Comment, CommentData } from "../../../../types/commentTypes";
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { setIsLoading } from "../../../../store/store";
+import { db } from "../../../shared/utils/database/database";
+import {mapCommentDataToComment} from "../../utils/comments/mapCommentDataToComment";
 
 const extractContinuationToken = (continuationItems: any[]): string | null => {
     if (!continuationItems || continuationItems.length === 0) {
@@ -114,10 +115,11 @@ export const fetchCommentsFromRemote = async (
         const LOCAL_STORAGE_KEY = CACHE_KEYS.FINAL(videoId);
         const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
-        const cachedData = await getCachedDataIfValid(LOCAL_STORAGE_KEY);
 
-        if (!bypassCache && cachedData) {
-            onCommentsFetched(cachedData?.items || cachedData);
+        // Retrieve cached data
+        const cachedData = await db.comments.where('videoId').equals(videoId).toArray();
+        if (!bypassCache && cachedData.length > 0) {
+            onCommentsFetched(cachedData);
             return;
         }
 
@@ -158,10 +160,14 @@ export const fetchCommentsFromRemote = async (
 
         if (totalComments.length > 0) {
             onCommentsFetched(totalComments);
-            // await storeDataInDB(LOCAL_STORAGE_KEY, totalComments, true);
+
+            // Store the comments in the database
+            await db.comments.bulkPut(totalComments.map(comment => ({
+                ...mapCommentDataToComment(comment, videoId)
+            })));
 
             // Clear temporary cache and continuation token
-            await removeDataFromDB(TEMP_CACHE_KEY);
+            await db.comments.where('videoId').equals(videoId).delete();
             localStorage.removeItem(CONTINUATION_TOKEN_KEY);
         }
     } catch (error: unknown) {

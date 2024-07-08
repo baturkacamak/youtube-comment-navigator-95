@@ -3,7 +3,6 @@ import {RootState} from '../types/rootState'; // Adjust the path as necessary
 import {Comment} from '../types/commentTypes'; // Adjust the path as necessary
 import {FilterState} from '../types/filterTypes';
 import {saveSettings} from "../features/settings/utils/settingsUtils";
-import {storeDataInDB} from "../features/shared/utils/cacheUtils"; // Adjust the path as necessary
 
 const initialState: RootState = {
     // Settings and filters
@@ -80,7 +79,6 @@ const commentsSlice = createSlice({
         },
         setBookmarkedLines: (state, action: PayloadAction<any[]>) => {
             state.bookmarkedLines = action.payload;
-            storeDataInDB('bookmarkedLines', action.payload); // Save to DB whenever state changes
         },
         // Loading state action
         setIsLoading: (state, action: PayloadAction<boolean>) => {

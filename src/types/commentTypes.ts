@@ -25,9 +25,17 @@ export interface Comment {
     hasLinks: boolean;
     videoTitle?: string;
     videoId?: string;
+    isBookmarked?: boolean;
     bookmarkAddedDate?: string;
     showRepliesDefault?: boolean;
     note?: string;
+    // Additional fields for database
+    id?: number;
+    timestamp?: number;
+    wordCount?: number;
+    normalizedScore?: number;
+    weightedZScore?: number;
+    bayesianAverage?: number;
 }
 
 export interface CommentActionsProps {

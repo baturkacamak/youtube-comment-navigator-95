@@ -7,9 +7,9 @@ import { RootState } from "../../../../types/rootState";
 import { debounce } from 'lodash';
 import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
 import { getVideoTitle } from "../../../shared/utils/getVideoTitle";
-import { storeDataInDB } from "../../../shared/utils/cacheUtils";
 import { setBookmarkedComments } from "../../../../store/store";
 import { Comment } from "../../../../types/commentTypes";
+import { db } from "../../../shared/utils/database/database";
 
 interface BookmarkButtonProps {
     comment: Comment;
@@ -48,6 +48,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
         let updatedBookmarks;
         if (isBookmarked) {
             updatedBookmarks = bookmarkedComments.filter((bookmark: Comment) => bookmark.commentId !== comment.commentId);
+            await db.comments.where('commentId').equals(comment.commentId).delete();
             setIsNoteInputVisible(false);
         } else {
             const videoId = extractYouTubeVideoIdFromUrl();
@@ -56,6 +57,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 ...comment,
                 videoId,
                 videoTitle,
+                isBookmarked: true,
                 bookmarkAddedDate: new Date().toISOString(),
                 note: ''
             };
@@ -65,8 +67,8 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 setPosition({ top: rect.bottom, left: rect.left });
             }
             setIsNoteInputVisible(true);
+            await db.comments.put(bookmarkedComment);
         }
-        await storeDataInDB('bookmarks', updatedBookmarks);
         dispatch(setBookmarkedComments(updatedBookmarks));
         setIsProcessing(false);
     }, 300);
