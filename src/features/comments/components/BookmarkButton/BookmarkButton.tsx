@@ -1,22 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { BookmarkIcon, BookmarkSlashIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useRef, useState} from 'react';
+import {BookmarkIcon, BookmarkSlashIcon} from '@heroicons/react/24/outline';
+import {useTranslation} from 'react-i18next';
+import {useDispatch, useSelector} from 'react-redux';
 import NoteInputModal from './NoteInputModal';
-import { RootState } from "../../../../types/rootState";
-import { debounce } from 'lodash';
-import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import { getVideoTitle } from "../../../shared/utils/getVideoTitle";
-import { setBookmarkedComments } from "../../../../store/store";
-import { Comment } from "../../../../types/commentTypes";
-import { db } from "../../../shared/utils/database/database";
+import {RootState} from "../../../../types/rootState";
+import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
+import {getVideoTitle} from "../../../shared/utils/getVideoTitle";
+import {setBookmarkedComments} from "../../../../store/store";
+import {Comment} from "../../../../types/commentTypes";
+import {db} from "../../../shared/utils/database/database";
 
 interface BookmarkButtonProps {
     comment: Comment;
 }
 
-const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
-    const { t } = useTranslation();
+const BookmarkButton: React.FC<BookmarkButtonProps> = ({comment}) => {
+    const {t} = useTranslation();
     const dispatch = useDispatch();
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -24,7 +23,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
     const [isNoteInputVisible, setIsNoteInputVisible] = useState(false);
     const [note, setNote] = useState('');
     const [isProcessing, setIsProcessing] = useState(false); // Flag to indicate if a save operation is in progress
-    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const [position, setPosition] = useState({top: 0, left: 0});
     const bookmarkButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
@@ -42,7 +41,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
         checkBookmarkStatus();
     }, [bookmarkedComments, comment.commentId]);
 
-    const handleBookmark = debounce(async () => {
+    const handleBookmark = async () => {
         if (isProcessing) return;
         setIsProcessing(true);
         let updatedBookmarks;
@@ -64,14 +63,15 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
             updatedBookmarks = [...bookmarkedComments, bookmarkedComment];
             if (bookmarkButtonRef.current) {
                 const rect = bookmarkButtonRef.current.getBoundingClientRect();
-                setPosition({ top: rect.bottom, left: rect.left });
+                setPosition({top: rect.bottom, left: rect.left});
             }
             setIsNoteInputVisible(true);
             await db.comments.put(bookmarkedComment);
         }
-        dispatch(setBookmarkedComments(updatedBookmarks));
+        const bookmarks = await db.comments.where('bookmarkAddedDate').notEqual('').toArray();
+        dispatch(setBookmarkedComments(bookmarks));
         setIsProcessing(false);
-    }, 300);
+    }
 
     return (
         <div className="relative">
@@ -84,9 +84,9 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ comment }) => {
                 aria-label={t('Bookmark')}
             >
                 {isBookmarked ? (
-                    <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                 ) : (
-                    <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                 )}
                 <span className="text-sm">{t('Bookmark')}</span>
             </button>

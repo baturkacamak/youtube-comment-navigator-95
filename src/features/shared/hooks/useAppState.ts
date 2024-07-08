@@ -36,7 +36,7 @@ const useAppState = () => {
             dispatch(setBookmarkedComments(bookmarks));
             setBookmarkedOnlyComments(bookmarks); // Update local state
         }
-    }, [dispatch]);
+    }, [bookmarkedComments]);
 
     const fetchAllComments = useCallback(async () => {
         const allComments = await db.comments.toArray();
