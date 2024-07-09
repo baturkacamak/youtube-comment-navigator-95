@@ -27,18 +27,15 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({comment}) => {
     const bookmarkButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
-        const checkBookmarkStatus = () => {
-            const bookmarkedComment = bookmarkedComments.find((bookmark: Comment) => bookmark.commentId === comment.commentId);
-            if (bookmarkedComment) {
-                setIsBookmarked(true);
-                setBookmarkAddedDate(bookmarkedComment.bookmarkAddedDate ? new Date(bookmarkedComment.bookmarkAddedDate).toLocaleString() : null);
-                setNote(bookmarkedComment.note || '');
-            } else {
-                setIsBookmarked(false);
-                setNote('');
-            }
-        };
-        checkBookmarkStatus();
+        const bookmarkedComment = bookmarkedComments.find((bookmark: Comment) => bookmark.commentId === comment.commentId);
+        if (bookmarkedComment) {
+            setIsBookmarked(true);
+            setBookmarkAddedDate(bookmarkedComment.bookmarkAddedDate ? new Date(bookmarkedComment.bookmarkAddedDate).toLocaleString() : null);
+            setNote(bookmarkedComment.note || '');
+        } else {
+            setIsBookmarked(false);
+            setNote('');
+        }
     }, [bookmarkedComments, comment.commentId]);
 
     const handleBookmark = async () => {
@@ -47,8 +44,10 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({comment}) => {
         let updatedBookmarks;
         if (isBookmarked) {
             updatedBookmarks = bookmarkedComments.filter((bookmark: Comment) => bookmark.commentId !== comment.commentId);
-            await db.comments.where('commentId').equals(comment.commentId).delete();
+            await db.comments.update(comment, {bookmarkAddedDate: '', note: ''});
             setIsNoteInputVisible(false);
+            setIsBookmarked(false);
+            setNote('');
         } else {
             const videoId = extractYouTubeVideoIdFromUrl();
             const videoTitle = getVideoTitle();
@@ -60,7 +59,6 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({comment}) => {
                 bookmarkAddedDate: new Date().toISOString(),
                 note: ''
             };
-            updatedBookmarks = [...bookmarkedComments, bookmarkedComment];
             if (bookmarkButtonRef.current) {
                 const rect = bookmarkButtonRef.current.getBoundingClientRect();
                 setPosition({top: rect.bottom, left: rect.left});
