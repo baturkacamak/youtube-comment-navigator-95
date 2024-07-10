@@ -1,9 +1,7 @@
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
 import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import { Comment, CommentData } from "../../../../types/commentTypes";
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
-import { setIsLoading } from "../../../../store/store";
 import { db } from "../../../shared/utils/database/database";
 import { mapCommentDataToComment } from "../../utils/comments/mapCommentDataToComment";
 import { extractContinuationToken } from "./continuationTokenUtils";
@@ -50,10 +48,14 @@ export const fetchCommentsFromRemote = async (
         };
 
         do {
-            const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
-            const replyRawJsonData = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
+            const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
 
-            const allComments = [rawJsonData, ...replyRawJsonData];
+            const [comments, replies] = await Promise.all([
+                fetchCommentJsonDataFromRemote(token, windowObj, signal),
+                fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal)
+            ]);
+
+            const allComments = [comments, ...replies];
             const processedData = processRawJsonCommentsData(allComments);
 
             // Store the newly fetched comments in the database
