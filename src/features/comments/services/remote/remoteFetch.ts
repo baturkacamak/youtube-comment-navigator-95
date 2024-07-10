@@ -5,93 +5,9 @@ import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { setIsLoading } from "../../../../store/store";
 import { db } from "../../../shared/utils/database/database";
-import {mapCommentDataToComment} from "../../utils/comments/mapCommentDataToComment";
-
-const extractContinuationToken = (continuationItems: any[]): string | null => {
-    if (!continuationItems || continuationItems.length === 0) {
-        return null;
-    }
-    const lastItem = continuationItems[continuationItems.length - 1];
-    return lastItem?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token || null;
-};
-
-type ContinuationItem = {
-    commentThreadRenderer?: {
-        replies?: {
-            commentRepliesRenderer?: {
-                contents?: Array<{
-                    continuationItemRenderer?: {
-                        continuationEndpoint?: {
-                            continuationCommand?: {
-                                token?: string;
-                            };
-                        };
-                    };
-                }>;
-            };
-        };
-    };
-    continuationItemRenderer?: {
-        button?: {
-            buttonRenderer?: {
-                command?: {
-                    continuationCommand?: {
-                        token?: string;
-                    };
-                };
-            };
-        };
-    };
-};
-
-// Helper function to extract reply continuation tokens
-const extractReplyContinuationTokens = (continuationItems: ContinuationItem[]): string[] => {
-    const tokens: string[] = [];
-    for (let index = 0; index < continuationItems.length; index++) {
-        const continuationItem = continuationItems[index];
-        const token = continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token ||
-            continuationItem?.continuationItemRenderer?.button?.buttonRenderer?.command?.continuationCommand?.token;
-        if (token) {
-            tokens.push(token);
-        }
-    }
-    return tokens;
-};
-
-// Updated fetchRepliesJsonDataFromRemote function
-const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj: any, signal: AbortSignal): Promise<any[]> => {
-    let replies: any[] = [];
-
-    const fetchRepliesRecursively = async (tokens: string[]) => {
-        for (const token of tokens) {
-            const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
-
-            if (Array.isArray(replyData)) {
-                replies = [...replies, ...replyData];
-            } else {
-                replies.push(replyData);
-            }
-
-            const continuationItems = replyData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
-                || replyData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
-
-            const newTokens = extractReplyContinuationTokens(continuationItems);
-            if (newTokens.length > 0) {
-                await fetchRepliesRecursively(newTokens);
-            }
-        }
-    };
-
-    const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
-        || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
-
-    const initialTokens = extractReplyContinuationTokens(continuationItems);
-    if (initialTokens.length > 0) {
-        await fetchRepliesRecursively(initialTokens);
-    }
-
-    return replies;
-};
+import { mapCommentDataToComment } from "../../utils/comments/mapCommentDataToComment";
+import { extractContinuationToken } from "./continuationTokenUtils";
+import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 
 let currentAbortController = new AbortController();
 
@@ -123,53 +39,51 @@ export const fetchCommentsFromRemote = async (
             return;
         }
 
-        let allComments: CommentData[] = [];
-        let processedData: { items: any[] } = { items: [] };
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
-        let totalComments: CommentData[] = [];
-        const batchSize = 500;
-        const updateThreshold = 2500;
-        let accumulatedComments: any[] = [];
-        let totalFetched = 0;
+        let totalFetchedComments = 0;
+        let updateInterval: ReturnType<typeof setInterval> | null = null;
+
+        const updateUI = async () => {
+            const commentsFromDB = await db.comments.where('videoId').equals(videoId).toArray();
+            onCommentsFetched(commentsFromDB);
+        };
 
         do {
-            allComments = [];
-            processedData = { items: [] };
-
             const rawJsonData: CommentData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
-            allComments.push(rawJsonData);
-
             const replyRawJsonData = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
-            allComments.push(...replyRawJsonData);
 
-            processedData = processRawJsonCommentsData(allComments);
-            accumulatedComments.push(...processedData.items);
+            const allComments = [rawJsonData, ...replyRawJsonData];
+            const processedData = processRawJsonCommentsData(allComments);
 
-            if ((totalFetched >= updateThreshold && accumulatedComments.length >= batchSize) || (totalFetched <= updateThreshold)) {
-                totalComments = [...totalComments, ...accumulatedComments];
-                onCommentsFetched(totalComments);
-                accumulatedComments = [];
+            // Store the newly fetched comments in the database
+            await db.comments.bulkPut(processedData.items.map(comment => ({
+                ...mapCommentDataToComment(comment, videoId)
+            })));
+
+            totalFetchedComments += processedData.items.length;
+
+            if (totalFetchedComments >= 500 && !updateInterval) {
+                updateInterval = setInterval(updateUI, 2000);
+            } else if (totalFetchedComments < 500) {
+                await updateUI();
             }
 
-            totalFetched = totalComments.length;
             const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
                 || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
             token = extractContinuationToken(continuationItems);
         } while (token);
 
-        if (totalComments.length > 0) {
-            onCommentsFetched(totalComments);
-
-            // Store the comments in the database
-            await db.comments.bulkPut(totalComments.map(comment => ({
-                ...mapCommentDataToComment(comment, videoId)
-            })));
-
-            // Clear temporary cache and continuation token
-            await db.comments.where('videoId').equals(videoId).delete();
-            localStorage.removeItem(CONTINUATION_TOKEN_KEY);
+        // Clear interval after all comments are fetched
+        if (updateInterval) {
+            clearInterval(updateInterval);
         }
+
+        // Final update from the database
+        await updateUI();
+
+        // Clear temporary cache and continuation token after all comments are fetched
+        localStorage.removeItem(CONTINUATION_TOKEN_KEY);
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
             console.log('Fetch operation was aborted.');
