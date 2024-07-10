@@ -38,17 +38,9 @@ const useAppState = () => {
         }
     }, [dispatch]);
 
-    const fetchAllComments = useCallback(async () => {
-        const allComments = await db.comments.toArray();
-        if (allComments) {
-            dispatch(setComments(allComments));
-        }
-    }, [dispatch]);
-
     useEffect(() => {
-        fetchAllComments();
         fetchBookmarkedComments();
-    }, [fetchAllComments, fetchBookmarkedComments]);
+    }, [fetchBookmarkedComments]);
 
     useEffect(() => {
         if (activeTab === 'bookmarks') {
