@@ -18,6 +18,7 @@ const useLoadContent = (bypassCache = false) => {
         const handleFetchedComments = (comments: any[]) => {
             dispatch(setComments(comments));
             dispatch(setOriginalComments(comments));
+            dispatch(setIsLoading(false));
         };
         await fetchComments(handleFetchedComments, bypassCache);
     };
