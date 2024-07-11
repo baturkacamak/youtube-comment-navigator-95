@@ -37,6 +37,12 @@ export const fetchCommentsFromRemote = async (
             return;
         }
 
+        window.addEventListener('message', (event: MessageEvent) => {
+            if (event.data.type === 'URL_CHANGED') {
+                currentAbortController.abort();
+            }
+        });
+
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
         let totalFetchedComments = 0;

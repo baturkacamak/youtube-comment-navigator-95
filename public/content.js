@@ -224,6 +224,7 @@ class YouTubeCommentNavigator {
 
     async onUrlChange() {
         this.checkAndInjectWithInterval(true);
+        window.postMessage({type: 'URL_CHANGED', url: window.location.href}, '*');
     }
 
     removeInjectedContent() {
