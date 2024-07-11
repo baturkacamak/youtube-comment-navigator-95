@@ -3,7 +3,6 @@ import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTu
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { db } from "../../../shared/utils/database/database";
-import { mapCommentDataToComment } from "../../utils/comments/mapCommentDataToComment";
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 
@@ -62,12 +61,10 @@ export const fetchCommentsFromRemote = async (
             ]);
 
             const allComments = [comments, ...replies];
-            const processedData = processRawJsonCommentsData(allComments);
+            const processedData = processRawJsonCommentsData(allComments); // Pass videoId to the processing function
 
             // Store the newly fetched comments in the database
-            await db.comments.bulkPut(processedData.items.map(comment => ({
-                ...mapCommentDataToComment(comment, videoId)
-            })));
+            await db.comments.bulkPut(processedData.items);
 
             totalFetchedComments += processedData.items.length;
 

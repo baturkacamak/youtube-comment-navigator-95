@@ -1,29 +1,12 @@
-import {Comment} from "../../../../types/commentTypes";
+import { Comment } from "../../../../types/commentTypes";
 import convertLikesToNumber from "../formatting/convertLikesToNumber";
 import convertTimeAgoToDate from "../formatting/convertTimeAgoToDate";
+import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
 
 const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/;
 
-export const transformCommentsData = (comment: any): {
-    author: any;
-    authorAvatarUrl: any;
-    authorMemberSince: any;
-    commentParentId: any;
-    authorChannelId: any;
-    published: any;
-    replyLevel: any;
-    isMember: any;
-    hasLinks: any;
-    content: any;
-    hasTimestamp: boolean;
-    isAuthorContentCreator: any;
-    replyCount: number;
-    commentId: any;
-    authorBadgeUrl: any;
-    viewLikes: any;
-    publishedDate: number;
-    likes: number
-} => {
+export const transformCommentsData = (comment: any): Comment => {
+    const videoId = extractYouTubeVideoIdFromUrl();
     const payload = comment.payload?.commentEntityPayload;
     const author = payload?.author?.displayName || 'Unknown';
     const content = payload?.properties?.content?.content || 'No content';
@@ -52,7 +35,7 @@ export const transformCommentsData = (comment: any): {
     return {
         author,
         likes,
-        viewLikes,
+        viewLikes: viewLikes.toString(),
         content,
         published,
         publishedDate,
@@ -63,10 +46,25 @@ export const transformCommentsData = (comment: any): {
         commentId,
         commentParentId,
         replyLevel,
-        authorBadgeUrl,
-        authorMemberSince,
+        authorBadgeUrl: authorBadgeUrl || '',
+        authorMemberSince: authorMemberSince || '',
         isMember,
         hasTimestamp,
-        hasLinks
+        hasLinks,
+        videoTitle: '', // Add if available in your data
+        videoId,
+        isBookmarked: false,
+        bookmarkAddedDate: '',
+        showRepliesDefault: false,
+        note: '',
+        wordCount: content.split(' ').length,
+        normalizedScore: 0,
+        weightedZScore: 0,
+        bayesianAverage: 0,
+        timestamp: Date.now(),
+        isDonated: false, // Placeholder, will be updated later
+        donationAmount: '',
+        isHearted: false,
+        likeAction: '',
     };
 };
