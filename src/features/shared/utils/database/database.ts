@@ -19,7 +19,7 @@ class NewDatabase extends Dexie {
     public comments: Dexie.Table<Comment, number>;
 
     public constructor() {
-        super('newCommentsCacheDB'); // New database name
+        super('youtube-comment-navigator-95');
         this.version(3).stores({
             comments: '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId'
         });
@@ -29,11 +29,19 @@ class NewDatabase extends Dexie {
 
 export const db = new NewDatabase();
 
+const MIGRATION_FLAG = 'bookmarksMigrationCompleted';
+
 const migrateBookmarks = async () => {
     const oldDb = new OldDatabase();
     const newDb = new NewDatabase();
 
     try {
+        // Check if the migration has already been completed
+        if (localStorage.getItem(MIGRATION_FLAG)) {
+            console.log('Migration has already been completed.');
+            return;
+        }
+
         // Open the old database
         await oldDb.open();
 
@@ -48,6 +56,15 @@ const migrateBookmarks = async () => {
                 ...bookmark,
                 isBookmarked: true,
                 bookmarkAddedDate: new Date().toISOString(),
+                videoId: bookmark.videoId || '', // Assuming videoId is a necessary field
+                content: bookmark.content || '',
+                commentId: bookmark.commentId || '',
+                publishedDate: bookmark.publishedDate || 0,
+                replyCount: bookmark.replyCount || 0,
+                wordCount: bookmark.content ? bookmark.content.split(' ').length : 0,
+                normalizedScore: 0,
+                weightedZScore: 0,
+                bayesianAverage: 0,
             }));
 
             // Open the new database
@@ -61,7 +78,7 @@ const migrateBookmarks = async () => {
             console.log('No bookmarks found to migrate');
         }
 
-        // Remove old cached comments
+        // Remove old cached comments if necessary
         const cachedCommentKeys = await oldDb.comments
             .where('key')
             .startsWith('cachedComments_')
@@ -70,6 +87,9 @@ const migrateBookmarks = async () => {
         await oldDb.comments.bulkDelete(cachedCommentKeys);
 
         console.log('Old cached comments deleted successfully');
+
+        // Set the migration flag in localStorage
+        localStorage.setItem(MIGRATION_FLAG, 'true');
 
         // Close databases
         oldDb.close();
