@@ -39,9 +39,9 @@ const BookmarkedComments: React.FC<BookmarkedCommentsProps> = ({ comments }) => 
                         <CommentItem
                             comment={comment}
                             replies={[]} // Add logic to fetch and display replies if necessary
-                            className={`text-gray-800 dark:text-gray-200 ${index % 2 === 0 ? 'bg-teal-100 dark:bg-teal-700' : 'bg-teal-200 dark:bg-teal-900'}`}
+                            className={`text-gray-800 dark:text-gray-200`}
                             bgColor={index % 2 === 0 ? 'bg-gradient-to-r from-zinc-50 to-zinc-100' : 'bg-gradient-to-r from-stone-50 to-stone-100'}
-                            darkBgColor={index % 2 === 0 ? 'dark:bg-teal-700' : 'dark:bg-teal-900'}
+                            darkBgColor={index % 2 === 0 ? 'dark:from-gray-800 dark:to-gray-900' : 'dark:from-gray-700 dark:to-gray-800'}
                             borderColor="border-gray-300"
                             darkBorderColor="dark:border-gray-600"
                             videoTitle={comment.videoTitle} // Assuming videoTitle is part of the comment object
