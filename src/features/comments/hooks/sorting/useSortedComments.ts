@@ -23,7 +23,7 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
     const previousSortByRef = useRef<string | null>(null);
     const previousSortOrderRef = useRef<string | null>(null);
 
-    const sortComments = useCallback((comments: Comment[], sortBy: string, sortOrder: string) => {
+    const sortComments = useCallback((comments: Comment[], sortBy: string, sortOrder: string, limit: number) => {
         const filteredComments = applyFilters(comments);
         const commentsToSort = [...filteredComments];
 
@@ -55,14 +55,14 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
             }
         };
 
-        return commentsToSort.sort(sortFunc);
+        return commentsToSort.sort(sortFunc).slice(0, limit);
     }, [applyFilters, calculateNormalized, getMaxValues, calculateWeightedZScore, getStats, calculateBayesianAverage, getAvgValues, sortByDate, sortByLikes, sortByReplies, sortByLength, sortByAuthor, sortByRandom]);
 
     const getInitialSortedComments = useCallback(
         (comments: Comment[], sortBy: string, sortOrder: string) => {
             if (!sortBy || !sortOrder) return [];
-            const sortedComments = sortComments(comments, sortBy, sortOrder);
-            return sortedComments.slice(0, 10);
+            const sortedComments = sortComments(comments, sortBy, sortOrder, 10); // Only sort the first 10 comments
+            return sortedComments;
         },
         [sortComments]
     );

@@ -10,7 +10,7 @@ import {calculateFilteredWordCount} from "../utils/calculateWordCount";
 import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 import {db} from "../utils/database/database";
 import {Comment} from "../../../types/commentTypes";
-import {searchComments} from "../../comments/services/commentSearchService"; // Ensure correct import
+import {searchComments} from "../../comments/services/commentSearchService";
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -18,6 +18,7 @@ const useAppState = () => {
     const [bookmarkedOnlyComments, setBookmarkedOnlyComments] = useState<Comment[]>([]);
 
     const comments = useSelector((state: RootState) => state.comments);
+    const originalComments = useSelector((state: RootState) => state.originalComments);
     const filters = useSelector((state: RootState) => state.filters);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
@@ -54,8 +55,8 @@ const useAppState = () => {
     }, [activeTab, fetchBookmarkedComments, filters.keyword]);
 
     const filteredAndSortedBookmarks = useMemo(() => {
-        if (!filters) return [];
-        let sortedComments = sortComments(bookmarkedOnlyComments, filters.sortBy, filters.sortOrder);
+        if (!filters || !filters.sortBy) return [];
+        let sortedComments = sortComments(bookmarkedOnlyComments, filters.sortBy, filters.sortOrder, 10);
         let filteredComments = filterComments(sortedComments, filters);
         if (searchKeyword) {
             filteredComments = searchComments(filteredComments, searchKeyword);
@@ -65,12 +66,15 @@ const useAppState = () => {
 
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
-        let sortedComments = sortComments(comments, filters.sortBy, filters.sortOrder);
-        let filteredComments = filterComments(sortedComments, filters);
-        if (searchKeyword) {
-            filteredComments = searchComments(filteredComments, searchKeyword);
+        let returnComments = comments;
+        if (filters.sortBy) {
+            returnComments = sortComments(returnComments, filters.sortBy, filters.sortOrder, 10);
         }
-        return filteredComments;
+        returnComments = filterComments(returnComments, filters);
+        if (searchKeyword) {
+            returnComments = searchComments(returnComments, searchKeyword);
+        }
+        return returnComments;
     }, [filters, sortComments, filterComments, comments, searchKeyword]);
 
     const setFiltersCallback = useCallback((filters: Filters) => {
