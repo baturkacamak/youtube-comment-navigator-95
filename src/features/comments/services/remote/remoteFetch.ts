@@ -52,6 +52,9 @@ export const fetchCommentsFromRemote = async (
             onCommentsFetched(commentsFromDB);
         };
 
+        // Delete existing comments with the same videoId to prevent duplication
+        await db.comments.where('videoId').equals(videoId).delete();
+
         do {
             const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
 
