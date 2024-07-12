@@ -30,7 +30,6 @@ const App: React.FC = () => {
 
     const {
         filters,
-        handleSearch,
         filteredAndSortedComments,
         setFiltersCallback,
         setActiveTab,
@@ -130,7 +129,7 @@ const App: React.FC = () => {
                         openSettings={openSettings}
                     />
                     <hr className="border border-solid border-gray-200 dark:border-gray-600" />
-                    <SearchBar onSearch={handleSearch} />
+                    <SearchBar />
                 </Box>
                 <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
                     <Tabs tabs={tabs} onTabChange={setActiveTab} />

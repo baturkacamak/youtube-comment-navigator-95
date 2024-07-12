@@ -1,4 +1,5 @@
-import React, {FormEvent, useCallback, useEffect, useRef, useState} from 'react';
+import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import SelectBox from '../../shared/components/SelectBox/SelectBox';
 import {
     ChatBubbleOvalLeftIcon,
@@ -8,23 +9,26 @@ import {
     MagnifyingGlassIcon,
     XCircleIcon
 } from '@heroicons/react/24/outline';
-import {Option} from "../../../types/utilityTypes";
-import {useTranslation} from 'react-i18next';
+import { Option } from "../../../types/utilityTypes";
+import { useTranslation } from 'react-i18next';
 import i18n from "i18next";
+import { RootState } from '../../../types/rootState';
+import { setSearchKeyword, clearSearchKeyword } from '../../../store/store';
 
-
-const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) => {
-    const {t} = useTranslation();
+const SearchBar: React.FC = () => {
+    const dispatch = useDispatch();
+    const { t } = useTranslation();
     const isRtl = i18n.dir() === 'rtl';
 
     const options: Option[] = [
-        {value: 'all', label: t('All'), icon: ClipboardDocumentListIcon},
-        {value: 'comments', label: t('Comments'), icon: ChatBubbleOvalLeftIcon},
-        {value: 'chat', label: t('Live Chat'), icon: InboxIcon},
-        {value: 'transcript', label: t('Transcript'), icon: DocumentTextIcon},
+        { value: 'all', label: t('All'), icon: ClipboardDocumentListIcon },
+        { value: 'comments', label: t('Comments'), icon: ChatBubbleOvalLeftIcon },
+        { value: 'chat', label: t('Live Chat'), icon: InboxIcon },
+        { value: 'transcript', label: t('Transcript'), icon: DocumentTextIcon },
     ];
 
-    const [query, setQuery] = useState('');
+    const searchKeywordFromState = useSelector((state: RootState) => state.searchKeyword);
+    const [searchKeyword, setSearchKeywordLocal] = useState(searchKeywordFromState);
     const [selectedOption, setSelectedOption] = useState<Option>(options[0]);
     const [placeholder, setPlaceholder] = useState(t('Search comments...'));
     const isFirstRender = useRef(true);
@@ -54,12 +58,12 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
     }, [selectedOption, updatePlaceholder]);
 
     const handleSearch = () => {
-        onSearch(query);
+        dispatch(setSearchKeyword(searchKeyword));
     };
 
     const handleClear = () => {
-        setQuery('');
-        onSearch('');
+        setSearchKeywordLocal('');
+        dispatch(clearSearchKeyword());
     };
 
     const handleSubmit = (event: FormEvent) => {
@@ -79,8 +83,8 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
             <input
                 type="text"
                 placeholder={placeholder}
-                value={query}
-                onChange={e => setQuery(e.target.value)}
+                value={searchKeyword}
+                onChange={e => setSearchKeywordLocal(e.target.value)}
                 className="flex-grow p-2 bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 transition-all duration-300 ease-in-out"
                 aria-label={placeholder}
             />
@@ -88,21 +92,21 @@ const SearchBar: React.FC<{ onSearch: (query: string) => void }> = ({onSearch}) 
                 type="button"
                 onClick={handleClear}
                 className={`absolute p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out
-                 ${isRtl ? ' left-10 ': ' right-10 '}
+                 ${isRtl ? ' left-10 ' : ' right-10 '}
                  ${
-                    query ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
+                    searchKeyword ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'
                 }`}
-                style={{transformOrigin: isRtl ? 'left' : 'right'}}
+                style={{ transformOrigin: isRtl ? 'left' : 'right' }}
                 aria-label={t('Clear search')}
             >
-                <XCircleIcon className="w-5 h-5 text-red-500"/>
+                <XCircleIcon className="w-5 h-5 text-red-500" />
             </button>
             <button
                 type="submit"
                 className={`p-2 bg-stone-500 dark:bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 ${isRtl ? 'rounded-l-lg ' : 'rounded-r-lg'}`}
                 aria-label={t('Submit search')}
             >
-                <MagnifyingGlassIcon className="w-5 h-5"/>
+                <MagnifyingGlassIcon className="w-5 h-5" />
             </button>
         </form>
     );

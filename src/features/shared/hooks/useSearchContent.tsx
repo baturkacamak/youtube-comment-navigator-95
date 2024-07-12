@@ -1,14 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../types/rootState";
-import {
-  setBookmarkedComments,
-  setComments,
-  setFilteredTranscripts,
-  setFilters,
-} from "../../../store/store";
-import { calculateFilteredWordCount } from "../utils/calculateWordCount";
-import { Comment } from "../../../types/commentTypes";
-import { normalizeString } from "../utils/normalizeString";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../types/rootState";
+import {setBookmarkedComments, setComments, setFilteredTranscripts, setFilters,} from "../../../store/store";
+import {calculateFilteredWordCount} from "../utils/calculateWordCount";
+import {Comment} from "../../../types/commentTypes";
+import {normalizeString} from "../utils/normalizeString";
 import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 
 const useSearchContent = () => {
@@ -49,7 +44,7 @@ const useSearchContent = () => {
 
       const filteredComments = Array.from(filteredCommentsMap.values());
       // Reorder the comments to ensure parents come before their replies
-      const reorderedComments = filteredComments.sort((a, b) => {
+      return filteredComments.sort((a, b) => {
         if (a.commentParentId === b.commentId) {
           return 1; // 'a' is a reply to 'b', so 'a' should come after 'b'
         } else if (b.commentParentId === a.commentId) {
@@ -58,7 +53,6 @@ const useSearchContent = () => {
           return 0; // No direct parent-child relationship, keep the existing order
         }
       });
-      return sortComments(reorderedComments, filters.sortBy, filters.sortOrder);
     };
 
     const filterTranscripts = (transcripts: any[]) => {
@@ -67,19 +61,10 @@ const useSearchContent = () => {
       );
     };
 
-    if (keyword.trim() === '') {
-      dispatch(setComments(commentsToSearch));
-      dispatch(setBookmarkedComments(bookmarksToSearch));
-      dispatch(setFilteredTranscripts(transcriptsToSearch));
-    } else {
+    if (keyword.trim() !== '') {
       const sortedAndFilteredComments = filterAndSortComments(commentsToSearch);
       const sortedAndFilteredBookmarks = filterAndSortComments(bookmarksToSearch);
       const filteredTranscripts = filterTranscripts(transcriptsToSearch);
-
-      dispatch(setComments(sortedAndFilteredComments));
-      dispatch(setBookmarkedComments(sortedAndFilteredBookmarks));
-      dispatch(setFilteredTranscripts(filteredTranscripts));
-
       const filteredWordCount = calculateFilteredWordCount(filteredTranscripts, keyword);
     }
   };

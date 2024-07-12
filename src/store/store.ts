@@ -51,6 +51,9 @@ const initialState: RootState = {
     showBookmarked: false,
 
     transcriptSelectedLanguage: {value: '', label: 'Select Language'},
+
+    // Search keyword
+    searchKeyword: '',
 };
 
 const commentsSlice = createSlice({
@@ -111,6 +114,14 @@ const commentsSlice = createSlice({
 
         // Reset action
         resetState: () => initialState,
+
+        // Search keyword actions
+        setSearchKeyword: (state, action: PayloadAction<string>) => {
+            state.searchKeyword = action.payload;
+        },
+        clearSearchKeyword: (state) => {
+            state.searchKeyword = '';
+        },
     },
 });
 
@@ -139,6 +150,10 @@ export const {
     setTranscriptSelectedLanguage,
     // Reset action
     resetState,
+
+    // Search keyword actions
+    setSearchKeyword,
+    clearSearchKeyword,
 } = commentsSlice.actions;
 
 const store = configureStore({

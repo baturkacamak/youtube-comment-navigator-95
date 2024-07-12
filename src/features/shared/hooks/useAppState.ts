@@ -1,16 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RootState } from '../../../types/rootState';
-import { setBookmarkedComments, setComments, setFilters, setShowBookmarked } from '../../../store/store';
+import {useDispatch, useSelector} from 'react-redux';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {RootState} from '../../../types/rootState';
+import {setBookmarkedComments, setFilters, setShowBookmarked} from '../../../store/store';
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
-import useSearchContent from './useSearchContent';
-import { Filters } from '../../../types/filterTypes';
+import {Filters} from '../../../types/filterTypes';
 import useTranscript from '../../transcripts/hooks/useTranscript';
-import { calculateFilteredWordCount } from "../utils/calculateWordCount";
+import {calculateFilteredWordCount} from "../utils/calculateWordCount";
 import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
-import { db } from "../utils/database/database";
-import { Comment } from "../../../types/commentTypes"; // Ensure correct import
+import {db} from "../utils/database/database";
+import {Comment} from "../../../types/commentTypes";
+import {searchComments} from "../../comments/services/commentSearchService"; // Ensure correct import
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -23,12 +23,12 @@ const useAppState = () => {
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const transcripts = useSelector((state: RootState) => state.transcripts);
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
+    const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
 
-    const { sortComments } = useSortedComments(false);
-    const { filterComments } = useFilteredComments(false);
-    const { handleSearch } = useSearchContent();
-    const { initialLoadCompleted } = useCommentsIncrementalLoader();
-    const { loadTranscript } = useTranscript();
+    const {sortComments} = useSortedComments(false);
+    const {filterComments} = useFilteredComments(false);
+    const {initialLoadCompleted} = useCommentsIncrementalLoader();
+    const {loadTranscript} = useTranscript();
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await db.comments.where('bookmarkAddedDate').above('').toArray();
@@ -55,19 +55,23 @@ const useAppState = () => {
 
     const filteredAndSortedBookmarks = useMemo(() => {
         if (!filters) return [];
-        return filterComments(
-            sortComments(bookmarkedOnlyComments, filters.sortBy, filters.sortOrder),
-            filters
-        );
-    }, [filters, sortComments, filterComments, bookmarkedOnlyComments]);
+        let sortedComments = sortComments(bookmarkedOnlyComments, filters.sortBy, filters.sortOrder);
+        let filteredComments = filterComments(sortedComments, filters);
+        if (searchKeyword) {
+            filteredComments = searchComments(filteredComments, searchKeyword);
+        }
+        return filteredComments;
+    }, [filters, sortComments, filterComments, bookmarkedOnlyComments, searchKeyword]);
 
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
-        return filterComments(
-            sortComments(comments, filters.sortBy, filters.sortOrder),
-            filters
-        );
-    }, [filters, sortComments, filterComments, comments]);
+        let sortedComments = sortComments(comments, filters.sortBy, filters.sortOrder);
+        let filteredComments = filterComments(sortedComments, filters);
+        if (searchKeyword) {
+            filteredComments = searchComments(filteredComments, searchKeyword);
+        }
+        return filteredComments;
+    }, [filters, sortComments, filterComments, comments, searchKeyword]);
 
     const setFiltersCallback = useCallback((filters: Filters) => {
         dispatch(setFilters(filters));
@@ -84,7 +88,6 @@ const useAppState = () => {
         filters,
         transcripts,
         initialLoadCompleted,
-        handleSearch,
         filteredAndSortedComments,
         setFiltersCallback,
         showBookmarked,

@@ -16,7 +16,8 @@ export interface RootState {
         fontFamily: string;
     };
     filteredTranscripts: any[];
-    bookmarkedLines: any[],
+    bookmarkedLines: any[];
     transcriptSelectedLanguage: { value: string, label: string };
+    searchKeyword: string;
 }
 
