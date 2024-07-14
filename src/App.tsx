@@ -35,11 +35,10 @@ const App: React.FC = () => {
         setActiveTab,
         transcriptWordCount,
         filteredAndSortedBookmarks, // Destructure the new state
+        transcript,
     } = useAppState();
 
     useFetchDataOnUrlChange();
-
-    const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
 
     const tabs = [
         {
@@ -68,7 +67,7 @@ const App: React.FC = () => {
                 label: `${t('Transcript')} (${transcriptWordCount})`,
                 icon: DocumentTextIcon,
             },
-            content: <Transcript transcripts={filteredTranscripts} />,
+            content: <Transcript transcripts={transcript} />,
         },
         {
             title: {

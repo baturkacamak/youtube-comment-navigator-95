@@ -10,7 +10,8 @@ import { calculateFilteredWordCount } from "../utils/calculateWordCount";
 import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 import { db } from "../utils/database/database";
 import { Comment } from "../../../types/commentTypes";
-import { searchComments } from "../../comments/services/commentSearchService"; // Ensure correct import
+import { searchComments } from "../../comments/services/commentSearchService";
+import {searchTranscripts} from "../../comments/services/transcriptSearchService"; // Ensure correct import
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -73,6 +74,14 @@ const useAppState = () => {
         return filteredComments;
     }, [filters, sortComments, filterComments, comments, searchKeyword]);
 
+    const searchedTranscripts = useMemo(() => {
+        let filteredTranscripts = transcripts;
+        if (searchKeyword) {
+            filteredTranscripts = searchTranscripts(filteredTranscripts, searchKeyword);
+        }
+        return filteredTranscripts;
+    }, [searchKeyword]);
+
     const setFiltersCallback = useCallback((filters: Filters) => {
         dispatch(setFilters(filters));
     }, [dispatch]);
@@ -81,7 +90,7 @@ const useAppState = () => {
         dispatch(setShowBookmarked(!showBookmarked));
     }, [dispatch, showBookmarked]);
 
-    const transcriptWordCount = calculateFilteredWordCount(filteredTranscripts, filters.keyword);
+    const transcriptWordCount = calculateFilteredWordCount(searchedTranscripts, searchKeyword);
 
     return {
         comments,
@@ -95,7 +104,8 @@ const useAppState = () => {
         activeTab,
         setActiveTab,
         transcriptWordCount,
-        filteredAndSortedBookmarks, // Expose this state for the BookmarkedComments component
+        filteredAndSortedBookmarks,
+        transcript: searchedTranscripts,
     };
 };
 
