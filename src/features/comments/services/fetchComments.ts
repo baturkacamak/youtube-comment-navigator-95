@@ -1,20 +1,13 @@
 // src/services/comments/fetchComments.ts
-import { fetchCommentsFromLocal } from './local/localFetch';
-import { fetchCommentsFromRemote } from './remote/remoteFetch';
-
-import {isLocalEnvironment} from "../../shared/utils/environmentVariables";
+import {fetchCommentsFromRemote} from './remote/remoteFetch';
 import {fetchContinuationTokenFromRemote} from "./remote/fetchContinuationTokenFromRemote";
 
 export const fetchComments = async (
     onCommentsFetched: (comments: any[]) => void,
     bypassCache = false,
 ) => {
-    if (isLocalEnvironment()) {
-        return fetchCommentsFromLocal();
-    } else {
-        let continuation = await fetchContinuationTokenFromRemote();
-        return fetchCommentsFromRemote(onCommentsFetched, bypassCache, continuation);
-    }
+    let continuation = await fetchContinuationTokenFromRemote();
+    return fetchCommentsFromRemote(onCommentsFetched, bypassCache, continuation);
 };
 
 

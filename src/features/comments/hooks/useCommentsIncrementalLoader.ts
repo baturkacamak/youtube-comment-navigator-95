@@ -6,7 +6,6 @@ import { CACHE_KEYS, isLocalEnvironment } from "../../shared/utils/environmentVa
 import { setComments, setOriginalComments } from "../../../store/store";
 import { fetchCommentsFromRemote } from "../services/remote/remoteFetch";
 import { fetchContinuationTokenFromRemote } from "../services/remote/fetchContinuationTokenFromRemote";
-import { fetchCommentsFromLocalIncrementally } from "../services/local/localFetch";
 import { db } from "../../shared/utils/database/database";
 
 const useCommentsIncrementalLoader = () => {
@@ -50,11 +49,7 @@ const useCommentsIncrementalLoader = () => {
                     byPassCache: boolean = false,
                     continuationToken?: string
                 ) => {
-                    if (isLocalEnvironment()) {
-                        await fetchCommentsFromLocalIncrementally(onCommentFetched);
-                    } else {
-                        await fetchCommentsFromRemote(onCommentFetched, byPassCache, continuationToken);
-                    }
+                    await fetchCommentsFromRemote(onCommentFetched, byPassCache, continuationToken);
                 };
 
                 await fetchCommentsIncrementally((comments) => {

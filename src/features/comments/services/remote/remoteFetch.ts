@@ -1,6 +1,6 @@
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
 import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
+import {CACHE_KEYS, isLocalEnvironment} from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { db } from "../../../shared/utils/database/database";
 import { extractContinuationToken } from "./continuationTokenUtils";
@@ -20,7 +20,10 @@ export const fetchCommentsFromRemote = async (
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
 
-        const videoId = extractYouTubeVideoIdFromUrl();
+        let videoId = extractYouTubeVideoIdFromUrl();
+        if (isLocalEnvironment()) {
+            videoId = 'localVideoId';
+        }
         if (!videoId) {
             throw new Error('Video ID not found');
         }
@@ -28,6 +31,7 @@ export const fetchCommentsFromRemote = async (
         const LOCAL_STORAGE_KEY = CACHE_KEYS.FINAL(videoId);
         const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
+
 
         // Retrieve cached data
         const cachedData = await db.comments.where('videoId').equals(videoId).toArray();
