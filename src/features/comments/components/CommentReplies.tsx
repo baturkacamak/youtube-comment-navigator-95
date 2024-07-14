@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CommentItem from './CommentItem';
 import { CommentRepliesProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
@@ -6,14 +6,8 @@ import { useTranslation } from 'react-i18next';
 const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, repliesRef, repliesHeight }) => {
     const { t } = useTranslation();
 
-    return (
-        <div
-            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out'}`}
-            style={{ maxHeight: repliesHeight }}
-            ref={repliesRef}
-            aria-expanded={showReplies}
-            aria-label={t('Replies')}
-        >
+    const memoizedReplies = useMemo(() => {
+        return (
             <div className="mt-4 space-y-4">
                 {replies.map((reply, index) => (
                     <CommentItem
@@ -28,6 +22,18 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
                     />
                 ))}
             </div>
+        );
+    }, [replies]);
+
+    return (
+        <div
+            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out'}`}
+            style={{ maxHeight: showReplies ? repliesHeight : '0px' }}
+            ref={repliesRef}
+            aria-expanded={showReplies}
+            aria-label={t('Replies')}
+        >
+            {showReplies && memoizedReplies}
         </div>
     );
 };

@@ -55,7 +55,8 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
             }
         };
 
-        return commentsToSort.sort(sortFunc);
+        const sortedComments = commentsToSort.sort(sortFunc);
+        return sortedComments;
     }, [applyFilters, calculateNormalized, getMaxValues, calculateWeightedZScore, getStats, calculateBayesianAverage, getAvgValues, sortByDate, sortByLikes, sortByReplies, sortByLength, sortByAuthor, sortByRandom]);
 
     const getInitialSortedComments = useCallback(
@@ -69,6 +70,7 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
 
     const loadMoreComments = useLoadMoreComments(comments, sortComments, previousSortByRef, previousSortOrderRef);
     const debouncedSortComments = useDebouncedSort(getInitialSortedComments);
+
 
     return { sortComments, loadMoreComments, debouncedSortComments };
 };

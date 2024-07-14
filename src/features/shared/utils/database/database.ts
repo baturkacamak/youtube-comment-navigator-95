@@ -1,6 +1,5 @@
 import Dexie from 'dexie';
 import { Comment } from "../../../../types/commentTypes";
-import commentsData from '../../../../comments.json'; // Adjust the path as needed
 
 // Define the old database
 class OldDatabase extends Dexie {

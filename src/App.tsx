@@ -58,7 +58,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     )}
-                    <CommentList comments={filteredAndSortedComments}/>
+                    <CommentList comments={filteredAndSortedComments} />
                 </>
             ),
         },
