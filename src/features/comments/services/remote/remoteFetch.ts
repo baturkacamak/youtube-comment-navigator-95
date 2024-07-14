@@ -68,7 +68,7 @@ export const fetchCommentsFromRemote = async (
             ]);
 
             const allComments = [comments, ...replies];
-            const processedData = processRawJsonCommentsData(allComments); // Pass videoId to the processing function
+            const processedData = processRawJsonCommentsData(allComments, videoId); // Pass videoId to the processing function
 
             // Store the newly fetched comments in the database
             await db.comments.bulkPut(processedData.items);

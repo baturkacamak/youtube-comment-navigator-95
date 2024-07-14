@@ -52,7 +52,7 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
 };
 
 
-export const processRawJsonCommentsData = (data: any[]) => {
+export const processRawJsonCommentsData = (data: any[], videoId: string) => {
     const allComments = data.flatMap(getCommentsFromData);
     const allCommentKeys = data.flatMap(getCommentKeysFromData);
 
@@ -62,7 +62,7 @@ export const processRawJsonCommentsData = (data: any[]) => {
     // Filtering and transforming comments
     const transformedComments = allComments
         .filter((comment: any) => comment.payload?.commentEntityPayload)
-        .map(transformCommentsData);
+        .map((comment: any) => transformCommentsData(comment, videoId));  // Pass videoId here
 
     // Add donation and heart information to comments
     const commentsWithAdditionalInfo = addAdditionalInfoToComments(transformedComments, allComments);

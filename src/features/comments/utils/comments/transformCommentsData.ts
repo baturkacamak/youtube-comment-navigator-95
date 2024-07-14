@@ -1,12 +1,10 @@
 import { Comment } from "../../../../types/commentTypes";
 import convertLikesToNumber from "../formatting/convertLikesToNumber";
 import convertTimeAgoToDate from "../formatting/convertTimeAgoToDate";
-import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
 
 const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/;
 
-export const transformCommentsData = (comment: any): Comment => {
-    const videoId = extractYouTubeVideoIdFromUrl();
+export const transformCommentsData = (comment: any, videoId: string): Comment => {
     const payload = comment.payload?.commentEntityPayload;
     const author = payload?.author?.displayName || 'Unknown';
     const content = payload?.properties?.content?.content || 'No content';
