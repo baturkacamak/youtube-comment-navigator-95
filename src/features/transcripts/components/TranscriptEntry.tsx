@@ -22,7 +22,7 @@ const TranscriptEntry: React.FC<TranscriptEntryProps> = ({
                                                              setHoveredLineIndex
                                                          }) => {
     const textSize = useSelector((state: RootState) => state.settings.textSize);
-    const keyword = useSelector((state: RootState) => state.filters.keyword);
+    const keyword = useSelector((state: RootState) => state.searchKeyword);
     const fontFamily = useSelector((state: RootState) => state.settings.fontFamily); // Get the selected font
 
     return (

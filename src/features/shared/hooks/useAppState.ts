@@ -45,14 +45,14 @@ const useAppState = () => {
 
     useEffect(() => {
         if (activeTab === 'bookmarks') {
-            if (filters.keyword.trim() === '') {
+            if (searchKeyword.trim() === '') {
                 fetchBookmarkedComments();
             }
             dispatch(setShowBookmarked(true));
         } else {
             dispatch(setShowBookmarked(false));
         }
-    }, [activeTab, fetchBookmarkedComments, filters.keyword]);
+    }, [activeTab, fetchBookmarkedComments, searchKeyword]);
 
     const filteredAndSortedBookmarks = useMemo(() => {
         if (!filters) return [];
@@ -80,7 +80,7 @@ const useAppState = () => {
             filteredTranscripts = searchTranscripts(filteredTranscripts, searchKeyword);
         }
         return filteredTranscripts;
-    }, [searchKeyword]);
+    }, [searchKeyword, transcripts]);
 
     const setFiltersCallback = useCallback((filters: Filters) => {
         dispatch(setFilters(filters));

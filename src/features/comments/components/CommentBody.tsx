@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from "../../../types/rootState";
 
 const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
-    const keyword = useSelector((state: RootState) => state.filters.keyword);
+    const keyword = useSelector((state: RootState) => state.searchKeyword);
     const textSize = useSelector((state: RootState) => state.settings.textSize);
     const fontFamily = useSelector((state: RootState) => state.settings.fontFamily); // Get the selected font
 
