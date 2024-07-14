@@ -7,7 +7,11 @@ import { extractContinuationToken } from "./continuationTokenUtils";
 import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 
 let currentAbortController = new AbortController();
-
+window.addEventListener('message', (event: MessageEvent) => {
+    if (event.data.type === 'URL_CHANGED') {
+        currentAbortController.abort();
+    }
+});
 export const fetchCommentsFromRemote = async (
     onCommentsFetched: (comments: any[]) => void,
     bypassCache: boolean = false,
@@ -16,9 +20,11 @@ export const fetchCommentsFromRemote = async (
     try {
         // Abort previous requests
         currentAbortController.abort();
+
         // Create a new AbortController for the new video
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
+
 
         let videoId = extractYouTubeVideoIdFromUrl();
         if (isLocalEnvironment()) {
@@ -39,12 +45,6 @@ export const fetchCommentsFromRemote = async (
             onCommentsFetched(cachedData);
             return;
         }
-
-        window.addEventListener('message', (event: MessageEvent) => {
-            if (event.data.type === 'URL_CHANGED') {
-                currentAbortController.abort();
-            }
-        });
 
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         let token: string | null = continuationToken || null;
