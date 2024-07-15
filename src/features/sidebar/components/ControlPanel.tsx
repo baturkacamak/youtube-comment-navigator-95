@@ -24,7 +24,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({filters, setFilters}) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <div className="flex gap-x-4 items-center justify-between flex-wrap">
+            <div className="flex gap-x-4 items-center flex-wrap">
                 <ArrowsUpDownIcon className="w-6 h-6 text-black dark:text-white" aria-hidden="true"/>
                 <SortList filters={filters} setFilters={setFilters}/>
             </div>
