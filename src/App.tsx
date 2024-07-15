@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -10,19 +10,21 @@ import useFetchDataOnUrlChange from "./features/shared/hooks/urlChange/useFetchD
 import './styles/App.scss';
 import NavigationHeader from "./features/navigation-header/components/NavigationHeader";
 import Box from "./features/shared/components/Box";
-import { useTranslation } from "react-i18next";
-import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } from '@heroicons/react/24/outline';
+import {useTranslation} from "react-i18next";
+import {BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon} from '@heroicons/react/24/outline';
 import Tabs from "./features/shared/components/Tabs";
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from "./types/rootState";
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from "./types/rootState";
 import i18n from "i18next";
 
 const App: React.FC = () => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const isRtl = i18n.dir() === 'rtl';
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
+    const showContentOnSearch = useSelector((state: RootState) => state.settings.showContentOnSearch); // Get the state
+    const searchKeyword = useSelector((state: RootState) => state.searchKeyword); // Get the search keyword
     const dispatch = useDispatch();
 
     const openSettings = () => setIsSettingsOpen(true);
@@ -34,7 +36,7 @@ const App: React.FC = () => {
         setFiltersCallback,
         setActiveTab,
         transcriptWordCount,
-        filteredAndSortedBookmarks, // Destructure the new state
+        filteredAndSortedBookmarks,
         transcript,
     } = useAppState();
 
@@ -57,7 +59,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     )}
-                    <CommentList comments={filteredAndSortedComments} />
+                    <CommentList comments={filteredAndSortedComments}/>
                 </>
             ),
         },
@@ -67,7 +69,7 @@ const App: React.FC = () => {
                 label: `${t('Transcript')} (${transcriptWordCount})`,
                 icon: DocumentTextIcon,
             },
-            content: <Transcript transcripts={transcript} />,
+            content: <Transcript transcripts={transcript}/>,
         },
         {
             title: {
@@ -93,7 +95,7 @@ const App: React.FC = () => {
                             />
                         </div>
                     )}
-                    <BookmarkedComments comments={filteredAndSortedBookmarks} />
+                    <BookmarkedComments comments={filteredAndSortedBookmarks}/>
                 </>
             ),
         },
@@ -112,27 +114,33 @@ const App: React.FC = () => {
     }
 
     return (
-        <div className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}>
-            <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
-            {isSettingsOpen && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
-                    onClick={closeSettings}
-                />
-            )}
+        <div
+            className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}>
+            <div className={`transition-all ease-in-out duration-500 ${isSettingsOpen ? 'max-h-[1000px] opacity-1' : 'max-h-0 opacity-0'}`}>
+                <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings}/>
+                {isSettingsOpen && (
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
+                        onClick={closeSettings}
+                    />
+                )}
+            </div>
             <div
                 className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${drawerClass}`}
             >
-                <Box className="flex flex-col w-full gap-2" aria-label={t('Control Panel')} borderColor={'border-transparent'}>
+                <Box className="flex flex-col w-full gap-2" aria-label={t('Control Panel')}
+                     borderColor={'border-transparent'}>
                     <NavigationHeader
                         openSettings={openSettings}
                     />
-                    <hr className="border border-solid border-gray-200 dark:border-gray-600" />
-                    <SearchBar />
+                    <hr className="border border-solid border-gray-200 dark:border-gray-600"/>
+                    <SearchBar/>
                 </Box>
-                <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
-                    <Tabs tabs={tabs} onTabChange={setActiveTab} />
-                </Box>
+                {(!showContentOnSearch || searchKeyword) && ( // Conditionally render the Tabs component
+                    <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
+                        <Tabs tabs={tabs} onTabChange={setActiveTab}/>
+                    </Box>
+                )}
             </div>
         </div>
     );

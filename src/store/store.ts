@@ -10,6 +10,7 @@ const initialState: RootState = {
         textSize: 'text-base',
         fontFamily: 'Arial, sans-serif',
         showFiltersSorts: true,
+        showContentOnSearch: false,
     },
     filters: {
         keyword: '',
@@ -107,6 +108,10 @@ const commentsSlice = createSlice({
             state.settings.fontFamily = action.payload;
             saveSettings({fontFamily: state.settings.fontFamily});
         },
+        setShowContentOnSearch: (state, action: PayloadAction<boolean>) => {
+            state.settings.showContentOnSearch = action.payload;
+            saveSettings({ showContentOnSearch: state.settings.showContentOnSearch });
+        },
 
         setTranscriptSelectedLanguage: (state, action: PayloadAction<{ value: string, label: string }>) => {
             state.transcriptSelectedLanguage = action.payload;
@@ -146,6 +151,7 @@ export const {
     setShowBookmarked,
     setShowFiltersSorts,
     setFontFamily,
+    setShowContentOnSearch,
 
     setTranscriptSelectedLanguage,
     // Reset action

@@ -13,6 +13,7 @@ import LoadingSection from "../../loading/components/LoadingSection";
 import {RootState} from '../../../types/rootState';
 import FontSetting from "../FontSetting";
 import i18n from "i18next";
+import ShowContentOnSearchToggle from "./ShowContentOnSearchToggle";
 
 const useGoogleDrive = () => {
     return {
@@ -94,10 +95,9 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({isOpen, onClose}) => {
                                 className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
                                 <LanguageSetting/>
                             </div>
-
                             <div
                                 className="flex items-center justify-between mb-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
-                                <ShowFiltersSortsToggle/>
+                                <ShowContentOnSearchToggle/>
                             </div>
                         </div>
                     </div>

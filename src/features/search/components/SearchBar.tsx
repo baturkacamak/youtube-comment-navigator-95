@@ -73,13 +73,6 @@ const SearchBar: React.FC = () => {
 
     return (
         <form onSubmit={handleSubmit} className="flex items-center p-2 relative" aria-label={t('Search form')}>
-            <SelectBox
-                options={options}
-                selectedOption={options.find(option => option.value === selectedOption.value)!}
-                setSelectedOption={setSelectedOption}
-                buttonClassName={'rounded-l-lg'}
-                aria-label={t('Select search category')}
-            />
             <input
                 type="text"
                 placeholder={placeholder}

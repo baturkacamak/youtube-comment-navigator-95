@@ -14,6 +14,7 @@ export interface RootState {
         textSize: string;
         showFiltersSorts: boolean;
         fontFamily: string;
+        showContentOnSearch: boolean;
     };
     filteredTranscripts: any[];
     bookmarkedLines: any[];
