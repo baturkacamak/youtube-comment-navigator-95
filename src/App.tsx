@@ -51,14 +51,12 @@ const App: React.FC = () => {
             },
             content: (
                 <>
-                    {showFiltersSorts && (
-                        <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
-                            <ControlPanel
-                                filters={filters}
-                                setFilters={setFiltersCallback}
-                            />
-                        </div>
-                    )}
+                    <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+                        <ControlPanel
+                            filters={filters}
+                            setFilters={setFiltersCallback}
+                        />
+                    </div>
                     <CommentList comments={filteredAndSortedComments}/>
                 </>
             ),
