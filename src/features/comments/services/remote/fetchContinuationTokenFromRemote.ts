@@ -38,7 +38,7 @@ export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean
     }
 };
 
-export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
+export const fetchContinuationTokenFromRemote = async (videoId?: string): Promise<string> => {
     try {
         const windowObj = window as any; // Cast window to any to use in YouTube logic
         const ytcfg = windowObj.ytcfg;
@@ -47,7 +47,9 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
         const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || "1";
         const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION;
 
-        const videoId = extractYouTubeVideoIdFromUrl();
+        if (!videoId) {
+            videoId = extractYouTubeVideoIdFromUrl();
+        }
         const referrer = document.referrer;
         const response = await fetch("https://www.youtube.com/youtubei/v1/next?fetchContinuationTokenFromRemote", {
             headers: {
@@ -100,22 +102,25 @@ export const fetchContinuationTokenFromRemote = async (): Promise<string>=> {
                     },
                     adSignalsInfo: {
                         params: [
-                            { key: "dt", value: String(Date.now()) },
-                            { key: "flash", value: "0" },
-                            { key: "frm", value: "0" },
-                            { key: "u_tz", value: String(new Date().getTimezoneOffset() * -1) },
-                            { key: "u_h", value: String(window.innerHeight) },
-                            { key: "u_w", value: String(window.innerWidth) },
-                            { key: "u_ah", value: String(window.screen.availHeight) },
-                            { key: "u_aw", value: String(window.screen.availWidth) },
-                            { key: "u_cd", value: String(window.screen.colorDepth) },
-                            { key: "bc", value: "31" },
-                            { key: "bih", value: String(window.innerHeight) },
-                            { key: "biw", value: String(window.innerWidth - (window.outerWidth - window.innerWidth)) },
-                            { key: "brdim", value: `${window.outerWidth},${window.outerHeight},${window.screenX},${window.screenY},${window.innerWidth},${window.innerHeight},${window.screen.availWidth},${window.screen.availHeight}` },
-                            { key: "vis", value: "1" },
-                            { key: "wgl", value: String(!!window.WebGLRenderingContext) },
-                            { key: "ca_type", value: "image" }
+                            {key: "dt", value: String(Date.now())},
+                            {key: "flash", value: "0"},
+                            {key: "frm", value: "0"},
+                            {key: "u_tz", value: String(new Date().getTimezoneOffset() * -1)},
+                            {key: "u_h", value: String(window.innerHeight)},
+                            {key: "u_w", value: String(window.innerWidth)},
+                            {key: "u_ah", value: String(window.screen.availHeight)},
+                            {key: "u_aw", value: String(window.screen.availWidth)},
+                            {key: "u_cd", value: String(window.screen.colorDepth)},
+                            {key: "bc", value: "31"},
+                            {key: "bih", value: String(window.innerHeight)},
+                            {key: "biw", value: String(window.innerWidth - (window.outerWidth - window.innerWidth))},
+                            {
+                                key: "brdim",
+                                value: `${window.outerWidth},${window.outerHeight},${window.screenX},${window.screenY},${window.innerWidth},${window.innerHeight},${window.screen.availWidth},${window.screen.availHeight}`
+                            },
+                            {key: "vis", value: "1"},
+                            {key: "wgl", value: String(!!window.WebGLRenderingContext)},
+                            {key: "ca_type", value: "image"}
                         ]
                     }
                 },

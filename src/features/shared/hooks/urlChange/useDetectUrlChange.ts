@@ -1,18 +1,26 @@
 import { useEffect } from 'react';
 import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdFromUrl';
-import {resetState, setIsLoading} from "../../../../store/store";
+import { resetState, setIsLoading } from "../../../../store/store";
 import { useDispatch } from "react-redux";
+
+let previousVideoId: string | null = null;
 
 const useDetectUrlChange = (callback: () => Promise<void>) => {
     const dispatch = useDispatch();
+    let debounceTimeout: NodeJS.Timeout | null = null;
 
     useEffect(() => {
         const abortController = new AbortController();
-        let previousVideoId: string | null = null;
 
         const handleUrlChangeMessage = (event: MessageEvent) => {
             if (event.data.type === 'URL_CHANGE_TO_VIDEO') {
-                handleUrlChange();
+                if (debounceTimeout) {
+                    clearTimeout(debounceTimeout);
+                }
+                debounceTimeout = setTimeout(() => {
+                    handleUrlChange();
+                    window.removeEventListener('message', handleUrlChangeMessage);
+                }, 500);
             }
         };
 
@@ -56,8 +64,11 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
         return () => {
             window.removeEventListener('message', handleUrlChangeMessage);
             abortController.abort();
+            if (debounceTimeout) {
+                clearTimeout(debounceTimeout);
+            }
         };
-    }, [callback]);
+    }, [callback, dispatch]);
 };
 
 export default useDetectUrlChange;
