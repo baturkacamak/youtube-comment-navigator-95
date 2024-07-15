@@ -1,10 +1,14 @@
+// src/features/comments/services/remote/remoteFetch.ts
+
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
 import { extractYouTubeVideoIdFromUrl } from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {CACHE_KEYS, isLocalEnvironment} from "../../../shared/utils/environmentVariables";
+import { CACHE_KEYS, isLocalEnvironment } from "../../../shared/utils/environmentVariables";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { db } from "../../../shared/utils/database/database";
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
+import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
+import {setComments, setIsLoading, setOriginalComments} from "../../../../store/store";
 
 let currentAbortController = new AbortController();
 window.addEventListener('message', (event: MessageEvent) => {
@@ -12,11 +16,28 @@ window.addEventListener('message', (event: MessageEvent) => {
         currentAbortController.abort();
     }
 });
+
+const storeContinuationToken = (videoId: string, token: string, continuationTokenKey: string) => {
+    const tokens = JSON.parse(localStorage.getItem(continuationTokenKey) || '{}');
+    tokens[videoId] = token;
+    localStorage.setItem(continuationTokenKey, JSON.stringify(tokens));
+};
+
+const retrieveCachedContinuationToken = (videoId: string, continuationTokenKey: string): string | null => {
+    const tokens = JSON.parse(localStorage.getItem(continuationTokenKey) || '{}');
+    return tokens[videoId] || null;
+};
+
 export const fetchCommentsFromRemote = async (
-    onCommentsFetched: (comments: any[]) => void,
+    dispatch: any,
     bypassCache: boolean = false,
-    continuationToken?: string
 ) => {
+    const handleFetchedComments = (comments: any[]) => {
+        dispatch(setComments(comments));
+        dispatch(setOriginalComments(comments));
+        dispatch(setIsLoading(false));
+    };
+
     try {
         // Abort previous requests
         currentAbortController.abort();
@@ -24,7 +45,6 @@ export const fetchCommentsFromRemote = async (
         // Create a new AbortController for the new video
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
-
 
         let videoId = extractYouTubeVideoIdFromUrl();
         if (isLocalEnvironment()) {
@@ -35,25 +55,27 @@ export const fetchCommentsFromRemote = async (
         }
 
         const LOCAL_STORAGE_KEY = CACHE_KEYS.FINAL(videoId);
-        const TEMP_CACHE_KEY = CACHE_KEYS.TEMP(videoId);
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
 
+        // Retrieve the continuation token from local storage if it exists
+        let token: string | null = retrieveCachedContinuationToken(videoId, CONTINUATION_TOKEN_KEY) || await fetchContinuationTokenFromRemote() || null;
 
-        // Retrieve cached data
-        const cachedData = await db.comments.where('videoId').equals(videoId).toArray();
-        if (!bypassCache && cachedData.length > 0) {
-            onCommentsFetched(cachedData);
-            return;
+        // Retrieve cached data if cache is not bypassed and there is no continuation token
+        if (!bypassCache && !token) {
+            const cachedData = await db.comments.where('videoId').equals(videoId).toArray();
+            if (cachedData.length > 0) {
+                handleFetchedComments(cachedData);
+                return;
+            }
         }
 
         const windowObj = window as any; // Cast window to any to use in YouTube logic
-        let token: string | null = continuationToken || null;
         let totalFetchedComments = 0;
         let updateInterval: ReturnType<typeof setInterval> | null = null;
 
         const updateUI = async () => {
             const commentsFromDB = await db.comments.where('videoId').equals(videoId).toArray();
-            onCommentsFetched(commentsFromDB);
+            handleFetchedComments(commentsFromDB);
         };
 
         // Delete existing comments with the same videoId to prevent duplication
@@ -84,6 +106,11 @@ export const fetchCommentsFromRemote = async (
             const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
                 || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
             token = extractContinuationToken(continuationItems);
+
+            // Store the current continuation token
+            if (token) {
+                storeContinuationToken(videoId, token, CONTINUATION_TOKEN_KEY);
+            }
         } while (token);
 
         // Clear interval after all comments are fetched
@@ -95,7 +122,9 @@ export const fetchCommentsFromRemote = async (
         await updateUI();
 
         // Clear temporary cache and continuation token after all comments are fetched
-        localStorage.removeItem(CONTINUATION_TOKEN_KEY);
+        const tokens = JSON.parse(localStorage.getItem(CONTINUATION_TOKEN_KEY) || '{}');
+        delete tokens[videoId];
+        localStorage.setItem(CONTINUATION_TOKEN_KEY, JSON.stringify(tokens));
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
             console.log('Fetch operation was aborted.');

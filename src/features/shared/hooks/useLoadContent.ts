@@ -1,6 +1,5 @@
 import { useDispatch } from 'react-redux';
-
-import { fetchComments, fetchChatReplies } from '../../comments/services/fetchComments';
+import { fetchChatReplies } from '../../comments/services/fetchComments';
 import {
     setComments, setFilteredTranscripts,
     setOriginalComments,
@@ -9,18 +8,14 @@ import {
     setTranscripts,
 } from "../../../store/store";
 import {fetchTranscript} from "../../transcripts/services/fetchTranscript";
+import {fetchCommentsFromRemote} from "../../comments/services/remote/remoteFetch";
 
 const useLoadContent = (bypassCache = false) => {
     const dispatch = useDispatch();
 
     const loadComments = async (bypassCache = false) => {
         dispatch(setIsLoading(true));
-        const handleFetchedComments = (comments: any[]) => {
-            dispatch(setComments(comments));
-            dispatch(setOriginalComments(comments));
-            dispatch(setIsLoading(false));
-        };
-        await fetchComments(handleFetchedComments, bypassCache);
+        await fetchCommentsFromRemote(dispatch, bypassCache);
     };
 
     const loadChatReplies = async () => {
@@ -58,7 +53,7 @@ const useLoadContent = (bypassCache = false) => {
             dispatch(setIsLoading(false));
         };
 
-        const commentsData = await fetchComments(handleFetchedComments, bypassCache);
+        const commentsData = await fetchCommentsFromRemote(handleFetchedComments, bypassCache);
         const chatRepliesData = await fetchChatReplies();
         const transcriptsData = await fetchTranscript();
     };

@@ -1,14 +1,11 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchContinuationTokenFromRemote } from '../../../comments/services/remote/fetchContinuationTokenFromRemote';
 import { fetchCommentsFromRemote } from '../../../comments/services/remote/remoteFetch';
 import useDetectUrlChange from './useDetectUrlChange';
 import {
     resetState,
     setBookmarkedComments,
-    setComments,
     setFilteredTranscripts, setIsLoading,
-    setOriginalComments,
     setTranscripts,
 } from "../../../../store/store";
 import { fetchCaptionTrackBaseUrl, fetchTranscriptFromRemote } from "../../../transcripts/services/remoteFetch";
@@ -22,13 +19,10 @@ const useFetchDataOnUrlChange = () => {
 
         await fetchAndSetBookmarks(dispatch);
         await fetchAndSetTranscripts(dispatch);
-
-        const continuationToken = await fetchContinuationTokenFromRemote();
         dispatch(setIsLoading(false));
         await fetchCommentsFromRemote(
-            (comments) => handleFetchedComments(comments, dispatch),
-            false,
-            continuationToken
+            dispatch,
+            false
         );
     });
 };
@@ -38,11 +32,6 @@ const handleAbortController = (abortControllerRef: React.MutableRefObject<AbortC
         abortControllerRef.current.abort();
     }
     abortControllerRef.current = new AbortController();
-};
-
-const handleFetchedComments = (comments: any[], dispatch: any) => {
-    dispatch(setComments(comments));
-    dispatch(setOriginalComments(comments));
 };
 
 const fetchAndSetBookmarks = async (dispatch: any) => {
