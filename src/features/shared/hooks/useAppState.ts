@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RootState } from '../../../types/rootState';
 import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
@@ -11,7 +11,8 @@ import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 import { db } from "../utils/database/database";
 import { Comment } from "../../../types/commentTypes";
 import { searchComments } from "../../comments/services/commentSearchService";
-import {searchTranscripts} from "../../comments/services/transcriptSearchService"; // Ensure correct import
+import { searchTranscripts } from "../../comments/services/transcriptSearchService";
+import useFetchDataOnUrlChange from "../hooks/urlChange/useFetchDataOnUrlChange";
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -91,6 +92,9 @@ const useAppState = () => {
     }, [dispatch, showBookmarked]);
 
     const transcriptWordCount = calculateFilteredWordCount(searchedTranscripts, searchKeyword);
+
+    // Call useFetchDataOnUrlChange
+    useFetchDataOnUrlChange();
 
     return {
         comments,

@@ -6,7 +6,6 @@ import CommentList from './features/comments/components/CommentList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
 import Transcript from './features/transcripts/components/Transcript';
 import useAppState from './features/shared/hooks/useAppState';
-import useFetchDataOnUrlChange from "./features/shared/hooks/urlChange/useFetchDataOnUrlChange";
 import './styles/App.scss';
 import NavigationHeader from "./features/navigation-header/components/NavigationHeader";
 import Box from "./features/shared/components/Box";
@@ -40,7 +39,6 @@ const App: React.FC = () => {
         transcript,
     } = useAppState();
 
-    useFetchDataOnUrlChange();
 
     const tabs = [
         {
