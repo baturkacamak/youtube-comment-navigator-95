@@ -35,7 +35,6 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
 
         let localToken = retrieveLocalContinuationToken(CONTINUATION_TOKEN_KEY);
-        let token: string | null = localToken || await fetchContinuationTokenFromRemote();
 
         if (!bypassCache && !localToken) {
             const cachedData = await fetchCachedComments(videoId);
@@ -44,6 +43,8 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
                 return;
             }
         }
+
+        let token: string | null = localToken || await fetchContinuationTokenFromRemote();
 
         const windowObj = window as any;
         let totalFetchedComments = 0;
