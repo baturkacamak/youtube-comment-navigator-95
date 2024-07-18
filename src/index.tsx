@@ -75,6 +75,17 @@ if (rootElement) {
             reportWebVitals(console.log); // Replace console.log with your analytics function
         });
     }
+    const handleUrlChangeToNotAVideo = (event: { data: { type: string; }; }) => {
+        if (event.data.type === 'STOP_VIDEO_NAVIGATION') {
+            root.unmount();
+        }
+    };
+
+    window.addEventListener('message', handleUrlChangeToNotAVideo);
+
+    window.addEventListener('beforeunload', () => {
+        window.removeEventListener('message', handleUrlChangeToNotAVideo);
+    });
 } else {
     console.error("Root element 'youtube-comment-navigator-app' not found");
 }

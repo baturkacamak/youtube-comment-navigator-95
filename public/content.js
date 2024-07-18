@@ -230,6 +230,7 @@ class YouTubeCommentNavigator {
     removeInjectedContent() {
         DOMHelper.removeAppContainer(this.appContainerId);
         this.assetInjector.removeAssets();
+        window.postMessage({type: 'STOP_VIDEO_NAVIGATION', url: window.location.href}, '*');
     }
 }
 
