@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     AcademicCapIcon,
     ArrowsUpDownIcon,
@@ -13,31 +13,37 @@ import {
 } from '@heroicons/react/24/outline';
 import RadioFilter from '../../shared/components/RadioFilter';
 import useAnimation from '../../shared/hooks/useAnimation';
-import {SortListProps} from "../../../types/filterTypes";
-import {useTranslation} from 'react-i18next';
+import { SortListProps } from "../../../types/filterTypes";
+import { useTranslation } from 'react-i18next';
 
-const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
-    const {t} = useTranslation();
-    const {triggerAnimation, getAnimationClass} = useAnimation(1000);
+const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
+    const { t } = useTranslation();
+    const { triggerAnimation, getAnimationClass } = useAnimation(1000);
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [maxHeight, setMaxHeight] = useState('0px');
     const containerRef = useRef<HTMLDivElement>(null);
 
     const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newSortBy = e.target.value;
-        const newSortOrder = filters.sortOrder;
-        setFilters({...filters, sortBy: newSortBy, sortOrder: newSortOrder});
-        triggerAnimation(newSortBy);
+        const currentSortBy = filters.sortBy;
+
+        if (newSortBy === currentSortBy) {
+            setFilters({ ...filters, sortBy: '', sortOrder: '' });
+        } else {
+            const newSortOrder = filters.sortOrder;
+            setFilters({ ...filters, sortBy: newSortBy, sortOrder: newSortOrder });
+            triggerAnimation(newSortBy);
+        }
     };
 
     const toggleSortOrder = () => {
         const newSortOrder = filters.sortOrder === 'asc' ? 'desc' : 'asc';
-        setFilters({...filters, sortOrder: newSortOrder});
+        setFilters({ ...filters, sortOrder: newSortOrder });
     };
 
     const handleRandomChange = () => {
         const newSortOrder = filters.sortOrder === 'asc' ? 'desc' : 'asc';
-        setFilters({...filters, sortBy: 'random', sortOrder: newSortOrder});
+        setFilters({ ...filters, sortBy: 'random', sortOrder: newSortOrder });
         triggerAnimation('random');
     };
 
@@ -51,37 +57,37 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
         {
             name: 'Likes',
             label: t('Likes'),
-            icon: <HandThumbUpIcon className={`w-5 h-5 mr-px ${getAnimationClass('likes', 'heartBeat')}`}/>,
+            icon: <HandThumbUpIcon className={`w-5 h-5 mr-px ${getAnimationClass('likes', 'heartBeat')}`} />,
             value: 'likes'
         },
         {
             name: 'Length',
             label: t('Word Count'),
-            icon: <ChartBarIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`}/>,
+            icon: <ChartBarIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`} />,
             value: 'length'
         },
         {
             name: 'Replies',
             label: t('Replies'),
-            icon: <ChatBubbleLeftRightIcon className={`w-5 h-5 mr-px ${getAnimationClass('replies', 'bounceIn')}`}/>,
+            icon: <ChatBubbleLeftRightIcon className={`w-5 h-5 mr-px ${getAnimationClass('replies', 'bounceIn')}`} />,
             value: 'replies'
         },
         {
             name: 'Date',
             label: t('Date'),
-            icon: <ClockIcon className={`w-5 h-5 mr-px ${getAnimationClass('date', 'swing')}`}/>,
+            icon: <ClockIcon className={`w-5 h-5 mr-px ${getAnimationClass('date', 'swing')}`} />,
             value: 'date'
         },
         {
             name: 'Author',
             label: t('Author'),
-            icon: <UsersIcon className={`w-5 h-5 mr-px ${getAnimationClass('author', 'rubberBand')}`}/>,
+            icon: <UsersIcon className={`w-5 h-5 mr-px ${getAnimationClass('author', 'rubberBand')}`} />,
             value: 'author'
         },
         {
             name: 'Random',
             label: t('Random'),
-            icon: <ArrowsUpDownIcon className={`w-5 h-5 mr-px ${getAnimationClass('random', 'flip')}`}/>,
+            icon: <ArrowsUpDownIcon className={`w-5 h-5 mr-px ${getAnimationClass('random', 'flip')}`} />,
             value: 'random'
         },
     ];
@@ -90,19 +96,19 @@ const SortList: React.FC<SortListProps> = ({filters, setFilters}) => {
         {
             name: 'Normalized',
             label: t('Normalized'),
-            icon: <ScaleIcon className={`w-5 h-5 mr-px ${getAnimationClass('normalized', 'pulse')}`}/>,
+            icon: <ScaleIcon className={`w-5 h-5 mr-px ${getAnimationClass('normalized', 'pulse')}`} />,
             value: 'normalized'
         },
         {
             name: 'Weighted Z-Score',
             label: t('Weighted Z-Score'),
-            icon: <ArrowTrendingUpIcon className={`w-5 h-5 mr-px ${getAnimationClass('zscore', 'pulse')}`}/>,
+            icon: <ArrowTrendingUpIcon className={`w-5 h-5 mr-px ${getAnimationClass('zscore', 'pulse')}`} />,
             value: 'zscore'
         },
         {
             name: 'Bayesian Average',
             label: t('Bayesian Average'),
-            icon: <AcademicCapIcon className={`w-5 h-5 mr-px ${getAnimationClass('bayesian', 'pulse')}`}/>,
+            icon: <AcademicCapIcon className={`w-5 h-5 mr-px ${getAnimationClass('bayesian', 'pulse')}`} />,
             value: 'bayesian'
         }
     ];

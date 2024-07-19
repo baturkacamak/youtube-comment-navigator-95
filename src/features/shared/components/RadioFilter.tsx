@@ -17,6 +17,12 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
         }
     };
 
+    const handleRadioClick = (e: React.MouseEvent<HTMLInputElement>) => {
+        if (selectedValue === value) {
+            onChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>);
+        }
+    };
+
     return (
         <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-2 cursor-pointer" aria-label={`Radio filter for ${name}`} role="radio" aria-checked={selectedValue === value}>
             <div className="relative">
@@ -26,6 +32,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({ name, label, icon, value, sel
                     value={value}
                     checked={selectedValue === value}
                     onChange={onChange}
+                    onClick={handleRadioClick}
                     className="absolute opacity-0 h-0 w-0"
                     aria-checked={selectedValue === value}
                     aria-label={name}
