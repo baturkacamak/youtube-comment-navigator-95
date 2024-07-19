@@ -12,37 +12,41 @@ export const mergeCommentsWithViewModels = (transformedComments: any[], commentV
         commentViewModel: commentViewModels[index] || {},
     }));
 };
+
+// Helper function to find a mutation by key and extract a value from a nested path
+const findMutationValue = (entityKey: string, path: string[], allComments: any[]) => {
+
+    // Find the mutation object with the matching entityKey
+    const mutation = allComments.find(item => item.entityKey === entityKey);
+
+    // Use the path array to navigate through the nested properties of the mutation payload
+    return path.reduce((accumulator, currentPath) => {
+        if (accumulator && accumulator[currentPath]) {
+            return accumulator[currentPath]; // Move to the next nested property
+        }
+        return ''; // Return an empty string if the path does not exist
+    }, mutation?.payload);
+};
+
 // Helper function to retrieve a value from a nested object path in a mutation
 export const addAdditionalInfoToComments = (comments: any[], allComments: any[]) => {
-    // Helper function to find a mutation by key and extract a value from a nested path
-    const findMutationValue = (entityKey: string, path: string[]) => {
-        // Find the mutation object with the matching entityKey
-        const mutation = allComments.find(item => item.entityKey === entityKey);
-
-        // Use the path array to navigate through the nested properties of the mutation payload
-        return path.reduce((accumulator, currentPath) => {
-            if (accumulator && accumulator[currentPath]) {
-                return accumulator[currentPath]; // Move to the next nested property
-            }
-            return ''; // Return an empty string if the path does not exist
-        }, mutation?.payload);
-    };
-
     return comments.map(comment => {
         const commentSurfaceKey = comment.commentViewModel?.commentSurfaceKey;
         const toolbarStateKey = comment.commentViewModel?.toolbarStateKey || false;
         const toolbarSurfaceKey = comment.commentViewModel?.toolbarSurfaceKey || false;
 
-        const donationAmount = findMutationValue(commentSurfaceKey, ['commentSurfaceEntityPayload', 'pdgCommentChip', 'pdgCommentChipRenderer', 'chipText', 'simpleText']);
+        const donationAmount = findMutationValue(commentSurfaceKey, ['commentSurfaceEntityPayload', 'pdgCommentChip', 'pdgCommentChipRenderer', 'chipText', 'simpleText'], allComments);
         const isDonated = !!donationAmount;
 
-        const heartState = findMutationValue(toolbarStateKey, ['engagementToolbarStateEntityPayload', 'heartState']);
+        const heartState = findMutationValue(toolbarStateKey, ['engagementToolbarStateEntityPayload', 'heartState'], allComments);
         const isHearted = heartState === 'TOOLBAR_HEART_STATE_HEARTED';
 
-        const likeAction = findMutationValue(toolbarSurfaceKey, ['engagementToolbarSurfaceEntityPayload', 'likeCommand', 'innertubeCommand', 'performCommentActionEndpoint', 'action']);
+        const likeAction = findMutationValue(toolbarSurfaceKey, ['engagementToolbarSurfaceEntityPayload', 'likeCommand', 'innertubeCommand', 'performCommentActionEndpoint', 'action'], allComments);
+
+        const { commentViewModel, ...restOfComment } = comment;
 
         return {
-            ...comment,
+            ...restOfComment,
             isDonated,
             donationAmount,
             isHearted,
@@ -64,8 +68,8 @@ export const processRawJsonCommentsData = (data: any[], videoId: string) => {
         .filter((comment: any) => comment.payload?.commentEntityPayload)
         .map((comment: any) => transformCommentsData(comment, videoId));  // Pass videoId here
 
+    const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
     // Add donation and heart information to comments
-    const commentsWithAdditionalInfo = addAdditionalInfoToComments(transformedComments, allComments);
-
+    const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
     return {items: commentsWithAdditionalInfo};
 };
