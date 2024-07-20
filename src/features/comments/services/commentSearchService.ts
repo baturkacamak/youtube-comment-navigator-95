@@ -5,22 +5,23 @@ import Fuse from "fuse.js";
 export const searchComments = (comments: Comment[], keyword: string): Comment[] => {
     const normalizedKeyword = normalizeString(keyword);
 
+    // Normalize comments content
+    const normalizedComments = comments.map(comment => ({
+        ...comment,
+        normalizedContent: normalizeString(comment.content),
+    }));
+
     // Set up Fuse.js options
     const fuseOptions = {
-        keys: ['content'],
+        keys: ['normalizedContent'],
         includeScore: true,
         threshold: 0.2,
     };
 
-    // Initialize Fuse with comments and options
-    const fuse = new Fuse(comments, fuseOptions);
-
-    // Perform the fuzzy search
+    const fuse = new Fuse(normalizedComments, fuseOptions);
     const fuseResults = fuse.search(normalizedKeyword);
-
     const filteredCommentsMap = new Map<string, Comment>();
 
-    // Process Fuse.js results
     fuseResults.forEach(({ item: comment }) => {
         filteredCommentsMap.set(comment.commentId, comment);
         if (comment.commentParentId) {
@@ -30,6 +31,21 @@ export const searchComments = (comments: Comment[], keyword: string): Comment[] 
                     ...parentComment,
                     showRepliesDefault: true
                 });
+            }
+        }
+    });
+
+    comments.forEach(comment => {
+        if (normalizeString(comment.content).includes(normalizedKeyword)) {
+            filteredCommentsMap.set(comment.commentId, comment);
+            if (comment.commentParentId) {
+                const parentComment = comments.find(c => c.commentId === comment.commentParentId);
+                if (parentComment) {
+                    filteredCommentsMap.set(parentComment.commentId, {
+                        ...parentComment,
+                        showRepliesDefault: true
+                    });
+                }
             }
         }
     });
