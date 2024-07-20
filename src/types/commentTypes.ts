@@ -1,4 +1,5 @@
 import React from "react";
+import {FuseResultMatch} from "fuse.js";
 
 export interface Comment {
     author: string;
