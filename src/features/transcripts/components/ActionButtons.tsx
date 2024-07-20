@@ -2,7 +2,7 @@ import React from 'react';
 import CopyButton from './buttons/CopyButton';
 import DownloadButton from './buttons/DownloadButton';
 import PrintButton from './buttons/PrintButton';
-import ShareButton from './buttons/ShareButton';  // Import the ShareButton component
+import ShareButton from '../../shared/components/ShareButton';  // Import the ShareButton component
 import TimestampToggle from './toggles/TimestampToggle';
 import TranslateSelectBox from './toggles/TranslateSelectBox';  // Import the TranslateSelectBox component
 import { formatTime } from '../utils/formatTime';

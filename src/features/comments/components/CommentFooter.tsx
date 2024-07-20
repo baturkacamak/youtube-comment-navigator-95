@@ -15,6 +15,7 @@ import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeV
 import Tooltip from "../../shared/components/Tooltip";
 import BookmarkButton from './BookmarkButton/BookmarkButton';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
+import ShareButton from '../../shared/components/ShareButton';
 
 interface CommentFooterProps {
     comment: Comment;
@@ -100,6 +101,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     </button>
                 )}
                 <BookmarkButton comment={comment} />
+                <ShareButton textToShare={comment.content} subject={t('Comment from YouTube')} url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`} />
             </div>
             <div className="flex items-center gap-4">
                 {comment.isAuthorContentCreator && (
