@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import getFormattedDate from './getFormattedDate';
+import timezoneMock from 'timezone-mock';
 
 beforeAll(() => {
     i18n.init({
@@ -9,6 +10,13 @@ beforeAll(() => {
             tr: { translation: {} }
         }
     });
+
+    // Mock timezone to UTC
+    timezoneMock.register('UTC');
+});
+
+afterAll(() => {
+    timezoneMock.unregister();
 });
 
 describe('getFormattedDate', () => {
