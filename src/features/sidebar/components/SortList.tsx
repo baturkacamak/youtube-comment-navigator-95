@@ -3,6 +3,7 @@ import {
     AcademicCapIcon,
     ArrowsUpDownIcon,
     ArrowTrendingUpIcon,
+    DocumentTextIcon,
     ChartBarIcon,
     ChatBubbleLeftRightIcon,
     ChevronDownIcon,
@@ -63,7 +64,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
         {
             name: 'Length',
             label: t('Word Count'),
-            icon: <ChartBarIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`} />,
+            icon: <DocumentTextIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`} />,
             value: 'length'
         },
         {
