@@ -142,5 +142,11 @@
   "Max Replies": "Máximo de Respuestas",
   "Min Words": "Mínimo de Palabras",
   "Max Words": "Máximo de Palabras",
-  "Word Count": "Recuento de palabras"
+  "Word Count": "Recuento de palabras",
+  "Show Content on Search": "Mostrar contenido en la búsqueda",
+  "Advanced": "Avanzado",
+  "Export Comments": "Exportar comentarios",
+  "Export as JSON": "Exportar como JSON",
+  "Export as CSV": "Exportar como CSV",
+  "Font": "Fuente"
 }

@@ -142,5 +142,11 @@
   "Max Replies": "அதிகபட்ச பதில்கள்",
   "Min Words": "குறைந்த வார்த்தைகள்",
   "Max Words": "அதிகபட்ச வார்த்தைகள்",
-  "Word Count": "சொல் எண்ணிக்கை"
+  "Word Count": "சொல் எண்ணிக்கை",
+  "Show Content on Search": "தேடலில் உள்ளடக்கத்தைக் காண்பி",
+  "Advanced": "மேம்பட்டது",
+  "Export Comments": "கருத்துகளை ஏற்றுமதி செய்க",
+  "Export as JSON": "JSON ஆக ஏற்றுமதி செய்க",
+  "Export as CSV": "CSV ஆக ஏற்றுமதி செய்க",
+  "Font": "எழுத்துரு"
 }

@@ -142,5 +142,11 @@
   "Max Replies": "Maks Balasan",
   "Min Words": "Min Kata",
   "Max Words": "Maks Kata",
-  "Word Count": "Kiraan Perkataan"
+  "Word Count": "Kiraan Perkataan",
+  "Show Content on Search": "Tunjukkan Kandungan pada Carian",
+  "Advanced": "Lanjutan",
+  "Export Comments": "Eksport Komen",
+  "Export as JSON": "Eksport sebagai JSON",
+  "Export as CSV": "Eksport sebagai CSV",
+  "Font": "Fon"
 }

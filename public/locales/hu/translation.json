@@ -142,5 +142,11 @@
   "Max Replies": "Maximális válaszok",
   "Min Words": "Minimális szavak",
   "Max Words": "Maximális szavak",
-  "Word Count": "Szószám"
+  "Word Count": "Szószám",
+  "Show Content on Search": "Tartalom megjelenítése kereséskor",
+  "Advanced": "Haladó",
+  "Export Comments": "Hozzászólások exportálása",
+  "Export as JSON": "Exportálás JSON formátumban",
+  "Export as CSV": "Exportálás CSV formátumban",
+  "Font": "Betűtípus"
 }

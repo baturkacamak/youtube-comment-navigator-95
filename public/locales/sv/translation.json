@@ -142,5 +142,11 @@
   "Max Replies": "Max Svar",
   "Min Words": "Min Ord",
   "Max Words": "Max Ord",
-  "Word Count": "Antal ord"
+  "Word Count": "Antal ord",
+  "Show Content on Search": "Visa innehåll vid sökning",
+  "Advanced": "Avancerad",
+  "Export Comments": "Exportera kommentarer",
+  "Export as JSON": "Exportera som JSON",
+  "Export as CSV": "Exportera som CSV",
+  "Font": "Typsnitt"
 }

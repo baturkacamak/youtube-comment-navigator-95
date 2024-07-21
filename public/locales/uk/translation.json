@@ -142,5 +142,11 @@
   "Max Replies": "Макс Відповідей",
   "Min Words": "Мін Слів",
   "Max Words": "Макс Слів",
-  "Word Count": "Кількість слів"
+  "Word Count": "Кількість слів",
+  "Show Content on Search": "Показувати вміст під час пошуку",
+  "Advanced": "Розширений",
+  "Export Comments": "Експортувати коментарі",
+  "Export as JSON": "Експортувати як JSON",
+  "Export as CSV": "Експортувати як CSV",
+  "Font": "Шрифт"
 }

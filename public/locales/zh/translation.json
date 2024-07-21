@@ -142,5 +142,11 @@
   "Max Replies": "最大回复",
   "Min Words": "最小字",
   "Max Words": "最大字",
-  "Word Count": "字数统计"
+  "Word Count": "字数统计",
+  "Show Content on Search": "搜索时显示内容",
+  "Advanced": "高级",
+  "Export Comments": "导出评论",
+  "Export as JSON": "导出为JSON",
+  "Export as CSV": "导出为CSV",
+  "Font": "字体"
 }

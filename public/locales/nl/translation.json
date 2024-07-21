@@ -142,5 +142,11 @@
   "Max Replies": "Max Antwoorden",
   "Min Words": "Min Woorden",
   "Max Words": "Max Woorden",
-  "Word Count": "Aantal woorden"
+  "Word Count": "Aantal woorden",
+  "Show Content on Search": "Toon inhoud bij zoeken",
+  "Advanced": "Geavanceerd",
+  "Export Comments": "Reacties exporteren",
+  "Export as JSON": "Exporteren als JSON",
+  "Export as CSV": "Exporteren als CSV",
+  "Font": "Lettertype"
 }

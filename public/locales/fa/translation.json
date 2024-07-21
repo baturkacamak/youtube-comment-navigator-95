@@ -142,5 +142,11 @@
   "Max Replies": "حداکثر پاسخ",
   "Min Words": "حداقل کلمات",
   "Max Words": "حداکثر کلمات",
-  "Word Count": "تعداد کلمات"
+  "Word Count": "تعداد کلمات",
+  "Show Content on Search": "نمایش محتوا در جستجو",
+  "Advanced": "پیشرفته",
+  "Export Comments": "صادرات نظرات",
+  "Export as JSON": "صادرات به صورت JSON",
+  "Export as CSV": "صادرات به صورت CSV",
+  "Font": "فونت"
 }

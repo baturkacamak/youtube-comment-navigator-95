@@ -141,5 +141,11 @@
   "Max Replies": "En Kop Yanıt",
   "Min Words": "En az Kelime",
   "Max Words": "En Kop Kelime",
-  "Word Count": "Kelime Sayısı"
+  "Word Count": "Kelime Sayısı",
+  "Show Content on Search": "Aramada işerikni körset",
+  "Advanced": "Kelişgen",
+  "Export Comments": "Yorumlarnı tışga avdar",
+  "Export as JSON": "JSON bolarak tışga avdar",
+  "Export as CSV": "JSV bolarak tışga avdar",
+  "Font": "Yazıv tipi"
 }

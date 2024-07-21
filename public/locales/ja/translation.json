@@ -142,5 +142,11 @@
   "Max Replies": "最大返信",
   "Min Words": "最小単語",
   "Max Words": "最大単語",
-  "Word Count": "単語数"
+  "Word Count": "単語数",
+  "Show Content on Search": "検索時にコンテンツを表示",
+  "Advanced": "高度",
+  "Export Comments": "コメントをエクスポート",
+  "Export as JSON": "JSONとしてエクスポート",
+  "Export as CSV": "CSVとしてエクスポート",
+  "Font": "フォント"
 }

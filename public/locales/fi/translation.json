@@ -142,5 +142,11 @@
   "Max Replies": "Max vastaukset",
   "Min Words": "Min sanat",
   "Max Words": "Max sanat",
-  "Word Count": "Sanamäärä"
+  "Word Count": "Sanamäärä",
+  "Show Content on Search": "Näytä sisältö haussa",
+  "Advanced": "Edistynyt",
+  "Export Comments": "Vie kommentit",
+  "Export as JSON": "Vie JSON-muodossa",
+  "Export as CSV": "Vie CSV-muodossa",
+  "Font": "Kirjasinlaji"
 }

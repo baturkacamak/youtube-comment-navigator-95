@@ -142,5 +142,11 @@
   "Max Replies": "সর্বাধিক প্রতিক্রিয়া",
   "Min Words": "ন্যূনতম শব্দ",
   "Max Words": "সর্বাধিক শব্দ",
-  "Word Count": "শব্দ গণনা"
+  "Word Count": "শব্দ গণনা",
+  "Show Content on Search": "অনুসন্ধানে সামগ্রী দেখান",
+  "Advanced": "উন্নত",
+  "Export Comments": "মন্তব্য রপ্তানি করুন",
+  "Export as JSON": "JSON হিসাবে রপ্তানি করুন",
+  "Export as CSV": "CSV হিসাবে রপ্তানি করুন",
+  "Font": "ফন্ট"
 }

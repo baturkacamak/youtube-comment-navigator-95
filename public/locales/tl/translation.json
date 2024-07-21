@@ -142,5 +142,11 @@
   "Max Replies": "Pinakamataas na Tugon",
   "Min Words": "Pinakamababang Salita",
   "Max Words": "Pinakamataas na Salita",
-  "Word Count": "Bilang ng Salita"
+  "Word Count": "Bilang ng Salita",
+  "Show Content on Search": "Ipakita ang Nilalaman sa Paghahanap",
+  "Advanced": "Advanced",
+  "Export Comments": "I-export ang Mga Komento",
+  "Export as JSON": "I-export bilang JSON",
+  "Export as CSV": "I-export bilang CSV",
+  "Font": "Font"
 }

@@ -142,5 +142,11 @@
   "Max Replies": "زیادہ سے زیادہ جوابات",
   "Min Words": "کم از کم الفاظ",
   "Max Words": "زیادہ سے زیادہ الفاظ",
-  "Word Count": "لفظ شمار"
+  "Word Count": "لفظ شمار",
+  "Show Content on Search": "تلاش پر مواد دکھائیں",
+  "Advanced": "اعلی درجے کی",
+  "Export Comments": "تبصرے برآمد کریں",
+  "Export as JSON": "JSON کے طور پر برآمد کریں",
+  "Export as CSV": "CSV کے طور پر برآمد کریں",
+  "Font": "فونٹ"
 }

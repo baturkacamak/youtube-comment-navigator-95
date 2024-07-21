@@ -142,5 +142,11 @@
   "Max Replies": "अधिकतम उत्तर",
   "Min Words": "न्यूनतम शब्द",
   "Max Words": "अधिकतम शब्द",
-  "Word Count": "शब्द गणना"
+  "Word Count": "शब्द गणना",
+  "Show Content on Search": "खोज पर सामग्री दिखाएं",
+  "Advanced": "उन्नत",
+  "Export Comments": "टिप्पणियाँ निर्यात करें",
+  "Export as JSON": "JSON के रूप में निर्यात करें",
+  "Export as CSV": "CSV के रूप में निर्यात करें",
+  "Font": "फ़ॉन्ट"
 }

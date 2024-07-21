@@ -142,5 +142,11 @@
   "Max Replies": "Μέγιστες Απαντήσεις",
   "Min Words": "Ελάχιστες Λέξεις",
   "Max Words": "Μέγιστες Λέξεις",
-  "Word Count": "Καταμέτρηση λέξεων"
+  "Word Count": "Καταμέτρηση λέξεων",
+  "Show Content on Search": "Εμφάνιση περιεχομένου στην αναζήτηση",
+  "Advanced": "Προχωρημένο",
+  "Export Comments": "Εξαγωγή σχολίων",
+  "Export as JSON": "Εξαγωγή ως JSON",
+  "Export as CSV": "Εξαγωγή ως CSV",
+  "Font": "Γραμματοσειρά"
 }

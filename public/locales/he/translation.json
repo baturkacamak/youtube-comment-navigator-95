@@ -142,5 +142,11 @@
   "Max Replies": "מקסימום תגובות",
   "Min Words": "מינימום מילים",
   "Max Words": "מקסימום מילים",
-  "Word Count": "ספירת מילים"
+  "Word Count": "ספירת מילים",
+  "Show Content on Search": "הצגת תוכן בחיפוש",
+  "Advanced": "מתקדם",
+  "Export Comments": "ייצא הערות",
+  "Export as JSON": "ייצא כ-JSON",
+  "Export as CSV": "ייצא כ-CSV",
+  "Font": "גופן"
 }

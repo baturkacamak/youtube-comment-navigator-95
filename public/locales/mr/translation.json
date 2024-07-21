@@ -142,5 +142,11 @@
   "Max Replies": "कमाल प्रतिसाद",
   "Min Words": "किमान शब्द",
   "Max Words": "कमाल शब्द",
-  "Word Count": "शब्द संख्या"
+  "Word Count": "शब्द संख्या",
+  "Show Content on Search": "शोधात सामग्री दाखवा",
+  "Advanced": "प्रगत",
+  "Export Comments": "टिप्पण्या निर्यात करा",
+  "Export as JSON": "JSON म्हणून निर्यात करा",
+  "Export as CSV": "CSV म्हणून निर्यात करा",
+  "Font": "फॉन्ट"
 }

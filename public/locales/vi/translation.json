@@ -142,5 +142,11 @@
   "Max Replies": "Tối đa Trả Lời",
   "Min Words": "Tối thiểu Từ",
   "Max Words": "Tối đa Từ",
-  "Word Count": "Số lượng từ"
+  "Word Count": "Số lượng từ",
+  "Show Content on Search": "Hiển thị Nội dung trên Tìm kiếm",
+  "Advanced": "Nâng cao",
+  "Export Comments": "Xuất Bình luận",
+  "Export as JSON": "Xuất dưới dạng JSON",
+  "Export as CSV": "Xuất dưới dạng CSV",
+  "Font": "Phông chữ"
 }

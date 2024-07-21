@@ -142,5 +142,11 @@
   "Max Replies": "Maximální počet odpovědí",
   "Min Words": "Minimální počet slov",
   "Max Words": "Maximální počet slov",
-  "Word Count": "Počet slov"
+  "Word Count": "Počet slov",
+  "Show Content on Search": "Zobrazit obsah při hledání",
+  "Advanced": "Pokročilé",
+  "Export Comments": "Exportovat komentáře",
+  "Export as JSON": "Exportovat jako JSON",
+  "Export as CSV": "Exportovat jako CSV",
+  "Font": "Písmo"
 }

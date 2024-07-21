@@ -142,5 +142,11 @@
   "Max Replies": "คำตอบสูงสุด",
   "Min Words": "คำขั้นต่ำ",
   "Max Words": "คำสูงสุด",
-  "Word Count": "จำนวนคำ"
+  "Word Count": "จำนวนคำ",
+  "Show Content on Search": "แสดงเนื้อหาในการค้นหา",
+  "Advanced": "ขั้นสูง",
+  "Export Comments": "ส่งออกความคิดเห็น",
+  "Export as JSON": "ส่งออกเป็น JSON",
+  "Export as CSV": "ส่งออกเป็น CSV",
+  "Font": "แบบอักษร"
 }

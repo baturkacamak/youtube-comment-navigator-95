@@ -142,5 +142,11 @@
   "Max Replies": "최대 응답",
   "Min Words": "최소 단어",
   "Max Words": "최대 단어",
-  "Word Count": "단어 수"
+  "Word Count": "단어 수",
+  "Show Content on Search": "검색 시 콘텐츠 표시",
+  "Advanced": "고급",
+  "Export Comments": "댓글 내보내기",
+  "Export as JSON": "JSON으로 내보내기",
+  "Export as CSV": "CSV로 내보내기",
+  "Font": "글꼴"
 }

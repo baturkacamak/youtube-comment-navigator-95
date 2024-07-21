@@ -142,5 +142,11 @@
   "Max Replies": "గరిష్ట ప్రత్యుత్తరాలు",
   "Min Words": "కనీసం పదాలు",
   "Max Words": "గరిష్ట పదాలు",
-  "Word Count": "పదాల లెక్క"
+  "Word Count": "పదాల లెక్క",
+  "Show Content on Search": "శోధనలో కంటెంట్‌ను చూపించు",
+  "Advanced": "ఉన్నతమైన",
+  "Export Comments": "వ్యాఖ్యలను ఎగుమతి చేయండి",
+  "Export as JSON": "JSON గా ఎగుమతి చేయండి",
+  "Export as CSV": "CSV గా ఎగుమతి చేయండి",
+  "Font": "ఫాంట్"
 }

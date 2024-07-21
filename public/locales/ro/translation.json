@@ -142,5 +142,11 @@
   "Max Replies": "Maxim Răspunsuri",
   "Min Words": "Minim Cuvinte",
   "Max Words": "Maxim Cuvinte",
-  "Word Count": "Numărul de cuvinte"
+  "Word Count": "Numărul de cuvinte",
+  "Show Content on Search": "Afișați conținutul la căutare",
+  "Advanced": "Avansat",
+  "Export Comments": "Exportați comentarii",
+  "Export as JSON": "Exportați ca JSON",
+  "Export as CSV": "Exportați ca CSV",
+  "Font": "Font"
 }

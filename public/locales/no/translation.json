@@ -142,5 +142,11 @@
   "Max Replies": "Maks Svar",
   "Min Words": "Min Ord",
   "Max Words": "Maks Ord",
-  "Word Count": "Ordtelling"
+  "Word Count": "Ordtelling",
+  "Show Content on Search": "Vis innhold ved søk",
+  "Advanced": "Avansert",
+  "Export Comments": "Eksporter kommentarer",
+  "Export as JSON": "Eksporter som JSON",
+  "Export as CSV": "Eksporter som CSV",
+  "Font": "Skrifttype"
 }

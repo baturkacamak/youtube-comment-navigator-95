@@ -142,5 +142,11 @@
   "Max Replies": "ਵੱਧ ਤੋਂ ਵੱਧ ਜਵਾਬ",
   "Min Words": "ਘੱਟੋ ਘੱਟ ਸ਼ਬਦ",
   "Max Words": "ਵੱਧ ਤੋਂ ਵੱਧ ਸ਼ਬਦ",
-  "Word Count": "ਸ਼ਬਦ ਗਿਣਤੀ"
+  "Word Count": "ਸ਼ਬਦ ਗਿਣਤੀ",
+  "Show Content on Search": "ਖੋਜ 'ਤੇ ਸਮੱਗਰੀ ਵੇਖਾਓ",
+  "Advanced": "ਤਕਨੀਕੀ",
+  "Export Comments": "ਟਿੱਪਣੀਆਂ ਨਿਰਯਾਤ ਕਰੋ",
+  "Export as JSON": "JSON ਦੇ ਤੌਰ ਤੇ ਨਿਰਯਾਤ ਕਰੋ",
+  "Export as CSV": "CSV ਦੇ ਤੌਰ ਤੇ ਨਿਰਯਾਤ ਕਰੋ",
+  "Font": "ਫੋਂਟ"
 }

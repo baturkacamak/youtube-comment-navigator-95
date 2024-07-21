@@ -142,5 +142,11 @@
   "Max Replies": "الحد الأقصى للردود",
   "Min Words": "الحد الأدنى للكلمات",
   "Max Words": "الحد الأقصى للكلمات",
-  "Word Count": "عدد الكلمات"
+  "Word Count": "عدد الكلمات",
+  "Show Content on Search": "عرض المحتوى عند البحث",
+  "Advanced": "متقدم",
+  "Export Comments": "تصدير التعليقات",
+  "Export as JSON": "تصدير كـ JSON",
+  "Export as CSV": "تصدير كـ CSV",
+  "Font": "الخط"
 }

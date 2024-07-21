@@ -142,5 +142,11 @@
   "Max Replies": "Maks Yanıt",
   "Min Words": "Min Kelime",
   "Max Words": "Maks Kelime",
-  "Word Count": "Kelime Sayısı"
+  "Word Count": "Kelime Sayısı",
+  "Show Content on Search": "Aramada İçeriği Göster",
+  "Advanced": "Gelişmiş",
+  "Export Comments": "Yorumları Dışa Aktar",
+  "Export as JSON": "JSON Olarak Dışa Aktar",
+  "Export as CSV": "CSV Olarak Dışa Aktar",
+  "Font": "Yazı Tipi"
 }

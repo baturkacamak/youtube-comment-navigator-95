@@ -125,5 +125,11 @@
   "Saved": "Sačuvano",
   "Bookmarked on:": "Obeleženo:",
   "This modal will close in COUNTDOWN seconds": "Ovaj modal će se zatvoriti za {{countdown}} sekundi",
-  "Word Count": "Brojanje reči"
+  "Word Count": "Brojanje reči",
+  "Show Content on Search": "Прикажи садржај при претрази",
+  "Advanced": "Напредно",
+  "Export Comments": "Извези коментаре",
+  "Export as JSON": "Извези као JSON",
+  "Export as CSV": "Извези као CSV",
+  "Font": "Фонт"
 }

@@ -142,5 +142,11 @@
   "Max Replies": "Макс Ответов",
   "Min Words": "Мин Слов",
   "Max Words": "Макс Слов",
-  "Word Count": "Подсчет слов"
+  "Word Count": "Подсчет слов",
+  "Show Content on Search": "Показать содержимое при поиске",
+  "Advanced": "Расширенные",
+  "Export Comments": "Экспорт комментариев",
+  "Export as JSON": "Экспортировать как JSON",
+  "Export as CSV": "Экспортировать как CSV",
+  "Font": "Шрифт"
 }
