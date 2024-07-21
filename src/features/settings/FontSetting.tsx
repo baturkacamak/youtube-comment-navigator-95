@@ -95,7 +95,7 @@ const FontSetting: React.FC = () => {
     return (
         <div className="inline-flex items-center gap-2">
             <label className="text-sm font-medium text-gray-800 dark:text-gray-200 select-none">
-                {t('Select Font')}
+                {t('Font')}
             </label>
             <SelectBox
                 options={availableFonts}
