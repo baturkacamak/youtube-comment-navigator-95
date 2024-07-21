@@ -20,6 +20,7 @@ export const searchComments = (comments: Comment[], keyword: string): Comment[] 
 
     const fuse = new Fuse(normalizedComments, fuseOptions);
     const fuseResults = fuse.search(normalizedKeyword);
+
     const filteredCommentsMap = new Map<string, Comment>();
 
     fuseResults.forEach(({ item: comment }) => {

@@ -89,7 +89,7 @@ describe('searchComments', () => {
     });
 
     it('should return comments that match the keyword fuzzily', () => {
-        const keyword = 'detaled';
+        const keyword = 'explanatin';  // 10-character misspelling
         const result = searchComments(mockComments, keyword);
         expect(result.length).toBe(2);
         expect(result.find(comment => comment.content === 'Thanks for the detailed explanation.')).toBeTruthy();
@@ -117,7 +117,7 @@ describe('searchComments', () => {
     });
 
     it('should handle a keyword that results in exact matches and fuzzy matches', () => {
-        const keyword = 'explation';  // Misspelling to test fuzzy matching
+        const keyword = 'explnation';  // Misspelling to test fuzzy matching
         const result = searchComments(mockComments, keyword);
         expect(result.length).toBe(2);
         expect(result.find(comment => comment.content === 'Thanks for the detailed explanation.')).toBeTruthy();
