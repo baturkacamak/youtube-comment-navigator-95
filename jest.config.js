@@ -1,11 +1,14 @@
 module.exports = {
     preset: 'ts-jest',
-    testEnvironment: 'node',
+    testEnvironment: 'jsdom',
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'], // Add this line to include your setup file
     transform: {
-        '^.+\\.tsx?$': 'ts-jest',
+        '^.+\\.[tj]sx?$': 'babel-jest',
     },
     transformIgnorePatterns: [
-        '/node_modules/',
+        '/node_modules/(?!@adobe/css-tools)',
     ],
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+    moduleNameMapper: {
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
+    },
 };
