@@ -20,5 +20,7 @@ export interface RootState {
     bookmarkedLines: any[];
     transcriptSelectedLanguage: { value: string, label: string };
     searchKeyword: string;
+    filteredAndSortedComments: Comment[];
+    filteredAndSortedBookmarks: Comment[];
 }
 

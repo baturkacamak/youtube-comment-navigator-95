@@ -55,6 +55,9 @@ const initialState: RootState = {
 
     // Search keyword
     searchKeyword: '',
+
+    filteredAndSortedComments: [],
+    filteredAndSortedBookmarks: [],
 };
 
 const commentsSlice = createSlice({
@@ -127,6 +130,13 @@ const commentsSlice = createSlice({
         clearSearchKeyword: (state) => {
             state.searchKeyword = '';
         },
+
+        setFilteredAndSortedComments(state, action: PayloadAction<Comment[]>) {
+            state.filteredAndSortedComments = action.payload;
+        },
+        setFilteredAndSortedBookmarks(state, action: PayloadAction<Comment[]>) {
+            state.filteredAndSortedBookmarks = action.payload;
+        },
     },
 });
 
@@ -160,6 +170,9 @@ export const {
     // Search keyword actions
     setSearchKeyword,
     clearSearchKeyword,
+
+    setFilteredAndSortedComments,
+    setFilteredAndSortedBookmarks,
 } = commentsSlice.actions;
 
 const store = configureStore({
