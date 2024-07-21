@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -9,15 +9,15 @@ import useAppState from './features/shared/hooks/useAppState';
 import './styles/App.scss';
 import NavigationHeader from "./features/navigation-header/components/NavigationHeader";
 import Box from "./features/shared/components/Box";
-import {useTranslation} from "react-i18next";
-import {BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon} from '@heroicons/react/24/outline';
+import { useTranslation } from "react-i18next";
+import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } from '@heroicons/react/24/outline';
 import Tabs from "./features/shared/components/Tabs";
 import {useDispatch, useSelector} from 'react-redux';
-import {RootState} from "./types/rootState";
+import { RootState } from "./types/rootState";
 import i18n from "i18next";
 
 const App: React.FC = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const isRtl = i18n.dir() === 'rtl';
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -39,7 +39,6 @@ const App: React.FC = () => {
         transcript,
     } = useAppState();
 
-
     const tabs = [
         {
             title: {
@@ -53,9 +52,10 @@ const App: React.FC = () => {
                         <ControlPanel
                             filters={filters}
                             setFilters={setFiltersCallback}
+                            comments={filteredAndSortedComments}
                         />
                     </div>
-                    <CommentList comments={filteredAndSortedComments}/>
+                    <CommentList comments={filteredAndSortedComments} />
                 </>
             ),
         },
@@ -65,7 +65,7 @@ const App: React.FC = () => {
                 label: `${t('Transcript')} (${transcriptWordCount})`,
                 icon: DocumentTextIcon,
             },
-            content: <Transcript transcripts={transcript}/>,
+            content: <Transcript transcripts={transcript} />,
         },
         {
             title: {
@@ -88,10 +88,11 @@ const App: React.FC = () => {
                             <ControlPanel
                                 filters={filters}
                                 setFilters={setFiltersCallback}
+                                comments={filteredAndSortedBookmarks}
                             />
                         </div>
                     )}
-                    <BookmarkedComments comments={filteredAndSortedBookmarks}/>
+                    <BookmarkedComments comments={filteredAndSortedBookmarks} />
                 </>
             ),
         },
@@ -113,7 +114,7 @@ const App: React.FC = () => {
         <div
             className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}>
             <div className={`transition-all ease-in-out duration-500 ${isSettingsOpen ? 'max-h-[1000px] opacity-1' : 'max-h-0 opacity-0'}`}>
-                <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings}/>
+                <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
                 {isSettingsOpen && (
                     <div
                         className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10"
@@ -129,12 +130,12 @@ const App: React.FC = () => {
                     <NavigationHeader
                         openSettings={openSettings}
                     />
-                    <hr className="border border-solid border-gray-200 dark:border-gray-600"/>
-                    <SearchBar/>
+                    <hr className="border border-solid border-gray-200 dark:border-gray-600" />
+                    <SearchBar />
                 </Box>
-                {(!showContentOnSearch || searchKeyword) && ( // Conditionally render the Tabs component
+                {(!showContentOnSearch || searchKeyword) && (
                     <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
-                        <Tabs tabs={tabs} onTabChange={setActiveTab}/>
+                        <Tabs tabs={tabs} onTabChange={setActiveTab} />
                     </Box>
                 )}
             </div>
