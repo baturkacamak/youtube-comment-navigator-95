@@ -65,7 +65,9 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ buttonContent, children }) 
             </button>
             <div
                 ref={menuRef}
-                className={`absolute mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-10 transition-transform duration-300 ease-in-out ${isOpen ? 'transform scale-100 opacity-100' : 'transform scale-95 opacity-0 pointer-events-none'}`}
+                className={`origin-top-left absolute mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 z-10 ring-1 ring-black ring-opacity-5 transform transition-all duration-300 ease-in-out ${
+                    isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'
+                }`}
             >
                 {children}
             </div>
