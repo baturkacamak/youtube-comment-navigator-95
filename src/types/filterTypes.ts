@@ -27,7 +27,8 @@ export interface Filters {
     };
 }
 
-export interface FilterState extends Filters {}
+export interface FilterState extends Filters {
+}
 
 export interface CheckboxFilterProps {
     name: string;
@@ -65,8 +66,9 @@ export interface SelectBoxProps {
 }
 
 export interface ControlPanelProps {
-    filters: any;
-    setFilters: (filters: any) => void;
+    filters: any,
+    setFilters: (filters: any) => void,
+    comments?: any[] | Comment[]
 }
 
 export interface AdvancedSortingProps {
