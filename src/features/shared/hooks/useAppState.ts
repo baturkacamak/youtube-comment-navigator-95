@@ -57,22 +57,24 @@ const useAppState = () => {
 
     const filteredAndSortedBookmarks = useMemo(() => {
         if (!filters) return [];
-        let sortedComments = sortComments(bookmarkedOnlyComments, filters.sortBy, filters.sortOrder);
-        let filteredComments = filterComments(sortedComments, filters);
+        let returnComments = bookmarkedOnlyComments;
         if (searchKeyword) {
-            filteredComments = searchComments(filteredComments, searchKeyword);
+            returnComments = searchComments(returnComments, searchKeyword);
         }
-        return filteredComments;
+        returnComments = sortComments(returnComments, filters.sortBy, filters.sortOrder);
+        returnComments = filterComments(returnComments, filters);
+        return returnComments;
     }, [filters, sortComments, filterComments, bookmarkedOnlyComments, searchKeyword]);
 
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
-        let sortedComments = sortComments(comments, filters.sortBy, filters.sortOrder);
-        let filteredComments = filterComments(sortedComments, filters);
+        let returnComments = comments;
         if (searchKeyword) {
-            filteredComments = searchComments(filteredComments, searchKeyword);
+            returnComments = searchComments(returnComments, searchKeyword);
         }
-        return filteredComments;
+        returnComments = sortComments(returnComments, filters.sortBy, filters.sortOrder);
+        returnComments = filterComments(returnComments, filters);
+        return returnComments;
     }, [filters, sortComments, filterComments, comments, searchKeyword]);
 
     const searchedTranscripts = useMemo(() => {

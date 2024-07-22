@@ -93,7 +93,7 @@ const FontSetting: React.FC = () => {
     const availableFonts = fonts.filter(font => isFontAvailable(font.value.split(',')[0]));
 
     return (
-        <div className="inline-flex items-center gap-2">
+        <div className="inline-flex items-center gap-2 w-full justify-between">
             <label className="text-sm font-medium text-gray-800 dark:text-gray-200 select-none">
                 {t('Font')}
             </label>
