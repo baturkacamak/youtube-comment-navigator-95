@@ -27,7 +27,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
 
     return (
         <div
-            className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out'}`}
+            className={`w-full transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out overflow-hidden '}`}
             style={{ maxHeight: showReplies ? repliesHeight : '0px' }}
             ref={repliesRef}
             aria-expanded={showReplies}
