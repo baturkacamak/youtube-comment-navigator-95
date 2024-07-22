@@ -6,7 +6,12 @@ const useSticky = (ref: RefObject<HTMLDivElement>, trigger: boolean) => {
     useEffect(() => {
         if (trigger && ref.current) {
             const rect = ref.current.getBoundingClientRect();
-            setIsSticky(true);
+            const isAboveMaxHeight = rect.height > 384; // 96 * 4 = 384px
+            if (!isAboveMaxHeight) {
+                setIsSticky(true);
+            } else {
+                setIsSticky(false);
+            }
         } else {
             setIsSticky(false);
         }
