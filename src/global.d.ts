@@ -4,4 +4,5 @@ interface Window {
             seekTo: (seconds: number, allowSeekAhead: boolean) => void;
         };
     };
+    ytInitialData: any;
 }
