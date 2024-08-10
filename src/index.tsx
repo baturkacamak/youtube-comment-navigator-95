@@ -9,6 +9,14 @@ import { getLanguageDirection } from './i18n';
 import i18n from './i18n';
 import store from "./store/store"; // Import i18n to access the current language
 
+if (window?.trustedTypes) {
+    if (!window?.trustedTypes.defaultPolicy) {
+        window?.trustedTypes.createPolicy('default', {
+            createHTML: (string) => string,
+        });
+    }
+}
+
 const rootElement = document.getElementById('youtube-comment-navigator-app') as HTMLElement;
 
 if (rootElement) {
