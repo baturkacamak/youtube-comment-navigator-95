@@ -47,7 +47,7 @@ class AssetInjector {
         }
 
         this.injectCSS(this.mainCss);
-        await this.injectJS(this.mainJs);
+        this.injectJS(this.mainJs);
     }
 
     injectCSS(cssFileName) {
@@ -59,17 +59,17 @@ class AssetInjector {
         }
     }
 
-    async injectJS(jsFileName) {
-        return new Promise((resolve, reject) => {
-            chrome.runtime.sendMessage({action: "injectScript", file: jsFileName}, (response) => {
-                if (chrome.runtime.lastError) {
-                    console.error('Error injecting script:', chrome.runtime.lastError);
-                    reject(chrome.runtime.lastError);
-                } else {
-                    resolve(response);
-                }
-            });
-        });
+    injectJS(jsFileName) {
+        if (!document.querySelector(`script[src="${chrome.runtime.getURL(jsFileName)}"]`)) {
+            const script = document.createElement('script');
+            script.src = chrome.runtime.getURL(jsFileName);
+            script.onload = () => {
+            };
+            script.onerror = () => {
+                console.error('Error loading React app script:', script.src);
+            };
+            document.head.appendChild(script);
+        }
     }
 
     async injectTranslation(locale) {
