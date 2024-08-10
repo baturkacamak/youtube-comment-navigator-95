@@ -9,6 +9,14 @@ import { getLanguageDirection } from './i18n';
 import i18n from './i18n';
 import store from "./store/store"; // Import i18n to access the current language
 
+if (window?.trustedTypes) {
+    if (!window?.trustedTypes.defaultPolicy) {
+        window?.trustedTypes.createPolicy('default', {
+            createHTML: (string) => string,
+        });
+    }
+}
+
 const rootElement = document.getElementById('youtube-comment-navigator-app') as HTMLElement;
 
 if (rootElement) {
@@ -69,12 +77,6 @@ if (rootElement) {
     // Initial render
     renderApp();
 
-    // Conditionally import reportWebVitals
-    if (!isLocalEnvironment()) {
-        import('./reportWebVitals').then(({ default: reportWebVitals }) => {
-            reportWebVitals(console.log); // Replace console.log with your analytics function
-        });
-    }
     const handleUrlChangeToNotAVideo = (event: { data: { type: string; }; }) => {
         if (event.data.type === 'STOP_VIDEO_NAVIGATION') {
             root.unmount();
