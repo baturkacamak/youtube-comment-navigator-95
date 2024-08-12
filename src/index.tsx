@@ -10,9 +10,11 @@ import i18n from './i18n';
 import store from "./store/store"; // Import i18n to access the current language
 
 if (window?.trustedTypes) {
-    if (!window?.trustedTypes.defaultPolicy) {
-        window?.trustedTypes.createPolicy('default', {
+    if (!window?.trustedTypes?.defaultPolicy) {
+        window?.trustedTypes?.createPolicy('default', {
             createHTML: (string) => string,
+            createScriptURL: (string) => string,
+            createScript: (string) => string
         });
     }
 }
@@ -88,7 +90,6 @@ if (rootElement) {
             root.unmount();
         }
     };
-
     window.addEventListener('message', handleUrlChangeToNotAVideo);
 
     window.addEventListener('beforeunload', () => {
