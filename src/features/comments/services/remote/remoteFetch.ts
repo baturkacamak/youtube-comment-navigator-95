@@ -11,6 +11,8 @@ import {
     storeContinuationToken
 } from "./utils";
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
+import {fetchCommentJsonDataFromRemote} from "./fetchCommentJsonDataFromRemote";
+import {extractContinuationToken} from "./continuationTokenUtils";
 
 let currentAbortController = new AbortController();
 window.addEventListener('message', (event: MessageEvent) => {
@@ -18,6 +20,15 @@ window.addEventListener('message', (event: MessageEvent) => {
         currentAbortController.abort();
     }
 });
+
+async function fetchNextTokenOnly(token: string, windowObj: any, signal: AbortSignal): Promise<{ nextToken: string | null }> {
+    const response = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
+    const nextToken = extractContinuationToken(
+        response.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems ||
+        response.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || []
+    );
+    return { nextToken };
+}
 
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
     const handleFetchedComments = (comments: any[]) => {
@@ -44,48 +55,77 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             }
         }
 
-        let token: string | null = localToken || await fetchContinuationTokenFromRemote();
+        let initialToken: string | null = localToken || await fetchContinuationTokenFromRemote();
 
         const windowObj = window as any;
-        let totalFetchedComments = 0;
-        let updateInterval: ReturnType<typeof setInterval> | null = null;
-
-        const updateUI = async () => {
-            const commentsFromDB = await fetchCachedComments(videoId);
-            handleFetchedComments(commentsFromDB);
-        };
 
         if (!localToken) {
             await deleteExistingComments(videoId);
         }
 
-        do {
-            const { processedData, token: newToken }: FetchAndProcessResult = await fetchAndProcessComments(token, videoId, windowObj, signal);
-            totalFetchedComments += processedData.items.length;
-            token = newToken;
+        // First, collect a batch of tokens for parallel fetching
+        const tokensToFetch: string[] = [];
+        let currentToken: string | null = initialToken;
+        const MAX_PARALLEL_REQUESTS = 5; // Adjust based on browser capabilities
 
-            if (totalFetchedComments >= 500 && !updateInterval) {
-                updateInterval = setInterval(updateUI, 2000);
-            } else if (totalFetchedComments < 500) {
-                await updateUI();
-            }
+        // Pre-fetch initial token batch
+        for (let i = 0; i < MAX_PARALLEL_REQUESTS && currentToken; i++) {
+            tokensToFetch.push(currentToken);
 
-            if (token) {
-                storeContinuationToken(token, CONTINUATION_TOKEN_KEY);
-            }
-        } while (token);
+            // Just get the next token without processing comments yet
+            const result: { nextToken: string | null } = await fetchNextTokenOnly(currentToken, windowObj, signal);
+            currentToken = result.nextToken;
 
-        if (updateInterval) {
-            clearInterval(updateInterval);
+            if (!currentToken) break;
         }
 
-        await updateUI();
+        console.log(`Starting parallel fetch of ${tokensToFetch.length} comment batches`);
+
+        // Setup a quick UI update interval
+        const updateInterval = setInterval(async () => {
+            const commentsFromDB = await fetchCachedComments(videoId);
+            handleFetchedComments(commentsFromDB);
+        }, 1000);
+
+        // Process tokens in parallel batches
+        while (tokensToFetch.length > 0 && !signal.aborted) {
+            // Take up to MAX_PARALLEL_REQUESTS tokens to process
+            const currentBatch = tokensToFetch.splice(0, MAX_PARALLEL_REQUESTS);
+
+            // Process this batch in parallel
+            const fetchPromises = currentBatch.map(token =>
+                fetchAndProcessComments(token, videoId, windowObj, signal)
+            );
+
+            try {
+                const results = await Promise.all(fetchPromises);
+
+                // Get more tokens for the next batch while we're processing this one
+                for (const result of results) {
+                    if (result.token) {
+                        tokensToFetch.push(result.token);
+                        storeContinuationToken(result.token, CONTINUATION_TOKEN_KEY);
+                    }
+                }
+            } catch (error) {
+                console.error("Error in parallel comment batch processing:", error);
+                break;
+            }
+        }
+
+        clearInterval(updateInterval);
+
+        // Final UI update
+        const commentsFromDB = await fetchCachedComments(videoId);
+        handleFetchedComments(commentsFromDB);
         clearLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
             console.log('Fetch operation was aborted.');
         } else {
             console.error('Error fetching comments from remote:', error);
         }
+        dispatch(setIsLoading(false));
     }
 };

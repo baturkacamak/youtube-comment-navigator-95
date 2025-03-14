@@ -13,16 +13,28 @@ export interface FetchAndProcessResult {
 }
 
 export const fetchAndProcessComments = async (token: string | null, videoId: string, windowObj: any, signal: AbortSignal) => {
+    // Fetch comment data once
     const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
-    const [comments, replies] = await Promise.all([
-        fetchCommentJsonDataFromRemote(token, windowObj, signal),
-        fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal)
-    ]);
-    const allComments = [comments, ...replies];
+
+    // Just fetch replies using the already fetched data
+    const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
+
+    const allComments = [rawJsonData, ...replies];
     const processedData = processRawJsonCommentsData(allComments, videoId);
-    await db.comments.bulkPut(processedData.items);
+
+    const commentIds = new Set();
+    const uniqueComments = processedData.items.filter(comment => {
+        if (commentIds.has(comment.commentId)) {
+            return false;
+        }
+        commentIds.add(comment.commentId);
+        return true;
+    });
+
+    await db.comments.bulkPut(uniqueComments);
+
     return {
-        processedData,
+        processedData: { items: uniqueComments },
         token: extractContinuationToken(
             rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems ||
             rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || []

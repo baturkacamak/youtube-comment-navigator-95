@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CommentItem from './CommentItem';
 import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Box from "../../shared/components/Box";
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
 import { Comment, CommentListProps } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
