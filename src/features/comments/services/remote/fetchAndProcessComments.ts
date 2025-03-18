@@ -10,7 +10,16 @@ export interface FetchAndProcessResult {
         items: any[];
     };
     token: string | null;
+    hasQueuedReplies: boolean; // New field to indicate if replies are being processed
 }
+
+// Track the count of active reply processing tasks
+let activeReplyTasks = 0;
+
+// Public method to check if background processing is happening
+export const hasActiveReplyProcessing = (): boolean => {
+    return activeReplyTasks > 0;
+};
 
 export const fetchAndProcessComments = async (token: string | null, videoId: string, windowObj: any, signal: AbortSignal): Promise<FetchAndProcessResult> => {
     // Fetch the main comments data
@@ -27,15 +36,39 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
     await db.comments.bulkPut(mainProcessedData.items);
 
     // Start fetching replies asynchronously, don't wait for completion
-    fetchRepliesAndProcess(rawJsonData, windowObj, signal, videoId);
+    const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId);
 
     // Return the main comments data and the continuation token
     // This allows the caller to continue fetching the next page immediately
     return {
         processedData: mainProcessedData,
-        token: continuationToken
+        token: continuationToken,
+        hasQueuedReplies
     };
 };
+
+/**
+ * Queues the asynchronous fetching and processing of replies
+ * without blocking the main comment fetching flow
+ * Returns true if replies were queued for processing
+ */
+async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string): Promise<boolean> {
+    // Check if replies are available to be processed
+    if (!rawJsonData || signal.aborted) {
+        return false;
+    }
+
+    // Increment active task counter
+    activeReplyTasks++;
+
+    // Process replies in the background
+    fetchRepliesAndProcess(rawJsonData, windowObj, signal, videoId).finally(() => {
+        // Decrement counter when finished, regardless of success or failure
+        activeReplyTasks--;
+    });
+
+    return true;
+}
 
 /**
  * Asynchronously fetches and processes replies without blocking the main comment fetching flow
@@ -46,7 +79,7 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
 
         if (replies && replies.length > 0) {
-            // Process only the replies
+            // Process the replies
             const repliesProcessedData = processRawJsonCommentsData(replies, videoId);
 
             // Store the processed replies in the database
