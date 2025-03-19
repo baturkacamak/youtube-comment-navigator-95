@@ -80,6 +80,14 @@ const commentsSlice = createSlice({
         setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
             state.filteredTranscripts = action.payload;
         },
+        addProcessedReplies: (state, action: PayloadAction<Comment[]>) => {
+            // Add the new replies to the comments array
+            state.comments = [...state.comments, ...action.payload];
+
+            // Update any dependent state that tracks comment counts
+            // For tabs that display comment count
+            state.filteredAndSortedComments = [...state.filteredAndSortedComments, ...action.payload];
+        },
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
             state.bookmarkedComments = action.payload;
@@ -147,7 +155,7 @@ export const {
     setReplies,
     setTranscripts,
     setFilteredTranscripts,
-
+    addProcessedReplies,
     // Bookmark actions
     setBookmarkedComments,
     setBookmarkedLines,
