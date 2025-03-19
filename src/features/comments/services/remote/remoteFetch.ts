@@ -66,12 +66,13 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         let hasQueuedReplies = false;
 
         do {
-            const result: FetchAndProcessResult = await fetchAndProcessComments(token, videoId, windowObj, signal);
-            totalFetchedComments += result.processedData.items.length;
-            token = result.token;
+            // @ts-ignore
+            let { token: newToken, hasQueuedReplies }: FetchAndProcessResult =
+                await fetchAndProcessComments(token, videoId, windowObj, signal, dispatch);
+            token = newToken;
 
             // Track if any batch has queued replies
-            if (result.hasQueuedReplies) {
+            if (hasQueuedReplies) {
                 hasQueuedReplies = true;
             }
 
