@@ -15,7 +15,7 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const textSize = useSelector((state: RootState) => state.settings.textSize);
-    const [includeTimestamps, setIncludeTimestamps] = useState(true);
+    const [includeTimestamps, setIncludeTimestamps] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState({ value: '', label: t('Select Language') });
     const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
 
