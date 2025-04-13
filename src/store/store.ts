@@ -81,12 +81,10 @@ const commentsSlice = createSlice({
             state.filteredTranscripts = action.payload;
         },
         addProcessedReplies: (state, action: PayloadAction<Comment[]>) => {
-            // Add the new replies to the comments array
-            state.comments = [...state.comments, ...action.payload];
-
-            // Update any dependent state that tracks comment counts
-            // For tabs that display comment count
-            state.filteredAndSortedComments = [...state.filteredAndSortedComments, ...action.payload];
+            action.payload.forEach(reply => {
+                state.comments.push(reply);
+                state.filteredAndSortedComments.push(reply);
+            });
         },
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
