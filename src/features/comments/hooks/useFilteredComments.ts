@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Comment } from "../../../types/commentTypes";
-import { setComments } from "../../../store/store";
+import { setDisplayedComments } from "../../../store/store";
 
 const useFilteredComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();
-    const originalComments = useSelector((state: any) => state.originalComments);
+    const displayedComments = useSelector((state: any) => state.displayedComments);
     const filters = useSelector((state: any) => state.filters);
     const previousFiltersRef = useRef<any>(null);
 
@@ -23,16 +23,16 @@ const useFilteredComments = (initialLoadCompleted: boolean) => {
 
     useEffect(() => {
         if (initialLoadCompleted) {
-            let filteredComments = originalComments;
+            let filteredComments = displayedComments;
             if (filters.timestamps || filters.heart || filters.links || filters.members || filters.donated) {
-                filteredComments = filterComments(originalComments, filters);
-                dispatch(setComments(filteredComments));
+                filteredComments = filterComments(displayedComments, filters);
+                dispatch(setDisplayedComments(filteredComments));
             } else {
-                dispatch(setComments(originalComments));
+                dispatch(setDisplayedComments(displayedComments));
             }
             previousFiltersRef.current = { ...filters };
         }
-    }, [filters, initialLoadCompleted, originalComments, dispatch]);
+    }, [filters, initialLoadCompleted, displayedComments, dispatch]);
 
     return { filterComments };
 };

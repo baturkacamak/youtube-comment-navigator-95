@@ -4,7 +4,7 @@ import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
-import {addProcessedReplies} from "../../../../store/store";
+import { addDisplayedComments } from "../../../../store/store";
 
 export interface FetchAndProcessResult {
     processedData: {
@@ -35,6 +35,11 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
     // Process and store the main comments immediately
     const mainProcessedData = processRawJsonCommentsData([rawJsonData], videoId);
     await db.comments.bulkPut(mainProcessedData.items);
+
+    // Sadece görüntülenen kısma ilk toplu yorumları ekleme
+    if (!token) { // İlk yükleme sırasında
+        dispatch(addDisplayedComments(mainProcessedData.items.slice(0, 10)));
+    }
 
     // Start fetching replies asynchronously, don't wait for completion
     const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
@@ -90,9 +95,6 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                 if (batchProcessedData.items.length > 0) {
                     // Store in database
                     await db.comments.bulkPut(batchProcessedData.items);
-
-                    // Update the UI by dispatching to Redux
-                    dispatch(addProcessedReplies(batchProcessedData.items));
 
                     // Small delay to allow UI to breathe (optional)
                     await new Promise(resolve => setTimeout(resolve, 10));

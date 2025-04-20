@@ -5,7 +5,6 @@ import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../s
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import { Filters } from '../../../types/filterTypes';
-import useTranscript from '../../transcripts/hooks/useTranscript';
 import { calculateFilteredWordCount } from "../utils/calculateWordCount";
 import useSortedComments from "../../comments/hooks/sorting/useSortedComments";
 import { db } from "../utils/database/database";
@@ -19,18 +18,15 @@ const useAppState = () => {
     const [activeTab, setActiveTab] = useState('comments');
     const [bookmarkedOnlyComments, setBookmarkedOnlyComments] = useState<Comment[]>([]);
 
-    const comments = useSelector((state: RootState) => state.comments);
+    const displayedComments = useSelector((state: RootState) => state.displayedComments);
     const filters = useSelector((state: RootState) => state.filters);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
-    const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const transcripts = useSelector((state: RootState) => state.transcripts);
-    const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
     const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
 
     const { sortComments } = useSortedComments(false);
     const { filterComments } = useFilteredComments(false);
     const { initialLoadCompleted } = useCommentsIncrementalLoader();
-    const { loadTranscript } = useTranscript();
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await db.comments.where('bookmarkAddedDate').above('').toArray();
@@ -53,7 +49,7 @@ const useAppState = () => {
         } else {
             dispatch(setShowBookmarked(false));
         }
-    }, [activeTab, fetchBookmarkedComments, searchKeyword]);
+    }, [activeTab, fetchBookmarkedComments, searchKeyword, dispatch]);
 
     const filteredAndSortedBookmarks = useMemo(() => {
         if (!filters) return [];
@@ -68,14 +64,14 @@ const useAppState = () => {
 
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
-        let returnComments = comments;
+        let returnComments = displayedComments; // Burada comments yerine displayedComments kullanılıyor
         if (searchKeyword) {
             returnComments = searchComments(returnComments, searchKeyword);
         }
         returnComments = sortComments(returnComments, filters.sortBy, filters.sortOrder);
         returnComments = filterComments(returnComments, filters);
         return returnComments;
-    }, [filters, sortComments, filterComments, comments, searchKeyword]);
+    }, [filters, sortComments, filterComments, displayedComments, searchKeyword]);
 
     const searchedTranscripts = useMemo(() => {
         let filteredTranscripts = transcripts;
@@ -99,7 +95,7 @@ const useAppState = () => {
     useFetchDataOnUrlChange();
 
     return {
-        comments,
+        displayedComments, // comments yerine displayedComments dönüyoruz
         filters,
         transcripts,
         initialLoadCompleted,

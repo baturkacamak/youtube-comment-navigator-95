@@ -37,8 +37,8 @@ const initialState: RootState = {
     },
 
     // Comments and transcripts data
-    originalComments: [],
-    comments: [],
+    displayedComments: [],
+    totalCommentCount: 0,
     replies: [],
     transcripts: [],
     filteredTranscripts: [],
@@ -65,11 +65,11 @@ const commentsSlice = createSlice({
     initialState,
     reducers: {
         // Data fetching and setting actions
-        setOriginalComments: (state, action: PayloadAction<Comment[]>) => {
-            state.originalComments = action.payload;
+        setDisplayedComments: (state, action: PayloadAction<Comment[]>) => {
+            state.displayedComments = action.payload;
         },
-        setComments: (state, action: PayloadAction<Comment[]>) => {
-            state.comments = action.payload;
+        setTotalCommentCount: (state, action: PayloadAction<number>) => {
+            state.totalCommentCount = action.payload;
         },
         setReplies: (state, action: PayloadAction<any[]>) => {
             state.replies = action.payload;
@@ -80,11 +80,15 @@ const commentsSlice = createSlice({
         setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
             state.filteredTranscripts = action.payload;
         },
-        addProcessedReplies: (state, action: PayloadAction<Comment[]>) => {
-            action.payload.forEach(reply => {
-                state.comments.push(reply);
-                state.filteredAndSortedComments.push(reply);
+        addDisplayedComments: (state, action: PayloadAction<Comment[]>) => {
+            // Add comments to displayed comments without duplicates
+            const commentMap = new Map(state.displayedComments.map(comment => [comment.commentId, comment]));
+
+            action.payload.forEach(comment => {
+                commentMap.set(comment.commentId, comment);
             });
+
+            state.displayedComments = Array.from(commentMap.values());
         },
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {
@@ -143,17 +147,22 @@ const commentsSlice = createSlice({
         setFilteredAndSortedBookmarks(state, action: PayloadAction<Comment[]>) {
             state.filteredAndSortedBookmarks = action.payload;
         },
+
+        clearDisplayedComments(state) {
+            state.displayedComments = [];
+        },
     },
 });
 
 export const {
     // Data fetching and setting actions
-    setOriginalComments,
-    setComments,
+    setDisplayedComments,
+    setTotalCommentCount,
     setReplies,
     setTranscripts,
     setFilteredTranscripts,
-    addProcessedReplies,
+    addDisplayedComments,
+
     // Bookmark actions
     setBookmarkedComments,
     setBookmarkedLines,
@@ -179,6 +188,8 @@ export const {
 
     setFilteredAndSortedComments,
     setFilteredAndSortedBookmarks,
+
+    clearDisplayedComments,
 } = commentsSlice.actions;
 
 const store = configureStore({
@@ -187,5 +198,3 @@ const store = configureStore({
 
 export default store;
 export type {RootState}; // Export RootState type for useSelector
-
-

@@ -15,7 +15,7 @@ const LoadingSection = () => {
     const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadContent();
 
     const { t } = useTranslation();
-    const commentsCount = useSelector((state: RootState) => state.comments.length);
+    const commentsCount = useSelector((state: RootState) => state.displayedComments.length);
 
     return (
         <div className="grid grid-cols-2 gap-2" aria-label={t('Loading Section')}>

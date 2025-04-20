@@ -1,7 +1,12 @@
 // src/features/comments/services/remote/remoteFetch.ts
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing } from "./fetchAndProcessComments";
-import { setComments, setIsLoading, setOriginalComments } from "../../../../store/store";
+import {
+    setDisplayedComments,
+    setIsLoading,
+    setTotalCommentCount,
+    clearDisplayedComments
+} from "../../../../store/store";
 import {
     clearLocalContinuationToken,
     deleteExistingComments,
@@ -21,8 +26,8 @@ window.addEventListener('message', (event: MessageEvent) => {
 
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
     const handleFetchedComments = (comments: any[]) => {
-        dispatch(setComments(comments));
-        dispatch(setOriginalComments(comments));
+        dispatch(setDisplayedComments(comments.slice(0, 10)));
+        dispatch(setTotalCommentCount(comments.length));
         dispatch(setIsLoading(false));
     };
 
@@ -40,43 +45,41 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             const cachedData = await fetchCachedComments(videoId);
             if (cachedData.length > 0) {
                 handleFetchedComments(cachedData);
-                return;
+                return cachedData;
             }
         }
+
+        dispatch(clearDisplayedComments());
 
         let token: string | null = localToken || await fetchContinuationTokenFromRemote();
 
         const windowObj = window as any;
-        let totalFetchedComments = 0;
         let updateInterval: ReturnType<typeof setInterval> | null = null;
 
         const updateUI = async () => {
             const commentsFromDB = await fetchCachedComments(videoId);
             handleFetchedComments(commentsFromDB);
+            return commentsFromDB;
         };
 
         if (!localToken) {
             await deleteExistingComments(videoId);
         }
 
-        // Start the UI update interval immediately to catch both comments and replies
-        // We'll clear it when all processing is complete
         updateInterval = setInterval(updateUI, 2000);
 
         let hasQueuedReplies = false;
 
         do {
             // @ts-ignore
-            let { token: newToken, hasQueuedReplies }: FetchAndProcessResult =
+            let { token: newToken, hasQueuedReplies: hasNewQueuedReplies }: FetchAndProcessResult =
                 await fetchAndProcessComments(token, videoId, windowObj, signal, dispatch);
             token = newToken;
 
-            // Track if any batch has queued replies
-            if (hasQueuedReplies) {
+            if (hasNewQueuedReplies) {
                 hasQueuedReplies = true;
             }
 
-            // Update UI immediately for parent comments
             await updateUI();
 
             if (token) {
@@ -84,47 +87,36 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             }
         } while (token);
 
-        // If we have background reply processing, wait for it to complete
-        // before clearing the interval and doing the final update
         if (hasQueuedReplies) {
-            // Continue updating UI until all reply tasks are done
             await waitForReplyProcessing(updateInterval, updateUI);
         } else if (updateInterval) {
-            // No replies to process, clear the interval
             clearInterval(updateInterval);
         }
 
-        // Final UI update
-        await updateUI();
+        const finalComments = await updateUI();
         clearLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+        return finalComments;
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
             console.log('Fetch operation was aborted.');
         } else {
             console.error('Error fetching comments from remote:', error);
         }
+        return [];
     }
 };
 
-/**
- * Helper function to wait for background reply processing to complete
- * while continuing to update the UI periodically
- */
 async function waitForReplyProcessing(
     updateInterval: ReturnType<typeof setInterval> | null,
-    updateUIFn: () => Promise<void>
+    updateUIFn: () => Promise<any[]>
 ): Promise<void> {
-    // If there's no interval, nothing to wait for
     if (!updateInterval) return;
 
-    // Check every second if reply processing is still active
     while (hasActiveReplyProcessing()) {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
-    // Clear the interval once all processing is complete
     clearInterval(updateInterval);
 
-    // Do one final UI update
     await updateUIFn();
 }

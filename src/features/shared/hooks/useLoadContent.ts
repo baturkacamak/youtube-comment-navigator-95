@@ -1,8 +1,8 @@
 import { useDispatch } from 'react-redux';
 import { fetchChatReplies } from '../../comments/services/fetchComments';
 import {
-    setComments, setFilteredTranscripts,
-    setOriginalComments,
+    setDisplayedComments, setFilteredTranscripts,
+    setTotalCommentCount,
     setIsLoading,
     setReplies,
     setTranscripts,
@@ -44,18 +44,33 @@ const useLoadContent = (bypassCache = false) => {
     const loadAll = async (bypassCache = false) => {
         dispatch(setIsLoading(true));
         const handleFetchedComments = (comments: any[]) => {
-            const allItems = [
-                ...comments,
-                ...(chatRepliesData && chatRepliesData.items ? chatRepliesData.items : []),
-                ...(transcriptsData && transcriptsData.items ? transcriptsData.items : [])
-            ];
-            dispatch(setComments(allItems));
-            dispatch(setIsLoading(false));
+            dispatch(setDisplayedComments(comments.slice(0, 10)));
+            dispatch(setTotalCommentCount(comments.length));
         };
 
-        const commentsData = await fetchCommentsFromRemote(handleFetchedComments, bypassCache);
-        const chatRepliesData = await fetchChatReplies();
-        const transcriptsData = await fetchTranscript();
+        // Paralel olarak veri çekelim
+        const commentsPromise = fetchCommentsFromRemote(handleFetchedComments, bypassCache);
+        const chatRepliesPromise = fetchChatReplies();
+        const transcriptsPromise = fetchTranscript();
+
+        // Tüm promise'ları çözelim
+        const [commentsData, chatRepliesData, transcriptsData] = await Promise.all([
+            commentsPromise,
+            chatRepliesPromise,
+            transcriptsPromise
+        ]);
+
+        // Cevapları işleyelim
+        if (chatRepliesData && chatRepliesData.items) {
+            dispatch(setReplies(chatRepliesData.items));
+        }
+
+        if (transcriptsData && transcriptsData.items) {
+            dispatch(setTranscripts(transcriptsData.items));
+            dispatch(setFilteredTranscripts(transcriptsData.items));
+        }
+
+        dispatch(setIsLoading(false));
     };
 
     return {

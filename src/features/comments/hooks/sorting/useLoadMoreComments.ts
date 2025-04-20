@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react';
 import { useDispatch } from 'react-redux';
-import { setComments } from '../../../../store/store';
 import { Comment } from '../../../../types/commentTypes';
+import {addDisplayedComments} from "../../../../store/store";
 
 const useLoadMoreComments = (comments: Comment[], sortComments: any, previousSortByRef: any, previousSortOrderRef: any) => {
     const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const useLoadMoreComments = (comments: Comment[], sortComments: any, previousSor
             const newCount = prevCount + 10;
             const sortedComments = sortComments(comments, previousSortByRef.current || '', previousSortOrderRef.current || '');
             const nextComments = sortedComments.slice(prevCount, newCount);
-            dispatch(setComments([...comments.slice(0, prevCount), ...nextComments]));
+            dispatch(addDisplayedComments(nextComments));
             return newCount;
         });
     }, [comments, dispatch, sortComments, previousSortByRef, previousSortOrderRef]);

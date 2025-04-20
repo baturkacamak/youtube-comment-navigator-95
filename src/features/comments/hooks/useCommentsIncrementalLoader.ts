@@ -1,7 +1,6 @@
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {Comment} from '../../../types/commentTypes';
-import {setComments, setOriginalComments} from "../../../store/store";
+import {setIsLoading} from "../../../store/store";
 import {fetchCommentsFromRemote} from "../services/remote/remoteFetch";
 
 const useCommentsIncrementalLoader = () => {
@@ -12,9 +11,8 @@ const useCommentsIncrementalLoader = () => {
     useEffect(() => {
         const loadComments = async () => {
             try {
-                dispatch(setComments([]));
+                dispatch(setIsLoading(true));
                 await fetchCommentsFromRemote(dispatch, byPassCache);
-
                 initialLoadCompleted.current = true;
             } catch (error) {
                 if (error instanceof Error) {
@@ -28,9 +26,8 @@ const useCommentsIncrementalLoader = () => {
         };
 
         loadComments();
-
-        // Cleanup function to handle component unmount and cancel ongoing requests
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch]); // byPassCache her zaman sabit olduğu için bağımlılık dizisinden çıkarıldı
 
     return {initialLoadCompleted: initialLoadCompleted.current};
 };

@@ -2,8 +2,8 @@ import {Comment} from "./commentTypes";
 import {FilterState} from "./filterTypes"; // Adjust the path as necessary
 
 export interface RootState {
-    originalComments: Comment[];
-    comments: Comment[];
+    displayedComments: Comment[];
+    totalCommentCount: number;
     replies: any[];
     transcripts: any[];
     filters: FilterState;

@@ -12,7 +12,7 @@ import Box from "./features/shared/components/Box";
 import { useTranslation } from "react-i18next";
 import { BookmarkIcon, ChatBubbleOvalLeftIcon, DocumentTextIcon, InboxIcon } from '@heroicons/react/24/outline';
 import Tabs from "./features/shared/components/Tabs";
-import {useDispatch, useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from "./types/rootState";
 import i18n from "i18next";
 
@@ -22,9 +22,9 @@ const App: React.FC = () => {
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
-    const showContentOnSearch = useSelector((state: RootState) => state.settings.showContentOnSearch); // Get the state
-    const searchKeyword = useSelector((state: RootState) => state.searchKeyword); // Get the search keyword
-    const dispatch = useDispatch();
+    const showContentOnSearch = useSelector((state: RootState) => state.settings.showContentOnSearch);
+    const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
+    const totalCommentCount = useSelector((state: RootState) => state.totalCommentCount);
 
     const openSettings = () => setIsSettingsOpen(true);
     const closeSettings = () => setIsSettingsOpen(false);
@@ -43,7 +43,7 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'comments',
-                label: `${t('Comments')} (${filteredAndSortedComments.length})`,
+                label: `${t('Comments')} (${totalCommentCount})`,
                 icon: ChatBubbleOvalLeftIcon,
             },
             content: (
