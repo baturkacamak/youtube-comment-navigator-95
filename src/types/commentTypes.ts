@@ -37,6 +37,7 @@ export interface Comment {
     normalizedScore?: number;
     weightedZScore?: number;
     bayesianAverage?: number;
+    tags?: string[];
 }
 
 export interface CommentActionsProps {
@@ -81,7 +82,8 @@ export interface CommentRepliesProps {
     showReplies: boolean;
     repliesRef: React.RefObject<HTMLDivElement>;
     repliesHeight: string;
-} // Define the type for the data structure returned by fetchCommentJsonDataFromRemote
+}
+
 export interface CommentData {
     onResponseReceivedEndpoints?: Array<{
         appendContinuationItemsAction?: {
@@ -107,7 +109,8 @@ export interface CommentData {
             }>
         }
     }>
-} // Define a type for the content item structure
+}
+
 export interface ContentItem {
     itemSectionRenderer?: {
         contents?: Array<{
@@ -135,4 +138,34 @@ export interface ContentItem {
             }
         }>
     }
+}
+
+export interface CommentFilter {
+    hasTimestamp?: boolean;
+    isHearted?: boolean;
+    hasLinks?: boolean;
+    isMember?: boolean;
+    isDonated?: boolean;
+    isAuthorContentCreator?: boolean;
+}
+
+export interface AdvancedCommentFilter {
+    likesThreshold?: { min: number; max: number | string };
+    repliesLimit?: { min: number; max: number | string };
+    wordCount?: { min: number; max: number | string };
+    dateTimeRange?: { start: string; end: string };
+}
+
+export interface SortOptions {
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+}
+
+export interface CommentQueryOptions {
+    basicFilters?: CommentFilter;
+    advancedFilters?: AdvancedCommentFilter;
+    sortOptions?: SortOptions;
+    searchTerm?: string;
+    page?: number;
+    pageSize?: number;
 }

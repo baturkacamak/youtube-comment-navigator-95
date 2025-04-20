@@ -15,9 +15,15 @@ const initialState: RootState = {
     filters: {
         keyword: '',
         verified: false,
-        hasLinks: false,
+        links: false,
         sortBy: '',
         sortOrder: '',
+        timestamps: false,
+        heart: false,
+        members: false,
+        donated: false,
+        creator: false,
+
         likesThreshold: {
             min: 0,
             max: Infinity,

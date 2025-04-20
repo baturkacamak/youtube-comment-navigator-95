@@ -4,22 +4,30 @@ import React from "react";
 import {Option} from "./utilityTypes";
 
 export interface Filters {
+    keyword: string;
+    verified: boolean;
+
+    timestamps: boolean;
+    heart: boolean;
+    links: boolean;
+    members: boolean;
+    donated: boolean;
+    creator: boolean;
+
     sortBy: string;
     sortOrder: string;
-    verified: boolean;
-    hasLinks: boolean;
-    keyword: string;
+
     likesThreshold: {
         min: number;
-        max: number;
+        max: number | string;
     };
     repliesLimit: {
         min: number;
-        max: number;
+        max: number | string;
     };
     wordCount: {
         min: number;
-        max: number;
+        max: number | string;
     };
     dateTimeRange: {
         start: string;
@@ -80,3 +88,30 @@ export interface SortListProps {
     filters: any;
     setFilters: (filters: any) => void;
 }
+
+export const mapFiltersToCommentFilter = (filters: FilterState) => {
+    return {
+        hasTimestamp: filters.timestamps,
+        isHearted: filters.heart,
+        hasLinks: filters.links,
+        isMember: filters.members,
+        isDonated: filters.donated,
+        isAuthorContentCreator: filters.creator,
+    };
+};
+
+export const mapFiltersToAdvancedFilter = (filters: FilterState) => {
+    return {
+        likesThreshold: filters.likesThreshold,
+        repliesLimit: filters.repliesLimit,
+        wordCount: filters.wordCount,
+        dateTimeRange: filters.dateTimeRange,
+    };
+};
+
+export const mapFiltersToSortOptions = (filters: FilterState) => {
+    return {
+        sortBy: filters.sortBy || 'date',
+        sortOrder: (filters.sortOrder || 'desc') as 'asc' | 'desc',
+    };
+};
