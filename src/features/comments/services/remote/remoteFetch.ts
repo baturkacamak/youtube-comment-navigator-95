@@ -12,6 +12,7 @@ import {
 } from "./utils";
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
 import {db} from "../../../shared/utils/database/database";
+import {loadPagedComments} from "../pagination";
 
 let currentAbortController = new AbortController();
 window.addEventListener('message', (event: MessageEvent) => {
@@ -24,11 +25,15 @@ window.addEventListener('message', (event: MessageEvent) => {
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
     const handleInitialCommentsLoaded = async (videoId: string) => {
         console.log('Initial comments fetch completed, loading first page to Redux');
-        const initialComments = await db.comments
-            .where('videoId')
-            .equals(videoId)
-            .limit(20)
-            .toArray();
+
+        // Use our pagination function instead of direct DB query
+        const initialComments = await loadPagedComments(
+            videoId,
+            0,  // first page
+            20, // page size
+            'date', // default sort
+            'desc'  // default order
+        );
 
         console.log(`Loading ${initialComments.length} comments to Redux (out of many in IndexedDB)`);
         dispatch(setComments(initialComments));

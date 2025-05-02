@@ -143,6 +143,9 @@ const commentsSlice = createSlice({
         setFilteredAndSortedBookmarks(state, action: PayloadAction<Comment[]>) {
             state.filteredAndSortedBookmarks = action.payload;
         },
+        appendComments: (state, action: PayloadAction<Comment[]>) => {
+            state.comments = [...state.comments, ...action.payload];
+        },
     },
 });
 
@@ -176,6 +179,8 @@ export const {
     // Search keyword actions
     setSearchKeyword,
     clearSearchKeyword,
+
+    appendComments,
 
     setFilteredAndSortedComments,
     setFilteredAndSortedBookmarks,
