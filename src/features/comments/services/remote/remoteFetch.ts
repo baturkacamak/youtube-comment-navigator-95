@@ -11,6 +11,7 @@ import {
     storeContinuationToken
 } from "./utils";
 import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
+import {db} from "../../../shared/utils/database/database";
 
 let currentAbortController = new AbortController();
 window.addEventListener('message', (event: MessageEvent) => {
@@ -19,10 +20,19 @@ window.addEventListener('message', (event: MessageEvent) => {
     }
 });
 
+// Fix for remoteFetch.ts
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
-    const handleFetchedComments = (comments: any[]) => {
-        dispatch(setComments(comments));
-        dispatch(setOriginalComments(comments));
+    const handleInitialCommentsLoaded = async (videoId: string) => {
+        console.log('Initial comments fetch completed, loading first page to Redux');
+        const initialComments = await db.comments
+            .where('videoId')
+            .equals(videoId)
+            .limit(20)
+            .toArray();
+
+        console.log(`Loading ${initialComments.length} comments to Redux (out of many in IndexedDB)`);
+        dispatch(setComments(initialComments));
+        dispatch(setOriginalComments(initialComments));
         dispatch(setIsLoading(false));
     };
 
@@ -39,7 +49,10 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         if (!bypassCache && !localToken) {
             const cachedData = await fetchCachedComments(videoId);
             if (cachedData.length > 0) {
-                handleFetchedComments(cachedData);
+                const initialCachedComments = cachedData.slice(0, 20);
+                dispatch(setComments(initialCachedComments));
+                dispatch(setOriginalComments(initialCachedComments));
+                dispatch(setIsLoading(false));
                 return;
             }
         }
@@ -47,55 +60,37 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         let token: string | null = localToken || await fetchContinuationTokenFromRemote();
 
         const windowObj = window as any;
-        let totalFetchedComments = 0;
-        let updateInterval: ReturnType<typeof setInterval> | null = null;
-
-        const updateUI = async () => {
-            const commentsFromDB = await fetchCachedComments(videoId);
-            handleFetchedComments(commentsFromDB);
-        };
+        let hasQueuedRepliesValue = false;
 
         if (!localToken) {
             await deleteExistingComments(videoId);
         }
 
-        // Start the UI update interval immediately to catch both comments and replies
-        // We'll clear it when all processing is complete
-        updateInterval = setInterval(updateUI, 2000);
-
-        let hasQueuedReplies = false;
-
         do {
-            // @ts-ignore
-            let { token: newToken, hasQueuedReplies }: FetchAndProcessResult =
+            const result: FetchAndProcessResult =
                 await fetchAndProcessComments(token, videoId, windowObj, signal, dispatch);
-            token = newToken;
 
-            // Track if any batch has queued replies
-            if (hasQueuedReplies) {
-                hasQueuedReplies = true;
+            token = result.token;
+
+            if (result.hasQueuedReplies) {
+                hasQueuedRepliesValue = true;
             }
-
-            // Update UI immediately for parent comments
-            await updateUI();
 
             if (token) {
                 storeContinuationToken(token, CONTINUATION_TOKEN_KEY);
             }
         } while (token);
 
-        // If we have background reply processing, wait for it to complete
-        // before clearing the interval and doing the final update
-        if (hasQueuedReplies) {
-            // Continue updating UI until all reply tasks are done
-            await waitForReplyProcessing(updateInterval, updateUI);
-        } else if (updateInterval) {
-            // No replies to process, clear the interval
-            clearInterval(updateInterval);
+        // After all comments are fetched, load only the initial set to Redux
+        await handleInitialCommentsLoaded(videoId);
+
+        // Wait for reply processing if needed
+        if (hasQueuedRepliesValue) {
+            await waitForReplyProcessing();
+            // Reload initial comments after replies are processed
+            await handleInitialCommentsLoaded(videoId);
         }
 
-        // Final UI update
-        await updateUI();
         clearLocalContinuationToken(CONTINUATION_TOKEN_KEY);
     } catch (error: unknown) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -103,28 +98,13 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         } else {
             console.error('Error fetching comments from remote:', error);
         }
+        dispatch(setIsLoading(false));
     }
 };
 
-/**
- * Helper function to wait for background reply processing to complete
- * while continuing to update the UI periodically
- */
-async function waitForReplyProcessing(
-    updateInterval: ReturnType<typeof setInterval> | null,
-    updateUIFn: () => Promise<void>
-): Promise<void> {
-    // If there's no interval, nothing to wait for
-    if (!updateInterval) return;
-
-    // Check every second if reply processing is still active
+// Simplified waitForReplyProcessing function
+async function waitForReplyProcessing(): Promise<void> {
     while (hasActiveReplyProcessing()) {
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
-
-    // Clear the interval once all processing is complete
-    clearInterval(updateInterval);
-
-    // Do one final UI update
-    await updateUIFn();
 }

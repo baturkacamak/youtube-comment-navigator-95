@@ -71,34 +71,30 @@ async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: Ab
 /**
  * Asynchronously fetches and processes replies without blocking the main comment fetching flow
  */
+// src/features/comments/services/remote/fetchAndProcessComments.ts
+
+// Modify the fetchRepliesAndProcess function
 async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<void> {
     try {
-        // Fetch replies based on the main comments data
         const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
 
         if (replies && replies.length > 0) {
-            // Process replies in smaller batches for more frequent UI updates
-            const BATCH_SIZE = 20; // Adjust based on your needs
+            const BATCH_SIZE = 20;
+            console.log(`Processing ${replies.length} replies, saving to IndexedDB only`);
 
             for (let i = 0; i < replies.length; i += BATCH_SIZE) {
-                // Take a batch of replies
                 const batch = replies.slice(i, i + BATCH_SIZE);
-
-                // Process this batch
                 const batchProcessedData = processRawJsonCommentsData(batch, videoId);
 
                 if (batchProcessedData.items.length > 0) {
-                    // Store in database
+                    // Only save to IndexedDB, don't dispatch to Redux
                     await db.comments.bulkPut(batchProcessedData.items);
+                    console.log(`Saved batch of ${batchProcessedData.items.length} replies to IndexedDB`);
 
-                    // Update the UI by dispatching to Redux
-                    dispatch(addProcessedReplies(batchProcessedData.items));
-
-                    // Small delay to allow UI to breathe (optional)
+                    // Small delay to allow UI to breathe
                     await new Promise(resolve => setTimeout(resolve, 10));
                 }
 
-                // Check if operation was aborted
                 if (signal.aborted) break;
             }
         }
