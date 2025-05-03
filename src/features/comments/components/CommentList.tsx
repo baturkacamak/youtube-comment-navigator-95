@@ -114,8 +114,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
 
     return (
         <div key={`comment-list`} className="flex flex-col">
-            <AnimatePresence>
-                {visibleComments.map((group, index) => {
+            {visibleComments.map((group, index) => {
                     const { bgColor, darkBgColor, borderColor, darkBorderColor } =
                         getCommentBackgroundColor(group.comment, index);
                     return (
@@ -141,7 +140,6 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
                         </motion.div>
                     );
                 })}
-            </AnimatePresence>
             {hasMore && (
                 <button
                     onClick={loadMoreComments}
