@@ -29,6 +29,7 @@ export const transformCommentsData = (comment: any, videoId: string): Comment =>
 
     // Extract commentParentId if replyLevel is 1
     const commentParentId = replyLevel === 1 ? commentId.split('.')[0] : undefined;
+    const wordCount = content.split(/\s+/).filter(Boolean).length;
 
     return {
         author,
@@ -49,18 +50,15 @@ export const transformCommentsData = (comment: any, videoId: string): Comment =>
         isMember,
         hasTimestamp,
         hasLinks,
-        videoTitle: '', // Add if available in your data
+        videoTitle: '',
         videoId,
         isBookmarked: false,
         bookmarkAddedDate: '',
         showRepliesDefault: false,
         note: '',
-        wordCount: content.split(' ').length,
-        normalizedScore: 0,
-        weightedZScore: 0,
-        bayesianAverage: 0,
+        wordCount,
         timestamp: Date.now(),
-        isDonated: false, // Placeholder, will be updated later
+        isDonated: false,
         donationAmount: '',
         isHearted: false,
         likeAction: '',
