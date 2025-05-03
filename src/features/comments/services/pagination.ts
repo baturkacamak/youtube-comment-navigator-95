@@ -14,6 +14,8 @@ export const loadPagedComments = async (
     sortBy: string = 'date',
     sortOrder: string = 'desc'
 ): Promise<Comment[]> => {
+    const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder})`;
+    console.time(label);
     try {
         console.log(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
 
@@ -23,6 +25,8 @@ export const loadPagedComments = async (
         // --- Use .between() for compound index range queries ---
         const lowerBound = [videoId, Dexie.minKey];
         const upperBound = [videoId, Dexie.maxKey];
+
+        const startQuery = performance.now();
 
         // Determine the base collection using the most efficient index available
         switch (sortBy) {
@@ -67,10 +71,10 @@ export const loadPagedComments = async (
 
         // Apply pagination using IndexedDB's capabilities (efficient)
         collection = collection.offset(offset).limit(pageSize);
-
+        const resultsStart = performance.now();
         // Retrieve the comments for the page
         let pagedComments = await collection.toArray();
-
+        const resultsEnd = performance.now();
         // --- Handle sorts that require in-memory processing after retrieval ---
 
         // Author sorting needs localeCompare
@@ -103,7 +107,12 @@ export const loadPagedComments = async (
             pagedComments = allComments.slice(offset, offset + pageSize);
         }
 
+        const end = performance.now();
 
+        console.log(`[${label}] Query setup took ${(resultsStart - startQuery).toFixed(2)}ms`);
+        console.log(`[${label}] IndexedDB .toArray() took ${(resultsEnd - resultsStart).toFixed(2)}ms`);
+        console.log(`[${label}] Total loadPagedComments() took ${(end - startQuery).toFixed(2)}ms`);
+        console.timeEnd(label);
         console.log(`Successfully loaded ${pagedComments.length} comments for page ${page} (Sorted by ${sortBy} ${sortOrder})`);
         return pagedComments;
     } catch (error) {

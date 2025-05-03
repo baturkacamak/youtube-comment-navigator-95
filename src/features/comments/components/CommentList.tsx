@@ -1,5 +1,5 @@
 // src/features/comments/components/CommentList.tsx
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import CommentItem from './CommentItem';
 import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Box from "../../shared/components/Box";
@@ -11,9 +11,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../types/rootState";
 import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import { setComments } from "../../../store/store";
+import {setComments, setIsLoading} from "../../../store/store";
 
-const CommentList: React.FC<CommentListProps> = ({ comments }) => {
+const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [page, setPage] = useState(0);
@@ -22,6 +22,7 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const isLoading = useSelector((state: RootState) => state.isLoading);
     const filters = useSelector((state: RootState) => state.filters);
+    const comments = useSelector((state: RootState) => state.comments);
 
     // Get video ID for loading comments
     const videoId = extractYouTubeVideoIdFromUrl();
@@ -38,6 +39,31 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
             getTotalCount();
         }
     }, [videoId, page]);
+
+    const hasInitialized = useRef(false);
+
+    useEffect(() => {
+        const loadInitialComments = async () => {
+            if (!hasInitialized.current) {
+                hasInitialized.current = true;
+                dispatch(setIsLoading(true));
+                try {
+                    console.log('Fetching:');
+                    const initialComments = await loadPagedComments(
+                        videoId, 0, 20, filters.sortBy || 'date', filters.sortOrder || 'desc'
+                    );
+                    console.log('Fetched initialComments:', initialComments);
+                    dispatch(setComments(initialComments));
+                } catch (error) {
+                    console.error('Error loading initial comments:', error);
+                } finally {
+                    dispatch(setIsLoading(false));
+                }
+            }
+        };
+
+        loadInitialComments();
+    }, [videoId, comments.length, dispatch, filters.sortBy, filters.sortOrder, isLoading]);
 
     const loadMoreComments = async () => {
         if (isLoadingMore || !hasMore) return;

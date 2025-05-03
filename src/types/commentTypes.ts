@@ -73,7 +73,6 @@ export interface CommentItemProps {
 }
 
 export interface CommentListProps {
-    comments: Comment[];
 }
 
 export interface CommentRepliesProps {
