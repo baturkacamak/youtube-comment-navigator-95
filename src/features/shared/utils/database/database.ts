@@ -1,69 +1,70 @@
-// src/features/shared/utils/database/database.ts
-import Dexie from 'dexie';
-import { Comment } from "../../../../types/commentTypes"; // Adjust path if needed
+import Dexie, { Table } from 'dexie';
+import { Comment } from "../../../../types/commentTypes";
+import logger from "../logger";
 
-// Keep the existing database name to preserve data
 class Database extends Dexie {
-    public comments: Dexie.Table<Comment, number>;
+    public comments!: Table<Comment, number>;
 
-    public constructor() {
-        super('youtube-comment-navigator-95'); // DO NOT CHANGE THIS NAME
+    constructor() {
+        super('youtube-comment-navigator-95');
 
-        // Version 3: Original schema (as provided in the prompt)
-        this.version(3).stores({
-            // Example fields from original - ensure all necessary fields were here
-            comments: '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId'
-        });
+        try {
+            logger.info('[Dexie] Initializing IndexedDB...');
 
-        // Version 4: Add compound indexes for efficient pagination & sorting
-        this.version(4).stores({
-            comments: `
-                ++id,
-                commentId,
-                videoId,
-                author,
-                likes,
-                publishedDate,
-                replyCount,
-                wordCount,
-                normalizedScore,
-                weightedZScore,
-                bayesianAverage,
-                isBookmarked,
-                bookmarkAddedDate,
-                replyLevel,
-                commentParentId,
-                authorThumb,
-                authorUrl,
-                content,
-                isOwner,
-                isPinned,
-                &commentId,
-                [videoId+publishedDate],
-                [videoId+likes],
-                [videoId+replyCount],
-                [videoId+author],
-                [videoId+normalizedScore],
-                [videoId+weightedZScore],
-                [videoId+bayesianAverage],
-                [videoId+isBookmarked],
-                [videoId+replyLevel+publishedDate],
-                [videoId+replyLevel+likes],
-                [videoId+replyLevel+replyCount],
-                [videoId+replyLevel+wordCount],
-                [videoId+replyLevel+normalizedScore],
-                [videoId+replyLevel+weightedZScore],
-                [videoId+replyLevel+bayesianAverage]`
-        }).upgrade(async tx => {
-            console.log("Upgrading database to version 4, adding compound indexes.");
-            const count = await tx.table('comments').count();
-            console.log(`Database upgrade complete. ${count} comments remain.`);
-        });
+            this.version(3).stores({
+                comments: '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId'
+            });
 
-        // Define the table property
-        this.comments = this.table('comments');
+            this.version(4).stores({
+                comments: `
+                    ++id,
+                    commentId,
+                    videoId,
+                    author,
+                    likes,
+                    publishedDate,
+                    replyCount,
+                    wordCount,
+                    normalizedScore,
+                    weightedZScore,
+                    bayesianAverage,
+                    isBookmarked,
+                    bookmarkAddedDate,
+                    replyLevel,
+                    commentParentId,
+                    authorThumb,
+                    authorUrl,
+                    content,
+                    isOwner,
+                    isPinned,
+                    [videoId+publishedDate],
+                    [videoId+likes],
+                    [videoId+replyCount],
+                    [videoId+author],
+                    [videoId+normalizedScore],
+                    [videoId+weightedZScore],
+                    [videoId+bayesianAverage],
+                    [videoId+isBookmarked],
+                    [videoId+replyLevel],
+                    [videoId+replyLevel+publishedDate],
+                    [videoId+replyLevel+likes],
+                    [videoId+replyLevel+replyCount],
+                    [videoId+replyLevel+wordCount],
+                    [videoId+replyLevel+normalizedScore],
+                    [videoId+replyLevel+weightedZScore],
+                    [videoId+replyLevel+bayesianAverage]
+                `
+            }).upgrade(async tx => {
+                const count = await tx.table('comments').count();
+                logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
+            });
+
+            this.comments = this.table('comments');
+            logger.success('[Dexie] IndexedDB initialized and table "comments" is ready.');
+        } catch (err: any) {
+            logger.error('[Dexie] Failed to initialize IndexedDB:', err);
+        }
     }
 }
 
-// Export a singleton instance
 export const db = new Database();
