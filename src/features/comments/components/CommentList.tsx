@@ -33,7 +33,7 @@ const CommentList: React.FC<CommentListProps> = () => {
             try {
                 const count = await countComments(videoId);
                 setTotalCount(count);
-                setHasMore(count > (page + 1) * 20);
+                setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
                 logger.info(`[Count] Total comments for ${videoId}:`, count);
             } catch (err) {
                 logger.error('Failed to fetch comment count:', err);
@@ -55,7 +55,11 @@ const CommentList: React.FC<CommentListProps> = () => {
                 try {
                     logger.start('loadInitialComments');
                     const initialComments = await loadPagedComments(
-                        videoId, PAGINATION.INITIAL_PAGE, PAGINATION.DEFAULT_PAGE_SIZE, filters.sortBy || 'date', filters.sortOrder || 'desc'
+                        videoId,
+                        PAGINATION.INITIAL_PAGE,
+                        PAGINATION.DEFAULT_PAGE_SIZE,
+                        filters.sortBy || 'date',
+                        filters.sortOrder || 'desc'
                     );
                     dispatch(setComments(initialComments));
                     logger.success('Initial comments loaded successfully');
@@ -92,7 +96,7 @@ const CommentList: React.FC<CommentListProps> = () => {
             } else {
                 dispatch(setComments([...comments, ...newComments]));
                 setPage(nextPage);
-                setHasMore(newComments.length === 20);
+                setHasMore(newComments.length === PAGINATION.DEFAULT_PAGE_SIZE);
                 logger.success(`Loaded ${newComments.length} more comments.`);
             }
         } catch (error) {

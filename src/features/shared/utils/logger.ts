@@ -1,6 +1,6 @@
 class Logger {
     debug = true;
-    prefix = "Userscript";
+    prefix = "YouTube Comment Navigator 95";
     customFormat: { locale: string; hour12: boolean } | null = null;
     logHistory: Array<{ timestamp: string; level: string; args: any[] }> = [];
     filters: Set<string> = new Set();
