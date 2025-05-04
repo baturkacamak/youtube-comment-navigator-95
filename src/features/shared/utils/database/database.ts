@@ -46,7 +46,14 @@ class Database extends Dexie {
                 [videoId+normalizedScore],
                 [videoId+weightedZScore],
                 [videoId+bayesianAverage],
-                [videoId+isBookmarked]` // Index for filtering bookmarks per video
+                [videoId+isBookmarked],
+                [videoId+replyLevel+publishedDate],
+                [videoId+replyLevel+likes],
+                [videoId+replyLevel+replyCount],
+                [videoId+replyLevel+wordCount],
+                [videoId+replyLevel+normalizedScore],
+                [videoId+replyLevel+weightedZScore],
+                [videoId+replyLevel+bayesianAverage]`
         }).upgrade(async tx => {
             console.log("Upgrading database to version 4, adding compound indexes.");
             const count = await tx.table('comments').count();
