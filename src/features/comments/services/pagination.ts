@@ -109,9 +109,19 @@ export const loadPagedComments = async (
 /**
  * Counts total comments for a video (already efficient)
  */
-export const countComments = async (videoId: string): Promise<number> => {
+export const countComments = async (
+    videoId: string,
+    options: { topLevelOnly?: boolean } = {}
+): Promise<number> => {
     try {
-        return await db.comments.where('videoId').equals(videoId).count();
+        if (options.topLevelOnly) {
+            return await db.comments
+                .where('[videoId+replyLevel]')
+                .between([videoId, 0], [videoId, 0], true, true)
+                .count();
+        } else {
+            return await db.comments.where('videoId').equals(videoId).count();
+        }
     } catch (error) {
         logger.error('Error counting comments:', error);
         return 0;

@@ -31,12 +31,12 @@ const CommentList: React.FC<CommentListProps> = () => {
     useEffect(() => {
         const getTotalCount = async () => {
             try {
-                const count = await countComments(videoId);
+                const count = await countComments(videoId, { topLevelOnly: true });
                 setTotalCount(count);
                 setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
-                logger.info(`[Count] Total comments for ${videoId}:`, count);
+                logger.info(`[Count] Top-level comments for ${videoId}:`, count);
             } catch (err) {
-                logger.error('Failed to fetch comment count:', err);
+                logger.error('Failed to fetch top-level comment count:', err);
             }
         };
 
