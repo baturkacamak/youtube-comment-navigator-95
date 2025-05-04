@@ -2,6 +2,7 @@
 import { db } from "../../shared/utils/database/database";
 import { Comment } from "../../../types/commentTypes"; // Adjust path if needed
 import Dexie from 'dexie';
+import {PAGINATION} from "../../shared/utils/appConstants.ts";
 
 /**
  * Loads a page of comments from IndexedDB with sorting and filtering,
@@ -9,8 +10,8 @@ import Dexie from 'dexie';
  */
 export const loadPagedComments = async (
     videoId: string,
-    page: number = 0,
-    pageSize: number = 20,
+    page: number = PAGINATION.INITIAL_PAGE,
+    pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
     sortBy: string = 'date',
     sortOrder: string = 'desc'
 ): Promise<Comment[]> => {

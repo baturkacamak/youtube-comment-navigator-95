@@ -1,7 +1,7 @@
 // src/features/comments/services/remote/utils.ts
 
 import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {isLocalEnvironment} from "../../../shared/utils/environmentVariables";
+import {isLocalEnvironment} from "../../../shared/utils/appConstants.ts";
 import {db} from "../../../shared/utils/database/database";
 
 export const getVideoId = (): string => {
