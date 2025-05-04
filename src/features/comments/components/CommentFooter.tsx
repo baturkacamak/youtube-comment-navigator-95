@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
     BanknotesIcon,
     CheckCircleIcon,
@@ -16,6 +16,8 @@ import Tooltip from "../../shared/components/Tooltip";
 import BookmarkButton from './BookmarkButton/BookmarkButton';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
 import ShareButton from '../../shared/components/ShareButton';
+import hoverAction from "../../shared/utils/hoverAction";
+import {setReplies} from "../../../store/store";
 
 interface CommentFooterProps {
     comment: Comment;
@@ -34,7 +36,31 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                                                      }) => {
     const { t } = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();
-    const videoId = comment.videoId || currentVideoId; // Use stored videoId if available, otherwise use current videoId
+    const videoId = comment.videoId || currentVideoId;
+
+    const viewRepliesButtonRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (viewRepliesButtonRef.current && comment.replyCount > 0) {
+            new hoverAction({
+                element: viewRepliesButtonRef.current,
+                action: async () => {
+                    return await setReplies(videoId, comment.commentId); // Fetch replies and let the parent handle where to store them
+                },
+                onResult: (result) => {
+                    // Here you can prepopulate Redux or a local cache with replies if needed
+                    console.log('Prefetched replies:', result);
+                },
+                eventNamePrefix: 'hover-replies',
+                cacheTTL: 5 * 60 * 1000, // 5 minutes cache
+                triggerMode: 'delay',
+                hoverDelay: 200,
+                supportFocus: true,
+                supportTouch: true,
+                executeOnlyOnce: true,
+            });
+        }
+    }, [comment.commentId, comment.replyCount, videoId]);
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
@@ -84,6 +110,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 </a>
                 {comment.replyCount > 0 && (
                     <button
+                        ref={viewRepliesButtonRef}
                         onClick={() => setShowReplies(!showReplies)}
                         className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
                         title={showReplies ? t('Hide replies') : t('Show replies')}
@@ -101,7 +128,11 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     </button>
                 )}
                 <BookmarkButton comment={comment} />
-                <ShareButton textToShare={comment.content} subject={t('Comment from YouTube')} url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`} />
+                <ShareButton
+                    textToShare={comment.content}
+                    subject={t('Comment from YouTube')}
+                    url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
+                />
             </div>
             <div className="flex items-center gap-4">
                 {comment.isAuthorContentCreator && (
@@ -117,10 +148,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 )}
                 {comment.isHearted && (
                     <Tooltip text={t('Hearted by Creator')}>
-                        <span
-                            className="ml-2 flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
-                            aria-label={t('Hearted by Creator')}
-                        >
+                        <span className="ml-2 flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1" aria-label={t('Hearted by Creator')}>
                             <HeartIcon className="w-4 h-4" aria-hidden="true" />
                         </span>
                     </Tooltip>
