@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import App from './App';
 import { Provider } from 'react-redux';
-import { isLocalEnvironment } from "./features/shared/utils/environmentVariables";
+import { isLocalEnvironment } from "./features/shared/utils/appConstants.ts";
 import './i18n';
 import { getLanguageDirection } from './i18n';
 import i18n from './i18n';

@@ -1,5 +1,5 @@
 // src/features/transcripts/services/localFetch.ts
-import { isLocalEnvironment } from '../../shared/utils/environmentVariables';
+import { isLocalEnvironment } from '../../shared/utils/appConstants.ts';
 import {ProcessedTranscript, processTranscriptData} from "../../transcripts/utils/processTranscriptData";
 
 const transcriptFile = '/example-comments/transcript.json';

@@ -13,6 +13,7 @@ import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import {setComments, setIsLoading} from "../../../store/store";
 import logger from '../../shared/utils/logger';
+import {PAGINATION} from "../../shared/utils/appConstants.ts";
 
 const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
@@ -54,7 +55,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 try {
                     logger.start('loadInitialComments');
                     const initialComments = await loadPagedComments(
-                        videoId, 0, 20, filters.sortBy || 'date', filters.sortOrder || 'desc'
+                        videoId, PAGINATION.INITIAL_PAGE, PAGINATION.DEFAULT_PAGE_SIZE, filters.sortBy || 'date', filters.sortOrder || 'desc'
                     );
                     dispatch(setComments(initialComments));
                     logger.success('Initial comments loaded successfully');
@@ -80,7 +81,7 @@ const CommentList: React.FC<CommentListProps> = () => {
             const newComments = await loadPagedComments(
                 videoId,
                 nextPage,
-                20,
+                PAGINATION.DEFAULT_PAGE_SIZE,
                 filters.sortBy || 'date',
                 filters.sortOrder || 'desc'
             );

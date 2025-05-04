@@ -10,7 +10,7 @@ import {
     retrieveLocalContinuationToken,
     storeContinuationToken
 } from "./utils";
-import { CACHE_KEYS } from "../../../shared/utils/environmentVariables";
+import {CACHE_KEYS, PAGINATION} from "../../../shared/utils/appConstants.ts";
 import {db} from "../../../shared/utils/database/database";
 import {loadPagedComments} from "../pagination";
 
@@ -29,8 +29,8 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         // Use our pagination function instead of direct DB query
         const initialComments = await loadPagedComments(
             videoId,
-            0,  // first page
-            20, // page size
+            PAGINATION.INITIAL_PAGE,  // first page
+            PAGINATION.DEFAULT_PAGE_SIZE, // page size
             'date', // default sort
             'desc'  // default order
         );

@@ -1,5 +1,5 @@
 import { fetchTranscriptFromLocal } from './localFetch';
-import { isLocalEnvironment } from '../../shared/utils/environmentVariables';
+import { isLocalEnvironment } from '../../shared/utils/appConstants.ts';
 import { fetchTranscriptFromRemote, fetchCaptionTrackBaseUrl } from "./remoteFetch";
 import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 

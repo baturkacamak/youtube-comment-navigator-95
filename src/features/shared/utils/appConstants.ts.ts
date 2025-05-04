@@ -1,6 +1,23 @@
-// src/utils/environmentVariables.ts
+// src/utils/appConstants.ts.ts
 export const isLocalEnvironment = (): boolean => {
     return process.env.NODE_ENV === 'development';
+};
+
+/**
+ * Pagination constants
+ */
+export const PAGINATION = {
+    DEFAULT_PAGE_SIZE: 20,
+    INITIAL_PAGE: 0
+};
+
+/**
+ * Time constants (in milliseconds)
+ */
+export const TIME = {
+    DEBOUNCE_DELAY: 300,
+    MAX_DEBOUNCE_DELAY: 1000,
+    ANIMATION_DURATION: 300
 };
 
 export const CACHE_KEYS = {
