@@ -1,8 +1,9 @@
 // src/features/comments/services/pagination.ts
 import { db } from "../../shared/utils/database/database";
-import { Comment } from "../../../types/commentTypes"; // Adjust path if needed
+import { Comment } from "../../../types/commentTypes";
 import Dexie from 'dexie';
-import {PAGINATION} from "../../shared/utils/appConstants.ts";
+import { PAGINATION } from "../../shared/utils/appConstants.ts";
+import logger from "../../shared/utils/logger";
 
 /**
  * Loads a page of comments from IndexedDB with sorting and filtering,
@@ -16,23 +17,20 @@ export const loadPagedComments = async (
     sortOrder: string = 'desc'
 ): Promise<Comment[]> => {
     const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder})`;
-    console.time(label);
+    logger.start(label);
     try {
-        console.log(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
+        logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
 
         const offset = page * pageSize;
         let collection: Dexie.Collection<Comment, number>;
 
-        // --- Use .between() for compound index range queries ---
         const lowerBound = [videoId, Dexie.minKey];
         const upperBound = [videoId, Dexie.maxKey];
 
-        const startQuery = performance.now();
-
-        // Determine the base collection using the most efficient index available
+        logger.start(`${label} querySetup`);
         switch (sortBy) {
             case 'date':
-                collection = db.comments.where('[videoId+publishedDate]').between(lowerBound, upperBound, true, true); // true, true for inclusive bounds
+                collection = db.comments.where('[videoId+publishedDate]').between(lowerBound, upperBound, true, true);
                 break;
             case 'likes':
                 collection = db.comments.where('[videoId+likes]').between(lowerBound, upperBound, true, true);
@@ -41,7 +39,6 @@ export const loadPagedComments = async (
                 collection = db.comments.where('[videoId+replyCount]').between(lowerBound, upperBound, true, true);
                 break;
             case 'author':
-                // LocaleCompare still happens after retrieval, but index helps narrow down
                 collection = db.comments.where('[videoId+author]').between(lowerBound, upperBound, true, true);
                 break;
             case 'normalized':
@@ -53,71 +50,72 @@ export const loadPagedComments = async (
             case 'bayesian':
                 collection = db.comments.where('[videoId+bayesianAverage]').between(lowerBound, upperBound, true, true);
                 break;
-            case 'length': // Unindexed sort - handled below
-            case 'random': // Unindexed sort - handled below
             default:
-                // Fallback to date sort index as a reasonable default if 'default' case hit unexpectedly
                 collection = db.comments.where('[videoId+publishedDate]').between(lowerBound, upperBound, true, true);
-                // If default was truly intended *and* you only need videoId filtering without sorting assistance,
-                // you could use the simpler index, but compound is generally fine:
-                // collection = db.comments.where('videoId').equals(videoId);
+                logger.warn(`Unknown sortBy: '${sortBy}', defaulting to 'date' index.`);
                 break;
         }
+        logger.end(`${label} querySetup`);
 
-        // Apply sorting direction for indexed sorts
-        // NOTE: .reverse() works correctly with .between() ranges.
-        if (sortOrder === 'desc' && sortBy !== 'random' && sortBy !== 'length' && sortBy !== 'author') {
+        if (sortOrder === 'desc' && !['random', 'length', 'author'].includes(sortBy)) {
             collection = collection.reverse();
         }
 
-        // Apply pagination using IndexedDB's capabilities (efficient)
         collection = collection.offset(offset).limit(pageSize);
-        const resultsStart = performance.now();
-        // Retrieve the comments for the page
+        logger.start(`${label} toArray`);
         let pagedComments = await collection.toArray();
-        const resultsEnd = performance.now();
-        // --- Handle sorts that require in-memory processing after retrieval ---
+        logger.end(`${label} toArray`);
 
-        // Author sorting needs localeCompare
         if (sortBy === 'author') {
             pagedComments.sort((a, b) => {
                 const result = a.author.localeCompare(b.author);
                 return sortOrder === 'asc' ? result : -result;
             });
-            // Note: Sorts only the retrieved page. See previous explanation.
         }
 
-        // Length sorting cannot use an index
         if (sortBy === 'length') {
-            console.warn("Sorting by length requires loading all comments for the video into memory first.");
-            const allComments = await db.comments.where('videoId').equals(videoId).toArray(); // Simple filter is fine here
-            allComments.sort((a, b) => {
-                const lenA = a.content?.length || 0;
-                const lenB = b.content?.length || 0;
-                const result = lenA - lenB;
-                return sortOrder === 'asc' ? result : -result;
-            });
-            pagedComments = allComments.slice(offset, offset + pageSize);
+            logger.warn("Sorting by length requires loading all comments for the video into memory first.");
+            try {
+                logger.start(`${label} loadLengthSort`);
+                const allComments = await db.comments.where('videoId').equals(videoId).toArray();
+                allComments.sort((a, b) => {
+                    const lenA = a.content?.length || 0;
+                    const lenB = b.content?.length || 0;
+                    const result = lenA - lenB;
+                    return sortOrder === 'asc' ? result : -result;
+                });
+                pagedComments = allComments.slice(offset, offset + pageSize);
+                logger.end(`${label} loadLengthSort`);
+            } catch (e) {
+                logger.error('Failed to sort by length:', e);
+                logger.end(`${label} loadLengthSort`);
+                logger.end(label);
+                return [];
+            }
         }
 
-        // Random sorting cannot use an index
         if (sortBy === 'random') {
-            console.warn("Sorting by random requires loading all comments for the video into memory first.");
-            const allComments = await db.comments.where('videoId').equals(videoId).toArray(); // Simple filter is fine here
-            allComments.sort(() => Math.random() - 0.5);
-            pagedComments = allComments.slice(offset, offset + pageSize);
+            logger.warn("Sorting by random requires loading all comments for the video into memory first.");
+            try {
+                logger.start(`${label} loadRandomSort`);
+                const allComments = await db.comments.where('videoId').equals(videoId).toArray();
+                allComments.sort(() => Math.random() - 0.5);
+                pagedComments = allComments.slice(offset, offset + pageSize);
+                logger.end(`${label} loadRandomSort`);
+            } catch (e) {
+                logger.error('Failed to sort by random:', e);
+                logger.end(`${label} loadRandomSort`);
+                logger.end(label);
+                return [];
+            }
         }
 
-        const end = performance.now();
-
-        console.log(`[${label}] Query setup took ${(resultsStart - startQuery).toFixed(2)}ms`);
-        console.log(`[${label}] IndexedDB .toArray() took ${(resultsEnd - resultsStart).toFixed(2)}ms`);
-        console.log(`[${label}] Total loadPagedComments() took ${(end - startQuery).toFixed(2)}ms`);
-        console.timeEnd(label);
-        console.log(`Successfully loaded ${pagedComments.length} comments for page ${page} (Sorted by ${sortBy} ${sortOrder})`);
+        logger.success(`Successfully loaded ${pagedComments.length} comments for page ${page} (Sorted by ${sortBy} ${sortOrder})`);
+        logger.end(label);
         return pagedComments;
     } catch (error) {
-        console.error('Error loading paged comments:', error);
+        logger.error('Error loading paged comments:', error);
+        logger.end(label);
         return [];
     }
 };
@@ -127,10 +125,9 @@ export const loadPagedComments = async (
  */
 export const countComments = async (videoId: string): Promise<number> => {
     try {
-        // This uses the simple 'videoId' index, which is efficient for counting.
         return await db.comments.where('videoId').equals(videoId).count();
     } catch (error) {
-        console.error('Error counting comments:', error);
+        logger.error('Error counting comments:', error);
         return 0;
     }
 };
