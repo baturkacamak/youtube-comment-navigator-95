@@ -5,10 +5,6 @@ import Dexie from 'dexie';
 import { PAGINATION } from "../../shared/utils/appConstants.ts";
 import logger from "../../shared/utils/logger";
 
-/**
- * Loads a page of comments from IndexedDB with sorting and filtering,
- * leveraging compound indexes for efficiency where possible.
- */
 export const loadPagedComments = async (
     videoId: string,
     page: number = PAGINATION.INITIAL_PAGE,
@@ -18,6 +14,7 @@ export const loadPagedComments = async (
 ): Promise<Comment[]> => {
     const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder})`;
     logger.start(label);
+
     try {
         logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
 
@@ -30,28 +27,36 @@ export const loadPagedComments = async (
         logger.start(`${label} querySetup`);
         switch (sortBy) {
             case 'date':
-                collection = db.comments.where('[videoId+publishedDate]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+publishedDate]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'likes':
-                collection = db.comments.where('[videoId+likes]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+likes]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'replies':
-                collection = db.comments.where('[videoId+replyCount]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+replyCount]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'author':
-                collection = db.comments.where('[videoId+author]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+author]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'normalized':
-                collection = db.comments.where('[videoId+normalizedScore]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+normalizedScore]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'zscore':
-                collection = db.comments.where('[videoId+weightedZScore]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+weightedZScore]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             case 'bayesian':
-                collection = db.comments.where('[videoId+bayesianAverage]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+bayesianAverage]')
+                    .between(lowerBound, upperBound, true, true);
                 break;
             default:
-                collection = db.comments.where('[videoId+publishedDate]').between(lowerBound, upperBound, true, true);
+                collection = db.comments.where('[videoId+publishedDate]')
+                    .between(lowerBound, upperBound, true, true);
                 logger.warn(`Unknown sortBy: '${sortBy}', defaulting to 'date' index.`);
                 break;
         }
@@ -61,9 +66,11 @@ export const loadPagedComments = async (
             collection = collection.reverse();
         }
 
-        collection = collection.offset(offset).limit(pageSize);
+        // Filter at cursor level to keep only top-level comments
+        collection = collection.and(comment => comment.replyLevel === 0);
+
         logger.start(`${label} toArray`);
-        let pagedComments = await collection.toArray();
+        const pagedComments = await collection.offset(offset).limit(pageSize).toArray();
         logger.end(`${label} toArray`);
 
         if (sortBy === 'author') {
@@ -73,44 +80,28 @@ export const loadPagedComments = async (
             });
         }
 
-        if (sortBy === 'length') {
-            logger.warn("Sorting by length requires loading all comments for the video into memory first.");
-            try {
-                logger.start(`${label} loadLengthSort`);
-                const allComments = await db.comments.where('videoId').equals(videoId).toArray();
-                allComments.sort((a, b) => {
-                    const lenA = a.content?.length || 0;
-                    const lenB = b.content?.length || 0;
-                    const result = lenA - lenB;
-                    return sortOrder === 'asc' ? result : -result;
+        if (sortBy === 'length' || sortBy === 'random') {
+            logger.warn(`Sorting by ${sortBy} requires full table scan. Loading all top-level comments for ${videoId}.`);
+            logger.start(`${label} fullScan`);
+            const allTopLevel = await db.comments.where('videoId').equals(videoId)
+                .and(c => c.replyLevel === 0)
+                .toArray();
+
+            if (sortBy === 'length') {
+                allTopLevel.sort((a, b) => {
+                    const diff = (a.content?.length || 0) - (b.content?.length || 0);
+                    return sortOrder === 'asc' ? diff : -diff;
                 });
-                pagedComments = allComments.slice(offset, offset + pageSize);
-                logger.end(`${label} loadLengthSort`);
-            } catch (e) {
-                logger.error('Failed to sort by length:', e);
-                logger.end(`${label} loadLengthSort`);
-                logger.end(label);
-                return [];
+            } else {
+                allTopLevel.sort(() => Math.random() - 0.5);
             }
+
+            logger.end(`${label} fullScan`);
+            logger.end(label);
+            return allTopLevel.slice(offset, offset + pageSize);
         }
 
-        if (sortBy === 'random') {
-            logger.warn("Sorting by random requires loading all comments for the video into memory first.");
-            try {
-                logger.start(`${label} loadRandomSort`);
-                const allComments = await db.comments.where('videoId').equals(videoId).toArray();
-                allComments.sort(() => Math.random() - 0.5);
-                pagedComments = allComments.slice(offset, offset + pageSize);
-                logger.end(`${label} loadRandomSort`);
-            } catch (e) {
-                logger.error('Failed to sort by random:', e);
-                logger.end(`${label} loadRandomSort`);
-                logger.end(label);
-                return [];
-            }
-        }
-
-        logger.success(`Successfully loaded ${pagedComments.length} comments for page ${page} (Sorted by ${sortBy} ${sortOrder})`);
+        logger.success(`Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);
         logger.end(label);
         return pagedComments;
     } catch (error) {
