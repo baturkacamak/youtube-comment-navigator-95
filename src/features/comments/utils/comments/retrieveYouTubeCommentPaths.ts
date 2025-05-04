@@ -1,11 +1,17 @@
 import {transformCommentsData} from "./transformCommentsData";
+import logger from "../../../shared/utils/logger";
 
 export const getCommentsFromData = (data: any) => {
     return data.frameworkUpdates?.entityBatchUpdate?.mutations || [];
 };
+
 export const getCommentKeysFromData = (data: any) => {
-    return data.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems || data.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || [];
+    return data.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems ||
+        data.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems ||
+        data.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems ||
+        [];
 };
+
 export const mergeCommentsWithViewModels = (transformedComments: any[], commentViewModels: any[]) => {
     return transformedComments.map((transformedComment, index) => ({
         ...transformedComment,
@@ -13,22 +19,21 @@ export const mergeCommentsWithViewModels = (transformedComments: any[], commentV
     }));
 };
 
-// Helper function to find a mutation by key and extract a value from a nested path
 const findMutationValue = (entityKey: string, path: string[], allComments: any[]) => {
-
-    // Find the mutation object with the matching entityKey
-    const mutation = allComments.find(item => item.entityKey === entityKey);
-
-    // Use the path array to navigate through the nested properties of the mutation payload
-    return path.reduce((accumulator, currentPath) => {
-        if (accumulator && accumulator[currentPath]) {
-            return accumulator[currentPath]; // Move to the next nested property
-        }
-        return ''; // Return an empty string if the path does not exist
-    }, mutation?.payload);
+    try {
+        const mutation = allComments.find(item => item.entityKey === entityKey);
+        return path.reduce((accumulator, currentPath) => {
+            if (accumulator && accumulator[currentPath]) {
+                return accumulator[currentPath];
+            }
+            return '';
+        }, mutation?.payload);
+    } catch (e) {
+        logger.warn(`Failed to find mutation value for ${entityKey}:`, e);
+        return '';
+    }
 };
 
-// Helper function to retrieve a value from a nested object path in a mutation
 export const addAdditionalInfoToComments = (comments: any[], allComments: any[]) => {
     return comments.map(comment => {
         const commentSurfaceKey = comment.commentViewModel?.commentSurfaceKey;
@@ -55,21 +60,32 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
     });
 };
 
+export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
+    try {
+        const allComments = rawData.flatMap(getCommentsFromData);
+        const allCommentKeys = rawData.flatMap(getCommentKeysFromData);
 
-export const processRawJsonCommentsData = (data: any[], videoId: string) => {
-    const allComments = data.flatMap(getCommentsFromData);
-    const allCommentKeys = data.flatMap(getCommentKeysFromData);
+        const commentViewModels = allCommentKeys.map((key: any) => key.commentThreadRenderer?.commentViewModel?.commentViewModel || {});
 
-    // Extracting commentViewModels
-    const commentViewModels = allCommentKeys.map((key: any) => key.commentThreadRenderer?.commentViewModel?.commentViewModel || {});
+        const transformedComments = allComments
+            .filter((comment: any) => {
+                const payload = comment.payload?.commentEntityPayload;
+                const isPinned = payload?.pinnedState === 'COMMENT_PINNED_STATE_PINNED';
+                if (isPinned) {
+                    logger.info(`Skipping pinned comment with id: ${payload?.id}`);
+                }
+                return payload && !isPinned;
+            })
+            .map((comment: any) => transformCommentsData(comment, videoId));
 
-    // Filtering and transforming comments
-    const transformedComments = allComments
-        .filter((comment: any) => comment.payload?.commentEntityPayload)
-        .map((comment: any) => transformCommentsData(comment, videoId));  // Pass videoId here
+        const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
+        const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
 
-    const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
-    // Add donation and heart information to comments
-    const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
-    return {items: commentsWithAdditionalInfo};
+        logger.success(`Processed ${commentsWithAdditionalInfo.length} comments for video ${videoId}`);
+
+        return { items: commentsWithAdditionalInfo };
+    } catch (error) {
+        logger.error("Error processing raw JSON comments data:", error);
+        return { items: [] };
+    }
 };
