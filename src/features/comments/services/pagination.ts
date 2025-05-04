@@ -19,45 +19,41 @@ export const loadPagedComments = async (
         logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
 
         const offset = page * pageSize;
-        let collection: Dexie.Collection<Comment, number>;
+        const baseIndex = 'videoId+replyLevel';
+        const buildIndexKey = (field: string) => `[${baseIndex}+${field}]`;
 
-        const lowerBound = [videoId, Dexie.minKey];
-        const upperBound = [videoId, Dexie.maxKey];
+        const bounds = {
+            lower: [videoId, 0, Dexie.minKey],
+            upper: [videoId, 0, Dexie.maxKey],
+        };
 
         logger.start(`${label} querySetup`);
+        let collection: Dexie.Collection<Comment, number>;
         switch (sortBy) {
             case 'date':
-                collection = db.comments.where('[videoId+publishedDate]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'likes':
-                collection = db.comments.where('[videoId+likes]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('likes')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'replies':
-                collection = db.comments.where('[videoId+replyCount]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('replyCount')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'author':
-                collection = db.comments.where('[videoId+author]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('author')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'normalized':
-                collection = db.comments.where('[videoId+normalizedScore]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('normalizedScore')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'zscore':
-                collection = db.comments.where('[videoId+weightedZScore]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('weightedZScore')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'bayesian':
-                collection = db.comments.where('[videoId+bayesianAverage]')
-                    .between(lowerBound, upperBound, true, true);
+                collection = db.comments.where(buildIndexKey('bayesianAverage')).between(bounds.lower, bounds.upper, true, true);
                 break;
             default:
-                collection = db.comments.where('[videoId+publishedDate]')
-                    .between(lowerBound, upperBound, true, true);
-                logger.warn(`Unknown sortBy: '${sortBy}', defaulting to 'date' index.`);
+                collection = db.comments.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
+                logger.warn(`Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
                 break;
         }
         logger.end(`${label} querySetup`);
@@ -66,11 +62,8 @@ export const loadPagedComments = async (
             collection = collection.reverse();
         }
 
-        // Filter at cursor level to keep only top-level comments
-        collection = collection.and(comment => comment.replyLevel === 0);
-
         logger.start(`${label} toArray`);
-        const pagedComments = await collection.offset(offset).limit(pageSize).toArray();
+        let pagedComments = await collection.offset(offset).limit(pageSize).toArray();
         logger.end(`${label} toArray`);
 
         if (sortBy === 'author') {
@@ -83,8 +76,10 @@ export const loadPagedComments = async (
         if (sortBy === 'length' || sortBy === 'random') {
             logger.warn(`Sorting by ${sortBy} requires full table scan. Loading all top-level comments for ${videoId}.`);
             logger.start(`${label} fullScan`);
-            const allTopLevel = await db.comments.where('videoId').equals(videoId)
-                .and(c => c.replyLevel === 0)
+
+            const allTopLevel = await db.comments
+                .where(buildIndexKey('publishedDate'))
+                .between(bounds.lower, bounds.upper, true, true)
                 .toArray();
 
             if (sortBy === 'length') {
