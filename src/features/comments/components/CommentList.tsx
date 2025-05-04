@@ -94,7 +94,8 @@ const CommentList: React.FC<CommentListProps> = () => {
                 setHasMore(false);
                 logger.info('No more comments to load.');
             } else {
-                dispatch(setComments([...comments, ...newComments]));
+                const updatedComments = [...comments, ...newComments];
+                dispatch(setComments(updatedComments));
                 setPage(nextPage);
                 setHasMore(newComments.length === PAGINATION.DEFAULT_PAGE_SIZE);
                 logger.success(`Loaded ${newComments.length} more comments.`);
