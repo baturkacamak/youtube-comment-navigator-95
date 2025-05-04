@@ -97,7 +97,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 const updatedComments = [...comments, ...newComments];
                 dispatch(setComments(updatedComments));
                 setPage(nextPage);
-                setHasMore(newComments.length === PAGINATION.DEFAULT_PAGE_SIZE);
+                setHasMore((page + 1) * PAGINATION.DEFAULT_PAGE_SIZE < totalCount);
                 logger.success(`Loaded ${newComments.length} more comments.`);
             }
         } catch (error) {
