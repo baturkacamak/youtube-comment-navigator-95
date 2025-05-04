@@ -46,6 +46,7 @@ class Database extends Dexie {
                     [videoId+bayesianAverage],
                     [videoId+isBookmarked],
                     [videoId+replyLevel],
+                    [videoId+replyLevel+commentParentId],
                     [videoId+replyLevel+publishedDate],
                     [videoId+replyLevel+likes],
                     [videoId+replyLevel+replyCount],

@@ -127,3 +127,15 @@ export const countComments = async (
         return 0;
     }
 };
+
+export const fetchRepliesForComment = async (videoId: string, parentId: string): Promise<Comment[]> => {
+    try {
+        return await db.comments
+            .where('[videoId+replyLevel+commentParentId]')
+            .between([videoId, 1, parentId], [videoId, 1, parentId])
+            .toArray();
+    } catch (err) {
+        logger.error(`Failed to fetch replies for ${parentId}:`, err);
+        return [];
+    }
+};
