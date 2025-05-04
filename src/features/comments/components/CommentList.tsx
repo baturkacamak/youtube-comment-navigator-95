@@ -12,6 +12,7 @@ import { RootState } from "../../../types/rootState";
 import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import {setComments, setIsLoading} from "../../../store/store";
+import logger from '../../shared/utils/logger';
 
 const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
@@ -24,15 +25,18 @@ const CommentList: React.FC<CommentListProps> = () => {
     const filters = useSelector((state: RootState) => state.filters);
     const comments = useSelector((state: RootState) => state.comments);
 
-    // Get video ID for loading comments
     const videoId = extractYouTubeVideoIdFromUrl();
 
-    // Load total comment count
     useEffect(() => {
         const getTotalCount = async () => {
-            const count = await countComments(videoId);
-            setTotalCount(count);
-            setHasMore(count > (page + 1) * 20);
+            try {
+                const count = await countComments(videoId);
+                setTotalCount(count);
+                setHasMore(count > (page + 1) * 20);
+                logger.info(`[Count] Total comments for ${videoId}:`, count);
+            } catch (err) {
+                logger.error('Failed to fetch comment count:', err);
+            }
         };
 
         if (videoId) {
@@ -48,16 +52,17 @@ const CommentList: React.FC<CommentListProps> = () => {
                 hasInitialized.current = true;
                 dispatch(setIsLoading(true));
                 try {
-                    console.log('Fetching:');
+                    logger.start('loadInitialComments');
                     const initialComments = await loadPagedComments(
                         videoId, 0, 20, filters.sortBy || 'date', filters.sortOrder || 'desc'
                     );
-                    console.log('Fetched initialComments:', initialComments);
                     dispatch(setComments(initialComments));
+                    logger.success('Initial comments loaded successfully');
                 } catch (error) {
-                    console.error('Error loading initial comments:', error);
+                    logger.error('Error loading initial comments:', error);
                 } finally {
                     dispatch(setIsLoading(false));
+                    logger.end('loadInitialComments');
                 }
             }
         };
@@ -70,6 +75,7 @@ const CommentList: React.FC<CommentListProps> = () => {
 
         setIsLoadingMore(true);
         try {
+            logger.start('loadMoreComments');
             const nextPage = page + 1;
             const newComments = await loadPagedComments(
                 videoId,
@@ -81,16 +87,18 @@ const CommentList: React.FC<CommentListProps> = () => {
 
             if (newComments.length === 0) {
                 setHasMore(false);
+                logger.info('No more comments to load.');
             } else {
-                // Append new comments to existing ones
                 dispatch(setComments([...comments, ...newComments]));
                 setPage(nextPage);
                 setHasMore(newComments.length === 20);
+                logger.success(`Loaded ${newComments.length} more comments.`);
             }
         } catch (error) {
-            console.error('Error loading more comments:', error);
+            logger.error('Error loading more comments:', error);
         } finally {
             setIsLoadingMore(false);
+            logger.end('loadMoreComments');
         }
     };
 
@@ -116,7 +124,6 @@ const CommentList: React.FC<CommentListProps> = () => {
         );
     }
 
-    // Optimized grouping of comments by parentCommentId
     const groupCommentsByParent = (comments: Comment[]) => {
         const parentMap = new Map<string, { comment: Comment, replies: Comment[] }>();
 
@@ -131,8 +138,7 @@ const CommentList: React.FC<CommentListProps> = () => {
             }
         });
 
-        const groupedComments = Array.from(parentMap.values());
-        return groupedComments;
+        return Array.from(parentMap.values());
     };
 
     const visibleComments = groupCommentsByParent(comments);
@@ -141,31 +147,31 @@ const CommentList: React.FC<CommentListProps> = () => {
     return (
         <div key={`comment-list`} className="flex flex-col">
             {visibleComments.map((group, index) => {
-                    const { bgColor, darkBgColor, borderColor, darkBorderColor } =
-                        getCommentBackgroundColor(group.comment, index);
-                    return (
-                        <motion.div
-                            key={group.comment.commentId}
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 5 }}
-                            layout
-                            transition={{ duration: 0.5 }}
-                            role="listitem"
-                            aria-labelledby={`comment-${group.comment.commentId}`}
-                        >
-                            <CommentItem
-                                comment={group.comment}
-                                replies={group.replies}
-                                className="text-gray-800 dark:text-gray-200"
-                                bgColor={bgColor}
-                                darkBgColor={darkBgColor}
-                                borderColor={borderColor}
-                                darkBorderColor={darkBorderColor}
-                            />
-                        </motion.div>
-                    );
-                })}
+                const { bgColor, darkBgColor, borderColor, darkBorderColor } =
+                    getCommentBackgroundColor(group.comment, index);
+                return (
+                    <motion.div
+                        key={group.comment.commentId}
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 5 }}
+                        layout
+                        transition={{ duration: 0.5 }}
+                        role="listitem"
+                        aria-labelledby={`comment-${group.comment.commentId}`}
+                    >
+                        <CommentItem
+                            comment={group.comment}
+                            replies={group.replies}
+                            className="text-gray-800 dark:text-gray-200"
+                            bgColor={bgColor}
+                            darkBgColor={darkBgColor}
+                            borderColor={borderColor}
+                            darkBorderColor={darkBorderColor}
+                        />
+                    </motion.div>
+                );
+            })}
             {hasMore && (
                 <button
                     onClick={loadMoreComments}
@@ -178,7 +184,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                     ) : (
                         <ChevronDownIcon className="w-5 h-5 mr-2" aria-hidden="true" />
                     )}
-                    {t('Load More Comments ({{remainingComments}} remaining)', { remainingComments: totalCount - comments.length })}
+                    {t('Load More Comments ({{remainingComments}} remaining)', { remainingComments })}
                 </button>
             )}
         </div>
