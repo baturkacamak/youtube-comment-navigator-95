@@ -129,13 +129,39 @@ export const countComments = async (
 };
 
 export const fetchRepliesForComment = async (videoId: string, parentId: string): Promise<Comment[]> => {
+    logger.start(`[fetchRepliesForComment] Fetching replies for parent: ${parentId}`);
+
     try {
-        return await db.comments
-            .where('[videoId+replyLevel+commentParentId]')
-            .between([videoId, 1, parentId], [videoId, 1, parentId])
+        // Direct query to get replies - this is the one that's working
+        const replies = await db.comments
+            .where('videoId')
+            .equals(videoId)
+            .and(item => {
+                // Simple, straightforward conditions
+                const isReplyLevel1 = item.replyLevel === 1;
+                const hasMatchingParent = item.commentParentId === parentId;
+                return isReplyLevel1 && hasMatchingParent;
+            })
             .toArray();
+
+        logger.info(`[fetchRepliesForComment] Found ${replies.length} replies for parent: ${parentId}`);
+
+        if (replies.length > 0) {
+            logger.success(`[fetchRepliesForComment] Successfully retrieved replies for comment: ${parentId}`);
+        } else {
+            const parentComment = await db.comments.where('commentId').equals(parentId).first();
+            const expectedReplies = parentComment?.replyCount || 0;
+
+            if (expectedReplies > 0) {
+                logger.warn(`[fetchRepliesForComment] No replies found, but expected: ${expectedReplies}`);
+            }
+        }
+
+        return replies;
     } catch (err) {
-        logger.error(`Failed to fetch replies for ${parentId}:`, err);
+        logger.error(`[fetchRepliesForComment] Failed to fetch replies for ${parentId}:`, err);
         return [];
+    } finally {
+        logger.end(`[fetchRepliesForComment] Fetching replies for parent: ${parentId}`);
     }
 };

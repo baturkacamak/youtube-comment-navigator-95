@@ -118,6 +118,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                         repliesRef={repliesRef}
                         repliesHeight={repliesHeight}
                         aria-label={t('Replies')}
+                        parentCommentId={comment.commentId}
                     />
                 )}
             </Box>
