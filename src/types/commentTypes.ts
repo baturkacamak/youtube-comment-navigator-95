@@ -80,7 +80,8 @@ export interface CommentRepliesProps {
     showReplies: boolean;
     repliesRef: React.RefObject<HTMLDivElement>;
     repliesHeight: string;
-} // Define the type for the data structure returned by fetchCommentJsonDataFromRemote
+    parentCommentId: string;
+}
 export interface CommentData {
     onResponseReceivedEndpoints?: Array<{
         appendContinuationItemsAction?: {

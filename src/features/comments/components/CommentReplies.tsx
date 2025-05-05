@@ -1,15 +1,27 @@
-import React, { useMemo } from 'react';
+import React, {useMemo} from 'react';
 import CommentItem from './CommentItem';
-import { CommentRepliesProps } from "../../../types/commentTypes";
-import { useTranslation } from 'react-i18next';
+import {CommentRepliesProps} from "../../../types/commentTypes";
+import {useTranslation} from 'react-i18next';
+import {useSelector} from "react-redux";
+import { RootState } from "../../../types/rootState";
 
-const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, repliesRef, repliesHeight }) => {
-    const { t } = useTranslation();
+const CommentReplies: React.FC<CommentRepliesProps> = ({
+                                                           replies: propReplies,
+                                                           showReplies,
+                                                           repliesRef,
+                                                           repliesHeight,
+                                                           parentCommentId
+                                                       }) => {
+    const {t} = useTranslation();
+    const storeReplies = useSelector((state: RootState) => state.replies);
+    const effectiveReplies = propReplies.length > 0
+        ? propReplies
+        : storeReplies.filter(reply => reply.commentParentId === parentCommentId);
 
     const memoizedReplies = useMemo(() => {
         return (
             <div className="mt-4 space-y-4">
-                {replies.map((reply, index) => (
+                {effectiveReplies.map((reply, index) => (
                     <CommentItem
                         key={`${reply.commentId}-${index}`}
                         comment={reply}
@@ -23,12 +35,12 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({ replies, showReplies, r
                 ))}
             </div>
         );
-    }, [replies]);
+    }, [effectiveReplies, t]);
 
     return (
         <div
             className={`w-full transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out overflow-hidden '}`}
-            style={{ maxHeight: showReplies ? repliesHeight : '0px' }}
+            style={{maxHeight: showReplies ? repliesHeight : '0px'}}
             ref={repliesRef}
             aria-expanded={showReplies}
             aria-label={t('Replies')}

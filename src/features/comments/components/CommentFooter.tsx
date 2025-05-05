@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
     BanknotesIcon,
     CheckCircleIcon,
@@ -9,15 +9,18 @@ import {
     HeartIcon,
     LinkIcon,
 } from '@heroicons/react/24/outline';
-import { useTranslation } from 'react-i18next';
-import { Comment } from "../../../types/commentTypes";
-import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import {useTranslation} from 'react-i18next';
+import {Comment} from "../../../types/commentTypes";
+import {extractYouTubeVideoIdFromUrl} from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import Tooltip from "../../shared/components/Tooltip";
 import BookmarkButton from './BookmarkButton/BookmarkButton';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
 import ShareButton from '../../shared/components/ShareButton';
 import hoverAction from "../../shared/utils/hoverAction";
 import {setReplies} from "../../../store/store";
+import {fetchRepliesForComment} from "../services/pagination";
+import {useDispatch} from "react-redux";
+import logger from '../../shared/utils/logger';
 
 interface CommentFooterProps {
     comment: Comment;
@@ -34,45 +37,83 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                                                          handleCopyToClipboard,
                                                          copySuccess,
                                                      }) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();
     const videoId = comment.videoId || currentVideoId;
+    const dispatch = useDispatch();
 
     const viewRepliesButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (viewRepliesButtonRef.current && comment.replyCount > 0) {
-            new hoverAction({
-                element: viewRepliesButtonRef.current,
-                action: async () => {
-                    return await setReplies(videoId, comment.commentId); // Fetch replies and let the parent handle where to store them
-                },
-                onResult: (result) => {
-                    // Here you can prepopulate Redux or a local cache with replies if needed
-                    console.log('Prefetched replies:', result);
-                },
-                eventNamePrefix: 'hover-replies',
-                cacheTTL: 5 * 60 * 1000, // 5 minutes cache
-                triggerMode: 'delay',
-                hoverDelay: 200,
-                supportFocus: true,
-                supportTouch: true,
-                executeOnlyOnce: true,
-            });
+            logger.start(`[CommentFooter] Setting up hoverAction for comment: ${comment.commentId}`);
+            try {
+                new hoverAction({
+                    element: viewRepliesButtonRef.current,
+                    action: async () => {
+                        logger.start(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
+                        try {
+                            const replies = await fetchRepliesForComment(videoId, comment.commentId);
+                            logger.success(`[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`);
+                            return replies;
+                        } catch (error) {
+                            logger.error(`[RepliesHover] Error fetching replies for comment: ${comment.commentId}`, error);
+                            // Return empty array on error to prevent UI breaking
+                            return [];
+                        } finally {
+                            logger.end(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
+                        }
+                    },
+                    onResult: (result) => {
+                        try {
+                            if (!result) {
+                                logger.warn(`[RepliesHover] No result returned for comment: ${comment.commentId}`);
+                                return;
+                            }
+
+                            if (result.length > 0) {
+                                logger.info(`[RepliesHover] Dispatching ${result.length} replies to Redux store for comment: ${comment.commentId}`);
+                                dispatch(setReplies(result));
+                                logger.success(`[RepliesHover] Successfully cached replies for comment: ${comment.commentId}`);
+                            } else {
+                                logger.info(`[RepliesHover] No replies to dispatch for comment: ${comment.commentId} (expected ${comment.replyCount})`);
+                            }
+                        } catch (error) {
+                            logger.error(`[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`, error);
+                        }
+                    },
+                    eventNamePrefix: 'hover-replies',
+                    cacheTTL: 5 * 60 * 1000, // 5 minutes cache
+                    triggerMode: 'delay',
+                    hoverDelay: 200,
+                    supportFocus: true,
+                    supportTouch: true,
+                    executeOnlyOnce: true,
+                });
+                logger.success(`[CommentFooter] HoverAction setup complete for comment: ${comment.commentId}`);
+            } catch (error) {
+                logger.error(`[CommentFooter] Error setting up hoverAction for comment: ${comment.commentId}`, error);
+            } finally {
+                logger.end(`[CommentFooter] Setting up hoverAction for comment: ${comment.commentId}`);
+            }
+        } else if (comment.replyCount === 0) {
+            logger.info(`[CommentFooter] No replies to prefetch for comment: ${comment.commentId}`);
+        } else if (!viewRepliesButtonRef.current) {
+            logger.warn(`[CommentFooter] Button ref not available for comment: ${comment.commentId}`);
         }
-    }, [comment.commentId, comment.replyCount, videoId]);
+    }, [comment.commentId, comment.replyCount, videoId, dispatch]);
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
             <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
                 <div className="flex items-center">
-                    <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                     <span className="text-sm font-bold" aria-label={t('Likes')}>
                         {comment.viewLikes || comment.likes}
                     </span>
                 </div>
                 <div className="flex items-center">
-                    <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                     <span className="text-sm" aria-label={t('Published date')}>
                         {getFormattedDate(comment.publishedDate)}
                     </span>
@@ -87,12 +128,12 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 >
                     {copySuccess ? (
                         <>
-                            <CheckCircleIcon className="w-4 h-4 mr-1 text-green-500 animate-pulse" aria-hidden="true" />
+                            <CheckCircleIcon className="w-4 h-4 mr-1 text-green-500 animate-pulse" aria-hidden="true"/>
                             <span className="text-sm">{t('Copied')}</span>
                         </>
                     ) : (
                         <>
-                            <ClipboardIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                            <ClipboardIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                             <span className="text-sm">{t('Copy')}</span>
                         </>
                     )}
@@ -105,7 +146,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     title={t('Go to original comment')}
                     aria-label={t('Go to original comment')}
                 >
-                    <LinkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                    <LinkIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                     <span className="text-sm">{t('Original')}</span>
                 </a>
                 {comment.replyCount > 0 && (
@@ -127,7 +168,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                         </span>
                     </button>
                 )}
-                <BookmarkButton comment={comment} />
+                <BookmarkButton comment={comment}/>
                 <ShareButton
                     textToShare={comment.content}
                     subject={t('Comment from YouTube')}
@@ -136,20 +177,22 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
             </div>
             <div className="flex items-center gap-4">
                 {comment.isAuthorContentCreator && (
-                    <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full" aria-label={t('Content creator')}>
+                    <span className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full"
+                          aria-label={t('Content creator')}>
                         {t('Creator')}
                     </span>
                 )}
                 {comment.isDonated && (
                     <span className="ml-2 flex items-center text-green-600" aria-label={t('Donation amount')}>
-                        <BanknotesIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+                        <BanknotesIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
                         {comment.donationAmount}
                     </span>
                 )}
                 {comment.isHearted && (
                     <Tooltip text={t('Hearted by Creator')}>
-                        <span className="ml-2 flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1" aria-label={t('Hearted by Creator')}>
-                            <HeartIcon className="w-4 h-4" aria-hidden="true" />
+                        <span className="ml-2 flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
+                              aria-label={t('Hearted by Creator')}>
+                            <HeartIcon className="w-4 h-4" aria-hidden="true"/>
                         </span>
                     </Tooltip>
                 )}
