@@ -37,13 +37,32 @@ const App: React.FC = () => {
         transcriptWordCount,
         filteredAndSortedBookmarks,
         transcript,
+        totalCommentsCount
     } = useAppState();
+
+    const hasActiveFilters =
+        !!filters.keyword ||
+        filters.verified ||
+        filters.hasLinks ||
+        !!filters.sortBy ||
+        filters.likesThreshold.min > 0 ||
+        filters.likesThreshold.max < Infinity ||
+        filters.repliesLimit.min > 0 ||
+        filters.repliesLimit.max < Infinity ||
+        filters.wordCount.min > 0 ||
+        filters.wordCount.max < Infinity ||
+        !!filters.dateTimeRange.start ||
+        !!filters.dateTimeRange.end ||
+        !!searchKeyword;
+
+    // Show either filtered count or total count
+    const displayCount = hasActiveFilters ? filteredAndSortedComments.length : totalCommentsCount;
 
     const tabs = [
         {
             title: {
                 id: 'comments',
-                label: `${t('Comments')} (${filteredAndSortedComments.length})`,
+                label: `${t('Comments')} (${displayCount})`,
                 icon: ChatBubbleOvalLeftIcon,
             },
             content: (

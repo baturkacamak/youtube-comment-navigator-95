@@ -22,5 +22,6 @@ export interface RootState {
     searchKeyword: string;
     filteredAndSortedComments: Comment[];
     filteredAndSortedBookmarks: Comment[];
+    totalCommentsCount: number;
 }
 

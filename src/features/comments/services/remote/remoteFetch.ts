@@ -1,7 +1,7 @@
 // src/features/comments/services/remote/remoteFetch.ts
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing } from "./fetchAndProcessComments";
-import { setComments, setIsLoading, setOriginalComments } from "../../../../store/store";
+import {setComments, setIsLoading, setOriginalComments, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearLocalContinuationToken,
     deleteExistingComments,
@@ -12,7 +12,7 @@ import {
 } from "./utils";
 import { CACHE_KEYS, PAGINATION } from "../../../shared/utils/appConstants.ts";
 import { db } from "../../../shared/utils/database/database";
-import { loadPagedComments } from "../pagination";
+import {countComments, loadPagedComments} from "../pagination";
 import logger from "../../../shared/utils/logger";
 
 let currentAbortController = new AbortController();
@@ -33,6 +33,8 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
                 'date',
                 'desc'
             );
+            const totalCount = await countComments(videoId);
+            dispatch(setTotalCommentsCount(totalCount));
             logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
             dispatch(setComments(initialComments));
             dispatch(setOriginalComments(initialComments));
