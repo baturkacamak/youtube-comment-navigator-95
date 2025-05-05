@@ -1,5 +1,5 @@
 // src/features/comments/components/CommentList.tsx
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CommentItem from './CommentItem';
 import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Box from "../../shared/components/Box";
@@ -11,9 +11,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../types/rootState";
 import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import {setComments, setIsLoading} from "../../../store/store";
+import { setComments, setIsLoading } from "../../../store/store";
 import logger from '../../shared/utils/logger';
-import {PAGINATION} from "../../shared/utils/appConstants.ts";
+import { PAGINATION } from "../../shared/utils/appConstants.ts";
 
 const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
@@ -27,6 +27,9 @@ const CommentList: React.FC<CommentListProps> = () => {
     const comments = useSelector((state: RootState) => state.comments);
 
     const videoId = extractYouTubeVideoIdFromUrl();
+    const hasInitialized = useRef(false);
+    const prevSortBy = useRef(filters.sortBy);
+    const prevSortOrder = useRef(filters.sortOrder);
 
     useEffect(() => {
         const getTotalCount = async () => {
@@ -45,8 +48,6 @@ const CommentList: React.FC<CommentListProps> = () => {
         }
     }, [videoId, page]);
 
-    const hasInitialized = useRef(false);
-
     useEffect(() => {
         const loadInitialComments = async () => {
             if (!hasInitialized.current) {
@@ -62,6 +63,9 @@ const CommentList: React.FC<CommentListProps> = () => {
                         filters.sortOrder || 'desc'
                     );
                     dispatch(setComments(initialComments));
+                    // Store initial sort values
+                    prevSortBy.current = filters.sortBy;
+                    prevSortOrder.current = filters.sortOrder;
                     logger.success('Initial comments loaded successfully');
                 } catch (error) {
                     logger.error('Error loading initial comments:', error);
@@ -73,7 +77,48 @@ const CommentList: React.FC<CommentListProps> = () => {
         };
 
         loadInitialComments();
-    }, [videoId, comments.length, dispatch, filters.sortBy, filters.sortOrder, isLoading]);
+    }, [videoId, dispatch, filters.sortBy, filters.sortOrder]);
+
+    // Add a new effect to handle sort changes
+    useEffect(() => {
+        // Only react to changes after initialization
+        if (hasInitialized.current &&
+            (prevSortBy.current !== filters.sortBy || prevSortOrder.current !== filters.sortOrder)) {
+
+            logger.info(`Sort changed from ${prevSortBy.current}/${prevSortOrder.current} to ${filters.sortBy}/${filters.sortOrder}`);
+
+            setPage(0);
+            setIsLoadingMore(false);
+            dispatch(setIsLoading(true));
+
+            const reloadWithNewSort = async () => {
+                try {
+                    logger.start('reloadWithNewSort');
+                    const sortedComments = await loadPagedComments(
+                        videoId,
+                        PAGINATION.INITIAL_PAGE,
+                        PAGINATION.DEFAULT_PAGE_SIZE,
+                        filters.sortBy || 'date',
+                        filters.sortOrder || 'desc'
+                    );
+                    dispatch(setComments(sortedComments));
+
+                    // Update refs to new values
+                    prevSortBy.current = filters.sortBy;
+                    prevSortOrder.current = filters.sortOrder;
+
+                    logger.success(`Comments reloaded with sort: ${filters.sortBy} ${filters.sortOrder}`);
+                } catch (error) {
+                    logger.error('Error reloading comments with new sort:', error);
+                } finally {
+                    dispatch(setIsLoading(false));
+                    logger.end('reloadWithNewSort');
+                }
+            };
+
+            reloadWithNewSort();
+        }
+    }, [filters.sortBy, filters.sortOrder, dispatch, videoId]);
 
     const loadMoreComments = async () => {
         if (isLoadingMore || !hasMore) return;
