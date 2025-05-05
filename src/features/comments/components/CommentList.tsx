@@ -175,45 +175,26 @@ const CommentList: React.FC<CommentListProps> = () => {
         );
     }
 
-    const groupCommentsByParent = (comments: Comment[]) => {
-        const parentMap = new Map<string, { comment: Comment, replies: Comment[] }>();
-
-        comments.forEach(comment => {
-            if (comment.replyLevel === 0) {
-                parentMap.set(comment.commentId, { comment, replies: [] });
-            } else {
-                const parentId = comment.commentParentId;
-                if (parentId && parentMap.has(parentId)) {
-                    parentMap.get(parentId)!.replies.push(comment);
-                }
-            }
-        });
-
-        return Array.from(parentMap.values());
-    };
-
-    const visibleComments = groupCommentsByParent(comments);
     const remainingComments = totalCount - comments.length;
 
     return (
         <div key={`comment-list`} className="flex flex-col">
-            {visibleComments.map((group, index) => {
+            {comments.map((comment, index) => {
                 const { bgColor, darkBgColor, borderColor, darkBorderColor } =
-                    getCommentBackgroundColor(group.comment, index);
+                    getCommentBackgroundColor(comment, index);
                 return (
                     <motion.div
-                        key={group.comment.commentId}
+                        key={comment.commentId}
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
                         layout
                         transition={{ duration: 0.5 }}
                         role="listitem"
-                        aria-labelledby={`comment-${group.comment.commentId}`}
+                        aria-labelledby={`comment-${comment.commentId}`}
                     >
                         <CommentItem
-                            comment={group.comment}
-                            replies={group.replies}
+                            comment={comment}
                             className="text-gray-800 dark:text-gray-200"
                             bgColor={bgColor}
                             darkBgColor={darkBgColor}
