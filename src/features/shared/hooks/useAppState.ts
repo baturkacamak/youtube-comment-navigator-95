@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { RootState } from '../../../types/rootState';
-import { setBookmarkedComments, setFilters, setShowBookmarked } from '../../../store/store';
+import {setBookmarkedComments, setFilters, setShowBookmarked, setTotalCommentsCount} from '../../../store/store';
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import { Filters } from '../../../types/filterTypes';
@@ -26,6 +26,7 @@ const useAppState = () => {
     const transcripts = useSelector((state: RootState) => state.transcripts);
     const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
     const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
+    const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
 
     const { sortComments } = useSortedComments(false);
     const { filterComments } = useFilteredComments(false);
@@ -93,6 +94,29 @@ const useAppState = () => {
         dispatch(setShowBookmarked(!showBookmarked));
     }, [dispatch, showBookmarked]);
 
+    const fetchTotalCommentsCount = useCallback(async () => {
+        try {
+            // Get current video ID from URL or wherever you store it
+            const currentVideoId = window.location.href.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\?]*)/)?.[1] || '';
+
+            if (currentVideoId) {
+                // Count comments for this video
+                const count = await db.comments
+                    .where('videoId')
+                    .equals(currentVideoId)
+                    .count();
+
+                dispatch(setTotalCommentsCount(count));
+            }
+        } catch (error) {
+            console.error('Error fetching total comments count:', error);
+        }
+    }, [dispatch]);
+
+    useEffect(() => {
+        fetchTotalCommentsCount();
+    }, [fetchTotalCommentsCount]);
+
     const transcriptWordCount = calculateFilteredWordCount(searchedTranscripts, searchKeyword);
 
     // Call useFetchDataOnUrlChange
@@ -112,6 +136,8 @@ const useAppState = () => {
         transcriptWordCount,
         filteredAndSortedBookmarks,
         transcript: searchedTranscripts,
+        totalCommentsCount,
+        fetchTotalCommentsCount,
     };
 };
 

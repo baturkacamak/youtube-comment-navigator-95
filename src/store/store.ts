@@ -48,6 +48,7 @@ const initialState: RootState = {
     bookmarkedLines: [],
     isLoading: true,
 
+    totalCommentsCount: 0,
     // Other state properties
     showBookmarked: false,
 
@@ -146,6 +147,9 @@ const commentsSlice = createSlice({
         appendComments: (state, action: PayloadAction<Comment[]>) => {
             state.comments = [...state.comments, ...action.payload];
         },
+        setTotalCommentsCount: (state, action: PayloadAction<number>) => {
+            state.totalCommentsCount = action.payload;
+        },
     },
 });
 
@@ -184,6 +188,7 @@ export const {
 
     setFilteredAndSortedComments,
     setFilteredAndSortedBookmarks,
+    setTotalCommentsCount,
 } = commentsSlice.actions;
 
 const store = configureStore({
