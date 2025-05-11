@@ -44,7 +44,6 @@ const App: React.FC = () => {
         !!filters.keyword ||
         filters.verified ||
         filters.hasLinks ||
-        !!filters.sortBy ||
         filters.likesThreshold.min > 0 ||
         filters.likesThreshold.max < Infinity ||
         filters.repliesLimit.min > 0 ||
