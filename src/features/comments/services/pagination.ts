@@ -10,7 +10,8 @@ export const loadPagedComments = async (
     page: number = PAGINATION.INITIAL_PAGE,
     pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
     sortBy: string = 'date',
-    sortOrder: string = 'desc'
+    sortOrder: string = 'desc',
+    filters: any = {}
 ): Promise<Comment[]> => {
     const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder})`;
     logger.start(label);
@@ -57,6 +58,26 @@ export const loadPagedComments = async (
                 break;
         }
         logger.end(`${label} querySetup`);
+
+        // Apply filters using .and()
+        if (filters.timestamps) {
+            collection = collection.and(comment => comment.hasTimestamp === true);
+        }
+        if (filters.heart) {
+            collection = collection.and(comment => comment.isHearted === true);
+        }
+        if (filters.links) {
+            collection = collection.and(comment => comment.hasLinks === true);
+        }
+        if (filters.members) {
+            collection = collection.and(comment => comment.isMember === true);
+        }
+        if (filters.donated) {
+            collection = collection.and(comment => comment.isDonated === true);
+        }
+        if (filters.creator) {
+            collection = collection.and(comment => comment.isAuthorContentCreator === true);
+        }
 
         if (sortOrder === 'desc' && !['random', 'length', 'author'].includes(sortBy)) {
             collection = collection.reverse();

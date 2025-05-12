@@ -58,7 +58,8 @@ const CommentList: React.FC<CommentListProps> = () => {
                     pageNum,
                     PAGINATION.DEFAULT_PAGE_SIZE,
                     sortBy,
-                    sortOrder
+                    sortOrder,
+                    filters
                 );
                 return data;
             } catch (err) {
@@ -66,10 +67,10 @@ const CommentList: React.FC<CommentListProps> = () => {
                 return [];
             }
         },
-        [videoId, sortBy, sortOrder]
+        [videoId, sortBy, sortOrder, filters]
     );
 
-    // Initial load & sort change
+    // Initial load & sort/filter change
     useEffect(() => {
         if (!videoId) return;
         dispatch(setIsLoading(true));
