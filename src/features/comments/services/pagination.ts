@@ -1,5 +1,4 @@
 // src/features/comments/services/pagination.ts
-import { db } from "../../shared/utils/database/database";
 import { Comment } from "../../../types/commentTypes";
 import Dexie from 'dexie';
 import { PAGINATION } from "../../shared/utils/appConstants.ts";
@@ -32,6 +31,7 @@ const applyFiltersAndSearch = (
 };
 
 export const loadPagedComments = async (
+    commentsTable: Dexie.Table<Comment, number>,
     videoId: string,
     page: number = PAGINATION.INITIAL_PAGE,
     pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
@@ -75,31 +75,31 @@ export const loadPagedComments = async (
         let collection: Dexie.Collection<Comment, number>;
         switch (sortBy) {
             case 'date':
-                collection = db.comments.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'likes':
-                collection = db.comments.where(buildIndexKey('likes')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('likes')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'replies':
-                collection = db.comments.where(buildIndexKey('replyCount')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('replyCount')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'author':
-                collection = db.comments.where(buildIndexKey('author')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('author')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'normalized':
-                collection = db.comments.where(buildIndexKey('normalizedScore')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('normalizedScore')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'zscore':
-                collection = db.comments.where(buildIndexKey('weightedZScore')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('weightedZScore')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'bayesian':
-                collection = db.comments.where(buildIndexKey('bayesianAverage')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('bayesianAverage')).between(bounds.lower, bounds.upper, true, true);
                 break;
             case 'length':
-                collection = db.comments.where(buildIndexKey('wordCount')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('wordCount')).between(bounds.lower, bounds.upper, true, true);
                 break;
             default:
-                collection = db.comments.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
+                collection = commentsTable.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
                 logger.warn(`${label} Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
                 break;
         }
@@ -137,7 +137,7 @@ export const loadPagedComments = async (
             logger.warn(`${label} Sorting by ${sortBy} requires full table scan. Applying search filter during scan.`);
             logger.start(`${label} fullScan`);
 
-            let allTopLevelCollection = db.comments
+            let allTopLevelCollection = commentsTable
                 .where(buildIndexKey('publishedDate'))
                 .between(bounds.lower, bounds.upper, true, true);
 
@@ -167,6 +167,7 @@ export const loadPagedComments = async (
  * Counts total comments matching the criteria (including search)
  */
 export const countComments = async (
+    commentsTable: Dexie.Table<Comment, number>,
     videoId: string,
     filters: any = {},
     searchKeyword: string = '',
@@ -185,11 +186,11 @@ export const countComments = async (
         let baseCollection: Dexie.Collection<Comment, number>;
 
         if (options.topLevelOnly) {
-            baseCollection = db.comments
+            baseCollection = commentsTable
                 .where('[videoId+replyLevel]')
                 .between([videoId, 0], [videoId, 0], true, true);
         } else {
-            baseCollection = db.comments.where('videoId').equals(videoId);
+            baseCollection = commentsTable.where('videoId').equals(videoId);
         }
 
         // Apply filters and search using the helper function
@@ -212,7 +213,11 @@ export const countComments = async (
     }
 };
 
-export const fetchRepliesForComment = async (videoId: string, parentId: string): Promise<Comment[]> => {
+export const fetchRepliesForComment = async (
+    commentsTable: Dexie.Table<Comment, number>,
+    videoId: string,
+    parentId: string
+): Promise<Comment[]> => {
     const label = `[fetchRepliesForComment] videoId: ${videoId}, parentId: ${parentId}`;
     logger.start(label);
 
@@ -229,7 +234,7 @@ export const fetchRepliesForComment = async (videoId: string, parentId: string):
 
     try {
         logger.info(`${label} Starting to fetch replies.`);
-        const replies = await db.comments
+        const replies = await commentsTable
             .where('videoId')
             .equals(videoId)
             .and(item => {
@@ -244,7 +249,7 @@ export const fetchRepliesForComment = async (videoId: string, parentId: string):
         if (replies.length > 0) {
             logger.success(`${label} Successfully retrieved ${replies.length} replies.`);
         } else {
-            const parentComment = await db.comments.where('commentId').equals(parentId).first();
+            const parentComment = await commentsTable.where('commentId').equals(parentId).first();
             const expectedReplies = parentComment?.replyCount || 0;
 
             if (expectedReplies > 0) {

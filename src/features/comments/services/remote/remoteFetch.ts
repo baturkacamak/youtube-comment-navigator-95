@@ -27,13 +27,14 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         try {
             logger.start('handleInitialCommentsLoaded');
             const initialComments = await loadPagedComments(
+                db.comments,
                 videoId,
                 PAGINATION.INITIAL_PAGE,
                 PAGINATION.DEFAULT_PAGE_SIZE,
                 'date',
                 'desc'
             );
-            const totalCount = await countComments(videoId);
+            const totalCount = await countComments(db.comments, videoId);
             dispatch(setTotalCommentsCount(totalCount));
             logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
             dispatch(setComments(initialComments));

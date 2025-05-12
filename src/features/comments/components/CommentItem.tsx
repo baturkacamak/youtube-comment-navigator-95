@@ -15,6 +15,7 @@ import { fetchRepliesForComment } from '../services/pagination';
 import logger from '../../shared/utils/logger';
 import { Comment } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
+import {db} from "../../shared/utils/database/database";
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -73,7 +74,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             setIsFetchingReplies(true);
             try {
                 logger.info(`[CommentItem ${comment.commentId}] Fetching replies onClick...`);
-                const replies = await fetchRepliesForComment(videoId, comment.commentId);
+                const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
                 setFetchedReplies(replies);
                 logger.success(`[CommentItem ${comment.commentId}] Fetched ${replies.length} replies onClick.`);
             } catch (error) {
