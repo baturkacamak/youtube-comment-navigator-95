@@ -12,7 +12,7 @@ import { RootState } from '../../../types/rootState';
 import useLoadContent from "../../shared/hooks/useLoadContent";
 
 const LoadingSection = () => {
-    const { loadComments, loadChatReplies, loadTranscript, loadAll } = useLoadContent();
+    const { loadComments, loadTranscript } = useLoadContent();
 
     const { t } = useTranslation();
     const commentsCount = useSelector((state: RootState) => state.comments.length);
@@ -27,25 +27,11 @@ const LoadingSection = () => {
                 aria-label={t('Load Comments ({{count}})', { count: commentsCount })}
             />
             <Button
-                onClick={loadChatReplies}
-                icon={InboxIcon}
-                label={t('Load Chat')}
-                className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load Chat')}
-            />
-            <Button
                 onClick={loadTranscript}
                 icon={DocumentTextIcon}
                 label={t('Load Transcript')}
                 className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
                 aria-label={t('Load Transcript')}
-            />
-            <Button
-                onClick={() => loadAll(true)}
-                icon={ClipboardDocumentListIcon}
-                label={t('Load All')}
-                className="bg-teal-700 hover:bg-teal-600 active:bg-teal-800 text-white rounded-full py-1 px-2 text-xs"
-                aria-label={t('Load All')}
             />
         </div>
     );

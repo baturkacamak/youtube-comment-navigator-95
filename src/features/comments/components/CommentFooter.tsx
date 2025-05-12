@@ -17,15 +17,15 @@ import BookmarkButton from './BookmarkButton/BookmarkButton';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
 import ShareButton from '../../shared/components/ShareButton';
 import hoverAction from "../../shared/utils/hoverAction";
-import {setReplies} from "../../../store/store";
 import {fetchRepliesForComment} from "../services/pagination";
-import {useDispatch} from "react-redux";
 import logger from '../../shared/utils/logger';
 
 interface CommentFooterProps {
     comment: Comment;
     showReplies: boolean;
-    setShowReplies: (show: boolean) => void;
+    onToggleReplies: () => Promise<void>;
+    cacheFetchedReplies: (replies: Comment[]) => void;
+    isFetchingReplies: boolean;
     handleCopyToClipboard: () => void;
     copySuccess: boolean;
 }
@@ -33,14 +33,15 @@ interface CommentFooterProps {
 const CommentFooter: React.FC<CommentFooterProps> = ({
                                                          comment,
                                                          showReplies,
-                                                         setShowReplies,
+                                                         onToggleReplies,
+                                                         cacheFetchedReplies,
+                                                         isFetchingReplies,
                                                          handleCopyToClipboard,
                                                          copySuccess,
                                                      }) => {
     const {t} = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();
     const videoId = comment.videoId || currentVideoId;
-    const dispatch = useDispatch();
 
     const viewRepliesButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -66,18 +67,14 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     },
                     onResult: (result) => {
                         try {
-                            if (!result) {
+                            if (!result || result.length === 0) {
                                 logger.warn(`[RepliesHover] No result returned for comment: ${comment.commentId}`);
                                 return;
                             }
-
-                            if (result.length > 0) {
-                                logger.info(`[RepliesHover] Dispatching ${result.length} replies to Redux store for comment: ${comment.commentId}`);
-                                dispatch(setReplies(result));
-                                logger.success(`[RepliesHover] Successfully cached replies for comment: ${comment.commentId}`);
-                            } else {
-                                logger.info(`[RepliesHover] No replies to dispatch for comment: ${comment.commentId} (expected ${comment.replyCount})`);
-                            }
+                            // Cache the fetched replies instead of dispatching
+                            logger.info(`[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`);
+                            cacheFetchedReplies(result);
+                            logger.success(`[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`);
                         } catch (error) {
                             logger.error(`[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`, error);
                         }
@@ -93,15 +90,13 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 logger.success(`[CommentFooter] HoverAction setup complete for comment: ${comment.commentId}`);
             } catch (error) {
                 logger.error(`[CommentFooter] Error setting up hoverAction for comment: ${comment.commentId}`, error);
-            } finally {
-                logger.end(`[CommentFooter] Setting up hoverAction for comment: ${comment.commentId}`);
             }
         } else if (comment.replyCount === 0) {
             logger.info(`[CommentFooter] No replies to prefetch for comment: ${comment.commentId}`);
         } else if (!viewRepliesButtonRef.current) {
             logger.warn(`[CommentFooter] Button ref not available for comment: ${comment.commentId}`);
         }
-    }, [comment.commentId, comment.replyCount, videoId, dispatch]);
+    }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
     return (
         <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
@@ -152,17 +147,25 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 {comment.replyCount > 0 && (
                     <button
                         ref={viewRepliesButtonRef}
-                        onClick={() => setShowReplies(!showReplies)}
-                        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+                        onClick={onToggleReplies}
+                        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300 disabled:opacity-50"
                         title={showReplies ? t('Hide replies') : t('Show replies')}
                         aria-label={showReplies ? t('Hide replies') : t('Show replies')}
+                        disabled={isFetchingReplies}
                     >
-                        <ChevronDownIcon
-                            className={`w-4 h-4 mr-1 transform transition-transform duration-300 ${
-                                showReplies ? 'rotate-180' : 'rotate-0'
-                            }`}
-                            aria-hidden="true"
-                        />
+                        {isFetchingReplies ? (
+                            <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-600 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        ) : (
+                            <ChevronDownIcon
+                                className={`w-4 h-4 mr-1 transform transition-transform duration-300 ${
+                                    showReplies ? 'rotate-180' : 'rotate-0'
+                                }`}
+                                aria-hidden="true"
+                            />
+                        )}
                         <span className="text-sm">
                             {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
                         </span>

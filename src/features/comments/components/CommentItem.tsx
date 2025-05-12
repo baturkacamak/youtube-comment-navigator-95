@@ -11,45 +11,78 @@ import { useTranslation } from 'react-i18next';
 import getFormattedDate from "../../settings/utils/getFormattedDate";
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import CommentNote from './CommentNote';
+import { fetchRepliesForComment } from '../services/pagination';
+import logger from '../../shared/utils/logger';
+import { Comment } from "../../../types/commentTypes";
+import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
                                                      className,
-                                                     replies = [],
                                                      bgColor,
                                                      darkBgColor,
                                                      borderColor,
                                                      darkBorderColor,
                                                      videoTitle,
                                                      videoThumbnailUrl,
-                                                     showRepliesDefault, // Add this prop
+                                                     showRepliesDefault,
                                                  }) => {
     const { t } = useTranslation();
     const [copySuccess, setCopySuccess] = useState(false);
-    const [showReplies, setShowReplies] = useState(comment.showRepliesDefault || false); // Initialize based on showRepliesDefault
-    const [repliesHeight, setRepliesHeight] = useState('0px');
+    const [showReplies, setShowReplies] = useState(comment.showRepliesDefault || false);
+    const [fetchedReplies, setFetchedReplies] = useState<Comment[] | null>(null);
+    const [isFetchingReplies, setIsFetchingReplies] = useState(false);
+    const repliesHeight = useRef('0px');
     const repliesRef = useRef<HTMLDivElement>(null);
     const parentCommentRef = useRef<HTMLDivElement>(null);
+    const videoId = comment.videoId || extractYouTubeVideoIdFromUrl();
 
     useEffect(() => {
-        if (showReplies && repliesRef.current) {
-            setRepliesHeight(`${repliesRef.current.scrollHeight}px`);
+        if (showReplies && repliesRef.current && fetchedReplies) {
+            repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
         } else {
-            setRepliesHeight('0px');
+            repliesHeight.current = '0px';
         }
-    }, [showReplies, replies]);
+    }, [showReplies, fetchedReplies]);
 
     const handleCopy = () => {
         copyToClipboard(
             comment.content,
             () => {
                 setCopySuccess(true);
-                setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
+                setTimeout(() => setCopySuccess(false), 2000);
             },
             (err) => {
                 console.error('Could not copy text: ', err);
             }
         );
+    };
+
+    const cacheFetchedReplies = (replies: Comment[]) => {
+        if (fetchedReplies === null) {
+            logger.info(`[CommentItem ${comment.commentId}] Caching ${replies.length} replies from hover.`);
+            setFetchedReplies(replies);
+        }
+    };
+
+    const handleToggleReplies = async () => {
+        const newShowReplies = !showReplies;
+        setShowReplies(newShowReplies);
+
+        if (newShowReplies && fetchedReplies === null) {
+            setIsFetchingReplies(true);
+            try {
+                logger.info(`[CommentItem ${comment.commentId}] Fetching replies onClick...`);
+                const replies = await fetchRepliesForComment(videoId, comment.commentId);
+                setFetchedReplies(replies);
+                logger.success(`[CommentItem ${comment.commentId}] Fetched ${replies.length} replies onClick.`);
+            } catch (error) {
+                logger.error(`[CommentItem ${comment.commentId}] Error fetching replies onClick`, error);
+                setFetchedReplies([]);
+            } finally {
+                setIsFetchingReplies(false);
+            }
+        }
     };
 
     const isSticky = useSticky(parentCommentRef, showReplies);
@@ -68,7 +101,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
             >
                 <div
                     ref={parentCommentRef}
-                    id={`parent-comment-${comment.commentId}`} // Unique identifier for each comment thread
+                    id={`parent-comment-${comment.commentId}`}
                     className={`parent-comment transition-all duration-300 ${isSticky ? 'shadow-md rounded-md bg-white dark:bg-gray-800 -m-2 p-2 sticky top-0 left-0 z-10' : ''}`}
                     role="article"
                     aria-labelledby={`comment-content-${comment.commentId}`}
@@ -106,18 +139,20 @@ const CommentItem: React.FC<CommentItemProps> = ({
                     <CommentFooter
                         comment={comment}
                         showReplies={showReplies}
-                        setShowReplies={setShowReplies}
+                        onToggleReplies={handleToggleReplies}
+                        cacheFetchedReplies={cacheFetchedReplies}
+                        isFetchingReplies={isFetchingReplies}
                         handleCopyToClipboard={handleCopy}
                         copySuccess={copySuccess}
                     />
                 </div>
                 {Number(comment.replyCount) > 0 && (
                     <CommentReplies
-                        replies={replies}
+                        replies={fetchedReplies ?? []}
                         showReplies={showReplies}
                         repliesRef={repliesRef}
-                        repliesHeight={repliesHeight}
-                        aria-label={t('Replies')}
+                        repliesHeight={repliesHeight.current}
+                        isLoading={isFetchingReplies}
                         parentCommentId={comment.commentId}
                     />
                 )}
