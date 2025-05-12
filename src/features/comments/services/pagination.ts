@@ -98,10 +98,30 @@ export const loadPagedComments = async (
             logger.warn(`Sorting by ${sortBy} requires full table scan. Loading all top-level comments for ${videoId}.`);
             logger.start(`${label} fullScan`);
 
-            const allTopLevel = await db.comments
+            let allTopLevel = await db.comments
                 .where(buildIndexKey('publishedDate'))
                 .between(bounds.lower, bounds.upper, true, true)
                 .toArray();
+
+            // Apply filters manually
+            if (filters.timestamps) {
+                allTopLevel = allTopLevel.filter(comment => comment.hasTimestamp === true);
+            }
+            if (filters.heart) {
+                allTopLevel = allTopLevel.filter(comment => comment.isHearted === true);
+            }
+            if (filters.links) {
+                allTopLevel = allTopLevel.filter(comment => comment.hasLinks === true);
+            }
+            if (filters.members) {
+                allTopLevel = allTopLevel.filter(comment => comment.isMember === true);
+            }
+            if (filters.donated) {
+                allTopLevel = allTopLevel.filter(comment => comment.isDonated === true);
+            }
+            if (filters.creator) {
+                allTopLevel = allTopLevel.filter(comment => comment.isAuthorContentCreator === true);
+            }
 
             if (sortBy === 'length') {
                 allTopLevel.sort((a, b) => {
