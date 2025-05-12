@@ -5,6 +5,32 @@ import Dexie from 'dexie';
 import { PAGINATION } from "../../shared/utils/appConstants.ts";
 import logger from "../../shared/utils/logger";
 
+// Helper function to apply filters and search keyword to a comment
+const applyFiltersAndSearch = (
+    comment: Comment,
+    filters: any,
+    searchKeyword: string,
+    options: { topLevelOnly?: boolean } = {}
+): boolean => {
+    // Ensure top-level only if specified, this check must be first
+    if (options.topLevelOnly && comment.replyLevel !== 0) return false;
+
+    let passesFilters = true;
+    if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
+    if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
+    if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
+    if (filters.members) passesFilters = passesFilters && comment.isMember === true;
+    if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
+    if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
+
+    let passesSearch = true;
+    if (searchKeyword) {
+        passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
+    }
+
+    return passesFilters && passesSearch;
+};
+
 export const loadPagedComments = async (
     videoId: string,
     page: number = PAGINATION.INITIAL_PAGE,
@@ -79,40 +105,15 @@ export const loadPagedComments = async (
         }
         logger.end(`${label} querySetup`);
 
-        // Apply filters using .and()
+        // Apply filters using the helper function
         let filteredCollection = collection;
         const activeFilters = Object.entries(filters).filter(([, value]) => value);
 
         if (activeFilters.length > 0 || searchKeyword) {
             logger.start(`${label} applyingFiltersAndSearch`);
-            filteredCollection = collection.filter(comment => {
-                let passesFilters = true;
-                if (filters.timestamps) {
-                    passesFilters = passesFilters && comment.hasTimestamp === true;
-                }
-                if (filters.heart) {
-                    passesFilters = passesFilters && comment.isHearted === true;
-                }
-                if (filters.links) {
-                    passesFilters = passesFilters && comment.hasLinks === true;
-                }
-                if (filters.members) {
-                    passesFilters = passesFilters && comment.isMember === true;
-                }
-                if (filters.donated) {
-                    passesFilters = passesFilters && comment.isDonated === true;
-                }
-                if (filters.creator) {
-                    passesFilters = passesFilters && comment.isAuthorContentCreator === true;
-                }
-
-                let passesSearch = true;
-                if (searchKeyword) {
-                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
-                }
-
-                return passesFilters && passesSearch;
-            });
+            filteredCollection = collection.filter(comment =>
+                applyFiltersAndSearch(comment, filters, searchKeyword)
+            );
             logger.end(`${label} applyingFiltersAndSearch`);
         }
 
@@ -140,21 +141,10 @@ export const loadPagedComments = async (
                 .where(buildIndexKey('publishedDate'))
                 .between(bounds.lower, bounds.upper, true, true);
 
-            allTopLevelCollection = allTopLevelCollection.filter(comment => {
-                let passesFilters = true;
-                if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
-                if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
-                if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
-                if (filters.members) passesFilters = passesFilters && comment.isMember === true;
-                if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
-                if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
-
-                let passesSearch = true;
-                if (searchKeyword) {
-                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
-                }
-                return passesFilters && passesSearch;
-            });
+            // Use helper function for filtering during random sort scan
+            allTopLevelCollection = allTopLevelCollection.filter(comment =>
+                applyFiltersAndSearch(comment, filters, searchKeyword)
+            );
 
             let allTopLevel = await allTopLevelCollection.toArray();
             allTopLevel.sort(() => Math.random() - 0.5);
@@ -202,27 +192,12 @@ export const countComments = async (
             baseCollection = db.comments.where('videoId').equals(videoId);
         }
 
-        // Apply filters and search
+        // Apply filters and search using the helper function
         const activeFilters = Object.entries(filters).filter(([, value]) => value);
         if (activeFilters.length > 0 || searchKeyword) {
-            baseCollection = baseCollection.filter(comment => {
-                let passesFilters = true;
-                // Ensure top-level only if specified, this check must be first
-                if (options.topLevelOnly && comment.replyLevel !== 0) return false;
-
-                if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
-                if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
-                if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
-                if (filters.members) passesFilters = passesFilters && comment.isMember === true;
-                if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
-                if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
-
-                let passesSearch = true;
-                if (searchKeyword) {
-                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
-                }
-                return passesFilters && passesSearch;
-            });
+             baseCollection = baseCollection.filter(comment =>
+                applyFiltersAndSearch(comment, filters, searchKeyword, options)
+             );
         }
 
         const count = await baseCollection.count();
