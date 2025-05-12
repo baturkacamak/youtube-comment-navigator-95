@@ -23,6 +23,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     const comments = useSelector((state: RootState) => state.comments);
     const isLoading = useSelector((state: RootState) => state.isLoading);
     const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
+    const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
 
     const videoId = extractYouTubeVideoIdFromUrl();
     const [page, setPage] = useState(0);
@@ -33,35 +34,22 @@ const CommentList: React.FC<CommentListProps> = () => {
     const sortBy = useMemo(() => filters.sortBy || 'date', [filters.sortBy]);
     const sortOrder = useMemo(() => filters.sortOrder || 'desc', [filters.sortOrder]);
 
-    // Fetch total count whenever videoId changes or comments added or filters change
+    // Fetch total count whenever videoId, filters, or searchKeyword changes
     useEffect(() => {
         if (!videoId) return;
         const fetchCount = async () => {
             try {
-                const isFilterActive = filters.timestamps || filters.heart || filters.links || filters.members || filters.donated || filters.creator;
-                if (isFilterActive) {
-                    const data = await loadPagedComments(
-                        videoId,
-                        0,
-                        Number.MAX_SAFE_INTEGER,
-                        sortBy,
-                        sortOrder,
-                        filters
-                    );
-                    setHasMore(data.length > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
-                    dispatch(setTotalCommentsCount(data.length));
-                } else {
-                    const count = await countComments(videoId);
-                    setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
-                    dispatch(setTotalCommentsCount(count));
-                }
-                logger.info(`Comment count for ${videoId}: ${totalCommentsCount}`);
+                // Always use the version of countComments that can filter by searchKeyword
+                const count = await countComments(videoId, filters, searchKeyword);
+                setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
+                dispatch(setTotalCommentsCount(count));
+                logger.info(`Total matching comment count (incl replies) for ${videoId} (search: "${searchKeyword}", filters: ${JSON.stringify(filters)}): ${count}`);
             } catch (err) {
                 logger.error('Failed to fetch comment count:', err);
             }
         };
         fetchCount();
-    }, [videoId, page, filters, sortBy, sortOrder, dispatch]);
+    }, [videoId, page, filters, searchKeyword, dispatch]);
 
     // Central comment loader
     const fetchComments = useCallback(
@@ -73,7 +61,8 @@ const CommentList: React.FC<CommentListProps> = () => {
                     PAGINATION.DEFAULT_PAGE_SIZE,
                     sortBy,
                     sortOrder,
-                    filters
+                    filters,
+                    searchKeyword
                 );
                 return data;
             } catch (err) {
@@ -81,18 +70,24 @@ const CommentList: React.FC<CommentListProps> = () => {
                 return [];
             }
         },
-        [videoId, sortBy, sortOrder, filters]
+        [videoId, sortBy, sortOrder, filters, searchKeyword]
     );
 
-    // Initial load & sort/filter change
+    // Initial load & sort/filter/search change
     useEffect(() => {
         if (!videoId) return;
         dispatch(setIsLoading(true));
         setPage(0);
         fetchComments(0).then(data => {
             dispatch(setComments(data));
+            // Recalculate total count (all matching comments) and hasMore
+            countComments(videoId, filters, searchKeyword).then(currentTotal => {
+                dispatch(setTotalCommentsCount(currentTotal));
+                // Base hasMore on whether the total count exceeds the currently loaded top-level comments
+                setHasMore(currentTotal > data.length);
+            });
         }).finally(() => dispatch(setIsLoading(false)));
-    }, [videoId, fetchComments, dispatch]);
+    }, [videoId, fetchComments, dispatch, filters, searchKeyword, sortBy, sortOrder]);
 
     // Load more
     const loadMore = async () => {
@@ -102,8 +97,16 @@ const CommentList: React.FC<CommentListProps> = () => {
             if (!data.length) {
                 setHasMore(false);
             } else {
-                dispatch(setComments([...comments, ...data]));
+                const newComments = [...comments, ...data];
+                dispatch(setComments(newComments));
                 setPage(prev => prev + 1);
+                // Check if there are still more comments after loading this batch
+                countComments(videoId, filters, searchKeyword).then(currentTotal => {
+                    const newTotalLoaded = newComments.length; // Count loaded top-level comments
+                    // Compare total matching count (incl replies) with loaded top-level comments
+                    // This might need refinement depending on how replies are handled
+                    setHasMore(currentTotal > newTotalLoaded);
+                });
             }
         }).finally(() => setLoadingMore(false));
     };
