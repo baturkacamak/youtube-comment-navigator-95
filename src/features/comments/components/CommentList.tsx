@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "../../../types/rootState";
 import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import { setComments, setIsLoading } from "../../../store/store";
+import { setComments, setIsLoading, setTotalCommentsCount } from "../../../store/store";
 import logger from '../../shared/utils/logger';
 import {PAGINATION} from "../../shared/utils/appConstants.ts";
 
@@ -22,10 +22,10 @@ const CommentList: React.FC<CommentListProps> = () => {
     const filters = useSelector((state: RootState) => state.filters);
     const comments = useSelector((state: RootState) => state.comments);
     const isLoading = useSelector((state: RootState) => state.isLoading);
+    const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
 
     const videoId = extractYouTubeVideoIdFromUrl();
     const [page, setPage] = useState(0);
-    const [totalCount, setTotalCount] = useState(0);
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
 
@@ -33,21 +33,35 @@ const CommentList: React.FC<CommentListProps> = () => {
     const sortBy = useMemo(() => filters.sortBy || 'date', [filters.sortBy]);
     const sortOrder = useMemo(() => filters.sortOrder || 'desc', [filters.sortOrder]);
 
-    // Fetch total count whenever videoId changes or comments added
+    // Fetch total count whenever videoId changes or comments added or filters change
     useEffect(() => {
         if (!videoId) return;
         const fetchCount = async () => {
             try {
-                const count = await countComments(videoId, { topLevelOnly: true });
-                setTotalCount(count);
-                setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
-                logger.info(`Comment count for ${videoId}: ${count}`);
+                const isFilterActive = filters.timestamps || filters.heart || filters.links || filters.members || filters.donated || filters.creator;
+                if (isFilterActive) {
+                    const data = await loadPagedComments(
+                        videoId,
+                        0,
+                        Number.MAX_SAFE_INTEGER,
+                        sortBy,
+                        sortOrder,
+                        filters
+                    );
+                    setHasMore(data.length > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
+                    dispatch(setTotalCommentsCount(data.length));
+                } else {
+                    const count = await countComments(videoId);
+                    setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
+                    dispatch(setTotalCommentsCount(count));
+                }
+                logger.info(`Comment count for ${videoId}: ${totalCommentsCount}`);
             } catch (err) {
                 logger.error('Failed to fetch comment count:', err);
             }
         };
         fetchCount();
-    }, [videoId, page]);
+    }, [videoId, page, filters, sortBy, sortOrder, dispatch]);
 
     // Central comment loader
     const fetchComments = useCallback(
@@ -112,7 +126,7 @@ const CommentList: React.FC<CommentListProps> = () => {
         );
     }
 
-    const remaining = totalCount - comments.length;
+    const remaining = totalCommentsCount - comments.length;
 
     return (
         <div className="flex flex-col">
