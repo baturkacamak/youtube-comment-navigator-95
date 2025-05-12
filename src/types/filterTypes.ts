@@ -25,6 +25,12 @@ export interface Filters {
         start: string;
         end: string;
     };
+    timestamps?: boolean;
+    heart?: boolean;
+    links?: boolean;
+    members?: boolean;
+    donated?: boolean;
+    creator?: boolean;
 }
 
 export interface FilterState extends Filters {
