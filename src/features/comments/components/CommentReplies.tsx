@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import CommentItem from './CommentItem';
 import {CommentRepliesProps} from "../../../types/commentTypes";
 import {useTranslation} from 'react-i18next';
@@ -12,6 +12,13 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({
                                                            parentCommentId
                                                        }) => {
     const {t} = useTranslation();
+
+    useEffect(() => {
+        if (showReplies && repliesRef.current && replies.length > 0) {
+            // Emit a resize event to force browsers to recalculate layout
+            window.dispatchEvent(new Event('resize'));
+        }
+    }, [showReplies, replies.length, repliesRef]);
 
     const memoizedReplies = useMemo(() => {
         if (isLoading) {
