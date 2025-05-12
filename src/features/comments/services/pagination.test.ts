@@ -73,11 +73,11 @@ const resetMocks = () => {
 // --- Mock Dexie Setup --- END ---
 
 // Sample comments (MANUALLY ENSURE wordCount is number type)
-const sampleComment1: Comment = { commentId: 'c1', videoId: 'v1', content: 'Test comment one', publishedDate: '2023-01-01T10:00:00Z', likes: 10, replyCount: 2, author: 'User A', replyLevel: 0, hasTimestamp: false, isHearted: false, hasLinks: false, isMember: false, isDonated: false, isAuthorContentCreator: false, wordCount: 3 };
-const sampleComment2: Comment = { commentId: 'c2', videoId: 'v1', content: 'Test comment two with link http://example.com', publishedDate: '2023-01-02T11:00:00Z', likes: 5, replyCount: 0, author: 'User B', replyLevel: 0, hasTimestamp: true, isHearted: true, hasLinks: true, isMember: true, isDonated: true, isAuthorContentCreator: true, wordCount: 6 };
-const sampleComment3: Comment = { commentId: 'c3', videoId: 'v1', content: 'Another test comment', publishedDate: '2023-01-03T12:00:00Z', likes: 20, replyCount: 1, author: 'User A', replyLevel: 0, hasTimestamp: false, isHearted: false, hasLinks: false, isMember: false, isDonated: false, isAuthorContentCreator: false, wordCount: 3 };
-const sampleReply1: Comment = { commentId: 'r1', videoId: 'v1', content: 'Reply to c1', publishedDate: '2023-01-01T10:05:00Z', likes: 1, replyCount: 0, author: 'User C', replyLevel: 1, commentParentId: 'c1' };
-const sampleReply2: Comment = { commentId: 'r2', videoId: 'v1', content: 'Second reply to c1', publishedDate: '2023-01-01T10:10:00Z', likes: 3, replyCount: 0, author: 'User D', replyLevel: 1, commentParentId: 'c1' };
+const sampleComment1 = { commentId: 'c1', videoId: 'v1', content: 'Test comment one', publishedDate: '2023-01-01T10:00:00Z', likes: 10, replyCount: 2, author: 'User A', replyLevel: 0, hasTimestamp: false, isHearted: false, hasLinks: false, isMember: false, isDonated: false, isAuthorContentCreator: false, wordCount: 3 };
+const sampleComment2 = { commentId: 'c2', videoId: 'v1', content: 'Test comment two with link http://example.com', publishedDate: '2023-01-02T11:00:00Z', likes: 5, replyCount: 0, author: 'User B', replyLevel: 0, hasTimestamp: true, isHearted: true, hasLinks: true, isMember: true, isDonated: true, isAuthorContentCreator: true, wordCount: 6 };
+const sampleComment3 = { commentId: 'c3', videoId: 'v1', content: 'Another test comment', publishedDate: '2023-01-03T12:00:00Z', likes: 20, replyCount: 1, author: 'User A', replyLevel: 0, hasTimestamp: false, isHearted: false, hasLinks: false, isMember: false, isDonated: false, isAuthorContentCreator: false, wordCount: 3 };
+const sampleReply1 = { commentId: 'r1', videoId: 'v1', content: 'Reply to c1', publishedDate: '2023-01-01T10:05:00Z', likes: 1, replyCount: 0, author: 'User C', replyLevel: 1, commentParentId: 'c1', wordCount: 3 };
+const sampleReply2 = { commentId: 'r2', videoId: 'v1', content: 'Second reply to c1', publishedDate: '2023-01-01T10:10:00Z', likes: 3, replyCount: 0, author: 'User D', replyLevel: 1, commentParentId: 'c1', wordCount: 4 };
 
 const mockTable = mockCommentsTable as unknown as Dexie.Table<Comment, number>;
 
