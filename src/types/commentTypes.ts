@@ -81,7 +81,9 @@ export interface CommentRepliesProps {
     repliesRef: React.RefObject<HTMLDivElement>;
     repliesHeight: string;
     parentCommentId: string;
+    isLoading?: boolean;
 }
+
 export interface CommentData {
     onResponseReceivedEndpoints?: Array<{
         appendContinuationItemsAction?: {
@@ -108,6 +110,7 @@ export interface CommentData {
         }
     }>
 } // Define a type for the content item structure
+
 export interface ContentItem {
     itemSectionRenderer?: {
         contents?: Array<{

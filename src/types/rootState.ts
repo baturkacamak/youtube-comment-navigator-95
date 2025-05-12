@@ -1,15 +1,15 @@
 import {Comment} from "./commentTypes";
 import {FilterState} from "./filterTypes"; // Adjust the path as necessary
+import {Option} from "./utilityTypes";
 
 export interface RootState {
     originalComments: Comment[];
     comments: Comment[];
-    replies: any[];
     transcripts: any[];
     filters: FilterState;
     isLoading: boolean;
     showBookmarked: boolean;
-    bookmarkedComments: any[];
+    bookmarkedComments: Comment[];
     settings: {
         textSize: string;
         showFiltersSorts: boolean;
@@ -18,7 +18,7 @@ export interface RootState {
     };
     filteredTranscripts: any[];
     bookmarkedLines: any[];
-    transcriptSelectedLanguage: { value: string, label: string };
+    transcriptSelectedLanguage: Option;
     searchKeyword: string;
     filteredAndSortedComments: Comment[];
     filteredAndSortedBookmarks: Comment[];
