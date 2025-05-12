@@ -11,13 +11,14 @@ export const loadPagedComments = async (
     pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
     sortBy: string = 'date',
     sortOrder: string = 'desc',
-    filters: any = {}
+    filters: any = {},
+    searchKeyword: string = ''
 ): Promise<Comment[]> => {
-    const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder})`;
+    const label = `[loadPagedComments] page ${page} (${sortBy} ${sortOrder}) search: "${searchKeyword}"`;
     logger.start(label);
 
     try {
-        logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}`);
+        logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}, filters: ${JSON.stringify(filters)}, search: "${searchKeyword}"`);
 
         const offset = page * pageSize;
         const baseIndex = 'videoId+replyLevel';
@@ -52,6 +53,9 @@ export const loadPagedComments = async (
             case 'bayesian':
                 collection = db.comments.where(buildIndexKey('bayesianAverage')).between(bounds.lower, bounds.upper, true, true);
                 break;
+            case 'length':
+                collection = db.comments.where(buildIndexKey('wordCount')).between(bounds.lower, bounds.upper, true, true);
+                break;
             default:
                 collection = db.comments.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
                 logger.warn(`Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
@@ -60,31 +64,49 @@ export const loadPagedComments = async (
         logger.end(`${label} querySetup`);
 
         // Apply filters using .and()
-        if (filters.timestamps) {
-            collection = collection.and(comment => comment.hasTimestamp === true);
-        }
-        if (filters.heart) {
-            collection = collection.and(comment => comment.isHearted === true);
-        }
-        if (filters.links) {
-            collection = collection.and(comment => comment.hasLinks === true);
-        }
-        if (filters.members) {
-            collection = collection.and(comment => comment.isMember === true);
-        }
-        if (filters.donated) {
-            collection = collection.and(comment => comment.isDonated === true);
-        }
-        if (filters.creator) {
-            collection = collection.and(comment => comment.isAuthorContentCreator === true);
+        let filteredCollection = collection;
+        const activeFilters = Object.entries(filters).filter(([, value]) => value);
+
+        if (activeFilters.length > 0 || searchKeyword) {
+            logger.start(`${label} applyingFiltersAndSearch`);
+            filteredCollection = collection.filter(comment => {
+                let passesFilters = true;
+                if (filters.timestamps) {
+                    passesFilters = passesFilters && comment.hasTimestamp === true;
+                }
+                if (filters.heart) {
+                    passesFilters = passesFilters && comment.isHearted === true;
+                }
+                if (filters.links) {
+                    passesFilters = passesFilters && comment.hasLinks === true;
+                }
+                if (filters.members) {
+                    passesFilters = passesFilters && comment.isMember === true;
+                }
+                if (filters.donated) {
+                    passesFilters = passesFilters && comment.isDonated === true;
+                }
+                if (filters.creator) {
+                    passesFilters = passesFilters && comment.isAuthorContentCreator === true;
+                }
+
+                let passesSearch = true;
+                if (searchKeyword) {
+                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
+                }
+
+                return passesFilters && passesSearch;
+            });
+            logger.end(`${label} applyingFiltersAndSearch`);
         }
 
-        if (sortOrder === 'desc' && !['random', 'length', 'author'].includes(sortBy)) {
-            collection = collection.reverse();
+        // Apply reverse *before* pagination for index-based sorts (excluding author/random)
+        if (sortOrder === 'desc' && !['random', 'author'].includes(sortBy)) {
+            filteredCollection = filteredCollection.reverse();
         }
 
         logger.start(`${label} toArray`);
-        let pagedComments = await collection.offset(offset).limit(pageSize).toArray();
+        let pagedComments = await filteredCollection.offset(offset).limit(pageSize).toArray();
         logger.end(`${label} toArray`);
 
         if (sortBy === 'author') {
@@ -94,43 +116,33 @@ export const loadPagedComments = async (
             });
         }
 
-        if (sortBy === 'length' || sortBy === 'random') {
-            logger.warn(`Sorting by ${sortBy} requires full table scan. Loading all top-level comments for ${videoId}.`);
+        if (sortBy === 'random') {
+            logger.warn(`Sorting by ${sortBy} requires full table scan. Applying search filter during scan.`);
             logger.start(`${label} fullScan`);
 
-            let allTopLevel = await db.comments
+            let allTopLevelCollection = db.comments
                 .where(buildIndexKey('publishedDate'))
-                .between(bounds.lower, bounds.upper, true, true)
-                .toArray();
+                .between(bounds.lower, bounds.upper, true, true);
 
-            // Apply filters manually
-            if (filters.timestamps) {
-                allTopLevel = allTopLevel.filter(comment => comment.hasTimestamp === true);
-            }
-            if (filters.heart) {
-                allTopLevel = allTopLevel.filter(comment => comment.isHearted === true);
-            }
-            if (filters.links) {
-                allTopLevel = allTopLevel.filter(comment => comment.hasLinks === true);
-            }
-            if (filters.members) {
-                allTopLevel = allTopLevel.filter(comment => comment.isMember === true);
-            }
-            if (filters.donated) {
-                allTopLevel = allTopLevel.filter(comment => comment.isDonated === true);
-            }
-            if (filters.creator) {
-                allTopLevel = allTopLevel.filter(comment => comment.isAuthorContentCreator === true);
-            }
+            allTopLevelCollection = allTopLevelCollection.filter(comment => {
+                let passesFilters = true;
+                if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
+                if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
+                if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
+                if (filters.members) passesFilters = passesFilters && comment.isMember === true;
+                if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
+                if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
 
-            if (sortBy === 'length') {
-                allTopLevel.sort((a, b) => {
-                    const diff = (a.content?.length || 0) - (b.content?.length || 0);
-                    return sortOrder === 'asc' ? diff : -diff;
-                });
-            } else {
-                allTopLevel.sort(() => Math.random() - 0.5);
-            }
+                let passesSearch = true;
+                if (searchKeyword) {
+                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
+                }
+                return passesFilters && passesSearch;
+            });
+
+            let allTopLevel = await allTopLevelCollection.toArray();
+
+            allTopLevel.sort(() => Math.random() - 0.5);
 
             logger.end(`${label} fullScan`);
             logger.end(label);
@@ -148,23 +160,57 @@ export const loadPagedComments = async (
 };
 
 /**
- * Counts total comments for a video (already efficient)
+ * Counts total comments matching the criteria (including search)
  */
 export const countComments = async (
     videoId: string,
+    filters: any = {},
+    searchKeyword: string = '',
     options: { topLevelOnly?: boolean } = {}
 ): Promise<number> => {
+    const label = `[countComments] video ${videoId} search: "${searchKeyword}"`;
+    logger.start(label);
     try {
+        let baseCollection: Dexie.Collection<Comment, number>;
+
         if (options.topLevelOnly) {
-            return await db.comments
+            baseCollection = db.comments
                 .where('[videoId+replyLevel]')
-                .between([videoId, 0], [videoId, 0], true, true)
-                .count();
+                .between([videoId, 0], [videoId, 0], true, true);
         } else {
-            return await db.comments.where('videoId').equals(videoId).count();
+            baseCollection = db.comments.where('videoId').equals(videoId);
         }
+
+        // Apply filters and search
+        const activeFilters = Object.entries(filters).filter(([, value]) => value);
+        if (activeFilters.length > 0 || searchKeyword) {
+            baseCollection = baseCollection.filter(comment => {
+                let passesFilters = true;
+                if (options.topLevelOnly && comment.replyLevel !== 0) return false; // Ensure top-level only if specified
+
+                if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
+                if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
+                if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
+                if (filters.members) passesFilters = passesFilters && comment.isMember === true;
+                if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
+                if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
+
+                let passesSearch = true;
+                if (searchKeyword) {
+                    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
+                }
+                return passesFilters && passesSearch;
+            });
+        }
+
+        const count = await baseCollection.count();
+        logger.success(`Counted ${count} comments matching criteria.`);
+        logger.end(label);
+        return count;
+
     } catch (error) {
         logger.error('Error counting comments:', error);
+        logger.end(label);
         return 0;
     }
 };
