@@ -16,6 +16,7 @@ import logger from '../../shared/utils/logger';
 import { Comment } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import {db} from "../../shared/utils/database/database";
+import {eventEmitter} from "../../shared/utils/eventEmitter";
 
 const CommentItem: React.FC<CommentItemProps> = ({
                                                      comment,
@@ -39,12 +40,51 @@ const CommentItem: React.FC<CommentItemProps> = ({
     const videoId = comment.videoId || extractYouTubeVideoIdFromUrl();
 
     useEffect(() => {
-        if (showReplies && repliesRef.current && fetchedReplies) {
-            repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
+        if (showReplies && repliesRef.current) {
+            // Add a small delay to ensure the content has rendered
+            const recalculateHeight = () => {
+                if (repliesRef.current) {
+                    repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
+                    // Force re-render to apply the new height
+                    setShowReplies(prev => !!prev);
+                }
+            };
+
+            if (fetchedReplies && fetchedReplies.length > 0) {
+                // If replies are already loaded, recalculate immediately
+                recalculateHeight();
+            } else {
+                // If replies aren't loaded yet, set a temporary reasonable height
+                repliesHeight.current = comment.replyCount ? `${comment.replyCount * 100}px` : '0px';
+            }
         } else {
             repliesHeight.current = '0px';
         }
-    }, [showReplies, fetchedReplies]);
+    }, [showReplies, fetchedReplies, comment.replyCount]);
+
+    useEffect(() => {
+        // Create unique event name for this comment
+        const eventName = `replies-loaded-${comment.commentId}`;
+
+        // Listen for when replies are loaded through any means
+        const unsubscribe = eventEmitter.on(eventName, (loadedReplies) => {
+            if (loadedReplies && Array.isArray(loadedReplies)) {
+                setFetchedReplies(loadedReplies);
+                // Force recalculation of height in next tick to ensure DOM is updated
+                setTimeout(() => {
+                    if (repliesRef.current) {
+                        repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
+                        // Force a re-render to apply the new height
+                        setShowReplies(prev => prev);
+                    }
+                }, 0);
+            }
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [comment.commentId]);
 
     const handleCopy = () => {
         copyToClipboard(
@@ -76,10 +116,13 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 logger.info(`[CommentItem ${comment.commentId}] Fetching replies onClick...`);
                 const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
                 setFetchedReplies(replies);
+                // Emit event that replies are loaded
+                eventEmitter.emit(`replies-loaded-${comment.commentId}`, replies);
                 logger.success(`[CommentItem ${comment.commentId}] Fetched ${replies.length} replies onClick.`);
             } catch (error) {
                 logger.error(`[CommentItem ${comment.commentId}] Error fetching replies onClick`, error);
                 setFetchedReplies([]);
+                eventEmitter.emit(`replies-loaded-${comment.commentId}`, []);
             } finally {
                 setIsFetchingReplies(false);
             }

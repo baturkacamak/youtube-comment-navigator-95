@@ -20,6 +20,7 @@ import hoverAction from "../../shared/utils/hoverAction";
 import {fetchRepliesForComment} from "../services/pagination";
 import logger from '../../shared/utils/logger';
 import {db} from "../../shared/utils/database/database";
+import {eventEmitter} from "../../shared/utils/eventEmitter";
 
 interface CommentFooterProps {
     comment: Comment;
@@ -75,6 +76,8 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                             // Cache the fetched replies instead of dispatching
                             logger.info(`[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`);
                             cacheFetchedReplies(result);
+                            // Emit event that replies are loaded
+                            eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
                             logger.success(`[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`);
                         } catch (error) {
                             logger.error(`[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`, error);
