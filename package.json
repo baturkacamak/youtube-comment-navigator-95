@@ -38,7 +38,7 @@
     "start": "react-scripts start",
     "build:css": "sed -i 's/rem/em/g' build/static/css/main.*.css",
     "build:css:rtl": "rtlcss input.css output-rtl.css",
-    "build": "react-scripts build && npm run build:css",
+    "build": "npm test && react-scripts build && npm run build:css",
     "test": "jest",
     "eject": "react-scripts eject",
     "webpack-start": "webpack serve --config webpack.dev.js",
