@@ -14,6 +14,7 @@ import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeV
 import { setComments, setIsLoading, setTotalCommentsCount } from "../../../store/store";
 import logger from '../../shared/utils/logger';
 import {PAGINATION} from "../../shared/utils/appConstants.ts";
+import {db} from "../../shared/utils/database/database";
 
 const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
@@ -40,7 +41,7 @@ const CommentList: React.FC<CommentListProps> = () => {
         const fetchCount = async () => {
             try {
                 // Always use the version of countComments that can filter by searchKeyword
-                const count = await countComments(videoId, filters, searchKeyword);
+                const count = await countComments(db.comments, videoId, filters, searchKeyword);
                 setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
                 dispatch(setTotalCommentsCount(count));
                 logger.info(`Total matching comment count (incl replies) for ${videoId} (search: "${searchKeyword}", filters: ${JSON.stringify(filters)}): ${count}`);
@@ -56,6 +57,7 @@ const CommentList: React.FC<CommentListProps> = () => {
         async (pageNum: number) => {
             try {
                 const data = await loadPagedComments(
+                    db.comments,
                     videoId,
                     pageNum,
                     PAGINATION.DEFAULT_PAGE_SIZE,
@@ -81,7 +83,7 @@ const CommentList: React.FC<CommentListProps> = () => {
         fetchComments(0).then(data => {
             dispatch(setComments(data));
             // Recalculate total count (all matching comments) and hasMore
-            countComments(videoId, filters, searchKeyword).then(currentTotal => {
+            countComments(db.comments, videoId, filters, searchKeyword).then(currentTotal => {
                 dispatch(setTotalCommentsCount(currentTotal));
                 // Base hasMore on whether the total count exceeds the currently loaded top-level comments
                 setHasMore(currentTotal > data.length);
@@ -101,7 +103,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 dispatch(setComments(newComments));
                 setPage(prev => prev + 1);
                 // Check if there are still more comments after loading this batch
-                countComments(videoId, filters, searchKeyword).then(currentTotal => {
+                countComments(db.comments, videoId, filters, searchKeyword).then(currentTotal => {
                     const newTotalLoaded = newComments.length; // Count loaded top-level comments
                     // Compare total matching count (incl replies) with loaded top-level comments
                     // This might need refinement depending on how replies are handled

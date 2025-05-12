@@ -19,6 +19,7 @@ import ShareButton from '../../shared/components/ShareButton';
 import hoverAction from "../../shared/utils/hoverAction";
 import {fetchRepliesForComment} from "../services/pagination";
 import logger from '../../shared/utils/logger';
+import {db} from "../../shared/utils/database/database";
 
 interface CommentFooterProps {
     comment: Comment;
@@ -54,7 +55,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     action: async () => {
                         logger.start(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
                         try {
-                            const replies = await fetchRepliesForComment(videoId, comment.commentId);
+                            const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
                             logger.success(`[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`);
                             return replies;
                         } catch (error) {
