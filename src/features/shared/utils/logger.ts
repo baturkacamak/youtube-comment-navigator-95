@@ -1,3 +1,5 @@
+import { ENABLE_LOGGER } from './appConstants.ts';
+
 class Logger {
     debug = true;
     prefix = "YouTube Comment Navigator 95";
@@ -94,6 +96,7 @@ class Logger {
     }
 
     log(level: string, ...args: any[]): void {
+        if (!ENABLE_LOGGER) return;
         if (!this.debug && level === "debug") return;
         if (this.filters.size && !args.some(arg => this.filters.has(String(arg)))) return;
 
