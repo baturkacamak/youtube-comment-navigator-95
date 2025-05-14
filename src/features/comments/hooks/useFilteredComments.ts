@@ -1,13 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Comment } from "../../../types/commentTypes";
-import { setComments } from "../../../store/store";
 
-const useFilteredComments = (initialLoadCompleted: boolean) => {
-    const dispatch = useDispatch();
-    const originalComments = useSelector((state: any) => state.originalComments);
-    const filters = useSelector((state: any) => state.filters);
-    const previousFiltersRef = useRef<any>(null);
+/**
+ * Simple helper hook that only exposes the filtering function so other hooks/components can
+ * reuse the same predicate logic. All actual data loading / filtered lists are now handled
+ * in loadPagedComments (IndexedDB query) and in memo-ised selectors.
+ */
+const useFilteredComments = () => {
 
     const filterComments = (comments: Comment[], filters: any) => {
         return comments.filter(comment => {
@@ -20,19 +18,6 @@ const useFilteredComments = (initialLoadCompleted: boolean) => {
             return true;
         });
     };
-
-    useEffect(() => {
-        if (initialLoadCompleted) {
-            let filteredComments = originalComments;
-            if (filters.timestamps || filters.heart || filters.links || filters.members || filters.donated) {
-                filteredComments = filterComments(originalComments, filters);
-                dispatch(setComments(filteredComments));
-            } else {
-                dispatch(setComments(originalComments));
-            }
-            previousFiltersRef.current = { ...filters };
-        }
-    }, [filters, initialLoadCompleted, originalComments, dispatch]);
 
     return { filterComments };
 };

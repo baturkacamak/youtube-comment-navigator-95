@@ -3,7 +3,6 @@ import {FilterState} from "./filterTypes"; // Adjust the path as necessary
 import {Option} from "./utilityTypes";
 
 export interface RootState {
-    originalComments: Comment[];
     comments: Comment[];
     transcripts: any[];
     filters: FilterState;

@@ -1,8 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { fetchChatReplies } from '../../comments/services/fetchComments';
 import {
-    setComments, setFilteredTranscripts,
-    setOriginalComments,
+    setFilteredTranscripts,
     setIsLoading,
     setTranscripts,
 } from "../../../store/store";
