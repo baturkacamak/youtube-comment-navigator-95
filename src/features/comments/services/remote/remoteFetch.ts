@@ -1,7 +1,7 @@
 // src/features/comments/services/remote/remoteFetch.ts
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing } from "./fetchAndProcessComments";
-import {setComments, setIsLoading, setOriginalComments, setTotalCommentsCount} from "../../../../store/store";
+import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearLocalContinuationToken,
     deleteExistingComments,
@@ -38,7 +38,6 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             dispatch(setTotalCommentsCount(totalCount));
             logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
             dispatch(setComments(initialComments));
-            dispatch(setOriginalComments(initialComments));
         } catch (err) {
             logger.error('Failed to load initial comments from IndexedDB:', err);
         } finally {
@@ -65,7 +64,6 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
                     logger.success(`Loaded ${cachedData.length} cached comments`);
                     const initialCachedComments = cachedData.slice(0, PAGINATION.DEFAULT_PAGE_SIZE);
                     dispatch(setComments(initialCachedComments));
-                    dispatch(setOriginalComments(initialCachedComments));
                     dispatch(setIsLoading(false));
                     return;
                 }

@@ -37,7 +37,6 @@ const initialState: RootState = {
     },
 
     // Comments and transcripts data
-    originalComments: [],
     comments: [],
     transcripts: [],
     filteredTranscripts: [],
@@ -65,9 +64,6 @@ const commentsSlice = createSlice({
     initialState,
     reducers: {
         // Data fetching and setting actions
-        setOriginalComments: (state, action: PayloadAction<Comment[]>) => {
-            state.originalComments = action.payload;
-        },
         setComments: (state, action: PayloadAction<Comment[]>) => {
             state.comments = action.payload;
         },
@@ -151,7 +147,6 @@ const commentsSlice = createSlice({
 
 export const {
     // Data fetching and setting actions
-    setOriginalComments,
     setComments,
     setTranscripts,
     setFilteredTranscripts,

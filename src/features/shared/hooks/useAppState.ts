@@ -29,7 +29,7 @@ const useAppState = () => {
     const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
 
     const { sortComments } = useSortedComments(false);
-    const { filterComments } = useFilteredComments(false);
+    const { filterComments } = useFilteredComments();
     const { initialLoadCompleted } = useCommentsIncrementalLoader();
     const { loadTranscript } = useTranscript();
 

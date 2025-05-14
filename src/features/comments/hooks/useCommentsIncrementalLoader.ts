@@ -1,7 +1,6 @@
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {Comment} from '../../../types/commentTypes';
-import {setComments, setOriginalComments} from "../../../store/store";
+import {setComments} from "../../../store/store";
 import {fetchCommentsFromRemote} from "../services/remote/remoteFetch";
 
 const useCommentsIncrementalLoader = () => {
