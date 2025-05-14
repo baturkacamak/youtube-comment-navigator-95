@@ -37,15 +37,13 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
         const mainProcessedData = processRawJsonCommentsData([rawJsonData], videoId);
 
-        try {
+        // Use a single transaction for all operations
+        await db.transaction('rw', db.comments, async () => {
             await db.comments.bulkPut(mainProcessedData.items);
-            // Update local count and Redux store
             localCommentCount += mainProcessedData.items.length;
             dispatch(setTotalCommentsCount(localCommentCount));
-            logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
-        } catch (err) {
-            logger.error("Failed to save main comments:", err);
-        }
+        });
+        logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
 
         const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
 
@@ -85,32 +83,29 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
 
         if (replies && replies.length > 0) {
-            const BATCH_SIZE = 20;
+            const BATCH_SIZE = 50; // Increased batch size
             logger.info(`Processing ${replies.length} replies.`);
 
-            for (let i = 0; i < replies.length; i += BATCH_SIZE) {
-                const batch = replies.slice(i, i + BATCH_SIZE);
-                const batchProcessedData = processRawJsonCommentsData(batch, videoId);
+            // Process all batches in a single transaction
+            await db.transaction('rw', db.comments, async () => {
+                for (let i = 0; i < replies.length; i += BATCH_SIZE) {
+                    const batch = replies.slice(i, i + BATCH_SIZE);
+                    const batchProcessedData = processRawJsonCommentsData(batch, videoId);
 
-                if (batchProcessedData.items.length > 0) {
-                    try {
+                    if (batchProcessedData.items.length > 0) {
                         await db.comments.bulkPut(batchProcessedData.items);
-                        // Update local count and Redux store for replies
                         localCommentCount += batchProcessedData.items.length;
-                        dispatch(setTotalCommentsCount(localCommentCount));
-                        logger.success(`Saved batch of ${batchProcessedData.items.length} replies to IndexedDB. Total count: ${localCommentCount}`);
-                    } catch (e) {
-                        logger.error("Failed to save replies batch:", e);
                     }
 
-                    await new Promise(resolve => setTimeout(resolve, 10));
+                    if (signal.aborted) {
+                        logger.warn("Reply processing aborted midway.");
+                        break;
+                    }
                 }
-
-                if (signal.aborted) {
-                    logger.warn("Reply processing aborted midway.");
-                    break;
-                }
-            }
+                // Update Redux store once after all batches are processed
+                dispatch(setTotalCommentsCount(localCommentCount));
+            });
+            logger.success(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
         } else {
             logger.info("No replies to process.");
         }
