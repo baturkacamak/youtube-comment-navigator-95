@@ -3,7 +3,7 @@ import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
-import { addProcessedReplies } from "../../../../store/store";
+import { addProcessedReplies, setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
 
 export interface FetchAndProcessResult {
@@ -15,9 +15,14 @@ export interface FetchAndProcessResult {
 }
 
 let activeReplyTasks = 0;
+let localCommentCount = 0;
 
 export const hasActiveReplyProcessing = (): boolean => {
     return activeReplyTasks > 0;
+};
+
+export const resetLocalCommentCount = () => {
+    localCommentCount = 0;
 };
 
 export const fetchAndProcessComments = async (token: string | null, videoId: string, windowObj: any, signal: AbortSignal, dispatch: any): Promise<FetchAndProcessResult> => {
@@ -34,7 +39,10 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
         try {
             await db.comments.bulkPut(mainProcessedData.items);
-            logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB.`);
+            // Update local count and Redux store
+            localCommentCount += mainProcessedData.items.length;
+            dispatch(setTotalCommentsCount(localCommentCount));
+            logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
         } catch (err) {
             logger.error("Failed to save main comments:", err);
         }
@@ -87,7 +95,10 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                 if (batchProcessedData.items.length > 0) {
                     try {
                         await db.comments.bulkPut(batchProcessedData.items);
-                        logger.success(`Saved batch of ${batchProcessedData.items.length} replies to IndexedDB.`);
+                        // Update local count and Redux store for replies
+                        localCommentCount += batchProcessedData.items.length;
+                        dispatch(setTotalCommentsCount(localCommentCount));
+                        logger.success(`Saved batch of ${batchProcessedData.items.length} replies to IndexedDB. Total count: ${localCommentCount}`);
                     } catch (e) {
                         logger.error("Failed to save replies batch:", e);
                     }

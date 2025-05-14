@@ -1,6 +1,6 @@
 // src/features/comments/services/remote/remoteFetch.ts
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
-import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing } from "./fetchAndProcessComments";
+import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearLocalContinuationToken,
@@ -34,6 +34,9 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
         logger.info(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
         let localToken = retrieveLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+
+        // Reset local comment count for new video
+        resetLocalCommentCount();
 
         if (!bypassCache && !localToken) {
             const hasLoadedFromCache = await loadCachedCommentsIfAny(videoId, dispatch);
