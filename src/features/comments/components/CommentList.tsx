@@ -40,11 +40,14 @@ const CommentList: React.FC<CommentListProps> = () => {
         if (!videoId) return;
         const fetchCount = async () => {
             try {
-                // Always use the version of countComments that can filter by searchKeyword
-                const count = await countComments(db.comments, videoId, filters, searchKeyword);
-                setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
-                dispatch(setTotalCommentsCount(count));
-                logger.info(`Total matching comment count (incl replies) for ${videoId} (search: "${searchKeyword}", filters: ${JSON.stringify(filters)}): ${count}`);
+                // Only fetch from IndexedDB if there are filters or search
+                if (Object.values(filters).some(Boolean) || searchKeyword) {
+                    const count = await countComments(db.comments, videoId, filters, searchKeyword);
+                    setHasMore(count > (page + 1) * PAGINATION.DEFAULT_PAGE_SIZE);
+                    dispatch(setTotalCommentsCount(count));
+                    logger.info(`Total matching comment count (incl replies) for ${videoId} (search: "${searchKeyword}", filters: ${JSON.stringify(filters)}): ${count}`);
+                }
+                // Otherwise, rely on the local count that's updated during processing
             } catch (err) {
                 logger.error('Failed to fetch comment count:', err);
             }
