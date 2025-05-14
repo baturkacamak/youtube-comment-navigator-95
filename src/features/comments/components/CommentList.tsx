@@ -13,7 +13,7 @@ import { loadPagedComments, countComments } from '../services/pagination';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { setComments, setIsLoading, setTotalCommentsCount } from "../../../store/store";
 import logger from '../../shared/utils/logger';
-import {PAGINATION} from "../../shared/utils/appConstants.ts";
+import {PAGINATION} from "../../shared/utils/appConstants";
 import {db} from "../../shared/utils/database/database";
 
 const CommentList: React.FC<CommentListProps> = () => {

@@ -10,7 +10,7 @@ import {
     retrieveLocalContinuationToken,
     storeContinuationToken
 } from "./utils";
-import { CACHE_KEYS, PAGINATION } from "../../../shared/utils/appConstants.ts";
+import { CACHE_KEYS, PAGINATION } from "../../../shared/utils/appConstants";
 import { db } from "../../../shared/utils/database/database";
 import {countComments, loadPagedComments} from "../pagination";
 import logger from "../../../shared/utils/logger";

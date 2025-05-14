@@ -1,4 +1,4 @@
-import { ENABLE_LOGGER } from './appConstants.ts';
+import { ENABLE_LOGGER } from './appConstants';
 
 class Logger {
     debug = true;

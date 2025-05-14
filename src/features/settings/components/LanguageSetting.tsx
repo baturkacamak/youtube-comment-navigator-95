@@ -4,7 +4,7 @@ import { Option } from '../../../types/utilityTypes';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
 import { LanguageIcon } from '@heroicons/react/24/outline';
-import { isLocalEnvironment, languageOptions } from '../../shared/utils/appConstants.ts';
+import { isLocalEnvironment, languageOptions } from '../../shared/utils/appConstants';
 import { getSettings, saveSettings } from "../utils/settingsUtils";
 
 const LanguageSetting: React.FC = () => {
