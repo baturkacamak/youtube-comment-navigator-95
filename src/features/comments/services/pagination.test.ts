@@ -1,6 +1,6 @@
 import { Comment } from '../../../types/commentTypes';
 import { loadPagedComments, countComments, fetchRepliesForComment } from './pagination';
-import { PAGINATION } from '../../shared/utils/appConstants.ts';
+import { PAGINATION } from '../../shared/utils/appConstants';
 import Dexie from 'dexie';
 
 // Mock the logger module

@@ -1,7 +1,7 @@
 // src/features/comments/services/pagination.ts
 import { Comment } from "../../../types/commentTypes";
 import Dexie from 'dexie';
-import { PAGINATION } from "../../shared/utils/appConstants.ts";
+import { PAGINATION } from "../../shared/utils/appConstants";
 import logger from "../../shared/utils/logger";
 
 // Helper function to apply filters and search keyword to a comment

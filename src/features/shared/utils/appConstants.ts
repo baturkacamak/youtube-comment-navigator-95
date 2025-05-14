@@ -1,4 +1,4 @@
-// src/utils/appConstants.ts
+// src/utils/appConstants
 export const isLocalEnvironment = (): boolean => {
     return process.env.NODE_ENV === 'development';
 };
