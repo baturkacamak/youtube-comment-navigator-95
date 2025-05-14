@@ -1,4 +1,4 @@
-// src/utils/appConstants.ts.ts
+// src/utils/appConstants.ts
 export const isLocalEnvironment = (): boolean => {
     return process.env.NODE_ENV === 'development';
 };
@@ -72,4 +72,6 @@ export const languageOptions: LanguageOption[] = [
     { value: 'vi', label: 'Tiếng Việt' }, // Vietnamese
     { value: 'zh', label: '中文' }, // Mandarin Chinese
 ];
+
+export const ENABLE_LOGGER = true; // Set to false to disable logger messages
 
