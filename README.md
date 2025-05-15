@@ -86,3 +86,27 @@ This project is licensed under the MIT License. For more details, see the [LICEN
 - 📝 **TypeScript**
 
 I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your YouTube browsing experience! 😊
+
+## 📜 Scripts
+
+The following scripts are available in the `package.json` to help with development and building:
+
+### General Scripts
+- **start**: `react-scripts start` - Starts the development server.
+- **build**: `npm test && react-scripts build && npm run build:css` - Runs tests and builds the project.
+- **build:css**: `sed -i 's/rem/em/g' build/static/css/main.*.css` - Converts CSS units from rem to em.
+- **build:css:rtl**: `rtlcss input.css output-rtl.css` - Converts CSS for right-to-left languages.
+- **test**: `jest` - Runs the test suite.
+- **eject**: `react-scripts eject` - Ejects the create-react-app configuration.
+
+### Webpack Scripts
+- **webpack-start**: `webpack serve --config webpack.dev.js` - Starts the webpack development server.
+- **webpack-build**: `webpack --config webpack.prod.js && node generate-asset-manifest.js dist production && sed -i 's/rem/em/g' dist/static/css/main.css` - Builds the production version.
+- **webpack-build:local**: `webpack --config webpack.local.js && node generate-asset-manifest.js dist-local && sed -i 's/rem/em/g' dist-local/static/css/main.css` - Builds the local version.
+- **webpack-watch**: `webpack --config webpack.dev.js --watch` - Watches for changes and rebuilds.
+- **webpack-watch:local**: `webpack --config webpack.local.js --watch` - Watches for changes in the local build.
+- **webpack-watch:prod**: `webpack --config webpack.prod.js --watch` - Watches for changes in the production build.
+
+### Chrome Extension Scripts
+- **chrome-build**: `npm run webpack-build && cd dist && zip -r ../chrome-extension.zip *` - Builds and zips the production extension.
+- **chrome-build:local**: `npm run webpack-build:local && cd dist-local && zip -r ../chrome-extension-local.zip *` - Builds and zips the local extension.
