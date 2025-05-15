@@ -6,17 +6,24 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 
 ## ✨ Features
 
-- 🔍 **Real-time Comment Search**: Quickly find comments by typing keywords.
-- ⏬ **Load More Comments**: Effortlessly load more comments with a single click.
-- 🔎 **Filter Comments**: Apply various filters to view only the comments that matter to you.
-- 🌙 **Dark Mode Support**: Seamlessly integrates with YouTube's dark mode.
-- 📊 **Advanced Sorting**: Sort comments based on different criteria like likes, replies, and more.
-- 🌐 **Multilingual Support**: Choose your preferred language from a wide range of options.
-- 🔄 **Randomize Order**: Randomize the order of comments for a fresh perspective.
-- 🧩 **Customizable Themes**: Switch between different themes to personalize your experience.
-- 📋 **Bookmark Comments**: Bookmark your favorite comments and view them later.
-- 🛠️ **Tooltips**: Get additional information and context with hover tooltips.
-- 🕒 **Accurate Time Display**: View the accurate time when comments were published, even for bookmarked comments.
+- 🔍 **Real-time Comment Search**: Quickly find comments by typing keywords. The search is dynamic and updates results as you type.
+- ⏬ **Load More Comments**: Effortlessly load more comments with a single click, ensuring you never miss out on any discussions.
+- 🔎 **Filter Comments**: Apply various filters to view only the comments that matter to you, such as filtering by likes, replies, or specific keywords.
+- 🌙 **Dark Mode Support**: Seamlessly integrates with YouTube's dark mode, providing a comfortable viewing experience in low-light environments.
+- 📊 **Advanced Sorting**: Sort comments based on different criteria like likes, replies, date, and more, allowing you to prioritize the most relevant discussions.
+- 🌐 **Multilingual Support**: Choose your preferred language from a wide range of options, making the extension accessible to a global audience.
+- 🔄 **Randomize Order**: Randomize the order of comments for a fresh perspective, perfect for discovering new insights or opinions.
+- 🧩 **Customizable Themes**: Switch between different themes to personalize your experience and match your aesthetic preferences.
+- 📋 **Bookmark Comments**: Bookmark your favorite comments and view them later, ensuring you can easily return to important discussions.
+- 🛠️ **Tooltips**: Get additional information and context with hover tooltips, enhancing your understanding of various features.
+- 🕒 **Accurate Time Display**: View the accurate time when comments were published, even for bookmarked comments, which recalculates the relative time based on the current date.
+- 📌 **Pin Comments**: Pin important comments to the top of the list for quick access.
+- 🔔 **Notifications**: Receive notifications for new comments or replies, keeping you updated on ongoing discussions.
+- 📁 **Export Comments**: Export comments to a file for offline reading or analysis.
+- 🔗 **Link Sharing**: Easily share links to specific comments with friends or colleagues.
+- 📈 **Analytics Dashboard**: View analytics on comment activity, such as the most active users or trending topics.
+- 🔒 **Privacy Controls**: Manage your data with robust privacy controls, ensuring your information is secure.
+- ⚙️ **Customizable Settings**: Adjust settings to tailor the extension to your needs, including notification preferences and display options.
 
 ## 🚀 Installation
 
