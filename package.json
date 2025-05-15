@@ -36,15 +36,17 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "build": "npm test && react-scripts build && npm run build:css",
     "build:css": "sed -i 's/rem/em/g' build/static/css/main.*.css",
     "build:css:rtl": "rtlcss input.css output-rtl.css",
-    "build": "npm test && react-scripts build && npm run build:css",
     "test": "jest",
     "eject": "react-scripts eject",
     "webpack-start": "webpack serve --config webpack.dev.js",
     "webpack-build": "webpack --config webpack.prod.js && node generate-asset-manifest.js dist production && sed -i 's/rem/em/g' dist/static/css/main.css",
     "webpack-build:local": "webpack --config webpack.local.js && node generate-asset-manifest.js dist-local && sed -i 's/rem/em/g' dist-local/static/css/main.css",
     "webpack-watch": "webpack --config webpack.dev.js --watch",
+    "webpack-watch:local": "webpack --config webpack.local.js --watch",
+    "webpack-watch:prod": "webpack --config webpack.prod.js --watch",
     "chrome-build": "npm run webpack-build && cd dist && zip -r ../chrome-extension.zip *",
     "chrome-build:local": "npm run webpack-build:local && cd dist-local && zip -r ../chrome-extension-local.zip *"
   },
