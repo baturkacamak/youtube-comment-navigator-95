@@ -1,6 +1,7 @@
 // src/features/transcripts/services/remoteFetch.ts
 import { ProcessedTranscript, processTranscriptData } from '../utils/processTranscriptData';
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import { youtubeApi } from '../../shared/services/youtubeApi';
 
 
 export const fetchTranscriptFromRemote = async (captionTrackBaseUrl: string, language: string = ''): Promise<ProcessedTranscript | null> => {
@@ -21,51 +22,10 @@ export const fetchTranscriptFromRemote = async (captionTrackBaseUrl: string, lan
 export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
     try {
         const videoId = extractYouTubeVideoIdFromUrl();
-
-        const hl = navigator.language || 'en';
-        const gl = 'TR';
-        const payload = {
-            context: {
-                client: {
-                    hl,
-                    gl,
-                    userAgent: navigator.userAgent,
-                    clientName: "WEB",
-                    clientVersion: "2.20240620.05.00",
-                    originalUrl: `https://www.youtube.com/watch?v=${videoId}`,
-                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    mainAppWebInfo: {
-                        graftUrl: `/watch?v=${videoId}`,
-                    }
-                },
-            },
-            videoId,
-            playbackContext: {
-                contentPlaybackContext: {
-                    currentUrl: `/watch?v=${videoId}`,
-                }
-            },
-        };
-
-        const response = await fetch("https://www.youtube.com/youtubei/v1/player?prettyPrint=false&ycn=95", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "*/*",
-                "Accept-Language": navigator.language,
-                "x-youtube-client-name": "1",
-                "x-youtube-client-version": "2.20240620.05.00",
-                "Origin": window.location.origin
-            },
-            body: JSON.stringify(payload),
-            credentials: "include"
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch video details");
-        }
-
-        const data = await response.json();
+        
+        // Use the new YouTube API service to fetch player data
+        const data = await youtubeApi.fetchPlayer(videoId);
+        
         return data?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl || null;
     } catch (error) {
         console.error("Failed to fetch video details:", error);
