@@ -1,5 +1,7 @@
 import { extractYouTubeVideoIdFromUrl } from "../utils/extractYouTubeVideoIdFromUrl";
 import logger from '../utils/logger';
+import { YOUTUBE_API_KEY, YOUTUBE_API_URL } from '../utils/appConstants';
+import httpService from './httpService';
 
 const BASE_URL = "https://www.youtube.com/youtubei/v1";
 
@@ -37,6 +39,14 @@ export interface ClientContext {
     webDisplayMode?: string;
     isWebNativeShareAvailable?: boolean;
   };
+}
+
+export interface VideoDetails {
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  channelTitle: string;
+  publishedAt: string;
 }
 
 export class YouTubeApiService {
@@ -245,6 +255,40 @@ export class YouTubeApiService {
       body,
       signal
     });
+  }
+
+  private getThumbnailUrl(videoId: string): string {
+    return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+  }
+
+  public async fetchVideoDetails(videoId: string): Promise<VideoDetails | null> {
+    const url = `${YOUTUBE_API_URL}?part=snippet&id=${videoId}&key=${YOUTUBE_API_KEY}`;
+    try {
+      const responseText = await httpService.get(url);
+      const data = JSON.parse(responseText);
+
+      if (data.items && data.items.length > 0) {
+        const snippet = data.items[0].snippet;
+        const details: VideoDetails = {
+          title: snippet.title,
+          description: snippet.description,
+          thumbnailUrl: this.getThumbnailUrl(videoId),
+          channelTitle: snippet.channelTitle,
+          publishedAt: snippet.publishedAt
+        };
+        logger.info('Fetched video details:', details);
+        return details;
+      }
+      logger.warn('No video details found for videoId:', videoId);
+      return null;
+    } catch (error) {
+      logger.error(`Failed to fetch video details for ID ${videoId}:`, error);
+      return null;
+    }
+  }
+
+  isReady(): boolean {
+    // ... existing code ...
   }
 }
 
