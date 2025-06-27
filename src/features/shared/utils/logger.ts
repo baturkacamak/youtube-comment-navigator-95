@@ -1,15 +1,15 @@
 import { ENABLE_LOGGER } from './appConstants';
 
 class Logger {
-    debug = true;
     prefix = "YouTube Comment Navigator 95";
     customFormat: { locale: string; hour12: boolean } | null = null;
-    logHistory: Array<{ timestamp: string; level: string; args: any[] }> = [];
+    logHistory: Array<{ timestamp: string; level: string; message: string, data: any[] }> = [];
     filters: Set<string> = new Set();
     lastTimestamp: Date | null = null;
     persist = false;
     mock = false;
     private debugEnabled: boolean = false;
+    maxLogHistory = 500; // Limit log history to prevent memory issues
 
     theme: Record<string, string> = {
         debug: "color: #3498db; font-weight: bold;",
@@ -114,13 +114,26 @@ class Logger {
             `\nCaller: ${caller}`
         ];
 
-        this.logHistory.push({ timestamp, level, args });
+        this.logHistory.push({ timestamp, level, message: args[0], data: args.slice(1) });
+        if (this.logHistory.length > this.maxLogHistory) {
+            this.logHistory.shift();
+        }
 
         if (this.persist) localStorage.setItem("LoggerHistory", JSON.stringify(this.logHistory));
-        if (!this.mock) console.log(...message);
+        if (this.mock) return;
+
+        // Use detailed object logging for warns/errors with objects
+        if ((level === 'warn' || level === 'error') && args.length > 1 && typeof args[1] === 'object' && args[1] !== null) {
+            const [mainMessage, ...objects] = args;
+             console.log(`%c${timestamp} %c${emoji} [${this.prefix} ${level.toUpperCase()}]%c: ${mainMessage}`, "color: gray; font-style: italic;", style, "color: inherit;");
+            objects.forEach(obj => this._logDetailedObject(level, obj));
+             console.log(`%cCaller: ${caller}`, 'color: gray; font-style: italic;');
+        } else {
+             console.log(...message);
+        }
     }
 
-    debugLog(...args: any[]): void { this.log("debug", ...args); }
+    debug(...args: any[]): void { this.log("debug", ...args); }
     info(...args: any[]): void { this.log("info", ...args); }
     warn(...args: any[]): void { this.log("warn", ...args); }
     error(...args: any[]): void { this.log("error", ...args); }
@@ -167,6 +180,58 @@ class Logger {
             this.logHistory = [];
             if (this.persist) localStorage.removeItem("LoggerHistory");
         }, intervalMs);
+    }
+
+    /**
+     * Formats and logs an object with detailed, collapsible sections.
+     * Inspired by the more robust LoggingService from another project.
+     * @param level The log level ('warn' or 'error')
+     * @param data The object to log.
+     */
+    private _logDetailedObject(level: 'warn' | 'error', data: any): void {
+        const isError = level === 'error';
+        const prefix = isError ? '🔴' : '⚠️';
+        const groupLabel = `%c${prefix} Detailed ${level.toUpperCase()} Information`;
+        const style = isError ? this.theme.error.replace('bold', 'normal') : this.theme.warn.replace('bold', 'normal');
+
+        console.groupCollapsed(groupLabel, style);
+
+        if (typeof data === 'object' && data !== null) {
+            Object.entries(data).forEach(([key, value]) => {
+                const keyStyle = 'color: #6b7280; font-weight: bold;';
+                const valueStyle = 'color: inherit; font-weight: normal;';
+
+                if (key.toLowerCase().includes('stack') && typeof value === 'string') {
+                    console.group('📋 Stack Trace:');
+                    console.log(value);
+                    console.groupEnd();
+                } else if ((key.toLowerCase().includes('reasons') || key.toLowerCase().includes('causes')) && Array.isArray(value)) {
+                    console.group('💡 Possible Reasons:');
+                    value.forEach((reason: string, index: number) => console.log(`  ${index + 1}. ${reason}`));
+                    console.groupEnd();
+                } else {
+                    console.log(`%c${key}:%c ${this._formatValue(value)}`, keyStyle, valueStyle);
+                }
+            });
+        } else {
+            console.log(data);
+        }
+
+        console.groupEnd();
+    }
+
+    /**
+     * Formats a value for display in the detailed log.
+     * @param value The value to format.
+     */
+    private _formatValue(value: any): string {
+        if (value === null) return 'null';
+        if (value === undefined) return 'undefined';
+        if (typeof value === 'boolean' || typeof value === 'number') return value.toString();
+        if (typeof value === 'string') return value;
+        if (Array.isArray(value)) return `[Array (${value.length} items)]`;
+        if (typeof value === 'object') return `{Object (${Object.keys(value).length} properties)}`;
+        return String(value);
     }
 }
 
