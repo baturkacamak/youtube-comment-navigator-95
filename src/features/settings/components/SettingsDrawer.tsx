@@ -14,14 +14,15 @@ import {RootState} from '../../../types/rootState';
 import FontSetting from "../FontSetting";
 import i18n from "i18next";
 import ShowContentOnSearchToggle from "./ShowContentOnSearchToggle";
+import logger from '../../shared/utils/logger';
 
 const useGoogleDrive = () => {
     return {
         isSignedIn: false,
-        signIn: () => console.log('Sign In'),
-        signOut: () => console.log('Sign Out'),
-        saveFile: (fileName: string, content: string) => console.log(`Saving ${fileName}: ${content}`),
-        loadFile: (fileName: string) => console.log(`Loading ${fileName}`),
+        signIn: () => logger.info('Sign In'),
+        signOut: () => logger.info('Sign Out'),
+        saveFile: (fileName: string, content: string) => logger.info(`Saving ${fileName}: ${content}`),
+        loadFile: (fileName: string) => logger.info(`Loading ${fileName}`),
     };
 };
 

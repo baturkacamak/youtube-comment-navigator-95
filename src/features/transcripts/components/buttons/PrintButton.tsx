@@ -1,6 +1,7 @@
 import React from 'react';
 import { PrinterIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import logger from '../../../shared/utils/logger';
 
 interface PrintButtonProps {
     transcriptText: string;
@@ -16,7 +17,7 @@ const PrintButton: React.FC<PrintButtonProps> = ({ transcriptText }) => {
             printWindow.document.close();
             printWindow.print();
         } else {
-            console.error("Failed to open print window");
+            logger.error("Failed to open print window");
         }
     };
 

@@ -1,4 +1,5 @@
 import { extractYouTubeVideoIdFromUrl } from "../utils/extractYouTubeVideoIdFromUrl";
+import logger from '../utils/logger';
 
 const BASE_URL = "https://www.youtube.com/youtubei/v1";
 
@@ -139,7 +140,7 @@ export class YouTubeApiService {
       
       return await response.json() as T;
     } catch (error) {
-      console.error(`Error fetching from YouTube API (${endpoint}):`, error);
+      logger.error(`Error fetching from YouTube API (${endpoint}):`, error);
       throw error;
     }
   }

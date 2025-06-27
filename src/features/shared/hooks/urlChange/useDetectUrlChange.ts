@@ -3,6 +3,7 @@ import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdF
 import { setIsLoading } from "../../../../store/store";
 import { useDispatch } from "react-redux";
 import useGlobalEventListener from "../useGlobalEventListener";
+import logger from '../../utils/logger';
 
 let previousVideoId: string | null = null;
 
@@ -21,12 +22,12 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
             if (hasVideoIdChanged(currentVideoId)) {
                 previousVideoId = currentVideoId;
                 await waitForVideoElement(currentVideoId);
-                console.log('URL changed, executing callback...');
+                logger.info('URL changed, executing callback...');
                 dispatch(setIsLoading(true));
                 await callback();
             }
         } catch (error) {
-            console.error('Error handling URL change:', error);
+            logger.error('Error handling URL change:', error);
         }
     };
 
@@ -39,10 +40,10 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
             const checkVideoElement = () => {
                 const videoElement = document.querySelector(`[video-id="${videoId}"]`);
                 if (videoElement) {
-                    console.log('Video element found.');
+                    logger.info('Video element found.');
                     resolve();
                 } else {
-                    console.log('Video element not yet available, retrying...');
+                    logger.info('Video element not yet available, retrying...');
                     setTimeout(checkVideoElement, 500); // Retry after 500ms
                 }
             };

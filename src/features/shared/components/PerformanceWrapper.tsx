@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import logger from '../utils/logger';
 
 interface PerformanceWrapperProps {
     id: string;
 }
 
-const PerformanceWrapper: React.FC<React.PropsWithChildren<PerformanceWrapperProps>> = ({ id, children }) => {
+export const PerformanceWrapper: React.FC<React.PropsWithChildren<PerformanceWrapperProps>> = ({ id, children }) => {
     useEffect(() => {
-        console.timeEnd(id);
+        logger.start(id);
+        return () => {
+            logger.end(id);
+        };
     }, [id]);
-
-    console.time(id);
 
     return <>{children}</>;
 };
-
-export default PerformanceWrapper;
