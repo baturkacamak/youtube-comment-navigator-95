@@ -4,6 +4,7 @@ import { AiOutlineWhatsApp, AiOutlineX, AiOutlineFacebook, AiOutlineLinkedin, Ai
 import { FaTelegramPlane } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import DropdownMenu from './DropdownMenu'; // Adjust the import path as necessary
+import logger from '../utils/logger';
 
 interface ShareButtonProps {
     textToShare: string;
@@ -47,11 +48,11 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare, subject = 'Check
         if (shareType in shareUrls) {
             window.open(shareUrls[shareType], '_blank');
         } else if (navigator.share) {
-            navigator.share({ title: subject, text, url }).catch(error => console.error('Error sharing', error));
+            navigator.share({ title: subject, text, url }).catch(error => logger.error('Error sharing', error));
         } else {
             navigator.clipboard.writeText(url ? `${text} ${url}` : text).then(() => {
                 alert('Text copied to clipboard. You can share it manually.');
-            }).catch(error => console.error('Could not copy text', error));
+            }).catch(error => logger.error('Could not copy text', error));
         }
     };
 

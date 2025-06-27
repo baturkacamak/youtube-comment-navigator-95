@@ -1,84 +1,58 @@
 // src/features/comments/services/remote/utils.ts
 
-import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
-import {isLocalEnvironment} from "../../../shared/utils/appConstants";
-import {db} from "../../../shared/utils/database/database";
+import { CACHE_KEYS } from '../../../shared/utils/appConstants';
+import { db } from '../../../shared/utils/database/database';
+import { Comment } from '../../../../types/commentTypes';
+import logger from '../../../shared/utils/logger';
 
-export const getVideoId = (): string => {
+export const extractVideoId = (): string => {
     try {
-        let videoId = extractYouTubeVideoIdFromUrl();
-        if (isLocalEnvironment()) {
-            videoId = 'localVideoId';
-        }
-        if (!videoId) {
-            throw new Error('Video ID not found in the current URL');
-        }
-        return videoId;
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('v') ?? '';
     } catch (error) {
-        console.error('Failed to extract video ID:', error);
-        throw error;
+        logger.error('Failed to extract video ID:', error);
+        return '';
     }
 };
 
-export const storeContinuationToken = (token: string, continuationTokenKey: string): boolean => {
+export const storeContinuationToken = async (videoId: string, token: string): Promise<void> => {
     try {
-        if (!token || !continuationTokenKey) {
-            throw new Error('Token or continuationTokenKey is missing');
-        }
-        localStorage.setItem(continuationTokenKey, token);
-        return true;
+        await db.setItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId), token);
     } catch (error) {
-        console.error('Failed to store continuation token:', error);
-        return false;
+        logger.error('Failed to store continuation token:', error);
     }
 };
 
-export const retrieveLocalContinuationToken = (continuationTokenKey: string): string | null => {
+export const getContinuationToken = async (videoId: string): Promise<string | null> => {
     try {
-        if (!continuationTokenKey) {
-            throw new Error('continuationTokenKey is missing');
-        }
-        return localStorage.getItem(continuationTokenKey) ?? null;
+        return await db.getItem<string>(CACHE_KEYS.CONTINUATION_TOKEN(videoId));
     } catch (error) {
-        console.error('Failed to retrieve continuation token:', error);
+        logger.error('Failed to retrieve continuation token:', error);
         return null;
     }
 };
 
-export const clearLocalContinuationToken = (continuationTokenKey: string): boolean => {
+export const clearContinuationToken = async (videoId: string): Promise<void> => {
     try {
-        if (!continuationTokenKey) {
-            throw new Error('continuationTokenKey is missing');
-        }
-        localStorage.removeItem(continuationTokenKey);
-        return true;
+        await db.removeItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId));
     } catch (error) {
-        console.error('Failed to clear continuation token:', error);
-        return false;
+        logger.error('Failed to clear continuation token:', error);
     }
 };
 
-export const fetchCachedComments = async (videoId: string) => {
+export const getCachedComments = async (videoId: string): Promise<Comment[] | null> => {
     try {
-        if (!videoId) {
-            throw new Error('VideoId is required to fetch cached comments');
-        }
-        return await db.comments.where('videoId').equals(videoId).toArray();
+        return await db.getItem<Comment[]>(`comments_${videoId}`);
     } catch (error) {
-        console.error('Failed to fetch cached comments:', error);
-        throw error;
+        logger.error('Failed to fetch cached comments:', error);
+        return null;
     }
 };
 
-export const deleteExistingComments = async (videoId: string): Promise<boolean> => {
+export const deleteCommentsFromDb = async (videoId: string): Promise<void> => {
     try {
-        if (!videoId) {
-            throw new Error('VideoId is required to delete comments');
-        }
-        await db.comments.where('videoId').equals(videoId).delete();
-        return true;
+        await db.removeItem(`comments_${videoId}`);
     } catch (error) {
-        console.error('Failed to delete existing comments:', error);
-        return false;
+        logger.error('Failed to delete existing comments:', error);
     }
 };

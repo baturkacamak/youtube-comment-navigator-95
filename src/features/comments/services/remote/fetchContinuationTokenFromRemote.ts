@@ -1,6 +1,12 @@
 import {ContentItem} from "../../../../types/commentTypes";
 import {extractYouTubeVideoIdFromUrl} from "../../../shared/utils/extractYouTubeVideoIdFromUrl";
 import { youtubeApi } from "../../../shared/services/youtubeApi";
+import logger from '../../../shared/utils/logger';
+import {
+  clearContinuationToken,
+  getContinuationToken,
+  storeContinuationToken
+} from './utils';
 
 export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean = false) => {
     try {
@@ -19,7 +25,7 @@ export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean
         }
 
         if (!continuationToken) {
-            console.error("Continuation data is null or undefined.");
+            logger.error("Continuation data is null or undefined.");
             return null;
         }
 
@@ -31,9 +37,9 @@ export const getContinuationTokenFromData = (data: any, isFetchingReply: boolean
         return continuationToken;
     } catch (err) {
         if (err instanceof Error) {
-            console.error(`Error in fetchContinuationData: ${err.message}`, err);
+            logger.error(`Error in fetchContinuationData: ${err.message}`, err);
         } else {
-            console.error(`Error in fetchContinuationData:`, err);
+            logger.error(`Error in fetchContinuationData:`, err);
         }
         return null;
     }
@@ -52,7 +58,7 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
 
         return getContinuationTokenFromData(result) || '';
     } catch (error) {
-        console.error('Error fetching continuation token:', error);
+        logger.error('Error fetching continuation token:', error);
         return '';
     }
 };

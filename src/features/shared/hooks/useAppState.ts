@@ -13,6 +13,7 @@ import { Comment } from "../../../types/commentTypes";
 import { searchComments } from "../../comments/services/commentSearchService";
 import { searchTranscripts } from "../../comments/services/transcriptSearchService";
 import useFetchDataOnUrlChange from "../hooks/urlChange/useFetchDataOnUrlChange";
+import logger from '../utils/logger';
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -109,7 +110,7 @@ const useAppState = () => {
                 dispatch(setTotalCommentsCount(count));
             }
         } catch (error) {
-            console.error('Error fetching total comments count:', error);
+            logger.error('Error fetching total comments count:', error);
         }
     }, [dispatch]);
 

@@ -1,6 +1,6 @@
-import { MouseEvent } from 'react';
+import logger from '../../../shared/utils/logger';
 
-const handleClickTimestamp = (event: MouseEvent<HTMLAnchorElement>) => {
+const handleClickTimestamp = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     const timestamp = event.currentTarget.getAttribute('data-timestamp');
     if (timestamp) {
@@ -10,10 +10,10 @@ const handleClickTimestamp = (event: MouseEvent<HTMLAnchorElement>) => {
             const seconds = timeParts.reduce((acc, part) => acc * 60 + part, 0);
             player.seekTo(seconds, true);
         } else {
-            console.error("Player does not have a seekTo method");
+            logger.error("Player does not have a seekTo method");
         }
     } else {
-        console.error("YouTube Player is not available");
+        logger.error("YouTube Player is not available");
     }
 };
 

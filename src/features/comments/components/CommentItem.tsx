@@ -17,8 +17,14 @@ import { Comment } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import {db} from "../../shared/utils/database/database";
 import {eventEmitter} from "../../shared/utils/eventEmitter";
+import {
+  HeartIcon as HeartIconSolid,
+  ChatBubbleBottomCenterTextIcon,
+  EllipsisVerticalIcon
+} from '@heroicons/react/24/solid';
+import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 
-const CommentItem: React.FC<CommentItemProps> = ({
+const CommentItem: React.FC<CommentItemProps> = React.memo(({
                                                      comment,
                                                      className,
                                                      bgColor,
@@ -94,7 +100,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 setTimeout(() => setCopySuccess(false), 2000);
             },
             (err) => {
-                console.error('Could not copy text: ', err);
+                logger.error('Could not copy text: ', err);
             }
         );
     };
@@ -202,6 +208,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 )}
             </Box>
     );
-};
+});
 
 export default CommentItem;

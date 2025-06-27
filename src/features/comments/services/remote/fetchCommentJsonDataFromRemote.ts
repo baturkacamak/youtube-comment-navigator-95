@@ -1,5 +1,6 @@
 import { fetchContinuationTokenFromRemote, getContinuationTokenFromData } from './fetchContinuationTokenFromRemote';
 import { youtubeApi } from '../../../shared/services/youtubeApi';
+import logger from '../../../shared/utils/logger';
 
 /**
  * Gets the continuation token either from the provided token, the window object, or by fetching from remote
@@ -40,7 +41,7 @@ export const fetchCommentJsonDataFromRemote = async (
             signal
         });
     } catch (error) {
-        console.error("Error fetching comments:", error);
+        logger.error("Error fetching comments:", error);
         return [];
     }
 };
