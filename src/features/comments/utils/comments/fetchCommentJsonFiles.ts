@@ -1,8 +1,8 @@
-export const fetchCommentFiles = async (commentFiles: string[]) => {
-    const fetchPromises = commentFiles.map(async (file) => {
-        const response = await fetch(file);
-        return response.json();
-    });
+import httpService from "../../../shared/services/httpService";
 
-    return Promise.all(fetchPromises);
-};
+async function fetchCommentJsonFiles(file: string) {
+    const response = await httpService.get(file);
+    return JSON.parse(response);
+}
+
+export default fetchCommentJsonFiles;

@@ -3,47 +3,71 @@ import { ProcessedTranscript, processTranscriptData } from '../utils/processTran
 import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
 import { youtubeApi } from '../../shared/services/youtubeApi';
 import logger from '../../shared/utils/logger';
+import httpService from '../../shared/services/httpService';
 
+/**
+ * Fetches a transcript from a remote URL.
+ * @param url The URL to fetch the transcript from.
+ * @returns A promise that resolves to the processed transcript data.
+ */
+export async function remoteFetch(url: string): Promise<ProcessedTranscript> {
+  try {
+    const response = await httpService.get(url);
+    const data = JSON.parse(response);
 
-export const fetchTranscriptFromRemote = async (captionTrackBaseUrl: string, language: string = ''): Promise<ProcessedTranscript | null> => {
-    try {
-        const url = language ? `${captionTrackBaseUrl}&fmt=json3&tlang=${language}` : `${captionTrackBaseUrl}&fmt=json3`;
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`Failed to fetch transcript from remote: ${response.status} ${response.statusText}`);
-        }
+    // Assuming the response is the raw transcript data that needs processing
+    return processTranscriptData(data);
+  } catch (error) {
+    logger.error('Failed to fetch transcript from remote:', {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
+}
 
-        // Check if response has content
-        const contentLength = response.headers.get('content-length');
-        if (contentLength === '0') {
-            logger.warn('Received empty response from transcript API');
-            return null;
-        }
+/**
+ * Represents the structure of the caption tracks response from YouTube.
+ */
+interface CaptionTracksResponse {
+  captionTracks?: {
+    baseUrl: string;
+  }[];
+}
 
-        // Get the response text first to check if it's valid
-        const responseText = await response.text();
-        if (!responseText || responseText.trim() === '') {
-            logger.warn('Received empty or whitespace-only response from transcript API');
-            return null;
-        }
+/**
+ * Fetches the caption tracks from a remote URL to find the transcript URL.
+ * @param url The URL to fetch the caption tracks from.
+ * @returns A promise that resolves to the base URL of the transcript.
+ */
+export async function fetchCaptionTracks(url: string): Promise<string> {
+  try {
+    const response = await httpService.get(url);
 
-        // Try to parse as JSON
-        let data;
-        try {
-            data = JSON.parse(responseText);
-        } catch (parseError) {
-            logger.error('Failed to parse transcript response as JSON:', parseError);
-            logger.error('Response text:', responseText.substring(0, 500)); // Log first 500 chars for debugging
-            return null;
-        }
-
-        return processTranscriptData(data);
-    } catch (error) {
-        logger.error("Failed to fetch transcript from remote:", error);
-        return null;
+    // The response is a string that needs to be parsed to find the captionTracks JSON
+    const captionTracksJson = response.split('"captionTracks":')[1];
+    if (!captionTracksJson) {
+      logger.warn('Could not find captionTracks in the response.', { url });
+      throw new Error('Caption tracks not found in the response.');
     }
-};
+
+    const captionTracksDataString = captionTracksJson.split(',"videoDetails"')[0];
+    const captionTracks: CaptionTracksResponse = JSON.parse(captionTracksDataString);
+
+    if (captionTracks.captionTracks?.[0]?.baseUrl) {
+      return captionTracks.captionTracks[0].baseUrl;
+    } else {
+      logger.warn('Base URL for transcript not found in caption tracks.', { url });
+      throw new Error('Transcript base URL not found.');
+    }
+  } catch (error) {
+    logger.error('Failed to fetch or parse caption tracks:', {
+      url,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
+}
 
 export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
     try {
