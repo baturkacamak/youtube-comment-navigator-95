@@ -77,6 +77,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             await deleteCommentsIfFreshFetch(null, videoId);
         }
 
+        logger.debug('[RemoteFetch] Triggering fetchAndProcessLiveChat...');
         // Start live chat fetch concurrently
         const liveChatPromise = fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch);
 
