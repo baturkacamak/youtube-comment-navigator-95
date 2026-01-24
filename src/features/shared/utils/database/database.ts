@@ -4,6 +4,7 @@ import logger from "../logger";
 
 class Database extends Dexie {
     public comments!: Table<Comment, number>;
+    public kvStore!: Table<{ key: string; value: any }, string>;
 
     constructor() {
         super('youtube-comment-navigator-95');
@@ -60,11 +61,29 @@ class Database extends Dexie {
                 logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
             });
 
+            this.version(5).stores({
+                kvStore: 'key'
+            });
+
             this.comments = this.table('comments');
+            this.kvStore = this.table('kvStore');
             logger.success('[Dexie] IndexedDB initialized and table "comments" is ready.');
         } catch (err: any) {
             logger.error('[Dexie] Failed to initialize IndexedDB:', err);
         }
+    }
+
+    async setItem(key: string, value: any): Promise<void> {
+        await this.kvStore.put({ key, value });
+    }
+
+    async getItem<T>(key: string): Promise<T | null> {
+        const result = await this.kvStore.get(key);
+        return result ? result.value : null;
+    }
+
+    async removeItem(key: string): Promise<void> {
+        await this.kvStore.delete(key);
     }
 }
 

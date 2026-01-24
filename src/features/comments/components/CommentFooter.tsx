@@ -48,10 +48,11 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
     const viewRepliesButtonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
+        let hoverActionInstance: hoverAction | null = null;
         if (viewRepliesButtonRef.current && comment.replyCount > 0) {
             logger.start(`[CommentFooter] Setting up hoverAction for comment: ${comment.commentId}`);
             try {
-                new hoverAction({
+                hoverActionInstance = new hoverAction({
                     element: viewRepliesButtonRef.current,
                     action: async () => {
                         logger.start(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
@@ -100,6 +101,16 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
         } else if (!viewRepliesButtonRef.current) {
             logger.warn(`[CommentFooter] Button ref not available for comment: ${comment.commentId}`);
         }
+
+        return () => {
+            if (hoverActionInstance) {
+                try {
+                    hoverActionInstance.destroy();
+                } catch (e) {
+                    logger.error(`[CommentFooter] Error destroying hoverAction for comment: ${comment.commentId}`, e);
+                }
+            }
+        };
     }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
     return (

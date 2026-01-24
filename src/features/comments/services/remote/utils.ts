@@ -42,7 +42,7 @@ export const clearContinuationToken = async (videoId: string): Promise<void> => 
 
 export const getCachedComments = async (videoId: string): Promise<Comment[] | null> => {
     try {
-        return await db.getItem<Comment[]>(`comments_${videoId}`);
+        return await db.comments.where('videoId').equals(videoId).toArray();
     } catch (error) {
         logger.error('Failed to fetch cached comments:', error);
         return null;
@@ -51,7 +51,7 @@ export const getCachedComments = async (videoId: string): Promise<Comment[] | nu
 
 export const deleteCommentsFromDb = async (videoId: string): Promise<void> => {
     try {
-        await db.removeItem(`comments_${videoId}`);
+        await db.comments.where('videoId').equals(videoId).delete();
     } catch (error) {
         logger.error('Failed to delete existing comments:', error);
     }

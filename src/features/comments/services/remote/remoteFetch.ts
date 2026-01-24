@@ -233,7 +233,7 @@ async function iterateFetchComments(
             }
         } catch (e) {
             if ((e as any)?.name === 'AbortError') {
-                logger.warn('Fetch operation aborted during iteration.');
+                logger.info('Fetch operation aborted during iteration.');
                 throw e;
             }
             const err = e as Error;

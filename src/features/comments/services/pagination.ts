@@ -40,22 +40,23 @@ export const loadPagedComments = async (
     filters: any = {},
     searchKeyword: string = ''
 ): Promise<Comment[]> => {
-    const label = `[loadPagedComments] videoId: ${videoId}, page ${page} (${sortBy} ${sortOrder}) search: "${searchKeyword}"`;
-    logger.start(label);
+    const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+    const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
+    logger.start(timerId);
 
     if (!videoId) {
-        logger.error(`${label} - Validation Error: videoId is required.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: videoId is required.`);
+        logger.end(timerId);
         return [];
     }
     if (typeof page !== 'number' || page < 0) {
-        logger.error(`${label} - Validation Error: Invalid page number '${page}'. Must be a non-negative number.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: Invalid page number '${page}'. Must be a non-negative number.`);
+        logger.end(timerId);
         return [];
     }
     if (typeof pageSize !== 'number' || pageSize <= 0) {
-        logger.error(`${label} - Validation Error: Invalid pageSize '${pageSize}'. Must be a positive number.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: Invalid pageSize '${pageSize}'. Must be a positive number.`);
+        logger.end(timerId);
         return [];
     }
 
@@ -71,7 +72,8 @@ export const loadPagedComments = async (
             upper: [videoId, 0, Dexie.maxKey],
         };
 
-        logger.start(`${label} querySetup`);
+        const queryTimer = `${timerId}-querySetup`;
+        logger.start(queryTimer);
         let collection: Dexie.Collection<Comment, number>;
         switch (sortBy) {
             case 'date':
@@ -100,21 +102,22 @@ export const loadPagedComments = async (
                 break;
             default:
                 collection = commentsTable.where(buildIndexKey('publishedDate')).between(bounds.lower, bounds.upper, true, true);
-                logger.warn(`${label} Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
+                logger.warn(`${logPrefix} Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
                 break;
         }
-        logger.end(`${label} querySetup`);
+        logger.end(queryTimer);
 
         // Apply filters using the helper function
         let filteredCollection = collection;
         const activeFilters = Object.entries(filters).filter(([, value]) => value);
 
         if (activeFilters.length > 0 || searchKeyword) {
-            logger.start(`${label} applyingFiltersAndSearch`);
+            const filterTimer = `${timerId}-applyingFiltersAndSearch`;
+            logger.start(filterTimer);
             filteredCollection = collection.filter(comment =>
                 applyFiltersAndSearch(comment, filters, searchKeyword)
             );
-            logger.end(`${label} applyingFiltersAndSearch`);
+            logger.end(filterTimer);
         }
 
         // Apply reverse *before* pagination for index-based sorts (excluding author/random)
@@ -122,9 +125,10 @@ export const loadPagedComments = async (
             filteredCollection = filteredCollection.reverse();
         }
 
-        logger.start(`${label} toArray`);
+        const arrayTimer = `${timerId}-toArray`;
+        logger.start(arrayTimer);
         let pagedComments = await filteredCollection.offset(offset).limit(pageSize).toArray();
-        logger.end(`${label} toArray`);
+        logger.end(arrayTimer);
 
         if (sortBy === 'author') {
             pagedComments.sort((a, b) => {
@@ -134,8 +138,9 @@ export const loadPagedComments = async (
         }
 
         if (sortBy === 'random') {
-            logger.warn(`${label} Sorting by ${sortBy} requires full table scan. Applying search filter during scan.`);
-            logger.start(`${label} fullScan`);
+            logger.warn(`${logPrefix} Sorting by ${sortBy} requires full table scan. Applying search filter during scan.`);
+            const scanTimer = `${timerId}-fullScan`;
+            logger.start(scanTimer);
 
             let allTopLevelCollection = commentsTable
                 .where(buildIndexKey('publishedDate'))
@@ -148,18 +153,18 @@ export const loadPagedComments = async (
 
             let allTopLevel = await allTopLevelCollection.toArray();
             allTopLevel.sort(() => Math.random() - 0.5);
-            logger.end(`${label} fullScan`);
-            logger.success(`${label} Successfully loaded ${allTopLevel.slice(offset, offset + pageSize).length} comments (random sort).`);
+            logger.end(scanTimer);
+            logger.success(`${logPrefix} Successfully loaded ${allTopLevel.slice(offset, offset + pageSize).length} comments (random sort).`);
             return allTopLevel.slice(offset, offset + pageSize);
         }
 
-        logger.success(`${label} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);
+        logger.success(`${logPrefix} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);
         return pagedComments;
     } catch (error) {
-        logger.error(`${label} Error loading paged comments:`, error);
+        logger.error(`${logPrefix} Error loading paged comments:`, error);
         return [];
     } finally {
-        logger.end(label);
+        logger.end(timerId);
     }
 };
 
@@ -173,12 +178,13 @@ export const countComments = async (
     searchKeyword: string = '',
     options: { topLevelOnly?: boolean } = {}
 ): Promise<number> => {
-    const label = `[countComments] video ${videoId} search: "${searchKeyword}" options: ${JSON.stringify(options)}`;
-    logger.start(label);
+    const timerId = `countComments-${videoId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+    const logPrefix = `[countComments] video ${videoId}`;
+    logger.start(timerId);
 
     if (!videoId) {
-        logger.error(`${label} - Validation Error: videoId is required.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: videoId is required.`);
+        logger.end(timerId);
         return 0;
     }
 
@@ -202,14 +208,14 @@ export const countComments = async (
         }
 
         const count = await baseCollection.count();
-        logger.success(`${label} Counted ${count} comments matching criteria.`);
+        logger.success(`${logPrefix} Counted ${count} comments matching criteria.`);
         return count;
 
     } catch (error) {
-        logger.error(`${label} Error counting comments:`, error);
+        logger.error(`${logPrefix} Error counting comments:`, error);
         return 0;
     } finally {
-        logger.end(label);
+        logger.end(timerId);
     }
 };
 
@@ -218,22 +224,23 @@ export const fetchRepliesForComment = async (
     videoId: string,
     parentId: string
 ): Promise<Comment[]> => {
-    const label = `[fetchRepliesForComment] videoId: ${videoId}, parentId: ${parentId}`;
-    logger.start(label);
+    const timerId = `fetchRepliesForComment-${parentId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+    const logPrefix = `[fetchRepliesForComment] videoId: ${videoId}, parentId: ${parentId}`;
+    logger.start(timerId);
 
     if (!videoId) {
-        logger.error(`${label} - Validation Error: videoId is required.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: videoId is required.`);
+        logger.end(timerId);
         return [];
     }
     if (!parentId) {
-        logger.error(`${label} - Validation Error: parentId is required.`);
-        logger.end(label);
+        logger.error(`${logPrefix} - Validation Error: parentId is required.`);
+        logger.end(timerId);
         return [];
     }
 
     try {
-        logger.info(`${label} Starting to fetch replies.`);
+        logger.info(`${logPrefix} Starting to fetch replies.`);
         const replies = await commentsTable
             .where('videoId')
             .equals(videoId)
@@ -244,25 +251,25 @@ export const fetchRepliesForComment = async (
             })
             .toArray();
 
-        logger.info(`${label} Found ${replies.length} replies.`);
+        logger.info(`${logPrefix} Found ${replies.length} replies.`);
 
         if (replies.length > 0) {
-            logger.success(`${label} Successfully retrieved ${replies.length} replies.`);
+            logger.success(`${logPrefix} Successfully retrieved ${replies.length} replies.`);
         } else {
             const parentComment = await commentsTable.where('commentId').equals(parentId).first();
             const expectedReplies = parentComment?.replyCount || 0;
 
             if (expectedReplies > 0) {
-                logger.warn(`${label} No replies found in DB, but parent comment (replyCount: ${expectedReplies}) indicates replies should exist.`);
+                logger.warn(`${logPrefix} No replies found in DB, but parent comment (replyCount: ${expectedReplies}) indicates replies should exist.`);
             } else {
-                logger.info(`${label} No replies found, and parent comment does not indicate any replies (or parent not found).`);
+                logger.info(`${logPrefix} No replies found, and parent comment does not indicate any replies (or parent not found).`);
             }
         }
         return replies;
     } catch (err) {
-        logger.error(`${label} Failed to fetch replies:`, err);
+        logger.error(`${logPrefix} Failed to fetch replies:`, err);
         return [];
     } finally {
-        logger.end(label);
+        logger.end(timerId);
     }
 };
