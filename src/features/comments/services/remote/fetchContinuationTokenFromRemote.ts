@@ -104,7 +104,7 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
         logger.debug('[fetchContinuationTokenFromRemote] Step 1 response received.');
 
         // Attempt to find the "Comments Token" directly (rare, but possible on some layouts)
-        let finalToken = extractCommentsToken(videoDetailsResponse);
+        let finalToken = extractCommentsToken(videoDetailsResponse, 1);
         if (finalToken) {
             logger.info('[fetchContinuationTokenFromRemote] Found comments token directly in Step 1.');
             return finalToken;
@@ -131,7 +131,7 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
         // --- Step 4: Extract the actual "Comments Token" (continuation) ---
         // By default, we look for the "Top Comments" (index 0) or "Newest" (index 1) based on user pref.
         // For initialization, usually index 0 is fine.
-        finalToken = extractCommentsToken(commentSectionResponse, 0);
+        finalToken = extractCommentsToken(commentSectionResponse, 1);
 
         if (!finalToken) {
              logger.error('[fetchContinuationTokenFromRemote] Failed to extract Final Comments Token from Step 3 response.');
