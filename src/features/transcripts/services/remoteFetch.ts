@@ -8,11 +8,15 @@ import httpService from '../../shared/services/httpService';
 /**
  * Fetches a transcript from a remote URL.
  * @param url The URL to fetch the transcript from.
+ * @param language Optional language code.
  * @returns A promise that resolves to the processed transcript data.
  */
-export async function remoteFetch(url: string): Promise<ProcessedTranscript> {
+export async function fetchTranscriptFromRemote(url: string, language?: string): Promise<ProcessedTranscript> {
   try {
-    const response = await httpService.get(url);
+    const urlObj = new URL(url);
+    urlObj.searchParams.set('fmt', 'json3');
+    
+    const response = await httpService.get(urlObj.toString());
     const data = JSON.parse(response);
 
     // Assuming the response is the raw transcript data that needs processing
