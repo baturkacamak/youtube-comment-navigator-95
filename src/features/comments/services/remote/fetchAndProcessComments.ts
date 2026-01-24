@@ -35,6 +35,35 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
     }
 }
 
+// Helper to upsert comments (update if exists, insert if new) based on commentId
+async function upsertComments(comments: any[]) {
+    if (!comments || comments.length === 0) return;
+
+    const incomingIds = comments.map(c => c.commentId).filter(Boolean);
+    if (incomingIds.length === 0) return;
+
+    // Fetch existing records to get their PKs (id)
+    const existingRecords = await db.comments
+        .where('commentId')
+        .anyOf(incomingIds)
+        .toArray();
+
+    const idMap = new Map(existingRecords.map(c => [c.commentId, c.id]));
+
+    const commentsToSave = comments.map(c => {
+        // If it exists, attach the existing ID to force an update
+        if (idMap.has(c.commentId)) {
+            return { ...c, id: idMap.get(c.commentId) };
+        }
+        // If it's new, ensure 'id' is undefined so Dexie generates it
+        // (Removing 'id' property if it exists but is null/undefined just in case)
+        const { id, ...rest } = c;
+        return rest;
+    });
+
+    await db.comments.bulkPut(commentsToSave);
+}
+
 export const fetchAndProcessComments = async (token: string | null, videoId: string, windowObj: any, signal: AbortSignal, dispatch: any): Promise<FetchAndProcessResult> => {
     logger.start("fetchAndProcessComments");
     try {
@@ -72,8 +101,8 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
         // Use a single transaction for all operations
         await db.transaction('rw', db.comments, async () => {
-            await db.comments.bulkPut(mainProcessedData.items);
-            localCommentCount += mainProcessedData.items.length;
+            await upsertComments(mainProcessedData.items);
+            localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
             dispatch(setTotalCommentsCount(localCommentCount));
         });
         logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
@@ -115,7 +144,8 @@ async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: Ab
 }
 
 async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<void> {
-    logger.start("fetchRepliesAndProcess");
+    const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    logger.start(timerId);
     try {
         // Check if already aborted
         if (signal.aborted) {
@@ -147,8 +177,7 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                     const batchProcessedData = processRawJsonCommentsData(batch, videoId);
 
                     if (batchProcessedData.items.length > 0) {
-                        await db.comments.bulkPut(batchProcessedData.items);
-                        localCommentCount += batchProcessedData.items.length;
+                        await upsertComments(batchProcessedData.items);
                     }
 
                     if (signal.aborted) {
@@ -157,6 +186,7 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                     }
                 }
                 // Update Redux store once after all batches are processed
+                localCommentCount = await getExistingCommentCount(videoId); // Recalculate count
                 dispatch(setTotalCommentsCount(localCommentCount));
             });
             logger.success(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
@@ -165,12 +195,12 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         }
     } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
-            logger.warn("Reply processing was aborted.");
+            logger.info("Reply processing was aborted.");
             throw error; // Rethrow to be caught by caller
         } else {
             logger.error("Error processing replies:", error);
         }
     } finally {
-        logger.end("fetchRepliesAndProcess");
+        logger.end(timerId);
     }
 }
