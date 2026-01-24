@@ -47,6 +47,10 @@ class AssetInjector {
         }
 
         this.injectCSS(this.mainCss);
+        
+        // Inject default translation BEFORE main JS so it's ready when React starts
+        await this.injectTranslation('en');
+
         this.injectJS(this.mainJs);
     }
 
@@ -90,10 +94,17 @@ class AssetInjector {
         try {
             const response = await fetch(chrome.runtime.getURL(`locales/${locale}/${namespace}.json`));
             const data = await response.json();
+            
+            // Method 1: Inject as Global Variable (More Reliable) - REMOVED for CSP compliance
+            // const globalScript = document.createElement('script');
+            // globalScript.textContent = `window.__YCN_TRANSLATIONS__ = window.__YCN_TRANSLATIONS__ || {}; window.__YCN_TRANSLATIONS__['${locale}'] = ${JSON.stringify(data)};`;
+            // (document.head || document.documentElement).appendChild(globalScript);
+
+            // Method 2: Inject as Script Tag (Fallback/Legacy)
             const script = document.createElement('script');
             script.type = 'application/json';
             script.id = `locale-${locale}`;
-            script.text = JSON.stringify(data);
+            script.textContent = JSON.stringify(data);
             document.head.appendChild(script);
 
             // Notify React app that the translation has been loaded
