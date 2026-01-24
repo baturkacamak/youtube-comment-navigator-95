@@ -4,6 +4,7 @@ import {Option} from "./utilityTypes";
 
 export interface RootState {
     comments: Comment[];
+    liveChat: Comment[];
     transcripts: any[];
     filters: FilterState;
     isLoading: boolean;

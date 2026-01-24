@@ -37,6 +37,7 @@ export interface Comment {
     normalizedScore?: number;
     weightedZScore?: number;
     bayesianAverage?: number;
+    isLiveChat?: boolean;
 }
 
 export interface CommentActionsProps {

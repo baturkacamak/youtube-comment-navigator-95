@@ -92,7 +92,7 @@ export function processLiveChatActions(actions: any[], context: ChatProcessingCo
                 videoId: context.currentVideoId,
                 
                 // Extra fields for chat
-                // isLiveChat: true // We can add this if we update the type
+                isLiveChat: true
             };
 
             // Check badges for verification/owner

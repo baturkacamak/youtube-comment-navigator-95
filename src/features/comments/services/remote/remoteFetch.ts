@@ -172,9 +172,12 @@ async function loadInitialComments(videoId: string, dispatch: any): Promise<void
             PAGINATION.INITIAL_PAGE,
             PAGINATION.DEFAULT_PAGE_SIZE,
             'date',
-            'desc'
+            'desc',
+            {},
+            '',
+            { excludeLiveChat: true }
         );
-        const totalCount = await countComments(db.comments, videoId);
+        const totalCount = await countComments(db.comments, videoId, {}, '', { excludeLiveChat: true });
         dispatch(setTotalCommentsCount(totalCount));
         logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
         dispatch(setComments(initialComments));

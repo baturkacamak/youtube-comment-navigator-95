@@ -3,6 +3,7 @@ import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
 import CommentList from './features/comments/components/CommentList';
+import LiveChatList from './features/comments/components/LiveChatList';
 import BookmarkedComments from './features/comments/components/BookmarkedComments';
 import Transcript from './features/transcripts/components/Transcript';
 import useAppState from './features/shared/hooks/useAppState';
@@ -91,7 +92,7 @@ const App: React.FC = () => {
                 label: t('Live Chat'),
                 icon: InboxIcon,
             },
-            content: <p>Live chat content will be here...</p>,
+            content: <LiveChatList />,
         },
         {
             title: {

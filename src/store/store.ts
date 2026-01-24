@@ -38,6 +38,7 @@ const initialState: RootState = {
 
     // Comments and transcripts data
     comments: [],
+    liveChat: [],
     transcripts: [],
     filteredTranscripts: [],
 
@@ -66,6 +67,9 @@ const commentsSlice = createSlice({
         // Data fetching and setting actions
         setComments: (state, action: PayloadAction<Comment[]>) => {
             state.comments = action.payload;
+        },
+        setLiveChat: (state, action: PayloadAction<Comment[]>) => {
+            state.liveChat = action.payload;
         },
         setTranscripts: (state, action: PayloadAction<any[]>) => {
             state.transcripts = action.payload;
@@ -148,6 +152,7 @@ const commentsSlice = createSlice({
 export const {
     // Data fetching and setting actions
     setComments,
+    setLiveChat,
     setTranscripts,
     setFilteredTranscripts,
     addProcessedReplies,

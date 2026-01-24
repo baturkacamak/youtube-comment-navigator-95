@@ -9,10 +9,14 @@ const applyFiltersAndSearch = (
     comment: Comment,
     filters: any,
     searchKeyword: string,
-    options: { topLevelOnly?: boolean } = {}
+    options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): boolean => {
     // Ensure top-level only if specified, this check must be first
     if (options.topLevelOnly && comment.replyLevel !== 0) return false;
+    
+    // Live chat filtering
+    if (options.excludeLiveChat && comment.isLiveChat) return false;
+    if (options.onlyLiveChat && !comment.isLiveChat) return false;
 
     let passesFilters = true;
     if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
@@ -38,7 +42,8 @@ export const loadPagedComments = async (
     sortBy: string = 'date',
     sortOrder: string = 'desc',
     filters: any = {},
-    searchKeyword: string = ''
+    searchKeyword: string = '',
+    options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): Promise<Comment[]> => {
     const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
     const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
@@ -111,11 +116,11 @@ export const loadPagedComments = async (
         let filteredCollection = collection;
         const activeFilters = Object.entries(filters).filter(([, value]) => value);
 
-        if (activeFilters.length > 0 || searchKeyword) {
+        if (activeFilters.length > 0 || searchKeyword || options.excludeLiveChat || options.onlyLiveChat) {
             const filterTimer = `${timerId}-applyingFiltersAndSearch`;
             logger.start(filterTimer);
             filteredCollection = collection.filter(comment =>
-                applyFiltersAndSearch(comment, filters, searchKeyword)
+                applyFiltersAndSearch(comment, filters, searchKeyword, options)
             );
             logger.end(filterTimer);
         }
@@ -176,7 +181,7 @@ export const countComments = async (
     videoId: string,
     filters: any = {},
     searchKeyword: string = '',
-    options: { topLevelOnly?: boolean } = {}
+    options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): Promise<number> => {
     const timerId = `countComments-${videoId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
     const logPrefix = `[countComments] video ${videoId}`;
@@ -201,7 +206,7 @@ export const countComments = async (
 
         // Apply filters and search using the helper function
         const activeFilters = Object.entries(filters).filter(([, value]) => value);
-        if (activeFilters.length > 0 || searchKeyword) {
+        if (activeFilters.length > 0 || searchKeyword || options.excludeLiveChat || options.onlyLiveChat) {
              baseCollection = baseCollection.filter(comment =>
                 applyFiltersAndSearch(comment, filters, searchKeyword, options)
              );

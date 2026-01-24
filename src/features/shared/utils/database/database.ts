@@ -65,6 +65,50 @@ class Database extends Dexie {
                 kvStore: 'key'
             });
 
+            this.version(6).stores({
+                comments: `
+                    ++id,
+                    commentId,
+                    videoId,
+                    author,
+                    likes,
+                    publishedDate,
+                    replyCount,
+                    wordCount,
+                    normalizedScore,
+                    weightedZScore,
+                    bayesianAverage,
+                    isBookmarked,
+                    bookmarkAddedDate,
+                    replyLevel,
+                    commentParentId,
+                    authorThumb,
+                    authorUrl,
+                    content,
+                    isOwner,
+                    isPinned,
+                    isLiveChat,
+                    [videoId+publishedDate],
+                    [videoId+likes],
+                    [videoId+replyCount],
+                    [videoId+author],
+                    [videoId+normalizedScore],
+                    [videoId+weightedZScore],
+                    [videoId+bayesianAverage],
+                    [videoId+isBookmarked],
+                    [videoId+replyLevel],
+                    [videoId+replyLevel+commentParentId],
+                    [videoId+replyLevel+publishedDate],
+                    [videoId+replyLevel+likes],
+                    [videoId+replyLevel+replyCount],
+                    [videoId+replyLevel+wordCount],
+                    [videoId+replyLevel+normalizedScore],
+                    [videoId+replyLevel+weightedZScore],
+                    [videoId+replyLevel+bayesianAverage],
+                    [videoId+isLiveChat]
+                `
+            });
+
             this.comments = this.table('comments');
             this.kvStore = this.table('kvStore');
             logger.success('[Dexie] IndexedDB initialized and table "comments" is ready.');
