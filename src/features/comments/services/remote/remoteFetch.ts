@@ -1,13 +1,12 @@
-// src/features/comments/services/remote/remoteFetch.ts
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
-    clearLocalContinuationToken,
-    deleteExistingComments,
-    fetchCachedComments,
-    getVideoId,
-    retrieveLocalContinuationToken,
+    clearContinuationToken,
+    deleteCommentsFromDb,
+    getCachedComments,
+    extractVideoId,
+    getContinuationToken,
     storeContinuationToken
 } from "./utils";
 import { CACHE_KEYS, PAGINATION } from "../../../shared/utils/appConstants";
@@ -41,7 +40,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         abortAllOngoingOperations();
         const signal = currentAbortController.signal;
 
-        const videoId = getVideoId();
+        const videoId = extractVideoId();
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
 
         logger.info(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
@@ -51,14 +50,14 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         
         // Clear continuation token if we're explicitly bypassing cache (e.g., "load more comments")
         if (bypassCache) {
-            clearLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+            await clearContinuationToken(videoId);
             // Delete all existing comments for this video to start fresh
-            await deleteExistingComments(videoId);
+            await deleteCommentsFromDb(videoId);
             logger.info(`Bypassing cache and starting fresh download for ${videoId}`);
         }
 
         // Get the local token only if we're not bypassing cache
-        let localToken = bypassCache ? null : retrieveLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+        let localToken = bypassCache ? null : await getContinuationToken(videoId);
 
         if (!bypassCache && !localToken) {
             const hasLoadedFromCache = await loadCachedCommentsIfAny(videoId, dispatch);
@@ -116,12 +115,18 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             }
         }
 
-        clearLocalContinuationToken(CONTINUATION_TOKEN_KEY);
+        await clearContinuationToken(videoId);
     } catch (error: unknown) {
         if ((error as Error)?.name === 'AbortError') {
             logger.info('Fetch operation was aborted.');
         } else {
-            logger.error('Error fetching comments from remote:', error);
+            const err = error as Error;
+            logger.error('Error fetching comments from remote:', {
+                name: err?.name,
+                message: err?.message,
+                stack: err?.stack,
+                raw: error
+            });
         }
         dispatch(setIsLoading(false));
     }
@@ -177,8 +182,8 @@ async function loadInitialComments(videoId: string, dispatch: any): Promise<void
 // New helper function: attempt to load cached comments and dispatch first page
 async function loadCachedCommentsIfAny(videoId: string, dispatch: any): Promise<boolean> {
     try {
-        const cachedData = await fetchCachedComments(videoId);
-        if (cachedData.length > 0) {
+        const cachedData = await getCachedComments(videoId);
+        if (cachedData && cachedData.length > 0) {
             logger.success(`Loaded ${cachedData.length} cached comments`);
             const initialCachedComments = cachedData.slice(0, PAGINATION.DEFAULT_PAGE_SIZE);
             dispatch(setComments(initialCachedComments));
@@ -224,14 +229,20 @@ async function iterateFetchComments(
                 hasQueuedRepliesValue = true;
             }
             if (token) {
-                storeContinuationToken(token, CONTINUATION_TOKEN_KEY);
+                await storeContinuationToken(videoId, token);
             }
         } catch (e) {
             if ((e as any)?.name === 'AbortError') {
                 logger.warn('Fetch operation aborted during iteration.');
                 throw e;
             }
-            logger.error('Error during comment fetch iteration:', e);
+            const err = e as Error;
+            logger.error('Error during comment fetch iteration:', {
+                name: err?.name,
+                message: err?.message,
+                stack: err?.stack,
+                raw: e
+            });
             break;
         }
     } while (token);
@@ -243,7 +254,7 @@ async function iterateFetchComments(
 async function deleteCommentsIfFreshFetch(localToken: string | null, videoId: string): Promise<void> {
     if (!localToken) {
         try {
-            await deleteExistingComments(videoId);
+            await deleteCommentsFromDb(videoId);
             logger.info(`Deleted existing comments for ${videoId}`);
         } catch (e) {
             logger.error('Failed to delete existing comments before fetch:', e);

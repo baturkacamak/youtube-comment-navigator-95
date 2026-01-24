@@ -125,11 +125,17 @@ class Logger {
         // Use detailed object logging for warns/errors with objects
         if ((level === 'warn' || level === 'error') && args.length > 1 && typeof args[1] === 'object' && args[1] !== null) {
             const [mainMessage, ...objects] = args;
-             console.log(`%c${timestamp} %c${emoji} [${this.prefix} ${level.toUpperCase()}]%c: ${mainMessage}`, "color: gray; font-style: italic;", style, "color: inherit;");
+            if (console && console.log) {
+                 console.log(`%c${timestamp} %c${emoji} [${this.prefix} ${level.toUpperCase()}]%c: ${mainMessage}`, "color: gray; font-style: italic;", style, "color: inherit;");
+            }
             objects.forEach(obj => this._logDetailedObject(level, obj));
-             console.log(`%cCaller: ${caller}`, 'color: gray; font-style: italic;');
+            if (console && console.log) {
+                 console.log(`%cCaller: ${caller}`, 'color: gray; font-style: italic;');
+            }
         } else {
-             console.log(...message);
+            if (console && console.log) {
+                 console.log(...message);
+            }
         }
     }
 
@@ -194,7 +200,11 @@ class Logger {
         const groupLabel = `%c${prefix} Detailed ${level.toUpperCase()} Information`;
         const style = isError ? this.theme.error.replace('bold', 'normal') : this.theme.warn.replace('bold', 'normal');
 
-        console.groupCollapsed(groupLabel, style);
+        if (console && console.groupCollapsed) {
+            console.groupCollapsed(groupLabel, style);
+        } else if (console && console.log) {
+            console.log(groupLabel);
+        }
 
         if (typeof data === 'object' && data !== null) {
             Object.entries(data).forEach(([key, value]) => {
@@ -202,22 +212,24 @@ class Logger {
                 const valueStyle = 'color: inherit; font-weight: normal;';
 
                 if (key.toLowerCase().includes('stack') && typeof value === 'string') {
-                    console.group('📋 Stack Trace:');
-                    console.log(value);
-                    console.groupEnd();
+                    if (console && console.group) console.group('📋 Stack Trace:');
+                    if (console && console.log) console.log(value);
+                    if (console && console.groupEnd) console.groupEnd();
                 } else if ((key.toLowerCase().includes('reasons') || key.toLowerCase().includes('causes')) && Array.isArray(value)) {
-                    console.group('💡 Possible Reasons:');
-                    value.forEach((reason: string, index: number) => console.log(`  ${index + 1}. ${reason}`));
-                    console.groupEnd();
+                    if (console && console.group) console.group('💡 Possible Reasons:');
+                    if (console && console.log) value.forEach((reason: string, index: number) => console.log(`  ${index + 1}. ${reason}`));
+                    if (console && console.groupEnd) console.groupEnd();
                 } else {
-                    console.log(`%c${key}:%c ${this._formatValue(value)}`, keyStyle, valueStyle);
+                    if (console && console.log) console.log(`%c${key}:%c ${this._formatValue(value)}`, keyStyle, valueStyle);
                 }
             });
         } else {
-            console.log(data);
+            if (console && console.log) console.log(data);
         }
 
-        console.groupEnd();
+        if (console && console.groupEnd) {
+            console.groupEnd();
+        }
     }
 
     /**

@@ -14,6 +14,15 @@ const languageDirections: { [key: string]: 'ltr' | 'rtl' } = {
     default: 'ltr'
 };
 
+// Extend Window interface to include our global translation object
+declare global {
+    interface Window {
+        __YCN_TRANSLATIONS__?: {
+            [locale: string]: any;
+        };
+    }
+}
+
 interface Resources {
     [locale: string]: {
         [namespace: string]: any;
@@ -22,14 +31,29 @@ interface Resources {
 
 const loadLocaleFromDOM = (locale: string): Resources | null => {
     const namespace = 'translation'; // Adjust if you use multiple namespaces
+    
+    // Priority 1: Check Global Variable (Most Reliable)
+    if (window.__YCN_TRANSLATIONS__ && window.__YCN_TRANSLATIONS__[locale]) {
+        console.log(`[YCN-i18n] Loaded locale '${locale}' from window.__YCN_TRANSLATIONS__`);
+        return {
+            [locale]: {
+                [namespace]: window.__YCN_TRANSLATIONS__[locale]
+            }
+        };
+    }
+
+    // Priority 2: Check Script Tag (Legacy)
     const script = document.getElementById(`locale-${locale}`);
     if (script && script.textContent) {
+         console.log(`[YCN-i18n] Loaded locale '${locale}' from DOM script tag`);
         return {
             [locale]: {
                 [namespace]: JSON.parse(script.textContent)
             }
         };
     }
+    
+    console.warn(`[YCN-i18n] Failed to load locale '${locale}' from DOM or Global Variable.`);
     return null;
 };
 
@@ -54,11 +78,26 @@ const i18nConfig: any = {
     supportedLngs: supportedLanguages,
 };
 
-// Only add resources key if not in local environment
-if (!isLocalEnvironment()) {
-    const initialResources = loadLocaleFromDOM(i18n.language);
-    if (initialResources) {
-        i18nConfig.resources = initialResources;
+// Always try to load resources from DOM first
+// Default to 'en' since that's what content.js injects initially, and i18n.language is undefined before init
+const initialResources = loadLocaleFromDOM(i18n.language || 'en');
+
+if (isLocalEnvironment()) {
+    console.log('[YCN-i18n] Environment is LOCAL/DEV');
+    console.log(`[YCN-i18n] Attempting to load locale from DOM for: ${i18n.language || 'en'}`);
+    const scriptEl = document.getElementById(`locale-${i18n.language || 'en'}`);
+    console.log(`[YCN-i18n] Script element found? ${!!scriptEl}`);
+    if (scriptEl) {
+        console.log(`[YCN-i18n] Script content length: ${scriptEl.textContent?.length}`);
+    }
+    console.log(`[YCN-i18n] Initial resources loaded? ${!!initialResources}`);
+}
+
+if (initialResources) {
+    i18nConfig.resources = initialResources;
+    // If we have resources, disable the backend fetch to avoid 404s
+    if (i18nConfig.backend) {
+        i18nConfig.backend.loadPath = undefined;
     }
 }
 
@@ -69,21 +108,19 @@ i18n
     .init(i18nConfig);
 
 // Listen for the language change and reload the necessary resources
-if (!isLocalEnvironment()) {
-    window.addEventListener('message', (event: MessageEvent) => {
-        if (event.source !== window) return; // Only accept messages from the same window
+window.addEventListener('message', (event: MessageEvent) => {
+    if (event.source !== window) return; // Only accept messages from the same window
 
-        const { type, payload } = event.data;
-        if (type === 'LANGUAGE_LOADED') {
-            const { language } = payload;
-            const resources = loadLocaleFromDOM(language);
-            if (resources) {
-                i18n.addResources(language, 'translation', resources[language]['translation']);
-                i18n.changeLanguage(language);
-            }
+    const { type, payload } = event.data;
+    if (type === 'LANGUAGE_LOADED') {
+        const { language } = payload;
+        const resources = loadLocaleFromDOM(language);
+        if (resources) {
+            i18n.addResources(language, 'translation', resources[language]['translation']);
+            i18n.changeLanguage(language);
         }
-    });
-}
+    }
+});
 
 export const getLanguageDirection = (language: string): 'ltr' | 'rtl' => {
     return languageDirections[language] || languageDirections.default;
