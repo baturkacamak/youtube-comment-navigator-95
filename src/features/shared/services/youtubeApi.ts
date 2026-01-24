@@ -179,13 +179,6 @@ export class YouTubeApiService {
       "Pragma": "no-cache"
     };
   }
-  
-  public getPotToken(): string | undefined {
-      if (this.capturedPotToken) {
-          return this.capturedPotToken;
-      }
-      return undefined;
-  }
 
   public async fetchFromApi<T>({ endpoint, queryParams = {}, body = {}, method = "POST", signal }: YouTubeApiOptions): Promise<T> {
     try {

@@ -19,6 +19,11 @@ type ContinuationItem = {
                         };
                     };
                 }>;
+                continuations?: Array<{
+                    nextContinuationData?: {
+                        continuation?: string;
+                    };
+                }>;
             };
         };
     };
@@ -41,6 +46,7 @@ export const extractReplyContinuationTokens = (continuationItems: ContinuationIt
     for (let index = 0; index < continuationItems.length; index++) {
         const continuationItem = continuationItems[index];
         const token = continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.contents?.[0]?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token ||
+            continuationItem.commentThreadRenderer?.replies?.commentRepliesRenderer?.continuations?.[0]?.nextContinuationData?.continuation ||
             continuationItem?.continuationItemRenderer?.button?.buttonRenderer?.command?.continuationCommand?.token;
         if (token) {
             tokens.push(token);
