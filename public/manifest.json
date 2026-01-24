@@ -29,7 +29,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["asset-manifest.json", "static/js/*", "static/css/*", "locales/*"],
+      "resources": ["asset-manifest.json", "static/js/*", "static/css/*", "locales/*", "retrieve-pot-token.js"],
       "matches": ["*://*.youtube.com/*"]
     }
   ],

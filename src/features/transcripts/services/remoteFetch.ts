@@ -18,8 +18,38 @@ export async function fetchTranscriptFromRemote(url: string, language?: string):
     const urlObj = new URL(url);
     urlObj.searchParams.set('fmt', 'json3');
     urlObj.searchParams.set('c', 'WEB');
+
+    // 1. Try to get the intercepted POT token first (most reliable)
+    // Wait up to 3 seconds for the injected script to find it
+    let potToken = await youtubeApi.waitForPotToken(3000);
+
+    if (potToken) {
+        logger.debug('Using intercepted POT token:', potToken);
+        urlObj.searchParams.set('pot', potToken);
+        urlObj.searchParams.set('potc', '1');
+    } else {
+        // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
+        logger.warn('Intercepted POT token not available after wait. Attempting to fetch from player API...');
+        try {
+            const playerResponse = await youtubeApi.fetchPlayer();
+            potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
+            
+            if (potToken) {
+                logger.debug('Found POT token from manual player fetch:', potToken);
+                urlObj.searchParams.set('pot', potToken);
+                urlObj.searchParams.set('potc', '1');
+            } else {
+                logger.warn('POT token not found in manual player response either.', playerResponse);
+            }
+        } catch (e) {
+            logger.error('Error fetching player response for POT token:', e);
+        }
+    }
     
-    const response = await httpService.get(urlObj.toString());
+    const finalUrl = urlObj.toString();
+    logger.debug('Fetching transcript from URL:', finalUrl);
+
+    const response = await httpService.get(finalUrl);
     const data = JSON.parse(response);
 
     // Assuming the response is the raw transcript data that needs processing
