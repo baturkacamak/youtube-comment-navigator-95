@@ -51,14 +51,69 @@ export interface VideoDetails {
 
 export class YouTubeApiService {
   private static instance: YouTubeApiService;
+  private capturedPotToken: string | null = null;
+  private potTokenResolver: ((token: string) => void) | null = null;
+  private potTokenPromise: Promise<string>;
   
-  private constructor() {}
+  private constructor() {
+    this.potTokenPromise = new Promise((resolve) => {
+        this.potTokenResolver = resolve;
+    });
+
+    // Listen for the POT token from the main world script
+    window.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
+            const token = event.data.token;
+            this.capturedPotToken = token;
+            logger.debug('YouTubeApiService received POT token via message:', token);
+            if (this.potTokenResolver) {
+                this.potTokenResolver(token);
+            }
+        }
+    });
+  }
   
   public static getInstance(): YouTubeApiService {
     if (!YouTubeApiService.instance) {
       YouTubeApiService.instance = new YouTubeApiService();
     }
     return YouTubeApiService.instance;
+  }
+
+  /**
+   * Waits for the POT token to be received from the injected script.
+   * @param timeoutMs Maximum time to wait in milliseconds (default: 5000ms)
+   * @returns The POT token if received, or undefined if timed out.
+   */
+  public async waitForPotToken(timeoutMs: number = 5000): Promise<string | undefined> {
+      if (this.capturedPotToken) {
+          return this.capturedPotToken;
+      }
+
+      logger.debug('Waiting for POT token... sending request to main world.');
+      window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
+
+      let timeoutHandle: NodeJS.Timeout;
+      const timeoutPromise = new Promise<undefined>((resolve) => {
+          timeoutHandle = setTimeout(() => {
+              logger.warn(`Timed out waiting for POT token after ${timeoutMs}ms`);
+              resolve(undefined);
+          }, timeoutMs);
+      });
+
+      return Promise.race([
+          this.potTokenPromise,
+          timeoutPromise
+      ]).finally(() => {
+          clearTimeout(timeoutHandle);
+      });
+  }
+  
+  public getPotToken(): string | undefined {
+      if (this.capturedPotToken) {
+          return this.capturedPotToken;
+      }
+      return undefined;
   }
   
   private getClientContext(videoId?: string, customContext?: Partial<ClientContext>): any {
@@ -125,6 +180,13 @@ export class YouTubeApiService {
     };
   }
   
+  public getPotToken(): string | undefined {
+      if (this.capturedPotToken) {
+          return this.capturedPotToken;
+      }
+      return undefined;
+  }
+
   public async fetchFromApi<T>({ endpoint, queryParams = {}, body = {}, method = "POST", signal }: YouTubeApiOptions): Promise<T> {
     try {
       // Build URL with query params
@@ -288,7 +350,7 @@ export class YouTubeApiService {
   }
 
   isReady(): boolean {
-    // ... existing code ...
+    return true;
   }
 }
 

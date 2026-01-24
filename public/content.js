@@ -72,6 +72,18 @@ class AssetInjector {
         }
     }
 
+    injectPotTokenRetriever() {
+        const scriptName = 'retrieve-pot-token.js';
+        if (!document.querySelector(`script[src="${chrome.runtime.getURL(scriptName)}"]`)) {
+             const script = document.createElement('script');
+             script.src = chrome.runtime.getURL(scriptName);
+             (document.head || document.documentElement).appendChild(script);
+             script.onload = function() {
+                 this.remove();
+             };
+        }
+    }
+
     async injectTranslation(locale) {
         const namespace = 'translation';
 
@@ -219,6 +231,7 @@ class YouTubeCommentNavigator {
     }
 
     setupInitialLoad() {
+        this.assetInjector.injectPotTokenRetriever();
         this.checkAndInjectWithInterval();
     }
 
