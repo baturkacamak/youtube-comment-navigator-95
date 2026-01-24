@@ -1,6 +1,6 @@
 {
   "name": "youtube-comment-navigator-95",
-  "version": "1.6.7",
+  "version": "1.7.0",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.1.3",
