@@ -13,8 +13,11 @@ import httpService from '../../shared/services/httpService';
  */
 export async function fetchTranscriptFromRemote(url: string, language?: string): Promise<ProcessedTranscript> {
   try {
+    logger.debug('Fetching transcript from remote URL:', url);
+    logger.debug('Language:', language);
     const urlObj = new URL(url);
     urlObj.searchParams.set('fmt', 'json3');
+    urlObj.searchParams.set('c', 'WEB');
     
     const response = await httpService.get(urlObj.toString());
     const data = JSON.parse(response);
