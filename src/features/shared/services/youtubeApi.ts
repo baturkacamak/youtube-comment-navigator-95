@@ -312,6 +312,34 @@ export class YouTubeApiService {
     });
   }
 
+  public async fetchLiveChat(options: {
+    continuation: string,
+    isReplay?: boolean,
+    playerOffsetMs?: string,
+    signal?: AbortSignal
+  }): Promise<any> {
+    const { continuation, isReplay = false, playerOffsetMs, signal } = options;
+    const clientContext = this.getClientContext();
+
+    const body: any = {
+      context: {
+        client: clientContext
+      },
+      continuation
+    };
+
+    if (playerOffsetMs) {
+      body.currentPlayerState = { playerOffsetMs };
+    }
+
+    return this.fetchFromApi({
+      endpoint: isReplay ? "live_chat/get_live_chat_replay" : "live_chat/get_live_chat",
+      queryParams: { prettyPrint: "false" },
+      body,
+      signal
+    });
+  }
+
   private getThumbnailUrl(videoId: string): string {
     return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
   }

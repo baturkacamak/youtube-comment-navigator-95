@@ -1,5 +1,6 @@
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
+import { fetchAndProcessLiveChat } from "../liveChat/fetchLiveChat";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearContinuationToken,
@@ -76,6 +77,9 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             await deleteCommentsIfFreshFetch(null, videoId);
         }
 
+        // Start live chat fetch concurrently
+        const liveChatPromise = fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch);
+
         // fetch all comments iteratively and determine if there are queued replies
         const hasQueuedRepliesValue = await iterateFetchComments(
             token,
@@ -85,6 +89,9 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             signal,
             dispatch
         );
+
+        // Ensure live chat fetch is also complete
+        await liveChatPromise;
 
         // Handle signal abort at the top level
         if (signal.aborted) {
