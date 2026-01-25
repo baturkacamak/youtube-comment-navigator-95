@@ -38,11 +38,9 @@ export function processLiveChatActions(actions: any[], context: ChatProcessingCo
         const action = actions[i];
 
         try {
-            // Normalize structure to be similar to replay actions if needed, or handle both
-            // Live chat actions usually have `addChatItemAction` directly or wrapped
-
-            // We construct a wrapper similar to YCS-cont to reuse their utils
-            const commentWrapper = {
+            // Each action from the API already has the replayChatItemAction structure
+            // Use it directly to preserve videoOffsetTimeMsec and other metadata
+            const commentWrapper = action.replayChatItemAction ? action : {
                 replayChatItemAction: {
                     actions: [action]
                 }
@@ -167,10 +165,23 @@ export function processLiveChatActions(actions: any[], context: ChatProcessingCo
             }
 
             // Extract video offset time if available
-            const videoOffsetTimeSec = wrapTryCatch(() =>
-                commentWrapper.replayChatItemAction.actions[0].videoOffsetTimeMsec
-            ) as number | undefined;
-            const videoOffsetTimeSeconds = videoOffsetTimeSec ? videoOffsetTimeSec / 1000 : undefined;
+            // videoOffsetTimeMsec is at the replayChatItemAction level, not inside actions[0]
+            const videoOffsetTimeMsec = wrapTryCatch(() =>
+                commentWrapper.replayChatItemAction.videoOffsetTimeMsec
+            ) as string | number | undefined;
+
+            const videoOffsetTimeSeconds = videoOffsetTimeMsec
+                ? Number(videoOffsetTimeMsec) / 1000
+                : undefined;
+
+            // Debug log for first few messages to verify timestamp extraction
+            if (i < 3) {
+                logger.debug(`[LiveChatProcessor] Message ${i} timestamp:`, {
+                    videoOffsetTimeMsec,
+                    videoOffsetTimeSeconds,
+                    authorName
+                });
+            }
 
             // Check for donation/super chat
             // Note: Super chat messages have a different renderer (liveChatPaidMessageRenderer)
