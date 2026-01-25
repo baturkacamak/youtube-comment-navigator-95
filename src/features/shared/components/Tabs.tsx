@@ -14,24 +14,15 @@ interface Tab {
 
 interface TabsProps {
     tabs: Tab[];
-    onTabChange?: (tabId: string) => void; // Add an optional callback prop for tab change
+    activeTab: string;
+    onTabChange: (tabId: string) => void;
 }
 
-const Tabs: React.FC<TabsProps> = ({ tabs, onTabChange }) => {
-    const [activeTab, setActiveTab] = useState(tabs[0].title.id);
-
+const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
+    
     const handleTabClick = (tabId: string) => {
-        setActiveTab(tabId);
-        if (onTabChange) {
-            onTabChange(tabId); // Invoke the callback when the tab changes
-        }
+        onTabChange(tabId);
     };
-
-    useEffect(() => {
-        if (onTabChange) {
-            onTabChange(activeTab);
-        }
-    }, [activeTab, onTabChange]);
 
     return (
         <>

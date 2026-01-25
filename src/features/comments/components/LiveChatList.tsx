@@ -22,45 +22,35 @@ const LiveChatList: React.FC = () => {
     const [page, setPage] = useState(0);
     const pageSize = 100; // Larger page size for chat
 
+    const fetchLiveChat = async () => {
+        const videoId = extractVideoId();
+        if (!videoId) return;
+        logger.info('Fetching live chat for videoId:', videoId);
+        try {
+            const chats = await loadPagedComments(
+                db.comments,
+                videoId,
+                page,
+                pageSize,
+                'date',
+                'asc', 
+                {},
+                '',
+                { onlyLiveChat: true }
+            );
+            
+            dispatch(setLiveChat(chats));
+        } catch (error) {
+            logger.error('Error fetching live chat:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    logger.info('LiveChatList component mounted');
     useEffect(() => {
-        const fetchLiveChat = async () => {
-            const videoId = extractVideoId();
-            if (!videoId) return;
-
-            setIsLoading(true);
-            try {
-                // Fetch live chat comments from DB
-                const chats = await loadPagedComments(
-                    db.comments,
-                    videoId,
-                    page,
-                    pageSize,
-                    'date',
-                    'asc', // Chat usually ascending
-                    {},
-                    '',
-                    { onlyLiveChat: true }
-                );
-                
-                // If it's page 0, replace, else append
-                if (page === 0) {
-                    dispatch(setLiveChat(chats));
-                } else {
-                    // We need an append action or just manual concat
-                    // Since setLiveChat replaces, we should append here?
-                    // But liveChatComments is from Redux.
-                    // Let's just set for now. To support infinite scroll we need more logic.
-                    // For the "replace placeholder" task, loading initial batch is sufficient.
-                    dispatch(setLiveChat(chats));
-                }
-            } catch (error) {
-                logger.error('Error fetching live chat:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchLiveChat();
+        const intervalId = setInterval(fetchLiveChat, 2000);
+        return () => clearInterval(intervalId);
     }, [dispatch, page]);
 
     return (

@@ -26,13 +26,15 @@ export const fetchAndProcessLiveChat = async (
 
         const continuationData = continuationResult.continuationData;
         const continuation = continuationData.continuation;
+        // If we found a replay/seek token, we MUST use isReplay=true for the API call
+        const isReplayMode = continuationResult.continuationType === 'replay' || continuationResult.continuationType === 'playerSeek';
 
-        logger.info(`Starting live chat fetch with continuation: ${continuation}`);
+        logger.info(`Starting live chat fetch with continuation: ${continuation.substring(0, 20)}..., isReplay: ${isReplayMode}, type: ${continuationResult.continuationType}`);
 
         // Initial fetch to determine mode
         const initialResponse = await youtubeApi.fetchLiveChat({
             continuation: continuation,
-            isReplay: true, // Assuming replay for now, usually safe for VODs
+            isReplay: isReplayMode,
             signal
         });
 
@@ -42,7 +44,13 @@ export const fetchAndProcessLiveChat = async (
         }
 
         const continuations = initialResponse?.continuationContents?.liveChatContinuation?.continuations;
+        const actions = initialResponse?.continuationContents?.liveChatContinuation?.actions;
+        
         logger.debug(`[LiveChat] Initial response continuations:`, continuations);
+        if (actions) {
+            logger.info(`[LiveChat] Initial batch has ${actions.length} actions.`);
+            await saveActions(actions, videoId, dispatch);
+        }
 
         // Try to find playerSeekContinuationData (new replay API)
         const playerSeekData = continuations?.find(
@@ -53,32 +61,38 @@ export const fetchAndProcessLiveChat = async (
         const liveChatReplayData = continuations?.find(
             (c: any) => c.liveChatReplayContinuationData
         )?.liveChatReplayContinuationData;
-
+        
+        // If the initial token was already playerSeek, we might want to continue in that mode even if response looks different,
+        // but usually the response gives us the NEXT token.
+        
         if (playerSeekData) {
              logger.info("[LiveChat] Mode: PlayerSeek (New API)");
              const nextContinuation = { continuation: playerSeekData.continuation };
              await processPlayerSeekLoop(nextContinuation, videoId, signal, dispatch);
         } else if (liveChatReplayData) {
              logger.info("[LiveChat] Mode: Fallback (Old API)");
-             // Initial batch might have actions
-             const actions = initialResponse?.continuationContents?.liveChatContinuation?.actions;
-             if (actions) {
-                 logger.info(`[LiveChat] Initial batch has ${actions.length} actions.`);
-                 await saveActions(actions, videoId, dispatch);
-             }
-             
              const nextContinuation = { continuation: liveChatReplayData.continuation };
              await processFallbackLoop(nextContinuation, videoId, signal, dispatch);
+        } else if (continuationResult.continuationType === 'playerSeek' && !playerSeekData && !liveChatReplayData) {
+             // We started with playerSeek but got no new token? This might be end of stream or error.
+             logger.warn("[LiveChat] Started with PlayerSeek but received no continuation. End of chat?");
+        } else if (continuationResult.continuationType === 'replay' && !liveChatReplayData) {
+             logger.warn("[LiveChat] Started with Replay but received no continuation. End of chat?");
         } else {
              // Maybe it's live (not replay)?
              const invalidationContinuation = continuations?.find(
                  (c: any) => c.invalidationContinuationData
              )?.invalidationContinuationData;
              
-             if (invalidationContinuation) {
+             // Or timedContinuationData (live stream)
+             const timedContinuation = continuations?.find(
+                 (c: any) => c.timedContinuationData
+             )?.timedContinuationData;
+             
+             if (invalidationContinuation || timedContinuation) {
                  logger.info("[LiveChat] Detected Live Stream (not replay). Fetching live... (Not fully implemented yet)");
              } else {
-                 logger.warn("[LiveChat] No known continuation type found. Stopping.");
+                 logger.warn("[LiveChat] No known continuation type found. Stopping.", continuations);
              }
         }
 
@@ -115,7 +129,8 @@ async function saveActions(actions: any[], videoId: string, dispatch: any) {
                      if (idMap.has(c.commentId)) {
                          return { ...c, id: idMap.get(c.commentId) };
                      }
-                     const { id, ...rest } = c;
+                     // Cast to any to safely destructure id even if it doesn't exist on the object runtime-wise or if TS complains
+                     const { id, ...rest } = c as any;
                      return rest;
                  });
                  

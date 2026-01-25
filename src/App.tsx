@@ -35,6 +35,7 @@ const App: React.FC = () => {
         filteredAndSortedComments,
         setFiltersCallback,
         setActiveTab,
+        activeTab,
         transcriptWordCount,
         filteredAndSortedBookmarks,
         transcript,
@@ -58,7 +59,7 @@ const App: React.FC = () => {
     // Show either filtered count or total count
     const displayCount = hasActiveFilters ? filteredAndSortedComments.length : totalCommentsCount;
 
-    const tabs = [
+    const tabs = React.useMemo(() => [
         {
             title: {
                 id: 'comments',
@@ -115,7 +116,17 @@ const App: React.FC = () => {
                 </>
             ),
         },
-    ];
+    ], [
+        t,
+        displayCount,
+        filters,
+        setFiltersCallback,
+        filteredAndSortedComments,
+        transcriptWordCount,
+        transcript,
+        filteredAndSortedBookmarks,
+        showFiltersSorts
+    ]);
 
     let drawerClass = 'ml-0 left-0';
     if (isSettingsOpen) {
@@ -154,7 +165,7 @@ const App: React.FC = () => {
                 </Box>
                 {(!showContentOnSearch || searchKeyword) && (
                     <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
-                        <Tabs tabs={tabs} onTabChange={setActiveTab} />
+                        <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
                     </Box>
                 )}
             </div>
