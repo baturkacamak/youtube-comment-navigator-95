@@ -37,6 +37,12 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
 
     const waitForVideoElement = (videoId: string | null): Promise<void> => {
         return new Promise<void>((resolve) => {
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                logger.info('Running on localhost, skipping video element check.');
+                resolve();
+                return;
+            }
+
             const checkVideoElement = () => {
                 const videoElement = document.querySelector(`[video-id="${videoId}"]`);
                 if (videoElement) {

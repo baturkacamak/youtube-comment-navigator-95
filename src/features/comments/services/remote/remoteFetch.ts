@@ -9,10 +9,11 @@ import {
     getContinuationToken,
     storeContinuationToken
 } from "./utils";
-import { CACHE_KEYS, PAGINATION } from "../../../shared/utils/appConstants";
+import { CACHE_KEYS, PAGINATION, isLocalEnvironment } from "../../../shared/utils/appConstants";
 import { db } from "../../../shared/utils/database/database";
 import {countComments, loadPagedComments} from "../pagination";
 import logger from "../../../shared/utils/logger";
+import { seedMockData } from "../../../shared/utils/mockDataSeeder";
 
 let currentAbortController = new AbortController();
 
@@ -35,6 +36,13 @@ function abortAllOngoingOperations() {
 }
 
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
+    // Check for local environment and redirect to mock seeder
+    if (isLocalEnvironment() && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        logger.info('[RemoteFetch] Local environment detected. Redirecting to Mock Data Seeder.');
+        await seedMockData(dispatch);
+        return;
+    }
+
     // abort any previous ongoing fetch operations
     try {
         abortAllOngoingOperations();

@@ -16,12 +16,25 @@ import { fetchAndProcessLiveChat } from "../../../comments/services/liveChat/fet
 import { extractVideoId } from "../../../comments/services/remote/utils";
 import {db} from "../../utils/database/database";
 import logger from "../../utils/logger";
+import { seedMockData } from "../../utils/mockDataSeeder";
+import { isLocalEnvironment } from "../../utils/appConstants";
 
 const useFetchDataOnUrlChange = () => {
     const dispatch = useDispatch();
 
     useDetectUrlChange(async () => {
+        logger.info('[useFetchDataOnUrlChange] URL Change Detected');
         dispatch(resetState());
+
+        const isLocal = isLocalEnvironment();
+        const hostname = window.location.hostname;
+        logger.info(`[useFetchDataOnUrlChange] Environment check: isLocal=${isLocal}, hostname=${hostname}`);
+
+        if (isLocal && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+            logger.info('[useFetchDataOnUrlChange] Triggering Mock Data Seeder');
+            await seedMockData(dispatch);
+            return;
+        }
 
         await fetchAndSetBookmarks(dispatch);
         await fetchAndSetTranscripts(dispatch);

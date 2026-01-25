@@ -7,6 +7,9 @@ import logger from '../../../shared/utils/logger';
 
 export const extractVideoId = (): string => {
     try {
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            return 'mock-video-id';
+        }
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('v') ?? '';
     } catch (error) {
