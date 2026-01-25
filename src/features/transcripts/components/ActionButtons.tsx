@@ -9,6 +9,7 @@ import { formatTime } from '../utils/formatTime';
 
 interface ActionButtonsProps {
     transcripts: any[];
+    allTranscripts?: any[];
     includeTimestamps: boolean;
     setIncludeTimestamps: (value: boolean) => void;
     selectedLanguage: { value: string, label: string };
@@ -17,6 +18,7 @@ interface ActionButtonsProps {
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
                                                          transcripts,
+                                                         allTranscripts,
                                                          includeTimestamps,
                                                          setIncludeTimestamps,
                                                          selectedLanguage,
@@ -24,7 +26,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                                                      }) => {
     const transcriptTextWithTimestamps = transcripts.map(entry => `${formatTime(entry.start)} ${entry.text}`).join('\n');
     const transcriptTextWithoutTimestamps = transcripts.map(entry => entry.text).join('\n');
-
+    
     return (
         <div className="flex items-center gap-4">
             <TimestampToggle

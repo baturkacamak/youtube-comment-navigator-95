@@ -2,13 +2,13 @@ import {copyToClipboard} from "./copyToClipboard";
 
 describe('handleCopyToClipboard', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('should call onSuccess when text is copied successfully', async () => {
-        const mockWriteText = jest.fn().mockResolvedValue(undefined);
-        const onSuccess = jest.fn();
-        const onError = jest.fn();
+        const mockWriteText = vi.fn().mockResolvedValue(undefined);
+        const onSuccess = vi.fn();
+        const onError = vi.fn();
         Object.assign(navigator, {
             clipboard: {
                 writeText: mockWriteText,
@@ -23,10 +23,10 @@ describe('handleCopyToClipboard', () => {
     });
 
     it('should call onError when there is an error copying text', async () => {
-        const error = new Error('Failed to copy');
-        const mockWriteText = jest.fn().mockRejectedValue(error);
-        const onSuccess = jest.fn();
-        const onError = jest.fn();
+        const error = new Error('Clipboard error');
+        const mockWriteText = vi.fn().mockRejectedValue(error);
+        const onSuccess = vi.fn();
+        const onError = vi.fn();
         Object.assign(navigator, {
             clipboard: {
                 writeText: mockWriteText,

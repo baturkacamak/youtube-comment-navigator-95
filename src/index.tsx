@@ -11,12 +11,12 @@ import store from "./store/store"; // Import i18n to access the current language
 import reportWebVitals from './reportWebVitals';
 import logger from './features/shared/utils/logger';
 
-if (window?.trustedTypes) {
-    if (!window?.trustedTypes?.defaultPolicy) {
-        window?.trustedTypes?.createPolicy('default', {
-            createHTML: (string) => string,
-            createScriptURL: (string) => string,
-            createScript: (string) => string
+if ((window as any)?.trustedTypes) {
+    if (!(window as any)?.trustedTypes?.defaultPolicy) {
+        (window as any)?.trustedTypes?.createPolicy('default', {
+            createHTML: (string: any) => string,
+            createScriptURL: (string: any) => string,
+            createScript: (string: any) => string
         });
     }
 }

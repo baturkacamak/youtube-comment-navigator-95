@@ -2,28 +2,31 @@ import { Comment } from '../../../types/commentTypes';
 import { loadPagedComments, countComments, fetchRepliesForComment } from './pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import Dexie from 'dexie';
+import logger from '../../shared/utils/logger';
 
 // Mock the logger module
-jest.mock('../../shared/utils/logger', () => ({
-    start: jest.fn(),
-    end: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    success: jest.fn(),
+vi.mock('../../shared/utils/logger', () => ({
+    default: {
+        start: vi.fn(),
+        end: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+        success: vi.fn(),
+    }
 }));
 
 // --- Mock Dexie Setup --- START ---
-const mockToArray = jest.fn();
-const mockLimit = jest.fn();
-const mockOffset = jest.fn();
-const mockReverse = jest.fn();
-const mockFilter = jest.fn();
-const mockBetween = jest.fn();
-const mockEquals = jest.fn();
-const mockAnd = jest.fn();
-const mockFirst = jest.fn();
-const mockCount = jest.fn();
+const mockToArray = vi.fn();
+const mockLimit = vi.fn();
+const mockOffset = vi.fn();
+const mockReverse = vi.fn();
+const mockFilter = vi.fn();
+const mockBetween = vi.fn();
+const mockEquals = vi.fn();
+const mockAnd = vi.fn();
+const mockFirst = vi.fn();
+const mockCount = vi.fn();
 
 // Base collection methods object
 const collectionMethods = {
@@ -45,7 +48,7 @@ const queryMethods = {
 };
 
 const mockCommentsTable = {
-    where: jest.fn(),
+    where: vi.fn(),
 };
 
 const resetMocks = () => {
@@ -68,7 +71,7 @@ const resetMocks = () => {
     mockCommentsTable.where.mockImplementation(() => queryMethods);
 
     // Reset logger mocks
-    Object.values(require('../../shared/utils/logger')).forEach((mockFn: any) => mockFn.mockClear());
+    Object.values(logger).forEach((mockFn: any) => mockFn.mockClear());
 };
 // --- Mock Dexie Setup --- END ---
 
@@ -84,11 +87,11 @@ const mockTable = mockCommentsTable as unknown as Dexie.Table<Comment, number>;
 describe('Pagination Services', () => {
     beforeEach(() => {
         resetMocks();
-        jest.useFakeTimers();
+        vi.useFakeTimers();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     describe('loadPagedComments', () => {
@@ -137,7 +140,7 @@ describe('Pagination Services', () => {
                 return collectionMethods;
             });
             const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', filters);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(mockFilter).toHaveBeenCalled();
             expect(result).toEqual(mockFilteredData);
@@ -152,7 +155,7 @@ describe('Pagination Services', () => {
                  return collectionMethods;
             });
             const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', {}, searchKeyword);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(mockFilter).toHaveBeenCalled();
             expect(result).toEqual(mockFilteredData);
@@ -211,7 +214,7 @@ describe('Pagination Services', () => {
                 return collectionMethods;
              });
              const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', filters);
-             jest.runAllTimers();
+             vi.runAllTimers();
              const result = await resultPromise;
              expect(mockFilter).toHaveBeenCalled();
              expect(result).toEqual(mockFilteredData);
@@ -226,7 +229,7 @@ describe('Pagination Services', () => {
                 return collectionMethods;
             });
             const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', {}, searchKeyword);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(mockFilter).toHaveBeenCalled();
             expect(result).toEqual(mockFilteredData);
@@ -241,7 +244,7 @@ describe('Pagination Services', () => {
                 return collectionMethods;
             });
             const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', filters, searchKeyword);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(mockFilter).toHaveBeenCalled();
             expect(result).toEqual([]);
@@ -305,7 +308,7 @@ describe('Pagination Services', () => {
              });
 
              const resultPromise = countComments(mockTable, 'v1', filters, searchKeyword);
-             jest.runAllTimers();
+             vi.runAllTimers();
              const result = await resultPromise;
 
             expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
@@ -326,7 +329,7 @@ describe('Pagination Services', () => {
              });
 
             const resultPromise = countComments(mockTable, 'v1', filters, searchKeyword, { topLevelOnly: true });
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
 
             expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
@@ -354,13 +357,13 @@ describe('Pagination Services', () => {
             const expectedCount = 1;
 
             // Create a spy that we can verify is called
-            const countSpy = jest.fn().mockResolvedValue(expectedCount);
+            const countSpy = vi.fn().mockResolvedValue(expectedCount);
             
             // Set up the mock chain very explicitly
             mockEquals.mockImplementation(() => {
                 console.log('equals mock called, returning object with filter method');
                 return { 
-                    filter: jest.fn().mockImplementation((filterFn) => {
+                    filter: vi.fn().mockImplementation((filterFn) => {
                         console.log('filter mock called within equals chain');
                         // Check that our filter actually works as expected on sample data
                         const filteredData = [sampleComment1, sampleComment2, sampleComment3].filter(filterFn);
@@ -391,7 +394,7 @@ describe('Pagination Services', () => {
             const expectedCount = 0;
             const mockFilteredCollection = {
                 ...collectionMethods,
-                count: jest.fn().mockResolvedValue(expectedCount)
+                count: vi.fn().mockResolvedValue(expectedCount)
             };
             mockFilter.mockImplementation((filterFn) => {
                  const actualFiltered = [sampleComment1, sampleComment2, sampleComment3].filter(filterFn);
@@ -400,7 +403,7 @@ describe('Pagination Services', () => {
                  return mockFilteredCollection;
              });
              const resultPromise = countComments(mockTable, 'v1', filters, searchKeyword);
-             jest.runAllTimers();
+             vi.runAllTimers();
              const result = await resultPromise;
             expect(mockFilter).toHaveBeenCalled();
             expect(mockFilteredCollection.count).toHaveBeenCalled();
@@ -418,7 +421,7 @@ describe('Pagination Services', () => {
                  return queryMethods;
              });
              const resultPromise = fetchRepliesForComment(mockTable, 'v1', parentId);
-             jest.runAllTimers();
+             vi.runAllTimers();
              const result = await resultPromise;
              expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
              expect(mockEquals).toHaveBeenCalledWith('v1');
@@ -436,7 +439,7 @@ describe('Pagination Services', () => {
             });
             mockFirst.mockResolvedValue({ ...sampleComment2, replyCount: 0 });
             const resultPromise = fetchRepliesForComment(mockTable, 'v1', parentId);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(result).toEqual([]);
             expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
@@ -458,7 +461,7 @@ describe('Pagination Services', () => {
              });
             mockFirst.mockResolvedValue({ ...sampleComment3, replyCount: 1 });
             const resultPromise = fetchRepliesForComment(mockTable, 'v1', parentId);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(result).toEqual([]);
             expect(mockCommentsTable.where).toHaveBeenCalledWith('commentId');
@@ -496,7 +499,7 @@ describe('Pagination Services', () => {
                  return queryMethods;
              });
              const resultPromise = fetchRepliesForComment(mockTable, 'v1', parentId);
-             jest.runAllTimers();
+             vi.runAllTimers();
              const result = await resultPromise;
              expect(mockAnd).toHaveBeenCalled();
              expect(mockToArray).toHaveBeenCalled();
@@ -513,7 +516,7 @@ describe('Pagination Services', () => {
              });
             mockFirst.mockResolvedValue(undefined);
             const resultPromise = fetchRepliesForComment(mockTable, 'v1', parentId);
-            jest.runAllTimers();
+            vi.runAllTimers();
             const result = await resultPromise;
             expect(result).toEqual([]);
             expect(mockCommentsTable.where).toHaveBeenCalledWith('commentId');
@@ -522,4 +525,4 @@ describe('Pagination Services', () => {
             expect(require('../../shared/utils/logger').info).toHaveBeenCalledWith(expect.stringContaining('No replies found, and parent comment does not indicate any replies (or parent not found)'));
         });
     });
-}); 
+});

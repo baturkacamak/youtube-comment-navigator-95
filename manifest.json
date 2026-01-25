@@ -19,17 +19,17 @@
     "*://*.youtube.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background.ts"
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["content.js"]
+      "js": ["src/content.tsx"]
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["asset-manifest.json", "static/js/*", "static/css/*", "locales/*", "retrieve-pot-token.js"],
+      "resources": ["locales/*", "retrieve-pot-token.js", "icon128.png", "icon48.png", "icon16.png"],
       "matches": ["*://*.youtube.com/*"]
     }
   ],
