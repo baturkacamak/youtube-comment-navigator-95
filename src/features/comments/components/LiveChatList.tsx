@@ -34,8 +34,6 @@ const LiveChatList: React.FC = () => {
     const [hasMore, setHasMore] = useState(true);
     const pageSize = 100; // Messages per page
 
-    const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-
     const videoId = extractVideoId();
 
     /**
@@ -98,24 +96,10 @@ const LiveChatList: React.FC = () => {
     // This component only handles displaying the data from the database
 
     /**
-     * Poll database for new messages (every 2 seconds)
-     * Also refetches when page changes (via dependency array)
+     * Fetch messages when component mounts, page changes, or video changes
      */
     useEffect(() => {
-        // Initial fetch
         fetchLiveChatFromDB();
-
-        // Set up polling interval
-        pollingIntervalRef.current = setInterval(() => {
-            fetchLiveChatFromDB();
-        }, 2000);
-
-        return () => {
-            if (pollingIntervalRef.current) {
-                clearInterval(pollingIntervalRef.current);
-                pollingIntervalRef.current = null;
-            }
-        };
     }, [page, videoId, dispatch]);
 
     // Handle component mount logging
