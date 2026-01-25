@@ -4,6 +4,8 @@ import { setTotalCommentsCount } from "../../../../store/store";
 import { processLiveChatActions } from "./liveChatProcessor";
 import { extractLiveChatContinuation } from "./continuation";
 import { wrapTryCatch, deepFindObjKey } from "./common";
+import { saveLiveChatMessages } from "./liveChatDatabase";
+import { LiveChatErrorType } from "../../../../types/liveChatTypes";
 import logger from "../../../shared/utils/logger";
 
 export const fetchAndProcessLiveChat = async (
@@ -148,48 +150,73 @@ export const fetchAndProcessLiveChat = async (
     }
 };
 
+/**
+ * Save livechat actions to database with extensive error handling
+ * Separates messages (saved to liveChatMessages) from replies (saved to comments)
+ */
 async function saveActions(actions: any[], videoId: string, dispatch: any) {
     if (!actions || actions.length === 0) {
         logger.debug("[LiveChat] No actions to save.");
         return;
     }
-    
-    logger.debug(`[LiveChat] Processing ${actions.length} raw actions...`);
-    const comments = processLiveChatActions(actions, { currentVideoId: videoId });
-    
-    if (comments.length > 0) {
-        try {
-            await db.transaction('rw', db.comments, async () => {
-                 // Reuse upsert logic from fetchAndProcessComments if possible, or duplicate it here.
-                 // upsertComments logic:
-                 const incomingIds = comments.map(c => c.commentId).filter(Boolean);
-                 const existingRecords = await db.comments.where('commentId').anyOf(incomingIds).toArray();
-                 const idMap = new Map(existingRecords.map(c => [c.commentId, c.id]));
-                 
-                 const commentsToSave = comments.map(c => {
-                     if (idMap.has(c.commentId)) {
-                         return { ...c, id: idMap.get(c.commentId) };
-                     }
-                     // Cast to any to safely destructure id even if it doesn't exist on the object runtime-wise or if TS complains
-                     const { id, ...rest } = c as any;
-                     return rest;
-                 });
-                 
-                 await db.comments.bulkPut(commentsToSave);
-                 
-                 // Update count - Note: we might want to skip this for performance if too frequent, 
-                 // but for now it helps debug visibility.
-                 const totalCount = await db.comments.where('videoId').equals(videoId).count();
-                 // dispatch(setTotalCommentsCount(totalCount)); // This updates the global count, confusing if separate tab? 
-                 // Actually, if we want to show chat in its own tab, we might not want to mix counts?
-                 // But let's leave it for now.
+
+    try {
+        logger.debug(`[LiveChat] Processing ${actions.length} raw actions...`);
+        const processedData = processLiveChatActions(actions, { currentVideoId: videoId });
+
+        // Log any parsing errors
+        if (processedData.errors.length > 0) {
+            logger.warn(`[LiveChat] Encountered ${processedData.errors.length} errors during processing:`);
+            processedData.errors.forEach((error, idx) => {
+                logger.warn(`[LiveChat] Error ${idx + 1}:`, {
+                    type: error.type,
+                    message: error.message,
+                    context: error.context
+                });
             });
-            logger.info(`[LiveChat] Saved ${comments.length} processed comments.`);
-        } catch (dbError) {
-            logger.error(`[LiveChat] Database error saving comments:`, dbError);
         }
-    } else {
-        logger.warn(`[LiveChat] Actions were present but resulted in 0 processed comments.`);
+
+        // Save messages to liveChatMessages table
+        if (processedData.messages.length > 0) {
+            try {
+                const savedCount = await saveLiveChatMessages(processedData.messages, videoId);
+                logger.success(`[LiveChat] Saved ${savedCount} livechat messages to database`);
+            } catch (saveError: any) {
+                logger.error(`[LiveChat] Failed to save livechat messages:`, saveError);
+                throw saveError;
+            }
+        } else {
+            logger.warn(`[LiveChat] Actions were present but resulted in 0 processed messages.`);
+        }
+
+        // Save replies to comments table
+        if (processedData.replies.length > 0) {
+            try {
+                await db.transaction('rw', db.comments, async () => {
+                    // Upsert logic for replies
+                    const incomingIds = processedData.replies.map(r => r.commentId).filter(Boolean);
+                    const existingRecords = await db.comments.where('commentId').anyOf(incomingIds).toArray();
+                    const idMap = new Map(existingRecords.map(c => [c.commentId, c.id]));
+
+                    const repliesToSave = processedData.replies.map(r => {
+                        if (idMap.has(r.commentId)) {
+                            return { ...r, id: idMap.get(r.commentId) };
+                        }
+                        const { id, ...rest } = r as any;
+                        return rest;
+                    });
+
+                    await db.comments.bulkPut(repliesToSave);
+                });
+                logger.success(`[LiveChat] Saved ${processedData.replies.length} livechat replies to comments table`);
+            } catch (replyError: any) {
+                logger.error(`[LiveChat] Failed to save livechat replies:`, replyError);
+                // Don't throw - messages were saved successfully
+            }
+        }
+    } catch (error: any) {
+        logger.error('[LiveChat] Critical error in saveActions:', error);
+        throw error; // Re-throw to propagate to caller
     }
 }
 

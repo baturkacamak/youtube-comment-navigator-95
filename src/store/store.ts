@@ -1,6 +1,7 @@
 import {configureStore, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {RootState} from '../types/rootState'; // Adjust the path as necessary
 import {Comment} from '../types/commentTypes'; // Adjust the path as necessary
+import {LiveChatMessage, LiveChatErrorType} from '../types/liveChatTypes';
 import {FilterState} from '../types/filterTypes';
 import {saveSettings} from "../features/settings/utils/settingsUtils";
 
@@ -39,15 +40,25 @@ const initialState: RootState = {
     // Comments and transcripts data
     comments: [],
     liveChat: [],
+    liveChatState: {
+        isLoading: false,
+        error: null,
+        lastFetchTime: null,
+        messageCount: 0,
+        continuationToken: null,
+        isReplay: false,
+    },
     transcripts: [],
     filteredTranscripts: [],
 
     // Bookmark and loading state
     bookmarkedComments: [],
+    bookmarkedLiveChatMessages: [],
     bookmarkedLines: [],
     isLoading: true,
 
     totalCommentsCount: 0,
+    liveChatMessageCount: 0,
     // Other state properties
     showBookmarked: false,
 
@@ -68,8 +79,21 @@ const commentsSlice = createSlice({
         setComments: (state, action: PayloadAction<Comment[]>) => {
             state.comments = action.payload;
         },
-        setLiveChat: (state, action: PayloadAction<Comment[]>) => {
+        setLiveChat: (state, action: PayloadAction<LiveChatMessage[]>) => {
             state.liveChat = action.payload;
+        },
+        setLiveChatLoading: (state, action: PayloadAction<boolean>) => {
+            state.liveChatState.isLoading = action.payload;
+        },
+        setLiveChatError: (state, action: PayloadAction<string | null>) => {
+            state.liveChatState.error = action.payload;
+        },
+        setLiveChatMessageCount: (state, action: PayloadAction<number>) => {
+            state.liveChatMessageCount = action.payload;
+            state.liveChatState.messageCount = action.payload;
+        },
+        setBookmarkedLiveChatMessages: (state, action: PayloadAction<LiveChatMessage[]>) => {
+            state.bookmarkedLiveChatMessages = action.payload;
         },
         setTranscripts: (state, action: PayloadAction<any[]>) => {
             state.transcripts = action.payload;
@@ -153,11 +177,15 @@ export const {
     // Data fetching and setting actions
     setComments,
     setLiveChat,
+    setLiveChatLoading,
+    setLiveChatError,
+    setLiveChatMessageCount,
     setTranscripts,
     setFilteredTranscripts,
     addProcessedReplies,
     // Bookmark actions
     setBookmarkedComments,
+    setBookmarkedLiveChatMessages,
     setBookmarkedLines,
 
     // Loading state action

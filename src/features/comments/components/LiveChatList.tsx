@@ -1,76 +1,109 @@
+/**
+ * LiveChatList Component
+ * Manages fetching and displaying live chat messages using the new transcript interface
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
-import { setLiveChat } from '../../../store/store';
-import { db } from '../../shared/utils/database/database';
+import {
+    setLiveChat,
+    setLiveChatLoading,
+    setLiveChatError,
+    setLiveChatMessageCount
+} from '../../../store/store';
 import { extractVideoId } from '../services/remote/utils';
 import { fetchAndProcessLiveChat } from '../services/liveChat/fetchLiveChat';
-import { loadPagedComments } from '../services/pagination';
-import CommentItem from './CommentItem';
-import { Comment } from '../../../types/commentTypes';
-import { PAGINATION } from '../../shared/utils/appConstants';
+import {
+    loadLiveChatMessages,
+    getLiveChatMessageCount
+} from '../services/liveChat/liveChatDatabase';
+import LiveChatTranscript from './LiveChatTranscript';
+import { LiveChatMessage, LiveChatErrorType } from '../../../types/liveChatTypes';
 import logger from '../../shared/utils/logger';
 
 const LiveChatList: React.FC = () => {
     const dispatch = useDispatch();
-    const liveChatComments = useSelector((state: RootState) => state.liveChat);
-    const [isLoading, setIsLoading] = useState(true);
-    
-    // We can implement pagination for live chat later, for now load a batch
-    // or rely on a "load more" button if we want to support it.
-    // Given live chat can be huge, we should definitely page it.
-    
+    const liveChatMessages = useSelector((state: RootState) => state.liveChat);
+    const liveChatState = useSelector((state: RootState) => state.liveChatState);
+
     const [page, setPage] = useState(0);
-    const pageSize = 100; // Larger page size for chat
+    const [hasMore, setHasMore] = useState(true);
+    const pageSize = 100; // Messages per page
+
     const liveChatFetchStarted = useRef(false);
     const liveChatAbortController = useRef<AbortController | null>(null);
+    const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    const fetchLiveChat = async () => {
-        const videoId = extractVideoId();
-        if (!videoId) return;
-        logger.info('Fetching live chat for videoId:', videoId);
-        try {
-            const chats = await loadPagedComments(
-                db.comments,
-                videoId,
-                page,
-                pageSize,
-                'date',
-                'asc', 
-                {},
-                '',
-                { onlyLiveChat: true }
-            );
-            
-            dispatch(setLiveChat(chats));
-        } catch (error) {
-            logger.error('Error fetching live chat:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    useEffect(() => {
-        fetchLiveChat();
-        const intervalId = setInterval(fetchLiveChat, 2000);
-        return () => clearInterval(intervalId);
-    }, [dispatch, page]);
+    const videoId = extractVideoId();
 
-    useEffect(() => {
-        logger.info('LiveChatList component mounted');
-    }, []);
-
-    useEffect(() => {
-        if (liveChatFetchStarted.current) {
+    /**
+     * Fetch live chat messages from database with error handling
+     */
+    const fetchLiveChatFromDB = async () => {
+        if (!videoId) {
+            logger.warn('[LiveChatList] No videoId found');
             return;
         }
 
-        const videoId = extractVideoId();
-        if (!videoId) {
-            logger.warn('[LiveChat] No videoId found; skipping live chat remote fetch.');
+        try {
+            logger.debug('[LiveChatList] Fetching messages from database');
+
+            const offset = page * pageSize;
+            const messages = await loadLiveChatMessages(videoId, offset, pageSize);
+            const totalCount = await getLiveChatMessageCount(videoId);
+
+            dispatch(setLiveChat(messages));
+            dispatch(setLiveChatMessageCount(totalCount));
+
+            // Check if there are more messages to load
+            setHasMore(offset + messages.length < totalCount);
+
+            logger.success(`[LiveChatList] Loaded ${messages.length} messages (total: ${totalCount})`);
+        } catch (error: any) {
+            logger.error('[LiveChatList] Failed to load messages from database:', error);
+            dispatch(setLiveChatError(error.message || 'Failed to load live chat messages'));
+        }
+    };
+
+    /**
+     * Handle timestamp click - seek video to specific time
+     */
+    const handleTimestampClick = (timestampSeconds: number) => {
+        try {
+            const player = document.querySelector('#movie_player') as any;
+            if (player && typeof player.seekTo === 'function') {
+                player.seekTo(timestampSeconds, true);
+                logger.info(`[LiveChatList] Seeked to ${timestampSeconds}s`);
+            } else {
+                logger.warn('[LiveChatList] YouTube player not available');
+            }
+        } catch (error: any) {
+            logger.error('[LiveChatList] Failed to seek video:', error);
+        }
+    };
+
+    /**
+     * Load more messages (pagination)
+     */
+    const handleLoadMore = () => {
+        if (!hasMore || liveChatState.isLoading) return;
+
+        logger.info('[LiveChatList] Loading more messages');
+        setPage(prevPage => prevPage + 1);
+    };
+
+    /**
+     * Start remote fetch for live chat data (runs once on mount)
+     */
+    useEffect(() => {
+        if (liveChatFetchStarted.current || !videoId) {
             return;
         }
 
         liveChatFetchStarted.current = true;
+
+        // Abort any existing fetch
         if (liveChatAbortController.current) {
             liveChatAbortController.current.abort();
         }
@@ -78,34 +111,85 @@ const LiveChatList: React.FC = () => {
         const controller = new AbortController();
         liveChatAbortController.current = controller;
 
-        logger.info('[LiveChat] Starting remote fetch for videoId:', videoId);
-        fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch).catch((error) => {
-            logger.error('[LiveChat] Remote fetch failed:', error);
-        });
+        logger.info('[LiveChatList] Starting remote fetch for videoId:', videoId);
+        dispatch(setLiveChatLoading(true));
+        dispatch(setLiveChatError(null));
+
+        fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch)
+            .then(() => {
+                logger.success('[LiveChatList] Remote fetch completed');
+                // Fetch from DB after remote fetch completes
+                fetchLiveChatFromDB();
+            })
+            .catch((error: any) => {
+                if (error.name === 'AbortError') {
+                    logger.info('[LiveChatList] Remote fetch aborted');
+                } else {
+                    logger.error('[LiveChatList] Remote fetch failed:', error);
+                    dispatch(setLiveChatError(error.message || 'Failed to fetch live chat'));
+                }
+            })
+            .finally(() => {
+                dispatch(setLiveChatLoading(false));
+            });
 
         return () => {
+            logger.info('[LiveChatList] Cleaning up remote fetch');
             controller.abort();
         };
-    }, [dispatch]);
+    }, [videoId, dispatch]);
+
+    /**
+     * Poll database for new messages (every 2 seconds)
+     */
+    useEffect(() => {
+        // Initial fetch
+        fetchLiveChatFromDB();
+
+        // Set up polling interval
+        pollingIntervalRef.current = setInterval(() => {
+            fetchLiveChatFromDB();
+        }, 2000);
+
+        return () => {
+            if (pollingIntervalRef.current) {
+                clearInterval(pollingIntervalRef.current);
+                pollingIntervalRef.current = null;
+            }
+        };
+    }, [page, videoId, dispatch]);
+
+    /**
+     * Refetch when page changes
+     */
+    useEffect(() => {
+        fetchLiveChatFromDB();
+    }, [page]);
+
+    // Handle component mount logging
+    useEffect(() => {
+        logger.info('[LiveChatList] Component mounted');
+        return () => {
+            logger.info('[LiveChatList] Component unmounted');
+        };
+    }, []);
 
     return (
-        <div className="flex flex-col gap-2">
-            {liveChatComments.length === 0 && !isLoading && (
-                <div className="text-center p-4 text-gray-500">
-                    No live chat replay available or loading...
+        <div className="livechat-list-container h-full">
+            {liveChatState.error && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded mb-4">
+                    <strong className="font-bold">Error:</strong>
+                    <span className="block sm:inline ml-2">{liveChatState.error}</span>
                 </div>
             )}
-            
-            {liveChatComments.map((comment: Comment) => (
-                <CommentItem
-                    key={comment.commentId}
-                    comment={comment}
-                />
-            ))}
-            
-            {isLoading && (
-                <div className="text-center p-4">Loading chat...</div>
-            )}
+
+            <LiveChatTranscript
+                messages={liveChatMessages}
+                isLoading={liveChatState.isLoading}
+                onTimestampClick={handleTimestampClick}
+                onLoadMore={handleLoadMore}
+                hasMore={hasMore}
+            />
         </div>
     );
 };
