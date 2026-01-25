@@ -91,14 +91,17 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     }
   };
 
-  const handleCopyToClipboard = async () => {
-    try {
-      await copyToClipboard(message.message);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (error: any) {
-      logger.error('[LiveChatMessageItem] Failed to copy to clipboard:', error);
-    }
+  const handleCopyToClipboard = () => {
+    copyToClipboard(
+      message.message,
+      () => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      },
+      (error) => {
+        logger.error('[LiveChatMessageItem] Failed to copy to clipboard:', error);
+      }
+    );
   };
 
   const toggleReplies = () => {
@@ -171,7 +174,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
           </span>
 
           {/* Reply count indicator */}
-          {message.replyCount && message.replyCount > 0 && (
+          {(message.replyCount || 0) > 0 && (
             <button
               onClick={toggleReplies}
               className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1 ml-auto"

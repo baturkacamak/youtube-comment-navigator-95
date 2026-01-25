@@ -82,6 +82,9 @@ const commentsSlice = createSlice({
         setLiveChat: (state, action: PayloadAction<LiveChatMessage[]>) => {
             state.liveChat = action.payload;
         },
+        appendLiveChat: (state, action: PayloadAction<LiveChatMessage[]>) => {
+            state.liveChat = [...state.liveChat, ...action.payload];
+        },
         setLiveChatLoading: (state, action: PayloadAction<boolean>) => {
             state.liveChatState.isLoading = action.payload;
         },
@@ -177,6 +180,7 @@ export const {
     // Data fetching and setting actions
     setComments,
     setLiveChat,
+    appendLiveChat,
     setLiveChatLoading,
     setLiveChatError,
     setLiveChatMessageCount,

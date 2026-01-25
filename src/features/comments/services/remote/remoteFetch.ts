@@ -42,6 +42,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
         const videoId = extractVideoId();
         const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
+        const windowObj = window as any;
 
         logger.info(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
         

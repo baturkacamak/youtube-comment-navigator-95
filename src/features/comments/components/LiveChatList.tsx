@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import {
     setLiveChat,
+    appendLiveChat,
     setLiveChatLoading,
     setLiveChatError,
     setLiveChatMessageCount
@@ -36,6 +37,12 @@ const LiveChatList: React.FC = () => {
 
     const videoId = extractVideoId();
 
+    // Reset page when videoId changes
+    useEffect(() => {
+        setPage(0);
+        setHasMore(true);
+    }, [videoId]);
+
     /**
      * Fetch live chat messages from database with error handling
      */
@@ -45,23 +52,37 @@ const LiveChatList: React.FC = () => {
             return;
         }
 
+        // Prevent fetching if already loading, unless it's a new video (page 0 replacement)
+        // We check liveChatState.isLoading, but we also need to ensure we don't block the initial load if state was stuck
+        if (liveChatState.isLoading && page > 0) return;
+
         try {
-            logger.debug('[LiveChatList] Fetching messages from database');
+            dispatch(setLiveChatLoading(true));
+            logger.debug(`[LiveChatList] Fetching messages from database (page ${page})`);
 
             const offset = page * pageSize;
             const messages = await loadLiveChatMessages(videoId, offset, pageSize);
             const totalCount = await getLiveChatMessageCount(videoId);
 
-            dispatch(setLiveChat(messages));
+            if (page === 0) {
+                dispatch(setLiveChat(messages));
+            } else {
+                dispatch(appendLiveChat(messages));
+            }
+            
             dispatch(setLiveChatMessageCount(totalCount));
 
             // Check if there are more messages to load
-            setHasMore(offset + messages.length < totalCount);
+            // If we loaded fewer messages than pageSize, we've reached the end
+            const currentTotal = (page * pageSize) + messages.length;
+            setHasMore(currentTotal < totalCount && messages.length === pageSize);
 
             logger.success(`[LiveChatList] Loaded ${messages.length} messages (total: ${totalCount})`);
         } catch (error: any) {
             logger.error('[LiveChatList] Failed to load messages from database:', error);
             dispatch(setLiveChatError(error.message || 'Failed to load live chat messages'));
+        } finally {
+            dispatch(setLiveChatLoading(false));
         }
     };
 
