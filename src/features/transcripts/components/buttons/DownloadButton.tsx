@@ -6,13 +6,14 @@ import { useTranslation } from 'react-i18next';
 
 interface DownloadButtonProps {
     transcriptText: string;
+    fileNamePrefix?: string;
 }
 
-const DownloadButton: React.FC<DownloadButtonProps> = ({ transcriptText }) => {
+const DownloadButton: React.FC<DownloadButtonProps> = ({ transcriptText, fileNamePrefix = 'transcript' }) => {
     const { t } = useTranslation();
 
     const getFormattedFileName = () => {
-        const baseName = 'transcript';
+        const baseName = fileNamePrefix;
         const videoTitle = getVideoTitle();
         const videoId = extractYouTubeVideoIdFromUrl();
         if (videoTitle) return `${baseName}-${videoTitle}.txt`;

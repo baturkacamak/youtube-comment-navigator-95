@@ -3,15 +3,22 @@
  * Displays livechat messages in a transcript-style format with clickable timestamps
  */
 
-import React, { useState, useRef, useEffect } from 'react';
-import { LiveChatTranscriptProps } from '../../../types/liveChatTypes';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { LiveChatTranscriptProps, LiveChatMessage } from '../../../types/liveChatTypes';
 import LiveChatMessageItem from './LiveChatMessageItem';
 import logger from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import {
   ChatBubbleLeftRightIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ChevronDownIcon
 } from '@heroicons/react/24/outline';
+import CopyButton from '../../transcripts/components/buttons/CopyButton';
+import DownloadButton from '../../transcripts/components/buttons/DownloadButton';
+import PrintButton from '../../transcripts/components/buttons/PrintButton';
+import ShareButton from '../../shared/components/ShareButton';
+import CheckboxFilter from '../../shared/components/CheckboxFilter';
+import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 
 const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   messages,
@@ -23,6 +30,14 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(false);
+
+  // Generate text for export/copy
+  const transcriptText = useMemo(() => {
+    return messages.map(msg => {
+      const time = msg.videoOffsetTimeSec !== undefined ? formatTimestamp(msg.videoOffsetTimeSec) : '--:--';
+      return `[${time}] ${msg.author}: ${msg.message}`;
+    }).join('\n');
+  }, [messages]);
 
   // Auto-scroll to bottom when new messages arrive (optional)
   useEffect(() => {
@@ -41,6 +56,10 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       logger.info('[LiveChatTranscript] Near bottom, loading more messages');
       onLoadMore();
     }
+  };
+
+  const handleAutoScrollChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAutoScroll(e.target.checked);
   };
 
   if (isLoading && messages.length === 0) {
@@ -73,36 +92,32 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   }
 
   return (
-    <div className="livechat-transcript flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <div className="flex items-center gap-2">
-          <ChatBubbleLeftRightIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {t('Live Chat Transcript')}
-          </h3>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            ({messages.length} {t('messages')})
-          </span>
+    <div className="livechat-transcript flex flex-col h-full rounded" aria-label="Live Chat Transcript">
+      {/* Sticky Action Bar */}
+      <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10 flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-4">
+          <CopyButton textToCopy={transcriptText} />
+          <DownloadButton transcriptText={transcriptText} fileNamePrefix="livechat" />
+          <PrintButton transcriptText={transcriptText} />
+          <ShareButton textToShare={transcriptText} />
         </div>
 
-        {/* Auto-scroll toggle */}
-        <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={autoScroll}
-            onChange={(e) => setAutoScroll(e.target.checked)}
-            className="rounded"
-          />
-          <span>{t('Auto-scroll')}</span>
-        </label>
+        <div className="flex items-center">
+           <CheckboxFilter
+              name={t('Auto-scroll')}
+              value="auto-scroll"
+              checked={autoScroll}
+              onChange={handleAutoScrollChange}
+              icon={<ChevronDownIcon className="w-4 h-4" />}
+            />
+        </div>
       </div>
 
       {/* Messages List */}
       <ul
         ref={scrollRef as any}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto bg-white dark:bg-gray-900 list-none p-4"
+        className="flex-1 overflow-y-auto bg-white dark:bg-gray-900 list-none p-4 rounded-lg border border-gray-200 dark:border-gray-700"
         style={{ maxHeight: 'calc(100vh - 200px)' }}
         role="list"
       >
