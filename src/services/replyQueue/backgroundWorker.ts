@@ -69,7 +69,8 @@ export function addTask(
   videoId: string,
   parentCommentId: string,
   continuationToken: string,
-  preparedRequest: PreparedRequest
+  preparedRequest: PreparedRequest,
+  tabId?: number
 ): string {
   const queue = getQueue(videoId);
   const taskId = generateTaskId();
@@ -82,11 +83,12 @@ export function addTask(
     preparedRequest,
     status: TaskStatus.PENDING,
     retryCount: 0,
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    tabId
   };
 
   queue.push(task);
-  console.log(`[BackgroundWorker] Added task ${taskId} for comment ${parentCommentId}`);
+  console.log(`[BackgroundWorker] Added task ${taskId} for comment ${parentCommentId} (tab: ${tabId})`);
 
   // Trigger processing
   processQueue(videoId);
@@ -101,7 +103,8 @@ export function addBatchTasks(
     parentCommentId: string;
     continuationToken: string;
     preparedRequest: PreparedRequest;
-  }>
+  }>,
+  tabId?: number
 ): string[] {
   const taskIds: string[] = [];
   const videoIds = new Set<string>();
@@ -118,7 +121,8 @@ export function addBatchTasks(
       preparedRequest: taskData.preparedRequest,
       status: TaskStatus.PENDING,
       retryCount: 0,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      tabId
     };
 
     queue.push(task);
@@ -126,7 +130,7 @@ export function addBatchTasks(
     videoIds.add(taskData.videoId);
   }
 
-  console.log(`[BackgroundWorker] Added ${taskIds.length} batch tasks`);
+  console.log(`[BackgroundWorker] Added ${taskIds.length} batch tasks (tab: ${tabId})`);
 
   // Trigger processing for all affected videos
   for (const videoId of videoIds) {
@@ -320,10 +324,10 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<{
     // Parse reply data - just count and next token
     const result = parseReplyResponse(data, task);
 
-    // Send raw reply data to content script for processing and storage
+    // Send raw reply data to content script for processing
     // This keeps transformation logic in one place (content script)
     if (result.hasReplies) {
-      await sendReplyDataToContentScript(data, task.videoId, task.parentCommentId);
+      await sendReplyDataToContentScript(data, task.videoId, task.parentCommentId, task.tabId);
     }
 
     return {
@@ -378,31 +382,40 @@ function parseReplyResponse(data: any, task: ReplyFetchTaskWithRequest): {
 }
 
 // Send raw reply data to content script for processing
-async function sendReplyDataToContentScript(rawData: any, videoId: string, parentCommentId: string): Promise<void> {
+async function sendReplyDataToContentScript(rawData: any, videoId: string, parentCommentId: string, tabId?: number): Promise<void> {
   return new Promise((resolve) => {
-    chrome.tabs.query({ url: '*://*.youtube.com/*' }, (tabs) => {
-      const targetTab = tabs.find(tab => tab.active) || tabs[0];
-      if (targetTab?.id) {
-        chrome.tabs.sendMessage(
-          targetTab.id,
-          {
-            type: 'PROCESS_REPLY_DATA',
-            videoId,
-            parentCommentId,
-            rawData
-          },
-          (response) => {
-            if (chrome.runtime.lastError) {
-              console.warn('[BackgroundWorker] Failed to send reply data:', chrome.runtime.lastError);
-            }
-            resolve();
+    const sendMessage = (id: number) => {
+      chrome.tabs.sendMessage(
+        id,
+        {
+          type: 'PROCESS_REPLY_DATA',
+          videoId,
+          parentCommentId,
+          rawData
+        },
+        (response) => {
+          if (chrome.runtime.lastError) {
+            console.warn(`[BackgroundWorker] Failed to send reply data to tab ${id}:`, chrome.runtime.lastError);
           }
-        );
-      } else {
-        console.warn('[BackgroundWorker] No YouTube tab found to send reply data');
-        resolve();
-      }
-    });
+          resolve();
+        }
+      );
+    };
+
+    if (tabId) {
+      sendMessage(tabId);
+    } else {
+      // Fallback to active tab if no tabId stored (legacy behavior)
+      chrome.tabs.query({ url: '*://*.youtube.com/*' }, (tabs) => {
+        const targetTab = tabs.find(tab => tab.active) || tabs[0];
+        if (targetTab?.id) {
+          sendMessage(targetTab.id);
+        } else {
+          console.warn('[BackgroundWorker] No YouTube tab found to send reply data');
+          resolve();
+        }
+      });
+    }
   });
 }
 
@@ -491,19 +504,22 @@ export function handleMessage(
   sender: chrome.runtime.MessageSender,
   sendResponse: (response?: any) => void
 ): boolean {
+  const tabId = sender.tab?.id;
+
   switch (message.type) {
     case MessageType.QUEUE_REPLY_FETCH:
       const taskId = addTask(
         message.task.videoId,
         message.task.parentCommentId,
         message.task.continuationToken,
-        message.task.preparedRequest
+        message.task.preparedRequest,
+        tabId
       );
       sendResponse({ taskId });
       return true;
 
     case MessageType.QUEUE_BATCH_REPLY_FETCH:
-      const taskIds = addBatchTasks(message.tasks);
+      const taskIds = addBatchTasks(message.tasks, tabId);
       sendResponse({ taskIds });
       return true;
 

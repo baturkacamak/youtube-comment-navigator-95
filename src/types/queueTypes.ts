@@ -24,6 +24,7 @@ export interface ReplyFetchTask {
   startedAt?: number;
   completedAt?: number;
   error?: string;
+  tabId?: number; // The tab that initiated this task
 }
 
 // Message types for content script <-> background communication
