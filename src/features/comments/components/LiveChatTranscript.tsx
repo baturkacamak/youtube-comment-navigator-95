@@ -99,16 +99,18 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       </div>
 
       {/* Messages List */}
-      <div
-        ref={scrollRef}
+      <ul
+        ref={scrollRef as any}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto bg-white dark:bg-gray-900"
+        className="flex-1 overflow-y-auto bg-white dark:bg-gray-900 list-none p-4"
         style={{ maxHeight: 'calc(100vh - 200px)' }}
+        role="list"
       >
-        {messages.map((message) => (
+        {messages.map((message, index) => (
           <LiveChatMessageItem
             key={message.messageId}
             message={message}
+            index={index}
             onTimestampClick={onTimestampClick}
           />
         ))}

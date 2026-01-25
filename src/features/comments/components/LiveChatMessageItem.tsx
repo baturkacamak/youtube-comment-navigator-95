@@ -4,10 +4,13 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../types/rootState';
 import { LiveChatMessageItemProps } from '../../../types/liveChatTypes';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 import handleClickTimestamp from '../utils/comments/handleClickTimestamp';
 import { copyToClipboard } from '../utils/clipboard/copyToClipboard';
+import { highlightText } from '../../shared/utils/highlightText';
 import logger from '../../shared/utils/logger';
 import { loadLiveChatReplies } from '../services/liveChat/liveChatDatabase';
 import { Comment } from '../../../types/commentTypes';
@@ -22,12 +25,20 @@ import {
   HeartIcon as HeartIconSolid
 } from '@heroicons/react/24/solid';
 
-const LiveChatMessageItem: React.FC<LiveChatMessageItemProps> = ({
+interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
+  index?: number;
+}
+
+const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   message,
+  index = 0,
   onTimestampClick,
   showReplies: showRepliesExternal,
   onToggleReplies
 }) => {
+  const textSize = useSelector((state: RootState) => state.settings.textSize);
+  const keyword = useSelector((state: RootState) => state.searchKeyword);
+  const fontFamily = useSelector((state: RootState) => state.settings.fontFamily);
   const [showReplies, setShowReplies] = useState(showRepliesExternal || false);
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
@@ -101,162 +112,91 @@ const LiveChatMessageItem: React.FC<LiveChatMessageItemProps> = ({
   // Format timestamp for display (e.g., "1:23:45")
   const timestampDisplay = message.videoOffsetTimeSec !== undefined
     ? formatTimestamp(message.videoOffsetTimeSec)
-    : null;
-
-  // Format published date
-  const publishedDate = new Date(message.published).toLocaleString();
+    : '--:--';
 
   return (
-    <div
-      className="livechat-message-item border-b border-gray-200 dark:border-gray-700 py-2 px-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+    <li
+      className={`mb-2 flex items-center rounded-lg ${textSize} ${index % 2 === 0 ? 'bg-gray-100 dark:bg-gray-700' : 'bg-slate-50 dark:bg-gray-800'}`}
       data-message-id={message.messageId}
     >
-      <div className="flex gap-3">
+      <div className="flex items-center w-full">
         {/* Timestamp - Clickable */}
-        <div className="flex-shrink-0 w-16 text-right">
-          {timestampDisplay ? (
-            <a
-              href="#"
-              data-timestamp={timestampDisplay}
-              onClick={handleTimestampClickInternal}
-              className="text-blue-600 dark:text-blue-400 hover:underline font-mono text-sm cursor-pointer"
-              title={`Jump to ${timestampDisplay}`}
-            >
-              {timestampDisplay}
-            </a>
-          ) : (
-            <span className="text-gray-400 dark:text-gray-600 font-mono text-sm">--:--</span>
-          )}
-        </div>
-
-        {/* Avatar */}
-        <div className="flex-shrink-0">
-          <img
-            src={message.authorAvatarUrl}
-            alt={message.author}
-            className="w-8 h-8 rounded-full"
-          />
-        </div>
+        <span
+          className="bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 mr-2 cursor-pointer hover:bg-stone-300 dark:hover:bg-gray-400 transition-colors"
+          onClick={handleTimestampClickInternal}
+          title={`Jump to ${timestampDisplay}`}
+        >
+          {timestampDisplay}
+        </span>
 
         {/* Message Content */}
-        <div className="flex-1 min-w-0">
-          {/* Author and Badges */}
-          <div className="flex items-center gap-2 mb-1">
-            <span
-              className={`font-semibold text-sm ${
-                message.isAuthorContentCreator
-                  ? 'text-gray-900 dark:text-white'
-                  : 'text-gray-700 dark:text-gray-300'
-              }`}
-            >
-              {message.author}
-            </span>
+        <div className="flex-1 pb-2 -mb-2 inline-flex items-center gap-2">
+          {/* Author with badges */}
+          <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-1">
+            {message.author}
 
             {/* Badges */}
             {message.badges && message.badges.length > 0 && (
-              <div className="flex gap-1">
-                {message.badges.map((badge, idx) => (
-                  <img
-                    key={idx}
-                    src={badge.iconUrl}
-                    alt={badge.label}
-                    title={badge.tooltipText || badge.label}
-                    className="w-4 h-4"
-                  />
-                ))}
-              </div>
+              message.badges.map((badge, idx) => (
+                <img
+                  key={idx}
+                  src={badge.iconUrl}
+                  alt={badge.label}
+                  title={badge.tooltipText || badge.label}
+                  className="w-4 h-4"
+                />
+              ))
             )}
 
             {message.isModerator && (
-              <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded">
-                MOD
-              </span>
-            )}
-
-            {message.isVerified && (
-              <span className="text-xs bg-gray-500 text-white px-1.5 py-0.5 rounded">
-                ✓
-              </span>
+              <span className="text-xs bg-blue-500 text-white px-1 py-0.5 rounded">MOD</span>
             )}
 
             {message.isAuthorContentCreator && (
-              <span className="text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded">
-                Creator
+              <span className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-1 py-0.5 rounded">Creator</span>
+            )}
+          </span>
+
+          {/* Message text */}
+          <span
+            className={`text-gray-800 dark:text-gray-300 cursor-text ${index % 2 === 0 ? 'text-black dark:text-gray-200' : 'text-gray-700 dark:text-gray-300'}`}
+            style={{ fontFamily }}
+          >
+            {message.isDonation && message.donationAmount && (
+              <span className="inline-block bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-0.5 rounded mr-1 text-sm font-semibold">
+                {message.donationAmount} {message.donationCurrency || ''}
               </span>
             )}
-          </div>
+            {highlightText(message.message, keyword)}
+          </span>
 
-          {/* Message Text */}
-          <div className="text-sm text-gray-800 dark:text-gray-200 break-words">
-            {message.isDonation && message.donationAmount && (
-              <div className="inline-block bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-2 py-1 rounded mr-2 mb-1 font-semibold">
-                {message.donationAmount} {message.donationCurrency || ''}
-              </div>
-            )}
-            {message.message}
-          </div>
-
-          {/* Note if bookmarked */}
-          {message.isBookmarked && message.note && (
-            <div className="mt-2 text-xs bg-yellow-50 dark:bg-yellow-900/20 border-l-4 border-yellow-400 p-2">
-              <div className="font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
-                Note:
-              </div>
-              <div className="text-gray-700 dark:text-gray-300">{message.note}</div>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex items-center gap-3 mt-2">
-            {/* Copy */}
+          {/* Reply count indicator */}
+          {message.replyCount && message.replyCount > 0 && (
             <button
-              onClick={handleCopyToClipboard}
-              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1 text-xs"
-              title="Copy message"
+              onClick={toggleReplies}
+              className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1 ml-auto"
             >
-              <DocumentDuplicateIcon className="w-4 h-4" />
-              {copySuccess && <span className="text-green-600">Copied!</span>}
+              <ChatBubbleBottomCenterTextIcon className="w-3 h-3" />
+              {message.replyCount}
             </button>
-
-            {/* Replies */}
-            {(message.hasReplies || message.replyCount) && (
-              <button
-                onClick={toggleReplies}
-                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1 text-xs"
-              >
-                <ChatBubbleBottomCenterTextIcon className="w-4 h-4" />
-                <span>{message.replyCount || 0}</span>
-                <span>{showReplies ? '▲' : '▼'}</span>
-              </button>
-            )}
-
-            {/* Bookmark indicator */}
-            {message.isBookmarked && (
-              <div className="text-yellow-500 flex items-center gap-1 text-xs">
-                <BookmarkIcon className="w-4 h-4 fill-current" />
-              </div>
-            )}
-
-            {/* Published time */}
-            <span className="text-xs text-gray-400 dark:text-gray-600 ml-auto">
-              {publishedDate}
-            </span>
-          </div>
-
-          {/* Replies */}
-          {message.hasReplies && (
-            <CommentReplies
-              replies={replies}
-              showReplies={showReplies}
-              repliesRef={repliesRef}
-              repliesHeight={repliesHeight}
-              parentCommentId={message.messageId}
-              isLoading={isLoadingReplies}
-            />
           )}
         </div>
       </div>
-    </div>
+
+      {/* Replies section */}
+      {message.hasReplies && showReplies && (
+        <div className="w-full mt-2 pl-8">
+          <CommentReplies
+            replies={replies}
+            showReplies={showReplies}
+            repliesRef={repliesRef}
+            repliesHeight={repliesHeight}
+            parentCommentId={message.messageId}
+            isLoading={isLoadingReplies}
+          />
+        </div>
+      )}
+    </li>
   );
 };
 

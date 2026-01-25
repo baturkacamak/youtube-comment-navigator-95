@@ -34,8 +34,6 @@ const LiveChatList: React.FC = () => {
     const [hasMore, setHasMore] = useState(true);
     const pageSize = 100; // Messages per page
 
-    const liveChatFetchStarted = useRef(false);
-    const liveChatAbortController = useRef<AbortController | null>(null);
     const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const videoId = extractVideoId();
@@ -96,63 +94,8 @@ const LiveChatList: React.FC = () => {
         setPage(prevPage => prevPage + 1);
     };
 
-    /**
-     * Start remote fetch for live chat data (runs once on mount)
-     * Only fetches if data doesn't already exist
-     */
-    useEffect(() => {
-        if (liveChatFetchStarted.current || !videoId) {
-            return;
-        }
-
-        const initializeLiveChat = async () => {
-            try {
-                // Check if live chat already exists in DB
-                const exists = await hasLiveChatMessages(videoId);
-                if (exists) {
-                    logger.info('[LiveChatList] Live chat already exists in DB, skipping remote fetch');
-                    liveChatFetchStarted.current = true;
-                    return;
-                }
-
-                liveChatFetchStarted.current = true;
-
-                // Abort any existing fetch
-                if (liveChatAbortController.current) {
-                    liveChatAbortController.current.abort();
-                }
-
-                const controller = new AbortController();
-                liveChatAbortController.current = controller;
-
-                logger.info('[LiveChatList] Starting remote fetch for videoId:', videoId);
-                dispatch(setLiveChatLoading(true));
-                dispatch(setLiveChatError(null));
-
-                await fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch);
-                logger.success('[LiveChatList] Remote fetch completed');
-                // Note: DB polling will automatically pick up new messages
-            } catch (error: any) {
-                if (error.name === 'AbortError') {
-                    logger.info('[LiveChatList] Remote fetch aborted');
-                } else {
-                    logger.error('[LiveChatList] Remote fetch failed:', error);
-                    dispatch(setLiveChatError(error.message || 'Failed to fetch live chat'));
-                }
-            } finally {
-                dispatch(setLiveChatLoading(false));
-            }
-        };
-
-        initializeLiveChat();
-
-        return () => {
-            if (liveChatAbortController.current) {
-                logger.info('[LiveChatList] Cleaning up remote fetch');
-                liveChatAbortController.current.abort();
-            }
-        };
-    }, [videoId, dispatch]);
+    // Note: Live chat is now fetched automatically on URL change via useFetchDataOnUrlChange
+    // This component only handles displaying the data from the database
 
     /**
      * Poll database for new messages (every 2 seconds)

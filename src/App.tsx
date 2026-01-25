@@ -25,6 +25,7 @@ const App: React.FC = () => {
     const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
     const showContentOnSearch = useSelector((state: RootState) => state.settings.showContentOnSearch); // Get the state
     const searchKeyword = useSelector((state: RootState) => state.searchKeyword); // Get the search keyword
+    const liveChatMessageCount = useSelector((state: RootState) => state.liveChatMessageCount); // Get livechat count
     const dispatch = useDispatch();
 
     const openSettings = () => setIsSettingsOpen(true);
@@ -90,7 +91,7 @@ const App: React.FC = () => {
         {
             title: {
                 id: 'livechat',
-                label: t('Live Chat'),
+                label: `${t('Live Chat')} (${liveChatMessageCount})`,
                 icon: InboxIcon,
             },
             content: <LiveChatList />,

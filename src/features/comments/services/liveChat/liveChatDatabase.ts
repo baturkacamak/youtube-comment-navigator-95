@@ -81,11 +81,30 @@ export async function saveLiveChatMessages(
       );
     }
 
-    // Use bulkPut to upsert messages (insert or update based on messageId)
-    await db.liveChatMessages.bulkPut(validMessages);
+    // Check for existing messages to prevent duplicates
+    const messageIds = validMessages.map(m => m.messageId);
+    const existingMessages = await db.liveChatMessages
+      .where('messageId')
+      .anyOf(messageIds)
+      .toArray();
 
-    logger.success(`[LiveChatDB] Successfully saved ${validMessages.length} messages`);
-    return validMessages.length;
+    const existingIds = new Set(existingMessages.map(m => m.messageId));
+    const newMessages = validMessages.filter(msg => !existingIds.has(msg.messageId));
+
+    if (newMessages.length === 0) {
+      logger.info(`[LiveChatDB] All ${validMessages.length} messages already exist in DB, skipping save`);
+      return 0;
+    }
+
+    if (newMessages.length < validMessages.length) {
+      logger.info(`[LiveChatDB] ${validMessages.length - newMessages.length} messages already exist, saving ${newMessages.length} new messages`);
+    }
+
+    // Use bulkAdd for new messages only
+    await db.liveChatMessages.bulkAdd(newMessages);
+
+    logger.success(`[LiveChatDB] Successfully saved ${newMessages.length} new messages`);
+    return newMessages.length;
   } catch (error: any) {
     logger.error('[LiveChatDB] Failed to save livechat messages:', error);
 
