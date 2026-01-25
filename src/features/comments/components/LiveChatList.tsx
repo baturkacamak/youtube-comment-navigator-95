@@ -16,7 +16,10 @@ import { extractVideoId } from '../services/remote/utils';
 import { fetchAndProcessLiveChat } from '../services/liveChat/fetchLiveChat';
 import {
     loadLiveChatMessages,
-    getLiveChatMessageCount
+    getLiveChatMessageCount,
+    hasLiveChatMessages,
+    deleteLiveChatMessages,
+    deleteLiveChatReplies
 } from '../services/liveChat/liveChatDatabase';
 import LiveChatTranscript from './LiveChatTranscript';
 import { LiveChatMessage, LiveChatErrorType } from '../../../types/liveChatTypes';
@@ -95,46 +98,59 @@ const LiveChatList: React.FC = () => {
 
     /**
      * Start remote fetch for live chat data (runs once on mount)
+     * Only fetches if data doesn't already exist
      */
     useEffect(() => {
         if (liveChatFetchStarted.current || !videoId) {
             return;
         }
 
-        liveChatFetchStarted.current = true;
+        const initializeLiveChat = async () => {
+            try {
+                // Check if live chat already exists in DB
+                const exists = await hasLiveChatMessages(videoId);
+                if (exists) {
+                    logger.info('[LiveChatList] Live chat already exists in DB, skipping remote fetch');
+                    liveChatFetchStarted.current = true;
+                    return;
+                }
 
-        // Abort any existing fetch
-        if (liveChatAbortController.current) {
-            liveChatAbortController.current.abort();
-        }
+                liveChatFetchStarted.current = true;
 
-        const controller = new AbortController();
-        liveChatAbortController.current = controller;
+                // Abort any existing fetch
+                if (liveChatAbortController.current) {
+                    liveChatAbortController.current.abort();
+                }
 
-        logger.info('[LiveChatList] Starting remote fetch for videoId:', videoId);
-        dispatch(setLiveChatLoading(true));
-        dispatch(setLiveChatError(null));
+                const controller = new AbortController();
+                liveChatAbortController.current = controller;
 
-        fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch)
-            .then(() => {
+                logger.info('[LiveChatList] Starting remote fetch for videoId:', videoId);
+                dispatch(setLiveChatLoading(true));
+                dispatch(setLiveChatError(null));
+
+                await fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch);
                 logger.success('[LiveChatList] Remote fetch completed');
                 // Note: DB polling will automatically pick up new messages
-            })
-            .catch((error: any) => {
+            } catch (error: any) {
                 if (error.name === 'AbortError') {
                     logger.info('[LiveChatList] Remote fetch aborted');
                 } else {
                     logger.error('[LiveChatList] Remote fetch failed:', error);
                     dispatch(setLiveChatError(error.message || 'Failed to fetch live chat'));
                 }
-            })
-            .finally(() => {
+            } finally {
                 dispatch(setLiveChatLoading(false));
-            });
+            }
+        };
+
+        initializeLiveChat();
 
         return () => {
-            logger.info('[LiveChatList] Cleaning up remote fetch');
-            controller.abort();
+            if (liveChatAbortController.current) {
+                logger.info('[LiveChatList] Cleaning up remote fetch');
+                liveChatAbortController.current.abort();
+            }
         };
     }, [videoId, dispatch]);
 

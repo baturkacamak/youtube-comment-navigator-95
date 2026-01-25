@@ -394,6 +394,72 @@ export async function deleteLiveChatMessages(videoId: string): Promise<number> {
 }
 
 /**
+ * Delete livechat replies (comments) for a video
+ * @param videoId Video ID
+ * @returns Number of replies deleted
+ * @throws LiveChatError if delete operation fails
+ */
+export async function deleteLiveChatReplies(videoId: string): Promise<number> {
+  try {
+    if (!videoId) {
+      throw createLiveChatError(
+        LiveChatErrorType.DATABASE_ERROR,
+        'videoId is required to delete livechat replies'
+      );
+    }
+
+    logger.info(`[LiveChatDB] Deleting livechat replies for video ${videoId}`);
+
+    // Delete all comments that are marked as livechat (isLiveChat = true)
+    const count = await db.comments
+      .where('videoId')
+      .equals(videoId)
+      .and(comment => comment.isLiveChat === true)
+      .delete();
+
+    logger.success(`[LiveChatDB] Deleted ${count} livechat replies`);
+    return count;
+  } catch (error: any) {
+    logger.error('[LiveChatDB] Failed to delete livechat replies:', error);
+
+    if (error.type && error.type in LiveChatErrorType) {
+      throw error;
+    }
+
+    throw createLiveChatError(
+      LiveChatErrorType.DATABASE_ERROR,
+      `Failed to delete livechat replies: ${error.message}`,
+      error,
+      { videoId }
+    );
+  }
+}
+
+/**
+ * Check if livechat messages already exist for a video
+ * @param videoId Video ID
+ * @returns True if messages exist, false otherwise
+ */
+export async function hasLiveChatMessages(videoId: string): Promise<boolean> {
+  try {
+    if (!videoId) {
+      return false;
+    }
+
+    const count = await db.liveChatMessages
+      .where('videoId')
+      .equals(videoId)
+      .count();
+
+    logger.info(`[LiveChatDB] Video ${videoId} has ${count} livechat messages`);
+    return count > 0;
+  } catch (error: any) {
+    logger.error('[LiveChatDB] Failed to check for existing livechat messages:', error);
+    return false;
+  }
+}
+
+/**
  * Bookmark a livechat message
  * @param messageId Message ID to bookmark
  * @param note Optional note to add to bookmark

@@ -63,28 +63,41 @@ export function processLiveChatActions(actions: any[], context: ChatProcessingCo
                         .timestampUsec
             ) as string | undefined;
 
+            // Some messages (system messages, moderator actions) may not have timestampUsec
+            // Try to use the video offset time as fallback
+            let timestampMs: number;
+            let usedFallback = false;
+
             if (!timestampUsec) {
-                errors.push({
-                    type: LiveChatErrorType.PARSE_ERROR,
-                    message: `Action ${i} missing timestampUsec`,
-                    timestamp: Date.now(),
-                    context: { actionIndex: i }
-                });
-                continue;
-            }
+                // Try to get timestamp from video offset
+                const videoOffsetMsec = wrapTryCatch(() =>
+                    commentWrapper.replayChatItemAction.videoOffsetTimeMsec
+                ) as string | number | undefined;
 
-            const timestampMicroseconds = Number.parseInt(String(timestampUsec), 10);
-            if (!timestampMicroseconds || Number.isNaN(timestampMicroseconds)) {
-                errors.push({
-                    type: LiveChatErrorType.PARSE_ERROR,
-                    message: `Action ${i} has invalid timestamp: ${timestampUsec}`,
-                    timestamp: Date.now(),
-                    context: { actionIndex: i, timestampUsec }
-                });
-                continue;
+                if (videoOffsetMsec) {
+                    // Use current time + video offset as timestamp
+                    const now = Date.now();
+                    timestampMs = now;
+                    usedFallback = true;
+                    logger.debug(`[LiveChatProcessor] Action ${i} using current time as timestamp (no timestampUsec)`);
+                } else {
+                    // No timestamp available - skip this message
+                    logger.debug(`[LiveChatProcessor] Action ${i} has no timestamp, skipping`);
+                    continue; // Silently skip - not an error, just a system message
+                }
+            } else {
+                const timestampMicroseconds = Number.parseInt(String(timestampUsec), 10);
+                if (!timestampMicroseconds || Number.isNaN(timestampMicroseconds)) {
+                    errors.push({
+                        type: LiveChatErrorType.PARSE_ERROR,
+                        message: `Action ${i} has invalid timestamp: ${timestampUsec}`,
+                        timestamp: Date.now(),
+                        context: { actionIndex: i, timestampUsec }
+                    });
+                    continue;
+                }
+                timestampMs = timestampMicroseconds / 1000;
             }
-
-            const timestampMs = timestampMicroseconds / 1000;
 
             // Extract renderer
             const renderer = wrapTryCatch(
