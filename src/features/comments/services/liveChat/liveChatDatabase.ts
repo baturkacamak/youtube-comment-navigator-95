@@ -69,6 +69,13 @@ export async function saveLiveChatMessages(
         logger.warn('[LiveChatDB] Adding videoId to message', { messageId: msg.messageId });
         msg.videoId = videoId;
       }
+      
+      // Ensure timestampMs is present (critical for sorting)
+      if (msg.timestampMs === undefined || msg.timestampMs === null) {
+        logger.warn('[LiveChatDB] Message missing timestampMs, defaulting to 0', { messageId: msg.messageId });
+        msg.timestampMs = 0;
+      }
+
       return true;
     });
 
@@ -179,8 +186,10 @@ export async function loadLiveChatMessages(
     }
 
     // Sort by timestamp (chronological order for transcript view)
-    const messages = await collection
-      .sortBy('timestampMs');
+    // We use in-memory sort to ensure messages with missing timestamps are included
+    // (Dexie's sortBy uses the index which excludes records with missing keys)
+    const allMessages = await collection.toArray();
+    const messages = allMessages.sort((a, b) => (a.timestampMs || 0) - (b.timestampMs || 0));
 
     // Apply pagination
     const paginatedMessages = messages.slice(offset, offset + limit);
