@@ -57,6 +57,16 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             logger.info(`Bypassing cache and starting fresh download for ${videoId}`);
         }
 
+        const windowObj = window as any;
+        logger.debug('[RemoteFetch] Triggering fetchAndProcessLiveChat...');
+        // Start live chat fetch concurrently - Fire and forget (it handles its own DB writes)
+        // We trigger this BEFORE cache check because cache might only have standard comments, 
+        // and we want to ensure live chat is fetched if available.
+        fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch)
+            .catch(err => {
+                logger.error('[RemoteFetch] fetchAndProcessLiveChat failed:', err);
+            });
+
         // Get the local token only if we're not bypassing cache
         let localToken = bypassCache ? null : await getContinuationToken(videoId);
 
@@ -69,20 +79,11 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
         let token: string | null = localToken || (await fetchContinuationTokenFromRemote());
 
-        const windowObj = window as any;
-
         // Ensure we start from a clean state if there is no continuation token cached
         // or if we're bypassing cache
         if (!localToken || bypassCache) {
             await deleteCommentsIfFreshFetch(null, videoId);
         }
-
-        logger.debug('[RemoteFetch] Triggering fetchAndProcessLiveChat...');
-        // Start live chat fetch concurrently
-        const liveChatPromise = fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch)
-            .catch(err => {
-                logger.error('[RemoteFetch] fetchAndProcessLiveChat failed:', err);
-            });
 
         // fetch all comments iteratively and determine if there are queued replies
         const hasQueuedRepliesValue = await iterateFetchComments(
@@ -93,9 +94,6 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             signal,
             dispatch
         );
-
-        // Ensure live chat fetch is also complete
-        await liveChatPromise;
 
         // Handle signal abort at the top level
         if (signal.aborted) {
