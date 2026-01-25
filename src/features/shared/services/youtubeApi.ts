@@ -115,6 +115,134 @@ export class YouTubeApiService {
       }
       return undefined;
   }
+
+  private getYtcfgData(): any {
+    const windowObj = window as any;
+    return windowObj?.ytcfg?.data_ ?? windowObj?.ytcfg;
+  }
+
+  private getAuthOrigin(): string {
+    const origin = window.location?.origin;
+    if (origin && origin.startsWith('http')) {
+      return origin;
+    }
+    return 'https://www.youtube.com';
+  }
+
+  private readCookieValue(cookieNames: string[]): string | undefined {
+    try {
+      const cookieHeader = document.cookie;
+      if (!cookieHeader) {
+        return undefined;
+      }
+
+      const segments = cookieHeader.split(';');
+      for (const name of cookieNames) {
+        for (const rawSegment of segments) {
+          const segment = rawSegment.trim();
+          if (!segment.length) {
+            continue;
+          }
+          if (segment.startsWith(`${name}=`)) {
+            return segment.substring(name.length + 1);
+          }
+          if (segment === name) {
+            return '';
+          }
+        }
+      }
+      return undefined;
+    } catch (error) {
+      logger.warn('Failed to read cookies for auth header:', error);
+      return undefined;
+    }
+  }
+
+  private async sha1Hex(input: string): Promise<string | undefined> {
+    try {
+      const data = new TextEncoder().encode(input);
+      const buffer = await crypto.subtle.digest('SHA-1', data);
+      return Array.from(new Uint8Array(buffer))
+        .map((value) => value.toString(16).padStart(2, '0'))
+        .join('');
+    } catch (error) {
+      logger.warn('Failed to compute SHA-1 hash:', error);
+      return undefined;
+    }
+  }
+
+  private async buildSapSidToken(headerName: string, secret: string, origin: string, timestamp: number): Promise<string | undefined> {
+    if (!secret) {
+      return undefined;
+    }
+
+    const digest = await this.sha1Hex(`${timestamp} ${secret} ${origin}`);
+    if (!digest) {
+      return undefined;
+    }
+
+    return `${headerName} ${timestamp}_${digest}`;
+  }
+
+  private async buildSapSidAuthorizationHeader(): Promise<string | undefined> {
+    const origin = this.getAuthOrigin();
+    const timestamp = Math.floor(Date.now() / 1000);
+    const tokens: string[] = [];
+
+    const sapSid = this.readCookieValue(['__SAPISID', 'SAPISID', '__Secure-3PAPISID']);
+    if (sapSid) {
+      const token = await this.buildSapSidToken('SAPISIDHASH', sapSid, origin, timestamp);
+      if (token) {
+        tokens.push(token);
+      }
+    }
+
+    const onePSid = this.readCookieValue(['__1PSAPISID', '__Secure-1PAPISID']);
+    if (onePSid) {
+      const token = await this.buildSapSidToken('SAPISID1PHASH', onePSid, origin, timestamp);
+      if (token) {
+        tokens.push(token);
+      }
+    }
+
+    const threePSid = this.readCookieValue(['__3PSAPISID', '__Secure-3PAPISID']);
+    if (threePSid) {
+      const token = await this.buildSapSidToken('SAPISID3PHASH', threePSid, origin, timestamp);
+      if (token) {
+        tokens.push(token);
+      }
+    }
+
+    return tokens.length ? tokens.join(' ') : undefined;
+  }
+
+  private getInnertubeApiKey(): string | undefined {
+    try {
+      const ytcfgData = this.getYtcfgData();
+      const windowObj = window as any;
+
+      return (
+        ytcfgData?.INNERTUBE_API_KEY ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_CHANNEL_TRAILER?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_PLAYLIST_OVERVIEW?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_VERTICAL_LANDING_PAGE_PROMO
+          ?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_SPONSORSHIPS_OFFER
+          ?.innertubeApiKey ||
+        windowObj?.ytplayer?.web_player_context_config?.innertubeApiKey ||
+        windowObj?.ytcfg?.INNERTUBE_API_KEY
+      );
+    } catch (error) {
+      logger.error('Failed to resolve Innertube API key:', error);
+      return undefined;
+    }
+  }
+
+  private getInnertubeClientContext(videoId?: string): any {
+    const ytcfgData = this.getYtcfgData();
+    return ytcfgData?.INNERTUBE_CONTEXT?.client || this.getClientContext(videoId);
+  }
   
   private getClientContext(videoId?: string, customContext?: Partial<ClientContext>): any {
     if (!videoId) {
@@ -160,24 +288,40 @@ export class YouTubeApiService {
     return { ...defaultContext, ...customContext };
   }
   
-  private getStandardRequestHeaders(): HeadersInit {
-    const windowObj = window as any;
-    const ytcfg = windowObj.ytcfg;
-    const ytcfgData = ytcfg?.data_;
+  private async getStandardRequestHeaders(): Promise<HeadersInit> {
+    const ytcfgData = this.getYtcfgData();
     const feedbackData = ytcfgData?.GOOGLE_FEEDBACK_PRODUCT_DATA;
     const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || "1";
     const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || "2.20240620.05.00";
     
-    return {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
       "Accept": "*/*",
       "Accept-Language": feedbackData?.accept_language || navigator.language,
+      "x-goog-visitor-id": ytcfgData?.VISITOR_DATA,
+      "x-youtube-identity-token": ytcfgData?.ID_TOKEN || '',
       "x-youtube-client-name": clientName,
       "x-youtube-client-version": clientVersion,
       "Origin": window.location.origin,
       "Cache-Control": "no-store",
       "Pragma": "no-cache"
     };
+    
+    const authHeader = await this.buildSapSidAuthorizationHeader();
+    if (authHeader) {
+      headers.Authorization = authHeader;
+    } else {
+      logger.warn('SAPISID auth header not available. Some Innertube requests may fail.');
+    }
+
+    const normalizedHeaders: Record<string, string> = {};
+    Object.entries(headers).forEach(([key, value]) => {
+      if (value) {
+        normalizedHeaders[key] = value;
+      }
+    });
+
+    return normalizedHeaders;
   }
 
   public async fetchFromApi<T>({ endpoint, queryParams = {}, body = {}, method = "POST", signal }: YouTubeApiOptions): Promise<T> {
@@ -191,16 +335,33 @@ export class YouTubeApiService {
       
       const response = await fetch(url, {
         method,
-        headers: this.getStandardRequestHeaders(),
+        headers: await this.getStandardRequestHeaders(),
         body: method === "POST" ? JSON.stringify(body) : undefined,
         credentials: "include",
         signal,
         cache: "no-store",
-        mode: "cors"
+        mode: "cors",
+        referrer: window.location.href,
+        referrerPolicy: "strict-origin-when-cross-origin"
       });
       
       if (!response.ok) {
-        throw new Error(`YouTube API error: ${response.status} ${response.statusText}`);
+        let errorText = '';
+        try {
+          errorText = await response.text();
+        } catch (readError) {
+          logger.warn('Failed to read error response body:', readError);
+        }
+
+        logger.error(`YouTube API error response (${endpoint}):`, {
+          status: response.status,
+          statusText: response.statusText,
+          body: errorText
+        });
+
+        throw new Error(
+          `YouTube API error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
+        );
       }
       
       return await response.json() as T;
@@ -316,10 +477,17 @@ export class YouTubeApiService {
     continuation: string,
     isReplay?: boolean,
     playerOffsetMs?: string,
+    clickTrackingParams?: string,
     signal?: AbortSignal
   }): Promise<any> {
-    const { continuation, isReplay = false, playerOffsetMs, signal } = options;
-    const clientContext = this.getClientContext();
+    const { continuation, isReplay = false, playerOffsetMs, clickTrackingParams, signal } = options;
+    const clientContext = this.getInnertubeClientContext();
+    const apiKey = this.getInnertubeApiKey();
+
+    if (!apiKey) {
+      logger.error('Innertube API key not found. Live chat requests will fail.');
+      throw new Error('Innertube API key not found');
+    }
 
     const body: any = {
       context: {
@@ -332,9 +500,13 @@ export class YouTubeApiService {
       body.currentPlayerState = { playerOffsetMs };
     }
 
+    if (clickTrackingParams) {
+      body.clickTracking = { clickTrackingParams };
+    }
+
     return this.fetchFromApi({
       endpoint: isReplay ? "live_chat/get_live_chat_replay" : "live_chat/get_live_chat",
-      queryParams: { prettyPrint: "false" },
+      queryParams: { prettyPrint: "false", key: apiKey },
       body,
       signal
     });

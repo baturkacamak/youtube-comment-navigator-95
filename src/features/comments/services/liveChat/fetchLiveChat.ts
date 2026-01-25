@@ -31,17 +31,50 @@ export const fetchAndProcessLiveChat = async (
 
         const continuationData = continuationResult.continuationData;
         const continuation = continuationData.continuation;
+        if (!continuation) {
+            logger.error('[LiveChat] Continuation data missing continuation token:', continuationData);
+            return;
+        }
+        const clickTrackingParams = continuationData.clickTrackingParams;
         // If we found a replay/seek token, we MUST use isReplay=true for the API call
         const isReplayMode = continuationResult.continuationType === 'replay' || continuationResult.continuationType === 'playerSeek';
 
         logger.info(`Starting live chat fetch with continuation: ${continuation.substring(0, 20)}..., isReplay: ${isReplayMode}, type: ${continuationResult.continuationType}`);
 
         // Initial fetch to determine mode
-        const initialResponse = await youtubeApi.fetchLiveChat({
-            continuation: continuation,
-            isReplay: isReplayMode,
-            signal
-        });
+        let initialResponse: any;
+        try {
+            initialResponse = await youtubeApi.fetchLiveChat({
+                continuation: continuation,
+                isReplay: isReplayMode,
+                clickTrackingParams,
+                signal
+            });
+        } catch (error) {
+            logger.error('[LiveChat] Initial fetch failed:', {
+                error,
+                continuationType: continuationResult.continuationType,
+                continuationPreview: continuation.substring(0, 20),
+                hasClickTrackingParams: Boolean(clickTrackingParams)
+            });
+            // If we started with reload continuation, retry using replay endpoint (matches YCS-cont flow)
+            if (!isReplayMode && continuationResult.continuationType === 'reload') {
+                logger.warn('[LiveChat] Retrying initial fetch using replay endpoint after reload failure.');
+                try {
+                    initialResponse = await youtubeApi.fetchLiveChat({
+                        continuation: continuation,
+                        isReplay: true,
+                        clickTrackingParams,
+                        signal
+                    });
+                } catch (retryError) {
+                    logger.error('[LiveChat] Replay retry failed after reload error:', retryError);
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
 
         if (!initialResponse) {
              logger.error("Failed to fetch initial live chat.");
@@ -52,6 +85,9 @@ export const fetchAndProcessLiveChat = async (
         const actions = initialResponse?.continuationContents?.liveChatContinuation?.actions;
         
         logger.debug(`[LiveChat] Initial response continuations:`, continuations);
+        if (!initialResponse?.continuationContents?.liveChatContinuation) {
+            logger.warn('[LiveChat] Initial response missing liveChatContinuation payload:', initialResponse);
+        }
         if (actions) {
             logger.info(`[LiveChat] Initial batch has ${actions.length} actions.`);
             await saveActions(actions, videoId, dispatch);
@@ -161,11 +197,18 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
     let token = initialToken;
     let currentOffsetTimeMsec = 0;
     let loopCount = 0;
+    let emptyActionLoops = 0;
+    const maxEmptyActionLoops = 2;
+    const maxLoopCount = 500;
     
     logger.start("[LiveChat] Starting PlayerSeek Loop");
 
     while (token && !signal.aborted) {
         loopCount++;
+        if (loopCount > maxLoopCount) {
+            logger.warn(`[LiveChat] Loop reached max iterations (${maxLoopCount}). Stopping.`);
+            break;
+        }
         // Log every 5 loops to avoid spam, or strictly debug
         if (loopCount % 5 === 0) logger.debug(`[LiveChat] Loop ${loopCount}, Offset: ${currentOffsetTimeMsec}ms`);
 
@@ -190,10 +233,20 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
                 }) as number | undefined;
                 
                 if (lastOffsetTime !== undefined) {
+                    if (currentOffsetTimeMsec === lastOffsetTime) {
+                        logger.info(`[LiveChat] Loop ${loopCount}: Offset unchanged (${lastOffsetTime}). Stopping.`);
+                        break;
+                    }
                     currentOffsetTimeMsec = lastOffsetTime;
                 }
+                emptyActionLoops = 0;
             } else {
                  logger.debug(`[LiveChat] Loop ${loopCount}: No actions in response.`);
+                 emptyActionLoops += 1;
+                 if (emptyActionLoops >= maxEmptyActionLoops) {
+                     logger.info(`[LiveChat] Loop ${loopCount}: No actions for ${maxEmptyActionLoops} loops. Stopping.`);
+                     break;
+                 }
             }
             
             const continuations = response?.continuationContents?.liveChatContinuation?.continuations;
@@ -218,11 +271,18 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
 async function processFallbackLoop(initialToken: any, videoId: string, signal: AbortSignal, dispatch: any) {
     let token = initialToken;
     let loopCount = 0;
+    let emptyActionLoops = 0;
+    const maxEmptyActionLoops = 2;
+    const maxLoopCount = 500;
     
     logger.start("[LiveChat] Starting Fallback Loop");
     
     while (token && !signal.aborted) {
          loopCount++;
+         if (loopCount > maxLoopCount) {
+             logger.warn(`[LiveChat] Fallback loop reached max iterations (${maxLoopCount}). Stopping.`);
+             break;
+         }
          if (loopCount % 5 === 0) logger.debug(`[LiveChat] Fallback Loop ${loopCount}`);
 
          try {
@@ -233,8 +293,15 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
              });
              
              const actions = response?.continuationContents?.liveChatContinuation?.actions;
-             if (actions) {
+             if (actions && actions.length > 0) {
                  await saveActions(actions, videoId, dispatch);
+                 emptyActionLoops = 0;
+             } else {
+                 emptyActionLoops += 1;
+                 if (emptyActionLoops >= maxEmptyActionLoops) {
+                     logger.info(`[LiveChat] Fallback loop ${loopCount}: No actions for ${maxEmptyActionLoops} loops. Stopping.`);
+                     break;
+                 }
              }
              
              const continuations = response?.continuationContents?.liveChatContinuation?.continuations;
@@ -248,8 +315,8 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
                  logger.info(`[LiveChat] Fallback Loop ${loopCount}: No liveChatReplayContinuationData found. Stopping.`);
                  break;
              }
-         } catch (loopError) {
-             logger.error(`[LiveChat] Fallback loop error:`, loopError);
+        } catch (loopError) {
+            logger.error(`[LiveChat] Fallback loop error:`, loopError);
              break;
          }
     }

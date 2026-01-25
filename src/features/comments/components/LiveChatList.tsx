@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { setLiveChat } from '../../../store/store';
 import { db } from '../../shared/utils/database/database';
 import { extractVideoId } from '../services/remote/utils';
+import { fetchAndProcessLiveChat } from '../services/liveChat/fetchLiveChat';
 import { loadPagedComments } from '../services/pagination';
 import CommentItem from './CommentItem';
 import { Comment } from '../../../types/commentTypes';
@@ -21,6 +22,8 @@ const LiveChatList: React.FC = () => {
     
     const [page, setPage] = useState(0);
     const pageSize = 100; // Larger page size for chat
+    const liveChatFetchStarted = useRef(false);
+    const liveChatAbortController = useRef<AbortController | null>(null);
 
     const fetchLiveChat = async () => {
         const videoId = extractVideoId();
@@ -46,12 +49,44 @@ const LiveChatList: React.FC = () => {
             setIsLoading(false);
         }
     };
-    logger.info('LiveChatList component mounted');
     useEffect(() => {
         fetchLiveChat();
         const intervalId = setInterval(fetchLiveChat, 2000);
         return () => clearInterval(intervalId);
     }, [dispatch, page]);
+
+    useEffect(() => {
+        logger.info('LiveChatList component mounted');
+    }, []);
+
+    useEffect(() => {
+        if (liveChatFetchStarted.current) {
+            return;
+        }
+
+        const videoId = extractVideoId();
+        if (!videoId) {
+            logger.warn('[LiveChat] No videoId found; skipping live chat remote fetch.');
+            return;
+        }
+
+        liveChatFetchStarted.current = true;
+        if (liveChatAbortController.current) {
+            liveChatAbortController.current.abort();
+        }
+
+        const controller = new AbortController();
+        liveChatAbortController.current = controller;
+
+        logger.info('[LiveChat] Starting remote fetch for videoId:', videoId);
+        fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch).catch((error) => {
+            logger.error('[LiveChat] Remote fetch failed:', error);
+        });
+
+        return () => {
+            controller.abort();
+        };
+    }, [dispatch]);
 
     return (
         <div className="flex flex-col gap-2">
