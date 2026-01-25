@@ -131,7 +131,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
             {t('No more messages to load')}
           </div>
         )}
-      </div>
+      </ul>
     </div>
   );
 };
