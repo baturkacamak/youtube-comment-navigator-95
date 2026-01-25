@@ -139,6 +139,7 @@ const useAppState = () => {
         transcript: searchedTranscripts,
         totalCommentsCount,
         fetchTotalCommentsCount,
+        bookmarkedOnlyComments
     };
 };
 

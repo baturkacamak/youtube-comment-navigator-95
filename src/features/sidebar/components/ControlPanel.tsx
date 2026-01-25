@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowsUpDownIcon, ChevronDownIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { Comment } from '../../../types/commentTypes';
 
-const ControlPanel: React.FC<ControlPanelProps> = ({ filters, setFilters, comments }) => {
+const ControlPanel: React.FC<ControlPanelProps> = ({ filters, setFilters, comments, allComments }) => {
     const { t } = useTranslation();
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [maxHeight, setMaxHeight] = useState('0px');
@@ -44,7 +44,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ filters, setFilters, commen
                 style={{ maxHeight }}
                 className={`transition-all duration-500  ${showAdvanced ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}
             >
-                <AdvancedFilters comments={comments} />
+                <AdvancedFilters comments={comments} allComments={allComments} />
             </div>
         </div>
     );

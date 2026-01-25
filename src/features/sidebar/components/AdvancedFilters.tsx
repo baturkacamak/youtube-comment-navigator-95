@@ -10,9 +10,10 @@ import { Comment } from '../../../types/commentTypes';
 
 interface AdvancedFiltersProps {
     comments: any[] | Comment[] | undefined; // Define the type of comments
+    allComments?: any[] | Comment[];
 }
 
-const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments }) => {
+const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments, allComments }) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const filters = useSelector((state: RootState) => state.filters);
@@ -184,7 +185,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments }) => {
                 </div>
                 <hr className="border-solid border-t" />
                 <div className="flex justify-start">
-                    <ExportButton comments={comments} />
+                    <ExportButton comments={comments} allComments={allComments} />
                 </div>
             </div>
         </div>

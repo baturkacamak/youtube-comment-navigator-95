@@ -25,6 +25,7 @@ import {
 import LiveChatTranscript from './LiveChatTranscript';
 import { LiveChatMessage, LiveChatErrorType } from '../../../types/liveChatTypes';
 import logger from '../../shared/utils/logger';
+import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 
 const LiveChatList: React.FC = () => {
     const dispatch = useDispatch();
@@ -42,6 +43,24 @@ const LiveChatList: React.FC = () => {
         setPage(0);
         setHasMore(true);
     }, [videoId]);
+
+    /**
+     * Fetch all messages for export
+     */
+    const fetchAllMessages = async (): Promise<string> => {
+        if (!videoId) return '';
+        try {
+            const count = await getLiveChatMessageCount(videoId);
+            const messages = await loadLiveChatMessages(videoId, 0, count);
+            return messages.map(msg => {
+                const time = msg.videoOffsetTimeSec !== undefined ? formatTimestamp(msg.videoOffsetTimeSec) : '--:--';
+                return `[${time}] ${msg.author}: ${msg.message}`;
+            }).join('\n');
+        } catch (error) {
+            logger.error('[LiveChatList] Failed to fetch all messages:', error);
+            return '';
+        }
+    };
 
     /**
      * Fetch live chat messages from database with error handling
@@ -146,6 +165,7 @@ const LiveChatList: React.FC = () => {
                 onTimestampClick={handleTimestampClick}
                 onLoadMore={handleLoadMore}
                 hasMore={hasMore}
+                fetchAllMessages={fetchAllMessages}
             />
         </div>
     );

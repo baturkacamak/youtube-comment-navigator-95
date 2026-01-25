@@ -87,6 +87,7 @@ export interface LiveChatTranscriptProps {
   onTimestampClick?: (timestampSeconds: number) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
+  fetchAllMessages?: () => Promise<string>;
 }
 
 /**

@@ -40,7 +40,9 @@ const App: React.FC = () => {
         transcriptWordCount,
         filteredAndSortedBookmarks,
         transcript,
-        totalCommentsCount
+        totalCommentsCount,
+        comments,
+        bookmarkedOnlyComments
     } = useAppState();
 
     const hasActiveFilters =
@@ -74,6 +76,7 @@ const App: React.FC = () => {
                             filters={filters}
                             setFilters={setFiltersCallback}
                             comments={filteredAndSortedComments}
+                            allComments={comments}
                         />
                     </div>
                     <CommentList />
@@ -110,6 +113,7 @@ const App: React.FC = () => {
                                 filters={filters}
                                 setFilters={setFiltersCallback}
                                 comments={filteredAndSortedBookmarks}
+                                allComments={bookmarkedOnlyComments}
                             />
                         </div>
                     )}

@@ -25,7 +25,8 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   isLoading,
   onTimestampClick,
   onLoadMore,
-  hasMore = false
+  hasMore = false,
+  fetchAllMessages
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -97,7 +98,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-4">
           <CopyButton textToCopy={transcriptText} />
-          <DownloadButton transcriptText={transcriptText} fileNamePrefix="livechat" />
+          <DownloadButton transcriptText={transcriptText} fileNamePrefix="livechat" allContent={fetchAllMessages} />
           <PrintButton transcriptText={transcriptText} />
           <ShareButton textToShare={transcriptText} />
         </div>

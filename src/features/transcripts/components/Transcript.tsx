@@ -9,9 +9,10 @@ import { fetchTranscript } from "../services/fetchTranscript";
 
 interface TranscriptProps {
     transcripts: any[];
+    allTranscripts?: any[];
 }
 
-const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
+const Transcript: React.FC<TranscriptProps> = ({ transcripts, allTranscripts }) => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const textSize = useSelector((state: RootState) => state.settings.textSize);
@@ -37,6 +38,7 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
             <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10">
                 <ActionButtons
                     transcripts={transcripts}
+                    allTranscripts={allTranscripts}
                     includeTimestamps={includeTimestamps}
                     setIncludeTimestamps={setIncludeTimestamps}
                     selectedLanguage={selectedLanguage}
