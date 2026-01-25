@@ -118,8 +118,7 @@ const LiveChatList: React.FC = () => {
         fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch)
             .then(() => {
                 logger.success('[LiveChatList] Remote fetch completed');
-                // Fetch from DB after remote fetch completes
-                fetchLiveChatFromDB();
+                // Note: DB polling will automatically pick up new messages
             })
             .catch((error: any) => {
                 if (error.name === 'AbortError') {
@@ -141,6 +140,7 @@ const LiveChatList: React.FC = () => {
 
     /**
      * Poll database for new messages (every 2 seconds)
+     * Also refetches when page changes (via dependency array)
      */
     useEffect(() => {
         // Initial fetch
@@ -158,13 +158,6 @@ const LiveChatList: React.FC = () => {
             }
         };
     }, [page, videoId, dispatch]);
-
-    /**
-     * Refetch when page changes
-     */
-    useEffect(() => {
-        fetchLiveChatFromDB();
-    }, [page]);
 
     // Handle component mount logging
     useEffect(() => {

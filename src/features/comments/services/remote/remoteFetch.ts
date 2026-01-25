@@ -1,6 +1,5 @@
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
 import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
-import { fetchAndProcessLiveChat } from "../liveChat/fetchLiveChat";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearContinuationToken,
@@ -57,15 +56,8 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             logger.info(`Bypassing cache and starting fresh download for ${videoId}`);
         }
 
-        const windowObj = window as any;
-        logger.debug('[RemoteFetch] Triggering fetchAndProcessLiveChat...');
-        // Start live chat fetch concurrently - Fire and forget (it handles its own DB writes)
-        // We trigger this BEFORE cache check because cache might only have standard comments, 
-        // and we want to ensure live chat is fetched if available.
-        fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch)
-            .catch(err => {
-                logger.error('[RemoteFetch] fetchAndProcessLiveChat failed:', err);
-            });
+        // Note: Live chat is now fetched independently by the LiveChatList component
+        // This avoids duplicate fetches and allows better control over when to load live chat
 
         // Get the local token only if we're not bypassing cache
         let localToken = bypassCache ? null : await getContinuationToken(videoId);
