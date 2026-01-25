@@ -1,10 +1,10 @@
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
-import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
-import { extractContinuationToken } from "./continuationTokenUtils";
+import { extractContinuationToken, extractReplyTasksFromRawData } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
-import { addProcessedReplies, setTotalCommentsCount } from "../../../../store/store";
+import { setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
+import { replyQueueService } from "../../../../services/replyQueue/replyQueueService";
 
 export interface FetchAndProcessResult {
     processedData: {
@@ -130,77 +130,59 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
     }
 };
 
+/**
+ * Queue reply fetch tasks to background worker for concurrent processing
+ * Uses the new queue-based architecture for better performance
+ */
 async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<boolean> {
     if (!rawJsonData || signal.aborted) {
         return false;
     }
 
-    activeReplyTasks++;
-    fetchRepliesAndProcess(rawJsonData, windowObj, signal, videoId, dispatch).finally(() => {
-        activeReplyTasks--;
-    });
+    // Extract reply tasks from raw data
+    const replyTasks = extractReplyTasksFromRawData(rawJsonData);
 
-    return true;
-}
+    if (replyTasks.length === 0) {
+        logger.info("No reply tasks to queue.");
+        return false;
+    }
 
-async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<void> {
-    const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    logger.start(timerId);
+    logger.info(`[QueueReplyProcessing] Queueing ${replyTasks.length} reply fetch tasks for video ${videoId}`);
+
     try {
-        // Check if already aborted
-        if (signal.aborted) {
-            logger.info("Reply processing was aborted before starting.");
-            throw new DOMException('Reply processing aborted', 'AbortError');
-        }
-        
-        const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
+        // Queue all tasks at once for batch processing
+        const tasks = replyTasks.map(task => ({
+            videoId,
+            parentCommentId: task.parentCommentId,
+            continuationToken: task.continuationToken
+        }));
 
-        if (signal.aborted) {
-            logger.info("Reply processing was aborted after fetching replies.");
-            throw new DOMException('Reply processing aborted', 'AbortError');
-        }
+        activeReplyTasks++;
 
-        if (replies && replies.length > 0) {
-            const BATCH_SIZE = 50; // Increased batch size
-            logger.info(`Processing ${replies.length} replies.`);
+        // Queue batch with callbacks
+        await replyQueueService.queueBatchReplyFetch(tasks, {
+            onAllComplete: async (vid, totalReplies, failedTasks) => {
+                logger.success(`[QueueReplyProcessing] All reply tasks completed for ${vid}. Total: ${totalReplies}, Failed: ${failedTasks}`);
+                activeReplyTasks--;
 
-            // Process all batches in a single transaction
-            await db.transaction('rw', db.comments, async () => {
-                for (let i = 0; i < replies.length; i += BATCH_SIZE) {
-                    // Check for abort before each batch
-                    if (signal.aborted) {
-                        logger.warn("Reply processing aborted before batch");
-                        throw new DOMException('Reply processing aborted', 'AbortError');
-                    }
-                    
-                    const batch = replies.slice(i, i + BATCH_SIZE);
-                    const batchProcessedData = processRawJsonCommentsData(batch, videoId);
-
-                    if (batchProcessedData.items.length > 0) {
-                        await upsertComments(batchProcessedData.items);
-                    }
-
-                    if (signal.aborted) {
-                        logger.warn("Reply processing aborted midway.");
-                        throw new DOMException('Reply processing aborted', 'AbortError');
-                    }
+                // Update comment count after all replies are fetched
+                try {
+                    const count = await getExistingCommentCount(vid);
+                    dispatch(setTotalCommentsCount(count));
+                } catch (e) {
+                    logger.error("Failed to update comment count after reply processing:", e);
                 }
-                // Update Redux store once after all batches are processed
-                localCommentCount = await getExistingCommentCount(videoId); // Recalculate count
-                dispatch(setTotalCommentsCount(localCommentCount));
-            });
-            logger.success(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
-        } else {
-            logger.info("No replies to process.");
-        }
+            },
+            onRateLimit: (vid, pauseDurationMs) => {
+                logger.warn(`[QueueReplyProcessing] Rate limited for ${vid}. Pausing ${pauseDurationMs}ms`);
+            }
+        });
+
+        logger.success(`[QueueReplyProcessing] Successfully queued ${replyTasks.length} reply tasks`);
+        return true;
     } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-            logger.info("Reply processing was aborted.");
-            throw error; // Rethrow to be caught by caller
-        } else {
-            logger.error("Error processing replies:", error);
-        }
-    } finally {
-        logger.end(timerId);
+        logger.error("[QueueReplyProcessing] Failed to queue reply tasks:", error);
+        activeReplyTasks--;
+        return false;
     }
 }
