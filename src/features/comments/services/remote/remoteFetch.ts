@@ -79,7 +79,10 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
         logger.debug('[RemoteFetch] Triggering fetchAndProcessLiveChat...');
         // Start live chat fetch concurrently
-        const liveChatPromise = fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch);
+        const liveChatPromise = fetchAndProcessLiveChat(videoId, windowObj, signal, dispatch)
+            .catch(err => {
+                logger.error('[RemoteFetch] fetchAndProcessLiveChat failed:', err);
+            });
 
         // fetch all comments iteratively and determine if there are queued replies
         const hasQueuedRepliesValue = await iterateFetchComments(

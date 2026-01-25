@@ -14,6 +14,11 @@ export const fetchAndProcessLiveChat = async (
 ) => {
     logger.start("fetchAndProcessLiveChat");
     try {
+        if (!windowObj || !windowObj.ytInitialData) {
+            logger.warn("[LiveChat] ytInitialData not found in window object. Aborting live chat fetch.");
+            return;
+        }
+
         const ytInitialData = windowObj.ytInitialData;
         const continuationResult = extractLiveChatContinuation(ytInitialData);
 

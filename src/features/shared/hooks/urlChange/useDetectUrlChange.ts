@@ -53,6 +53,11 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
 
     useGlobalEventListener('message', handleUrlChangeMessage);
 
+    useEffect(() => {
+        logger.info('useDetectUrlChange mounted, checking URL...');
+        handleUrlChange();
+    }, []);
+
     return null;
 };
 
