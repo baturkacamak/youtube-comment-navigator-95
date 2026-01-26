@@ -314,7 +314,7 @@ class DatabaseEventEmitter {
             logger.warn(`${this.logPrefix} emitCommentsAdded called with negative count: ${count}`);
         }
 
-        logger.info(`${this.logPrefix} Comments added`, { videoId, count, commentIdsCount: commentIds?.length });
+        logger.debug(`${this.logPrefix} Comments added`, { videoId, count, commentIdsCount: commentIds?.length });
         this.emit('comments:added', { videoId, count, commentIds });
     }
 
@@ -327,7 +327,7 @@ class DatabaseEventEmitter {
             return;
         }
 
-        logger.info(`${this.logPrefix} Comments updated`, { videoId, count, commentIdsCount: commentIds?.length });
+        logger.debug(`${this.logPrefix} Comments updated`, { videoId, count, commentIdsCount: commentIds?.length });
         this.emit('comments:updated', { videoId, count, commentIds });
     }
 
@@ -340,7 +340,7 @@ class DatabaseEventEmitter {
             return;
         }
 
-        logger.info(`${this.logPrefix} Comments deleted`, { videoId, count, commentIdsCount: commentIds?.length });
+        logger.debug(`${this.logPrefix} Comments deleted`, { videoId, count, commentIdsCount: commentIds?.length });
         this.emit('comments:deleted', { videoId, count, commentIds });
     }
 
@@ -356,7 +356,7 @@ class DatabaseEventEmitter {
             logger.warn(`${this.logPrefix} emitRepliesAdded called with negative count: ${count}`);
         }
 
-        logger.info(`${this.logPrefix} Replies added`, { videoId, count, commentIdsCount: commentIds?.length });
+        logger.debug(`${this.logPrefix} Replies added`, { videoId, count, commentIdsCount: commentIds?.length });
         this.emit('replies:added', { videoId, count, commentIds });
     }
 
@@ -369,7 +369,7 @@ class DatabaseEventEmitter {
             return;
         }
 
-        logger.info(`${this.logPrefix} Bulk comments added`, { videoId, count });
+        logger.debug(`${this.logPrefix} Bulk comments added`, { videoId, count });
         this.emit('comments:bulk-add', { videoId, count });
     }
 
@@ -382,7 +382,7 @@ class DatabaseEventEmitter {
             return;
         }
 
-        logger.info(`${this.logPrefix} Live chat messages added`, { videoId, count });
+        logger.debug(`${this.logPrefix} Live chat messages added`, { videoId, count });
         this.emit('livechat:added', { videoId, count });
     }
 

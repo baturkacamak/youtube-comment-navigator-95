@@ -200,7 +200,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         const startTime = performance.now();
         const fetchId = `fetch-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
 
-        logger.info(`${logPrefix} Fetching page ${pageNum}`, {
+        logger.debug(`${logPrefix} Fetching page ${pageNum}`, {
             fetchId,
             videoId,
             pageNum,
@@ -237,7 +237,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
                     searchKeyword,
                 });
             } else {
-                logger.success(`${logPrefix} Page fetch completed`, {
+                logger.debug(`${logPrefix} Page fetch completed`, {
                     fetchId,
                     videoId,
                     pageNum,
@@ -344,7 +344,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         const throttledRefresh = throttle(() => {
             if (pendingRefresh) {
                 pendingRefresh = false;
-                logger.info(`${logPrefix} Throttled data update, refreshing view`);
+                logger.debug(`${logPrefix} Throttled data update, refreshing view`);
                 fetchPage(0, false).then(data => {
                     if (data.length > 0) {
                         setIsLoading(false);
@@ -401,7 +401,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         }
 
         const nextPage = page + 1;
-        logger.info(`${logPrefix} Loading more comments`, {
+        logger.debug(`${logPrefix} Loading more comments`, {
             currentPage: page,
             nextPage,
             currentCommentsCount: comments.length,

@@ -44,7 +44,7 @@ class Logger {
         const start = this.timers.get(label);
         if (start != null) {
             const duration = performance.now() - start;
-            this.info(`[TIMER] ${label} took ${duration.toFixed(2)}ms`);
+            this.debug(`[TIMER] ${label} took ${duration.toFixed(2)}ms`);
             this.timers.delete(label);
         } else {
             this.warn(`[TIMER] No start time found for "${label}"`);
@@ -97,7 +97,7 @@ class Logger {
 
     log(level: string, ...args: any[]): void {
         if (!ENABLE_LOGGER) return;
-        if (!this.debug && level === "debug") return;
+        if (!this.debugEnabled && level === "debug") return;
         if (this.filters.size && !args.some(arg => this.filters.has(String(arg)))) return;
 
         const emoji = this.emojis[level] || '';

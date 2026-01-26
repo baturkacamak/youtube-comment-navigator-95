@@ -186,7 +186,7 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         if (isFreshVideo) {
             markVideoAsFresh(videoId);
         }
-        logger.info(`Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`);
+        logger.debug(`Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`);
 
         const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
 
@@ -227,7 +227,7 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
             // Log buffering status
             const buffered = getBufferSize(videoId);
-            logger.info(`Buffered ${insertedCount} comments (total buffered: ${buffered}, flushed: ${flushed})`);
+            logger.debug(`Buffered ${insertedCount} comments (total buffered: ${buffered}, flushed: ${flushed})`);
         } else {
             // Direct mode: Write immediately to IndexedDB
             await db.transaction('rw', db.comments, async () => {
@@ -307,7 +307,7 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
 
         if (replies && replies.length > 0) {
             const BATCH_SIZE = BATCH_CONFIG.REPLY_BATCH_SIZE;
-            logger.info(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
+            logger.debug(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
 
             // Process all batches in a single transaction
             await db.transaction('rw', db.comments, async () => {
@@ -339,9 +339,9 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
             dbEvents.emitRepliesAdded(videoId, replies.length); // Approximate count
             dbEvents.emitCountUpdated(videoId, localCommentCount);
 
-            logger.success(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
+            logger.debug(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
         } else {
-            logger.info("No replies to process.");
+            logger.debug("No replies to process.");
         }
     } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {

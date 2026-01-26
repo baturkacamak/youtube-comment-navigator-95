@@ -66,7 +66,7 @@ export const loadPagedComments = async (
     }
 
     try {
-        logger.info(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}, filters: ${JSON.stringify(filters)}, search: "${searchKeyword}"`);
+        logger.debug(`Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}, filters: ${JSON.stringify(filters)}, search: "${searchKeyword}"`);
 
         const offset = page * pageSize;
         const baseIndex = 'videoId+replyLevel';
@@ -172,7 +172,7 @@ export const loadPagedComments = async (
             return result;
         }
 
-        logger.success(`${logPrefix} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);
+        logger.debug(`${logPrefix} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);
         return pagedComments;
     } catch (error) {
         logger.error(`${logPrefix} Error loading paged comments:`, error);
@@ -222,7 +222,7 @@ export const countComments = async (
         }
 
         const count = await baseCollection.count();
-        logger.success(`${logPrefix} Counted ${count} comments matching criteria.`);
+        logger.debug(`${logPrefix} Counted ${count} comments matching criteria.`);
         return count;
 
     } catch (error) {
