@@ -8,6 +8,10 @@ import { loadPagedComments, countComments } from '../services/pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import logger from '../../shared/utils/logger';
 import { dbEvents } from '../../shared/utils/database/dbEvents';
+import { throttle } from '../../shared/utils/debounce';
+
+/** Throttle interval for UI updates during heavy fetching (ms) */
+const UI_UPDATE_THROTTLE_MS = 1000;
 
 export interface UseCommentsFromDBOptions {
     videoId: string | null;
@@ -326,11 +330,28 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         };
     }, [videoId, sortBy, sortOrder, filters, searchKeyword, fetchPage, logPrefix, debugLog]);
 
-    // Subscribe to database events for this video
+    // Subscribe to database events for this video with throttled updates
     useEffect(() => {
         if (!videoId) return;
 
         debugLog(`Subscribing to database events for video: ${videoId}`);
+
+        // Track pending refresh to coalesce multiple events
+        let pendingRefresh = false;
+
+        // Create a throttled refresh function to limit UI updates during heavy fetching
+        // This ensures we update at most once per UI_UPDATE_THROTTLE_MS
+        const throttledRefresh = throttle(() => {
+            if (pendingRefresh) {
+                pendingRefresh = false;
+                logger.info(`${logPrefix} Throttled data update, refreshing view`);
+                fetchPage(0, false).then(data => {
+                    if (data.length > 0) {
+                        setIsLoading(false);
+                    }
+                });
+            }
+        }, UI_UPDATE_THROTTLE_MS, { leading: true, trailing: true });
 
         const unsubscribe = dbEvents.onAll((event) => {
             if (event.videoId === videoId) {
@@ -341,19 +362,15 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
                 // Refresh data when new content arrives
                 if (
-                    event.type === 'comments:added' || 
-                    event.type === 'comments:bulk-add' || 
+                    event.type === 'comments:added' ||
+                    event.type === 'comments:bulk-add' ||
                     event.type === 'replies:added'
                 ) {
                     // Only refresh if we are on the first page or if the list is empty
                     // This prevents disrupting the user if they have scrolled down
                     if (page === 0 || comments.length === 0) {
-                        logger.info(`${logPrefix} Data update detected, refreshing view`);
-                        fetchPage(0, false).then(data => {
-                            if (data.length > 0) {
-                                setIsLoading(false);
-                            }
-                        });
+                        pendingRefresh = true;
+                        throttledRefresh();
                     }
                 }
             }
@@ -361,6 +378,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
         return () => {
             debugLog('Unsubscribing from database events');
+            throttledRefresh.cancel();
             unsubscribe();
         };
     }, [videoId, page, comments.length, fetchPage, debugLog, logPrefix]);

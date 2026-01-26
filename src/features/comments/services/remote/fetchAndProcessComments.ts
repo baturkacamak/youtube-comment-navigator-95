@@ -5,6 +5,12 @@ import { extractContinuationToken } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
 import { dbEvents } from "../../../shared/utils/database/dbEvents";
 import logger from "../../../shared/utils/logger";
+import {
+    accumulateComments,
+    flushAccumulator,
+    getBufferSize,
+    clearAccumulator,
+} from "./commentBatchAccumulator";
 
 export interface FetchAndProcessResult {
     processedData: {
@@ -16,6 +22,21 @@ export interface FetchAndProcessResult {
 
 let activeReplyTasks = 0;
 let localCommentCount = 0;
+// Track videos that are known to be fresh (no existing comments at session start)
+const freshVideoSessions = new Set<string>();
+
+/**
+ * Configuration for batch accumulation.
+ * When enabled, comments are accumulated in memory and written in larger batches.
+ */
+export const BATCH_CONFIG = {
+    /** Enable batch accumulation for main comments (set to true for high-volume fetching) */
+    USE_ACCUMULATOR: true,
+    /** Number of comments to accumulate before flushing to IndexedDB */
+    BATCH_SIZE: 500,
+    /** Batch size for reply processing (within transactions) */
+    REPLY_BATCH_SIZE: 50,
+};
 
 export const hasActiveReplyProcessing = (): boolean => {
     return activeReplyTasks > 0;
@@ -23,6 +44,61 @@ export const hasActiveReplyProcessing = (): boolean => {
 
 export const resetLocalCommentCount = () => {
     localCommentCount = 0;
+};
+
+/**
+ * Flush any buffered comments to IndexedDB.
+ * Call this when fetching is complete or paused to ensure all comments are persisted.
+ *
+ * @param videoId - The video ID to flush
+ * @returns The number of comments flushed
+ */
+export const flushBufferedComments = async (videoId: string): Promise<number> => {
+    if (!BATCH_CONFIG.USE_ACCUMULATOR) {
+        return 0;
+    }
+
+    const flushed = await flushAccumulator(videoId);
+    if (flushed > 0) {
+        localCommentCount = await getExistingCommentCount(videoId);
+        logger.success(`Flushed ${flushed} buffered comments. Total count: ${localCommentCount}`);
+    }
+    return flushed;
+};
+
+/**
+ * Clear accumulator for a video (call when switching videos or cleaning up).
+ *
+ * @param videoId - The video ID
+ * @param flush - Whether to flush remaining comments before clearing (default: true)
+ */
+export const cleanupVideoAccumulator = async (videoId: string, flush: boolean = true): Promise<void> => {
+    if (BATCH_CONFIG.USE_ACCUMULATOR) {
+        await clearAccumulator(videoId, flush);
+    }
+    clearFreshVideoMarker(videoId);
+};
+
+/**
+ * Mark a video as fresh (no existing comments) for optimized inserts.
+ * Call this when starting a fetch session for a new video.
+ */
+export const markVideoAsFresh = (videoId: string) => {
+    freshVideoSessions.add(videoId);
+};
+
+/**
+ * Clear the fresh video marker (e.g., after first batch is inserted).
+ */
+export const clearFreshVideoMarker = (videoId: string) => {
+    freshVideoSessions.delete(videoId);
+};
+
+/**
+ * Check if a video is marked as fresh.
+ */
+export const isVideoFresh = (videoId: string): boolean => {
+    return freshVideoSessions.has(videoId);
 };
 
 // Add a function to get the existing comment count for a video
@@ -35,13 +111,44 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
     }
 }
 
-// Helper to upsert comments (update if exists, insert if new) based on commentId
-async function upsertComments(comments: any[]) {
+/**
+ * Upsert comments into IndexedDB.
+ *
+ * Optimization strategies:
+ * 1. If skipLookup is true (fresh video), uses bulkAdd directly (faster, no read-before-write)
+ * 2. Otherwise, does a read-before-write to preserve existing primary keys for updates
+ *
+ * @param comments - Array of comment objects to upsert
+ * @param skipLookup - If true, skips the read phase (use for fresh videos with no existing comments)
+ */
+async function upsertComments(comments: any[], skipLookup: boolean = false) {
     if (!comments || comments.length === 0) return;
 
     const incomingIds = comments.map(c => c.commentId).filter(Boolean);
     if (incomingIds.length === 0) return;
 
+    // Fast path: For fresh videos, skip the lookup entirely
+    if (skipLookup) {
+        const commentsToAdd = comments.map(c => {
+            // Remove 'id' so Dexie auto-generates it
+            const { id, ...rest } = c;
+            return rest;
+        });
+
+        try {
+            await db.comments.bulkAdd(commentsToAdd);
+            return;
+        } catch (error: any) {
+            // If bulkAdd fails due to constraint violation (duplicates), fall through to upsert logic
+            if (error.name !== 'BulkError') {
+                throw error;
+            }
+            logger.warn(`[upsertComments] bulkAdd had ${error.failures?.length || 'some'} duplicates, falling back to upsert`);
+            // Fall through to the standard upsert path below
+        }
+    }
+
+    // Standard path: Read-before-write for proper upsert behavior
     // Fetch existing records to get their PKs (id)
     const existingRecords = await db.comments
         .where('commentId')
@@ -72,10 +179,14 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
             throw new DOMException('Fetch aborted', 'AbortError');
         }
 
-        // Retrieve existing comment count
+        // Retrieve existing comment count and determine if this is a fresh video
         const existingCommentCount = await getExistingCommentCount(videoId);
         localCommentCount = existingCommentCount;
-        logger.info(`Starting with existing comment count: ${localCommentCount}`);
+        const isFreshVideo = existingCommentCount === 0;
+        if (isFreshVideo) {
+            markVideoAsFresh(videoId);
+        }
+        logger.info(`Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`);
 
         const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
 
@@ -98,20 +209,45 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
             throw new DOMException('Fetch aborted', 'AbortError');
         }
 
-        // Use a single transaction for all operations
+        // Insert comments into IndexedDB
         const insertedCount = mainProcessedData.items.length;
-        await db.transaction('rw', db.comments, async () => {
-            await upsertComments(mainProcessedData.items);
-            localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
-        });
-        
-        logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
+        const skipLookup = isVideoFresh(videoId);
 
-        // Emit database event for reactive UI updates
-        if (insertedCount > 0) {
-            const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);
-            dbEvents.emitCommentsAdded(videoId, insertedCount, commentIds);
-            dbEvents.emitCountUpdated(videoId, localCommentCount);
+        if (BATCH_CONFIG.USE_ACCUMULATOR) {
+            // Batch accumulator mode: buffer comments and flush in larger batches
+            const flushed = await accumulateComments(videoId, mainProcessedData.items, {
+                batchSize: BATCH_CONFIG.BATCH_SIZE,
+                isFresh: skipLookup,
+            });
+
+            // Update local count if we flushed
+            if (flushed > 0) {
+                localCommentCount = await getExistingCommentCount(videoId);
+            }
+
+            // Log buffering status
+            const buffered = getBufferSize(videoId);
+            logger.info(`Buffered ${insertedCount} comments (total buffered: ${buffered}, flushed: ${flushed})`);
+        } else {
+            // Direct mode: Write immediately to IndexedDB
+            await db.transaction('rw', db.comments, async () => {
+                await upsertComments(mainProcessedData.items, skipLookup);
+                localCommentCount = await getExistingCommentCount(videoId);
+            });
+
+            // After first successful insert, clear fresh marker since we now have comments
+            if (skipLookup && insertedCount > 0) {
+                clearFreshVideoMarker(videoId);
+            }
+
+            logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
+
+            // Emit database event for reactive UI updates
+            if (insertedCount > 0) {
+                const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);
+                dbEvents.emitCommentsAdded(videoId, insertedCount, commentIds);
+                dbEvents.emitCountUpdated(videoId, localCommentCount);
+            }
         }
 
         const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
@@ -170,8 +306,8 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         }
 
         if (replies && replies.length > 0) {
-            const BATCH_SIZE = 50; // Increased batch size
-            logger.info(`Processing ${replies.length} replies.`);
+            const BATCH_SIZE = BATCH_CONFIG.REPLY_BATCH_SIZE;
+            logger.info(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
 
             // Process all batches in a single transaction
             await db.transaction('rw', db.comments, async () => {

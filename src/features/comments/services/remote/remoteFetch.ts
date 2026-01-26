@@ -1,5 +1,12 @@
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
-import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
+import {
+    fetchAndProcessComments,
+    FetchAndProcessResult,
+    hasActiveReplyProcessing,
+    resetLocalCommentCount,
+    flushBufferedComments,
+    cleanupVideoAccumulator,
+} from "./fetchAndProcessComments";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearContinuationToken,
@@ -35,6 +42,9 @@ function abortAllOngoingOperations() {
     }
 }
 
+// Track the current video for cleanup purposes
+let currentVideoId: string | null = null;
+
 export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolean = false) => {
     // Check for local environment and redirect to mock seeder
     if (isLocalEnvironment() && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
@@ -53,7 +63,14 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         const windowObj = window as any;
 
         logger.info(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
-        
+
+        // Clean up previous video's accumulator if switching videos
+        if (currentVideoId && currentVideoId !== videoId) {
+            await cleanupVideoAccumulator(currentVideoId, true);
+            logger.info(`Cleaned up accumulator for previous video: ${currentVideoId}`);
+        }
+        currentVideoId = videoId;
+
         // Reset local comment count for new video or when bypassing cache
         resetLocalCommentCount();
         
@@ -221,44 +238,56 @@ async function iterateFetchComments(
     let token: string | null = initialToken;
     let hasQueuedRepliesValue = false;
 
-    do {
-        try {
-            // Check if operation has been aborted
-            if (signal.aborted) {
-                logger.info('Fetch comments iteration aborted.');
-                throw new DOMException('Fetch aborted', 'AbortError');
-            }
-            
-            const result: FetchAndProcessResult = await fetchAndProcessComments(
-                token,
-                videoId,
-                windowObj,
-                signal,
-                dispatch
-            );
+    try {
+        do {
+            try {
+                // Check if operation has been aborted
+                if (signal.aborted) {
+                    logger.info('Fetch comments iteration aborted.');
+                    throw new DOMException('Fetch aborted', 'AbortError');
+                }
 
-            token = result.token;
-            if (result.hasQueuedReplies) {
-                hasQueuedRepliesValue = true;
+                const result: FetchAndProcessResult = await fetchAndProcessComments(
+                    token,
+                    videoId,
+                    windowObj,
+                    signal,
+                    dispatch
+                );
+
+                token = result.token;
+                if (result.hasQueuedReplies) {
+                    hasQueuedRepliesValue = true;
+                }
+                if (token) {
+                    await storeContinuationToken(videoId, token);
+                }
+            } catch (e) {
+                if ((e as any)?.name === 'AbortError') {
+                    logger.info('Fetch operation aborted during iteration.');
+                    throw e;
+                }
+                const err = e as Error;
+                logger.error('Error during comment fetch iteration:', {
+                    name: err?.name,
+                    message: err?.message,
+                    stack: err?.stack,
+                    raw: e
+                });
+                break;
             }
-            if (token) {
-                await storeContinuationToken(videoId, token);
+        } while (token);
+    } finally {
+        // Always flush any buffered comments when iteration ends (success, error, or abort)
+        try {
+            const flushed = await flushBufferedComments(videoId);
+            if (flushed > 0) {
+                logger.info(`Flushed ${flushed} remaining buffered comments after fetch iteration`);
             }
-        } catch (e) {
-            if ((e as any)?.name === 'AbortError') {
-                logger.info('Fetch operation aborted during iteration.');
-                throw e;
-            }
-            const err = e as Error;
-            logger.error('Error during comment fetch iteration:', {
-                name: err?.name,
-                message: err?.message,
-                stack: err?.stack,
-                raw: e
-            });
-            break;
+        } catch (flushError) {
+            logger.error('Error flushing buffered comments:', flushError);
         }
-    } while (token);
+    }
 
     return hasQueuedRepliesValue;
 }
