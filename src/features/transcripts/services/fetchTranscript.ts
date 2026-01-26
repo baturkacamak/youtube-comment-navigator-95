@@ -9,9 +9,20 @@ export const fetchTranscript = async (language: string = '') => {
     if (isLocalEnvironment()) {
         return fetchTranscriptFromLocal();
     } else {
-        let captionTrackBaseUrl = ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl;
-        let videoId = extractYouTubeVideoIdFromUrl();
-        let captionVideoId = extractYouTubeVideoIdFromUrl(captionTrackBaseUrl);
+        let captionTrackBaseUrl = null;
+        const videoId = extractYouTubeVideoIdFromUrl();
+
+        try {
+            // Check if variable exists before accessing
+            if (typeof ytInitialPlayerResponse !== 'undefined') {
+                captionTrackBaseUrl = ytInitialPlayerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl;
+            }
+        } catch (e) {
+            // Variable not defined or not accessible
+        }
+
+        const captionVideoId = extractYouTubeVideoIdFromUrl(captionTrackBaseUrl);
+        
         if (!captionTrackBaseUrl || videoId !== captionVideoId) {
             captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
         }

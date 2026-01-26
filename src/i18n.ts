@@ -53,7 +53,8 @@ const loadLocaleFromDOM = (locale: string): Resources | null => {
         };
     }
     
-    console.warn(`[YCN-i18n] Failed to load locale '${locale}' from DOM or Global Variable.`);
+    // Changing to debug as this often happens initially before the LANGUAGE_LOADED event fires
+    console.debug(`[YCN-i18n] Failed to load locale '${locale}' from DOM or Global Variable.`);
     return null;
 };
 
