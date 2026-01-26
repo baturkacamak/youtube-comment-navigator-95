@@ -25,19 +25,25 @@ const getContinuationToken = async (
 
 /**
  * Fetches comment JSON data from the YouTube API using the continuation token
+ * 
+ * @param continueToken - The continuation token for pagination
+ * @param windowObj - Window object with ytcfg data
+ * @param isFetchingReply - Explicitly indicate if fetching replies (not main threads)
+ * @param signal - Optional AbortSignal for cancellation
  */
 export const fetchCommentJsonDataFromRemote = async (
     continueToken: string | null,
     windowObj: any,
+    isFetchingReply: boolean = false,
     signal?: AbortSignal
 ) => {
     try {
-        const continuation = await getContinuationToken(continueToken, windowObj, signal !== undefined);
+        const continuation = await getContinuationToken(continueToken, windowObj, isFetchingReply);
         
         // Use the new YouTube API service
         return await youtubeApi.fetchNext({
             continuationToken: continuation,
-            isFetchingReply: signal !== undefined,
+            isFetchingReply,
             signal
         });
     } catch (error) {

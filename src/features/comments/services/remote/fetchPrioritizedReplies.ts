@@ -175,7 +175,7 @@ async function fetchRepliesForSingleComment(
         logger.debug(`[PrioritizedReplies] Fetching with token: ${replyToken.substring(0, 30)}...`);
 
         // Fetch the initial reply page using the continuation token
-        const replyThreadData = await fetchCommentJsonDataFromRemote(replyToken, windowObj, signal);
+        const replyThreadData = await fetchCommentJsonDataFromRemote(replyToken, windowObj, true, signal);
         
         // Fetch all replies recursively (handles pagination if there are more replies)
         const repliesData = await fetchRepliesJsonDataFromRemote(

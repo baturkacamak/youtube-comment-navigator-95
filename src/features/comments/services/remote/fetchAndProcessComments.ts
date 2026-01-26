@@ -118,7 +118,7 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         localCommentCount = existingCommentCount;
         logger.info(`Starting with existing comment count: ${localCommentCount}`);
 
-        const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
+        const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, false, signal);
 
         // Check if operation was aborted during fetch
         if (signal.aborted) {

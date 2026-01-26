@@ -6,7 +6,7 @@ export const fetchRepliesJsonDataFromRemote = async (rawJsonData: any, windowObj
 
     const fetchRepliesRecursively = async (tokens: string[]) => {
         for (const token of tokens) {
-            const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
+            const replyData = await fetchCommentJsonDataFromRemote(token, windowObj, true, signal);
 
             if (Array.isArray(replyData)) {
                 replies = [...replies, ...replyData];
