@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { HandThumbUpIcon, ChatBubbleLeftRightIcon, CalendarDaysIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from 'react-i18next';
 import { setFilters } from '../../../store/store';
 import { RootState } from '../../../types/rootState';
 import { FilterState } from '../../../types/filterTypes';
-import ExportButton from '../../shared/components/ExportButton'; // Import the ExportButton component
+import ExportButton from '../../shared/components/ExportButton';
 import { Comment } from '../../../types/commentTypes';
 
+/** Debounce delay for filter updates (ms) */
+const FILTER_DEBOUNCE_MS = 300;
+
 interface AdvancedFiltersProps {
-    comments: any[] | Comment[] | undefined; // Define the type of comments
+    comments: any[] | Comment[] | undefined;
     allComments?: any[] | Comment[];
 }
 
@@ -22,35 +25,59 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments, allComments
     const [wordCount, setWordCount] = useState<{ min: number; max: number | string }>({ min: 0, max: Infinity });
     const [dateTimeRange, setDateTimeRange] = useState<{ start: string; end: string }>({ start: '', end: '' });
 
+    // Refs for debounce timers
+    const debounceTimers = useRef<{ [key: string]: NodeJS.Timeout }>({});
+
+    // Cleanup timers on unmount
     useEffect(() => {
-        setDateTimeRange({ start: '', end: '' }); // Initialize end with current date and time
+        return () => {
+            Object.values(debounceTimers.current).forEach(clearTimeout);
+        };
     }, []);
 
-    const updateFilter = (key: keyof FilterState, value: any) => {
-        dispatch(setFilters({
-            ...filters,
-            [key]: value,
-        }));
-    };
+    useEffect(() => {
+        setDateTimeRange({ start: '', end: '' });
+    }, []);
+
+    // PERF: Debounced filter update - prevents excessive Redux dispatches and DB queries
+    // Local state updates immediately for responsive UI, Redux updates after debounce
+    const updateFilterDebounced = useCallback((key: keyof FilterState, value: any) => {
+        // Clear any pending update for this key
+        if (debounceTimers.current[key]) {
+            clearTimeout(debounceTimers.current[key]);
+        }
+
+        // Schedule the Redux dispatch
+        debounceTimers.current[key] = setTimeout(() => {
+            dispatch(setFilters({
+                ...filters,
+                [key]: value,
+            }));
+        }, FILTER_DEBOUNCE_MS);
+    }, [dispatch, filters]);
 
     const handleLikesThresholdChange = (key: 'min' | 'max', value: number) => {
-        setLikesThreshold(prev => ({ ...prev, [key]: value }));
-        updateFilter('likesThreshold', { ...likesThreshold, [key]: value });
+        const newValue = { ...likesThreshold, [key]: value };
+        setLikesThreshold(newValue);
+        updateFilterDebounced('likesThreshold', newValue);
     };
 
     const handleRepliesLimitChange = (key: 'min' | 'max', value: number) => {
-        setRepliesLimit(prev => ({ ...prev, [key]: value }));
-        updateFilter('repliesLimit', { ...repliesLimit, [key]: value });
+        const newValue = { ...repliesLimit, [key]: value };
+        setRepliesLimit(newValue);
+        updateFilterDebounced('repliesLimit', newValue);
     };
 
     const handleWordCountChange = (key: 'min' | 'max', value: number) => {
-        setWordCount(prev => ({ ...prev, [key]: value }));
-        updateFilter('wordCount', { ...wordCount, [key]: value });
+        const newValue = { ...wordCount, [key]: value };
+        setWordCount(newValue);
+        updateFilterDebounced('wordCount', newValue);
     };
 
     const handleDateTimeRangeChange = (key: 'start' | 'end', value: string) => {
-        setDateTimeRange(prev => ({ ...prev, [key]: value }));
-        updateFilter('dateTimeRange', { ...dateTimeRange, [key]: value });
+        const newValue = { ...dateTimeRange, [key]: value };
+        setDateTimeRange(newValue);
+        updateFilterDebounced('dateTimeRange', newValue);
     };
 
     return (
