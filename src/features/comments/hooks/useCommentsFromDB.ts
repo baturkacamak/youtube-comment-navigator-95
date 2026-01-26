@@ -338,6 +338,24 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
                     count: event.count,
                     commentIds: event.commentIds?.length,
                 });
+
+                // Refresh data when new content arrives
+                if (
+                    event.type === 'comments:added' || 
+                    event.type === 'comments:bulk-add' || 
+                    event.type === 'replies:added'
+                ) {
+                    // Only refresh if we are on the first page or if the list is empty
+                    // This prevents disrupting the user if they have scrolled down
+                    if (page === 0 || comments.length === 0) {
+                        logger.info(`${logPrefix} Data update detected, refreshing view`);
+                        fetchPage(0, false).then(data => {
+                            if (data.length > 0) {
+                                setIsLoading(false);
+                            }
+                        });
+                    }
+                }
             }
         });
 
@@ -345,7 +363,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             debugLog('Unsubscribing from database events');
             unsubscribe();
         };
-    }, [videoId, debugLog]);
+    }, [videoId, page, comments.length, fetchPage, debugLog, logPrefix]);
 
     // Load more comments (next page)
     const loadMore = useCallback(async () => {
