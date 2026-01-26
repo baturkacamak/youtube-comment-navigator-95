@@ -5,7 +5,7 @@ import { db } from "../../../shared/utils/database/database";
 import { dbEvents } from "../../../shared/utils/database/dbEvents";
 import { setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
-import { replyQueueService } from "../../../../services/replyQueue/replyQueueService";
+import { ParallelReplyFetcher } from "./parallelReplyFetcher";
 
 export interface FetchAndProcessResult {
     processedData: {
@@ -140,8 +140,12 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 };
 
 /**
- * Queue reply fetch tasks to background worker for concurrent processing
- * Uses the new queue-based architecture for better performance
+ * Fetch reply tasks in parallel directly from content script context
+ * Uses ParallelReplyFetcher with p-queue for concurrent processing
+ *
+ * This approach avoids the service worker limitation where requests don't get
+ * proper browser headers (Referer, sec-fetch-site, etc.), which triggers
+ * YouTube's bot detection.
  */
 async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<boolean> {
     if (!rawJsonData || signal.aborted) {
@@ -156,41 +160,40 @@ async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: Ab
         return false;
     }
 
-    logger.info(`[QueueReplyProcessing] Queueing ${replyTasks.length} reply fetch tasks for video ${videoId}`);
+    logger.info(`[QueueReplyProcessing] Fetching ${replyTasks.length} reply tasks in parallel for video ${videoId}`);
 
     try {
-        // Queue all tasks at once for batch processing
-        const tasks = replyTasks.map(task => ({
-            videoId,
-            parentCommentId: task.parentCommentId,
-            continuationToken: task.continuationToken
-        }));
-
         activeReplyTasks++;
 
-        // Queue batch with callbacks
-        await replyQueueService.queueBatchReplyFetch(tasks, {
-            onAllComplete: async (vid, totalReplies, failedTasks) => {
-                logger.success(`[QueueReplyProcessing] All reply tasks completed for ${vid}. Total: ${totalReplies}, Failed: ${failedTasks}`);
-                activeReplyTasks--;
+        // Create parallel fetcher and queue all tasks
+        const replyFetcher = new ParallelReplyFetcher(videoId, signal, dispatch);
 
-                // Update comment count after all replies are fetched
-                try {
-                    const count = await getExistingCommentCount(vid);
-                    dispatch(setTotalCommentsCount(count));
-                } catch (e) {
-                    logger.error("Failed to update comment count after reply processing:", e);
-                }
-            },
-            onRateLimit: (vid, pauseDurationMs) => {
-                logger.warn(`[QueueReplyProcessing] Rate limited for ${vid}. Pausing ${pauseDurationMs}ms`);
+        // Queue all tasks for parallel processing (non-blocking)
+        // The fetcher will handle the concurrent requests and store replies in IndexedDB
+        replyFetcher.queueReplyFetches(replyTasks).then(async () => {
+            logger.success(`[QueueReplyProcessing] All reply tasks completed for ${videoId}`);
+            activeReplyTasks--;
+
+            // Update comment count after all replies are fetched
+            try {
+                const count = await getExistingCommentCount(videoId);
+                dispatch(setTotalCommentsCount(count));
+            } catch (e) {
+                logger.error("Failed to update comment count after reply processing:", e);
             }
+        }).catch((error) => {
+            if (error?.name === 'AbortError') {
+                logger.info(`[QueueReplyProcessing] Reply fetching aborted for ${videoId}`);
+            } else {
+                logger.error("[QueueReplyProcessing] Failed to complete reply tasks:", error);
+            }
+            activeReplyTasks--;
         });
 
-        logger.success(`[QueueReplyProcessing] Successfully queued ${replyTasks.length} reply tasks`);
+        logger.success(`[QueueReplyProcessing] Successfully started fetching ${replyTasks.length} reply tasks`);
         return true;
     } catch (error) {
-        logger.error("[QueueReplyProcessing] Failed to queue reply tasks:", error);
+        logger.error("[QueueReplyProcessing] Failed to start reply tasks:", error);
         activeReplyTasks--;
         return false;
     }

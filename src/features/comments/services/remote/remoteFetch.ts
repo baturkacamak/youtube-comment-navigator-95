@@ -14,7 +14,6 @@ import { db } from "../../../shared/utils/database/database";
 import {countComments, loadPagedComments} from "../pagination";
 import logger from "../../../shared/utils/logger";
 import { seedMockData } from "../../../shared/utils/mockDataSeeder";
-import { replyQueueService } from "../../../../services/replyQueue/replyQueueService";
 
 let currentAbortController = new AbortController();
 
@@ -25,21 +24,16 @@ window.addEventListener('message', (event: MessageEvent) => {
     }
 });
 
-// Track current video ID for task cancellation
+// Track current video ID for cleanup
 let currentVideoId: string | null = null;
 
 // Function to abort all ongoing operations
 function abortAllOngoingOperations() {
     try {
+        // Abort any in-progress fetches via the abort controller
+        // The ParallelReplyFetcher respects abort signals
         currentAbortController.abort();
         currentAbortController = new AbortController();
-
-        // Cancel any queued reply fetch tasks for the current video
-        if (currentVideoId) {
-            replyQueueService.cancelVideoTasks(currentVideoId).catch(err => {
-                logger.warn('Failed to cancel queued reply tasks:', err);
-            });
-        }
 
         logger.info('All ongoing operations aborted.');
     } catch (error) {
@@ -157,11 +151,12 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
 async function waitForReplyProcessing(): Promise<void> {
     logger.start('waitForReplyProcessing');
-    const maxWaitTime = 60000; // Increased to 60 seconds for concurrent processing
+    const maxWaitTime = 60000; // 60 seconds for concurrent processing
     const startTime = Date.now();
 
-    // Check both the legacy active reply tracking and the queue service
-    while (hasActiveReplyProcessing() || (currentVideoId && replyQueueService.hasActiveProcessing(currentVideoId))) {
+    // Wait for parallel reply fetching to complete
+    // The ParallelReplyFetcher runs asynchronously and stores replies directly to IndexedDB
+    while (hasActiveReplyProcessing()) {
         // Check for timeout
         if (Date.now() - startTime > maxWaitTime) {
             logger.warn('Exceeded maximum wait time for reply processing.');
@@ -174,16 +169,7 @@ async function waitForReplyProcessing(): Promise<void> {
             throw new DOMException('Reply wait aborted', 'AbortError');
         }
 
-        // Log progress
-        if (currentVideoId) {
-            try {
-                const stats = await replyQueueService.getQueueStats(currentVideoId);
-                logger.debug(`[WaitForReplies] Queue status - Pending: ${stats.pendingTasks}, InProgress: ${stats.inProgressTasks}, Completed: ${stats.completedTasks}`);
-            } catch {
-                // Ignore errors when checking queue stats
-            }
-        }
-
+        logger.debug('[WaitForReplies] Waiting for parallel reply fetching to complete...');
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
     logger.end('waitForReplyProcessing');

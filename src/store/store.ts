@@ -125,7 +125,7 @@ const commentsSlice = createSlice({
         setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
             state.filteredTranscripts = action.payload;
         },
-        // @deprecated Replies are now added directly to IndexedDB by replyQueueService
+        // @deprecated Replies are now added directly to IndexedDB by ParallelReplyFetcher
         // UI updates via useLiveQuery in useCommentsFromDB hook
         addProcessedReplies: (state, action: PayloadAction<Comment[]>) => {
             // No-op: Kept for backward compatibility
