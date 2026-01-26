@@ -102,8 +102,12 @@ if (initialResources) {
     }
 }
 
+// Only use HttpBackend in local environment to avoid 404s/parsing errors in production
+if (isLocalEnvironment()) {
+    i18n.use(HttpBackend);
+}
+
 i18n
-    .use(HttpBackend)
     .use(LanguageDetector)
     .use(initReactI18next)
     .init(i18nConfig);
