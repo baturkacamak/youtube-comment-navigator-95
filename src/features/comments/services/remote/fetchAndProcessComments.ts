@@ -6,7 +6,6 @@ import { db } from "../../../shared/utils/database/database";
 import { dbEvents } from "../../../shared/utils/database/dbEvents";
 import { setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
-import { performanceMonitor } from "../../../shared/utils/PerformanceMonitor";
 
 export interface FetchAndProcessResult {
     processedData: {
@@ -41,7 +40,6 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
 async function upsertComments(comments: any[]) {
     if (!comments || comments.length === 0) return;
 
-    performanceMonitor.start(`IndexedDB Upsert (${comments.length} items)`);
     const incomingIds = comments.map(c => c.commentId).filter(Boolean);
     if (incomingIds.length === 0) return;
 
@@ -64,14 +62,10 @@ async function upsertComments(comments: any[]) {
     });
 
     await db.comments.bulkPut(commentsToSave);
-    performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
 }
 
 export const fetchAndProcessComments = async (token: string | null, videoId: string, windowObj: any, signal: AbortSignal, dispatch: any): Promise<FetchAndProcessResult> => {
     logger.start("fetchAndProcessComments");
-    performanceMonitor.start("Total Fetch & Process Operation");
-    performanceMonitor.measureMemory("Start Fetch");
-
     try {
         // Check if operation is already aborted before starting
         if (signal.aborted) {
@@ -84,9 +78,7 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         localCommentCount = existingCommentCount;
         logger.info(`Starting with existing comment count: ${localCommentCount}`);
 
-        performanceMonitor.start("Network Fetch (Main)");
         const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
-        performanceMonitor.end("Network Fetch (Main)");
 
         // Check if operation was aborted during fetch
         if (signal.aborted) {
@@ -99,9 +91,7 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
             rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems || []
         );
 
-        performanceMonitor.start("Process JSON Logic");
         const mainProcessedData = processRawJsonCommentsData([rawJsonData], videoId);
-        performanceMonitor.end("Process JSON Logic", { count: mainProcessedData.items.length });
 
         // Check if operation was aborted before database transaction
         if (signal.aborted) {
@@ -111,13 +101,11 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
         // Use a single transaction for all operations
         const insertedCount = mainProcessedData.items.length;
-        performanceMonitor.start("IndexedDB Transaction (Main)");
         await db.transaction('rw', db.comments, async () => {
             await upsertComments(mainProcessedData.items);
             localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
             dispatch(setTotalCommentsCount(localCommentCount));
         });
-        performanceMonitor.end("IndexedDB Transaction (Main)");
         
         logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
 
@@ -130,8 +118,6 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
 
         const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
 
-        performanceMonitor.measureMemory("End Fetch");
-        performanceMonitor.end("Total Fetch & Process Operation");
         logger.end("fetchAndProcessComments");
         
         return {
@@ -146,7 +132,6 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         }
         logger.error("Failed to fetch and process comments:", err);
         logger.end("fetchAndProcessComments");
-        performanceMonitor.end("Total Fetch & Process Operation"); // Ensure we close the timer
         return {
             processedData: { items: [] },
             token: null,
@@ -171,7 +156,6 @@ async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: Ab
 async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<void> {
     const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     logger.start(timerId);
-    performanceMonitor.start("Reply Processing (Total)");
     
     try {
         // Check if already aborted
@@ -180,9 +164,7 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
             throw new DOMException('Reply processing aborted', 'AbortError');
         }
         
-        performanceMonitor.start("Network Fetch (Replies)");
         const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
-        performanceMonitor.end("Network Fetch (Replies)");
 
         if (signal.aborted) {
             logger.info("Reply processing was aborted after fetching replies.");
@@ -192,7 +174,6 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         if (replies && replies.length > 0) {
             const BATCH_SIZE = 50; // Increased batch size
             logger.info(`Processing ${replies.length} replies.`);
-            performanceMonitor.start(`Process & Save Replies (${replies.length})`);
 
             // Process all batches in a single transaction
             await db.transaction('rw', db.comments, async () => {
@@ -220,7 +201,6 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                 localCommentCount = await getExistingCommentCount(videoId); // Recalculate count
                 dispatch(setTotalCommentsCount(localCommentCount));
             });
-            performanceMonitor.end(`Process & Save Replies (${replies.length})`);
             
             // Emit final event
             dbEvents.emitRepliesAdded(videoId, replies.length); // Approximate count
@@ -239,6 +219,5 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
         }
     } finally {
         logger.end(timerId);
-        performanceMonitor.end("Reply Processing (Total)");
     }
 }
