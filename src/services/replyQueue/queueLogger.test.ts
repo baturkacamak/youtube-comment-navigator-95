@@ -43,10 +43,10 @@ describe('queueLogger', () => {
     mockConsoleWarn = vi.fn();
     mockConsoleError = vi.fn();
 
-    console.debug = mockConsoleDebug;
-    console.info = mockConsoleInfo;
-    console.warn = mockConsoleWarn;
-    console.error = mockConsoleError;
+    console.debug = mockConsoleDebug as any;
+    console.info = mockConsoleInfo as any;
+    console.warn = mockConsoleWarn as any;
+    console.error = mockConsoleError as any;
   });
 
   afterEach(() => {

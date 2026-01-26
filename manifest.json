@@ -29,7 +29,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["locales/*", "retrieve-pot-token.js", "icon128.png", "icon48.png", "icon16.png"],
+      "resources": ["locales/*", "locales/*/*", "retrieve-pot-token.js", "inject-translations.js", "icon128.png", "icon48.png", "icon16.png"],
       "matches": ["*://*.youtube.com/*"]
     }
   ],

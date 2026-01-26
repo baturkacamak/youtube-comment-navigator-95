@@ -109,8 +109,8 @@ describe('queueTypes', () => {
   });
 
   describe('DEFAULT_WORKER_POOL_CONFIG', () => {
-    it('should have maxConcurrency set to 3', () => {
-      expect(DEFAULT_WORKER_POOL_CONFIG.maxConcurrency).toBe(3);
+    it('should have maxConcurrency set to 1 (sequential to avoid bot detection)', () => {
+      expect(DEFAULT_WORKER_POOL_CONFIG.maxConcurrency).toBe(1);
     });
 
     it('should have retryLimit set to 3', () => {
@@ -129,6 +129,10 @@ describe('queueTypes', () => {
       expect(DEFAULT_WORKER_POOL_CONFIG.taskTimeoutMs).toBe(30000);
     });
 
+    it('should have requestDelayMs set to 1500 (human-like timing)', () => {
+      expect(DEFAULT_WORKER_POOL_CONFIG.requestDelayMs).toBe(1500);
+    });
+
     it('should have all required WorkerPoolConfig properties', () => {
       const config: WorkerPoolConfig = DEFAULT_WORKER_POOL_CONFIG;
       expect(config).toHaveProperty('maxConcurrency');
@@ -136,6 +140,7 @@ describe('queueTypes', () => {
       expect(config).toHaveProperty('retryDelayMs');
       expect(config).toHaveProperty('rateLimitPauseMs');
       expect(config).toHaveProperty('taskTimeoutMs');
+      expect(config).toHaveProperty('requestDelayMs');
     });
 
     it('should have positive values for all numeric properties', () => {
@@ -144,6 +149,7 @@ describe('queueTypes', () => {
       expect(DEFAULT_WORKER_POOL_CONFIG.retryDelayMs).toBeGreaterThan(0);
       expect(DEFAULT_WORKER_POOL_CONFIG.rateLimitPauseMs).toBeGreaterThan(0);
       expect(DEFAULT_WORKER_POOL_CONFIG.taskTimeoutMs).toBeGreaterThan(0);
+      expect(DEFAULT_WORKER_POOL_CONFIG.requestDelayMs).toBeGreaterThanOrEqual(0);
     });
 
     it('should have reasonable timeout values', () => {

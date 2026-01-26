@@ -130,15 +130,17 @@ export interface WorkerPoolConfig {
   retryDelayMs: number;
   rateLimitPauseMs: number;
   taskTimeoutMs: number;
+  requestDelayMs: number; // Delay between requests to avoid bot detection
 }
 
 // Default worker pool configuration
 export const DEFAULT_WORKER_POOL_CONFIG: WorkerPoolConfig = {
-  maxConcurrency: 3, // Start conservative, can be increased
+  maxConcurrency: 1, // Sequential processing to avoid bot detection (like yt-dlp)
   retryLimit: 3,
   retryDelayMs: 1000,
   rateLimitPauseMs: 5000,
-  taskTimeoutMs: 30000
+  taskTimeoutMs: 30000,
+  requestDelayMs: 1500 // 1.5 second delay between requests (human-like timing)
 };
 
 // Queue statistics

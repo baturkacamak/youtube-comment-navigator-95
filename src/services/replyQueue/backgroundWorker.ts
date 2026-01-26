@@ -685,6 +685,64 @@ function handleTaskFailure(
 // ============================================================================
 
 /**
+ * Make HTTP request from content script context to get proper browser headers
+ * Service worker requests don't get Referer, sec-fetch-site, etc. which triggers bot detection
+ */
+async function makeRequestFromContentScript(
+  preparedRequest: PreparedRequest,
+  tabId: number,
+  signal: AbortSignal
+): Promise<{ success: boolean; response?: Response; error?: string }> {
+  return new Promise((resolve) => {
+    const requestId = generateTaskId();
+    const timeout = setTimeout(() => {
+      resolve({ success: false, error: 'Timeout waiting for content script response' });
+    }, 30000);
+
+    // Listen for response from content script
+    const messageListener = (message: any) => {
+      if (message.type === 'FETCH_RESPONSE' && message.requestId === requestId) {
+        clearTimeout(timeout);
+        chrome.runtime.onMessage.removeListener(messageListener);
+
+        if (message.success && message.responseData) {
+          // Reconstruct Response object from serialized data
+          const response = new Response(message.responseData.body, {
+            status: message.responseData.status,
+            statusText: message.responseData.statusText,
+            headers: message.responseData.headers
+          });
+          resolve({ success: true, response });
+        } else {
+          resolve({ success: false, error: message.error || 'Unknown error from content script' });
+        }
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // Check if signal is already aborted
+    if (signal.aborted) {
+      clearTimeout(timeout);
+      chrome.runtime.onMessage.removeListener(messageListener);
+      resolve({ success: false, error: 'Request aborted' });
+      return;
+    }
+
+    // Send request to content script
+    chrome.tabs.sendMessage(tabId, {
+      type: 'MAKE_FETCH_REQUEST',
+      requestId,
+      preparedRequest
+    }).catch((error) => {
+      clearTimeout(timeout);
+      chrome.runtime.onMessage.removeListener(messageListener);
+      resolve({ success: false, error: `Failed to send message to content script: ${error.message}` });
+    });
+  });
+}
+
+/**
  * Execute a single fetch task
  */
 async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecutionResult> {
@@ -693,24 +751,75 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecuti
     attempt: task.retryCount + 1
   });
 
+  // Add delay before request to avoid bot detection
+  // Add random jitter (±30%) to make timing more human-like
+  if (config.requestDelayMs > 0) {
+    const jitter = (Math.random() - 0.5) * 0.6; // ±30%
+    const actualDelay = Math.floor(config.requestDelayMs * (1 + jitter));
+    taskExecutorLogger.debug(`Delaying request by ${actualDelay}ms to avoid bot detection`);
+    await new Promise(resolve => setTimeout(resolve, actualDelay));
+  }
+
   let response: Response;
 
   try {
-    // Create abort controller for timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), config.taskTimeoutMs);
+  // Create abort controller for timeout
+  taskExecutorLogger.debug(`Making fetch request for task ${task.id}`, {
+    url: task.preparedRequest.url,
+    method: task.preparedRequest.method,
+    hasAuth: !!task.preparedRequest.headers['Authorization'],
+    hasBody: !!task.preparedRequest.body,
+    bodyLength: task.preparedRequest.body?.length || 0,
+    headerKeys: Object.keys(task.preparedRequest.headers).join(', ')
+  });
 
-    try {
-      response = await fetch(task.preparedRequest.url, {
-        method: task.preparedRequest.method,
-        headers: task.preparedRequest.headers,
-        body: task.preparedRequest.body,
-        credentials: 'include',
-        signal: controller.signal
-      });
-    } finally {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), config.taskTimeoutMs);
+
+  try {
+    // Validate tabId
+    if (!task.tabId) {
       clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: 'No tab ID available for request',
+        errorCode: ErrorCode.TAB_NOT_FOUND,
+        retryable: false
+      };
     }
+
+    // Make request from content script context to get proper browser headers
+    // This avoids bot detection that happens with service worker requests
+    const fetchResult = await makeRequestFromContentScript(
+      task.preparedRequest,
+      task.tabId,
+      controller.signal
+    );
+    
+    if (!fetchResult.success) {
+      clearTimeout(timeoutId);
+      return {
+        success: false,
+        error: fetchResult.error || 'Failed to make request from content script',
+        errorCode: ErrorCode.NETWORK_ERROR,
+        retryable: true
+      };
+    }
+    
+    response = fetchResult.response!;
+    
+    taskExecutorLogger.debug(`Fetch completed for task ${task.id}`, {
+      status: response.status,
+      ok: response.ok,
+      statusText: response.statusText,
+      headers: {
+        contentType: response.headers.get('content-type'),
+        contentLength: response.headers.get('content-length')
+      }
+    });
+  } finally {
+    clearTimeout(timeoutId);
+  }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       taskExecutorLogger.warn(`Task ${task.id} timed out`, {
@@ -750,10 +859,15 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecuti
       errorText = 'Unable to read error response';
     }
 
-    taskExecutorLogger.warn(`HTTP error for task ${task.id}`, {
+    taskExecutorLogger.error(`HTTP error for task ${task.id}`, {
       status: response.status,
       statusText: response.statusText,
-      bodyPreview: errorText.substring(0, 200)
+      url: task.preparedRequest.url,
+      method: task.preparedRequest.method,
+      headers: task.preparedRequest.headers,
+      bodyPreview: errorText.substring(0, 500),
+      videoId: task.videoId,
+      parentCommentId: task.parentCommentId
     });
 
     return {
@@ -764,14 +878,26 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecuti
     };
   }
 
+  // Log successful response
+  taskExecutorLogger.debug(`Received response for task ${task.id}`, {
+    status: response.status,
+    contentType: response.headers.get('content-type'),
+    videoId: task.videoId
+  });
+
   // Parse response
   let data: any;
+  let responseText: string = '';
   try {
-    data = await response.json();
+    responseText = await response.text();
+    taskExecutorLogger.debug(`Response text length: ${responseText.length} characters`);
+    data = JSON.parse(responseText);
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     taskExecutorLogger.error(`Failed to parse JSON for task ${task.id}`, {
-      error: errorMsg
+      error: errorMsg,
+      responsePreview: responseText.substring(0, 500),
+      responseLength: responseText.length
     });
     return {
       success: false,
@@ -783,8 +909,9 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecuti
 
   // Validate response structure
   if (!data || typeof data !== 'object') {
-    taskExecutorLogger.warn(`Invalid response structure for task ${task.id}`, {
-      dataType: typeof data
+    taskExecutorLogger.error(`Invalid response structure for task ${task.id}`, {
+      dataType: typeof data,
+      dataPreview: JSON.stringify(data).substring(0, 500)
     });
     return {
       success: false,
@@ -793,6 +920,11 @@ async function executeTask(task: ReplyFetchTaskWithRequest): Promise<TaskExecuti
       retryable: false
     };
   }
+  
+  taskExecutorLogger.debug(`Response parsed successfully`, {
+    hasOnResponseReceivedEndpoints: !!data?.onResponseReceivedEndpoints,
+    topLevelKeys: Object.keys(data || {}).join(', ')
+  });
 
   // Parse reply data
   const parseResult = parseReplyResponse(data);

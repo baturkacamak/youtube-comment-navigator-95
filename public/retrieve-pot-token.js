@@ -1,4 +1,6 @@
 (function () {
+    console.info('[YCN-POT] POT token retrieval script loaded');
+    
     const MAX_RETRIES = 10;
     const RETRY_DELAY = 1000;
 
@@ -81,34 +83,48 @@
     let cachedToken = null;
 
     function attemptRetrieve(attempt = 1) {
+        console.debug(`[YCN-POT] Attempt ${attempt}/${MAX_RETRIES} to retrieve POT token`);
         const token = getTranscriptPot();
         
         if (token) {
             cachedToken = token;
+            console.info(`[YCN-POT] ✓ POT token retrieved successfully on attempt ${attempt}`);
+            console.debug(`[YCN-POT] Token: ${token.substring(0, 20)}...`);
             window.postMessage({ type: 'YCN_POT_TOKEN_RECEIVED', token }, '*');
         } else if (attempt < MAX_RETRIES) {
+            console.warn(`[YCN-POT] Token not found, retrying in ${RETRY_DELAY}ms... (${attempt}/${MAX_RETRIES})`);
             setTimeout(() => attemptRetrieve(attempt + 1), RETRY_DELAY);
         } else {
-            console.error('[YCN-POT] Failed to retrieve POT token after max retries.');
+            console.error(`[YCN-POT] ✗ Failed to retrieve POT token after ${MAX_RETRIES} retries.`);
         }
     }
 
     window.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'YCN_REQUEST_POT_TOKEN') {
+            console.debug('[YCN-POT] POT token request received');
             if (cachedToken) {
+                console.info('[YCN-POT] Returning cached token');
                 window.postMessage({ type: 'YCN_POT_TOKEN_RECEIVED', token: cachedToken }, '*');
             } else {
+                console.info('[YCN-POT] No cached token, attempting retrieval');
                 attemptRetrieve(1);
             }
         }
     });
 
+    console.debug(`[YCN-POT] Document ready state: ${document.readyState}`);
+    
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        console.info('[YCN-POT] Document ready, starting token retrieval');
         attemptRetrieve();
     } else {
+        console.info('[YCN-POT] Waiting for document load...');
         window.addEventListener('load', () => {
-             attemptRetrieve();
+            console.info('[YCN-POT] Document loaded, starting token retrieval');
+            attemptRetrieve();
         });
     }
+
+    console.info('[YCN-POT] POT token retrieval system initialized');
 
 })();
