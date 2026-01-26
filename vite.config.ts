@@ -30,6 +30,9 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  esbuild: {
+    charset: 'ascii',
+  },
   build: {
     rollupOptions: {
       output: {
@@ -38,6 +41,8 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]',
       },
     },
+    target: 'es2020',
+    minify: 'esbuild',
   },
   test: {
     globals: true,
