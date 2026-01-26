@@ -1,7 +1,7 @@
 import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote";
 import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
-import { extractContinuationToken } from "./continuationTokenUtils";
+import { extractContinuationToken, extractReplyContinuationTokens } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
 import { addProcessedReplies, setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
@@ -33,6 +33,46 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
         logger.error('Failed to retrieve existing comment count:', error);
         return 0;
     }
+}
+
+/**
+ * Extract reply continuation tokens from raw JSON and map them to comment IDs
+ * Returns a Map of commentId -> replyContinuationToken
+ */
+function extractReplyTokensForComments(rawJsonData: any): Map<string, string> {
+    const tokenMap = new Map<string, string>();
+    
+    try {
+        const continuationItems = rawJsonData.onResponseReceivedEndpoints?.[0]?.appendContinuationItemsAction?.continuationItems
+            || rawJsonData.onResponseReceivedEndpoints?.[1]?.reloadContinuationItemsCommand?.continuationItems
+            || [];
+
+        for (const item of continuationItems) {
+            const commentThreadRenderer = item.commentThreadRenderer;
+            if (!commentThreadRenderer) continue;
+
+            // Get comment ID from the thread
+            const commentViewModel = commentThreadRenderer.commentViewModel?.commentViewModel;
+            const commentId = commentViewModel?.commentKey || 
+                             commentThreadRenderer.comment?.commentRenderer?.commentId;
+            
+            // Get reply continuation token
+            const replyToken = commentThreadRenderer.replies?.commentRepliesRenderer?.contents?.[0]
+                ?.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token ||
+                commentThreadRenderer.replies?.commentRepliesRenderer?.continuations?.[0]
+                ?.nextContinuationData?.continuation;
+
+            if (commentId && replyToken) {
+                tokenMap.set(commentId, replyToken);
+            }
+        }
+
+        logger.debug(`Extracted ${tokenMap.size} reply continuation tokens`);
+    } catch (error) {
+        logger.error('Error extracting reply tokens:', error);
+    }
+
+    return tokenMap;
 }
 
 // Helper to upsert comments (update if exists, insert if new) based on commentId
@@ -99,21 +139,31 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
             throw new DOMException('Fetch aborted', 'AbortError');
         }
 
+        // Extract reply continuation tokens from raw JSON and store them with comments
+        const replyTokensMap = extractReplyTokensForComments(rawJsonData);
+        
+        // Attach reply tokens to comments
+        const commentsWithTokens = mainProcessedData.items.map(comment => {
+            const replyToken = replyTokensMap.get(comment.commentId);
+            return replyToken ? { ...comment, replyContinuationToken: replyToken } : comment;
+        });
+
         // Use a single transaction for all operations
         await db.transaction('rw', db.comments, async () => {
-            await upsertComments(mainProcessedData.items);
+            await upsertComments(commentsWithTokens);
             localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
             dispatch(setTotalCommentsCount(localCommentCount));
         });
         logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
 
-        const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
+        // NOTE: Reply processing is now deferred to Phase 2 (prioritized fetching)
+        // We no longer queue reply processing here to allow all main comments to load first
 
         logger.end("fetchAndProcessComments");
         return {
             processedData: mainProcessedData,
             token: continuationToken,
-            hasQueuedReplies
+            hasQueuedReplies: false // Always false now, replies are fetched separately
         };
     } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') {

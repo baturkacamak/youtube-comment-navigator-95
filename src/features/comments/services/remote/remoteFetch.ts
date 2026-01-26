@@ -1,5 +1,6 @@
 import { fetchContinuationTokenFromRemote } from "./fetchContinuationTokenFromRemote";
-import { fetchAndProcessComments, FetchAndProcessResult, hasActiveReplyProcessing, resetLocalCommentCount } from "./fetchAndProcessComments";
+import { fetchAndProcessComments, FetchAndProcessResult, resetLocalCommentCount } from "./fetchAndProcessComments";
+import { fetchRepliesInPriorityOrder } from "./fetchPrioritizedReplies";
 import {setComments, setIsLoading, setTotalCommentsCount} from "../../../../store/store";
 import {
     clearContinuationToken,
@@ -86,8 +87,12 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             await deleteCommentsIfFreshFetch(null, videoId);
         }
 
-        // fetch all comments iteratively and determine if there are queued replies
-        const hasQueuedRepliesValue = await iterateFetchComments(
+        // ========================================================================
+        // PHASE 1: Fetch ALL main comments first
+        // ========================================================================
+        logger.info('[RemoteFetch] ===== PHASE 1: Fetching all main comments =====');
+        
+        await iterateFetchComments(
             token,
             videoId,
             CONTINUATION_TOKEN_KEY,
@@ -96,36 +101,55 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
             dispatch
         );
 
-        // Handle signal abort at the top level
+        // Handle signal abort
         if (signal.aborted) {
-            logger.info('Fetch operation was aborted before completion.');
+            logger.info('[RemoteFetch] Fetch operation was aborted before completion.');
             dispatch(setIsLoading(false));
             return;
         }
 
-        // once all comments are fetched, load the first page to UI
+        // Load main comments to UI
         await loadInitialComments(videoId, dispatch);
-
-        if (hasQueuedRepliesValue) {
-            try {
-                await waitForReplyProcessing();
-                // Check if aborted again after waiting for replies
-                if (signal.aborted) {
-                    logger.info('Operation aborted after waiting for reply processing.');
-                    dispatch(setIsLoading(false));
-                    return;
-                }
-                await loadInitialComments(videoId, dispatch);
-            } catch (e) {
-                if ((e as Error)?.name === 'AbortError') {
-                    logger.info('Reply wait operation was aborted.');
-                } else {
-                    logger.error('Error waiting for reply processing:', e);
-                }
-            }
-        }
-
         await clearContinuationToken(videoId);
+        
+        logger.success('[RemoteFetch] ✓ PHASE 1 Complete: All main comments fetched and displayed');
+
+        // ========================================================================
+        // PHASE 2: Fetch replies in priority order (most replies first)
+        // ========================================================================
+        logger.info('[RemoteFetch] ===== PHASE 2: Fetching replies in priority order =====');
+        
+        try {
+            await fetchRepliesInPriorityOrder(videoId, windowObj, {
+                delayBetweenRequests: 1500, // 1.5s between requests to avoid bot detection
+                signal,
+                onProgress: async (progress) => {
+                    // Update UI with fresh data every few comments
+                    if (progress.current % 5 === 0 || progress.current === progress.total) {
+                        logger.info(`[RemoteFetch] Reply progress: ${progress.current}/${progress.total} (${progress.replyCount} replies fetched)`);
+                        await loadInitialComments(videoId, dispatch);
+                    }
+                }
+            });
+            
+            if (signal.aborted) {
+                logger.info('[RemoteFetch] Reply fetching was aborted.');
+            } else {
+                logger.success('[RemoteFetch] ✓ PHASE 2 Complete: All replies fetched');
+            }
+            
+            // Final UI update with all data
+            await loadInitialComments(videoId, dispatch);
+            
+        } catch (error) {
+            if ((error as Error)?.name === 'AbortError') {
+                logger.info('[RemoteFetch] Reply fetching was aborted.');
+            } else {
+                logger.error('[RemoteFetch] Error during reply fetching:', error);
+            }
+            // Don't fail the whole operation if reply fetching fails
+            // Main comments are already loaded
+        }
     } catch (error: unknown) {
         if ((error as Error)?.name === 'AbortError') {
             logger.info('Fetch operation was aborted.');
@@ -142,28 +166,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     }
 };
 
-async function waitForReplyProcessing(): Promise<void> {
-    logger.start('waitForReplyProcessing');
-    const maxWaitTime = 30000; // 30 seconds maximum wait
-    const startTime = Date.now();
-    
-    while (hasActiveReplyProcessing()) {
-        // Check for timeout
-        if (Date.now() - startTime > maxWaitTime) {
-            logger.warn('Exceeded maximum wait time for reply processing.');
-            break;
-        }
-        
-        // Check for abort signal
-        if (currentAbortController.signal.aborted) {
-            logger.info('Reply wait operation aborted.');
-            throw new DOMException('Reply wait aborted', 'AbortError');
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-    logger.end('waitForReplyProcessing');
-}
+// Removed: waitForReplyProcessing() - No longer needed with prioritized reply fetching
 
 // New helper function: Load initial paged comments from IndexedDB and dispatch
 async function loadInitialComments(videoId: string, dispatch: any): Promise<void> {
