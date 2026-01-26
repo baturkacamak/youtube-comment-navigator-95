@@ -2,6 +2,7 @@ import { fetchCommentJsonDataFromRemote } from "./fetchCommentJsonDataFromRemote
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { extractContinuationToken, extractReplyTasksFromRawData } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
+import { dbEvents } from "../../../shared/utils/database/dbEvents";
 import { setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
 import { replyQueueService } from "../../../../services/replyQueue/replyQueueService";
@@ -100,12 +101,20 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         }
 
         // Use a single transaction for all operations
+        const insertedCount = mainProcessedData.items.length;
         await db.transaction('rw', db.comments, async () => {
             await upsertComments(mainProcessedData.items);
             localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
             dispatch(setTotalCommentsCount(localCommentCount));
         });
-        logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
+        logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
+
+        // Emit database event for reactive UI updates
+        if (insertedCount > 0) {
+            const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);
+            dbEvents.emitCommentsAdded(videoId, insertedCount, commentIds);
+            dbEvents.emitCountUpdated(videoId, localCommentCount);
+        }
 
         const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
 

@@ -16,6 +16,7 @@ import {
 import { PreparedRequest } from './backgroundWorker';
 import { processRawJsonCommentsData } from '../../features/comments/utils/comments/retrieveYouTubeCommentPaths';
 import { db } from '../../features/shared/utils/database/database';
+import { dbEvents } from '../../features/shared/utils/database/dbEvents';
 import logger from '../../features/shared/utils/logger';
 
 // Event callbacks
@@ -501,6 +502,17 @@ class ReplyQueueService {
       });
 
       logger.success(`[ReplyQueueService] Stored ${repliesWithParent.length} replies for parent ${parentCommentId}`);
+
+      // Emit database event for reactive UI updates
+      if (repliesWithParent.length > 0) {
+        const replyIds = repliesWithParent.map((c: any) => c.commentId).filter(Boolean);
+        dbEvents.emitRepliesAdded(videoId, repliesWithParent.length, replyIds);
+
+        // Get updated total count and emit
+        const totalCount = await db.comments.where('videoId').equals(videoId).count();
+        dbEvents.emitCountUpdated(videoId, totalCount);
+      }
+
       logger.end('processAndStoreReplyData');
 
       return repliesWithParent.length;

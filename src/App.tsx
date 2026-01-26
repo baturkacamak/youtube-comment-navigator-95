@@ -41,26 +41,16 @@ const App: React.FC = () => {
         filteredAndSortedBookmarks,
         transcript,
         totalCommentsCount,
-        comments,
         bookmarkedOnlyComments
     } = useAppState();
 
-    const hasActiveFilters =
-        !!filters.keyword ||
-        filters.verified ||
-        filters.hasLinks ||
-        filters.likesThreshold.min > 0 ||
-        filters.likesThreshold.max < Infinity ||
-        filters.repliesLimit.min > 0 ||
-        filters.repliesLimit.max < Infinity ||
-        filters.wordCount.min > 0 ||
-        filters.wordCount.max < Infinity ||
-        !!filters.dateTimeRange.start ||
-        !!filters.dateTimeRange.end ||
-        !!searchKeyword;
+    // Note: In-memory filtering is no longer used for comments tab.
+    // CommentList uses useCommentsFromDB hook which queries IndexedDB directly
+    // with filters applied at the database level.
 
-    // Show either filtered count or total count
-    const displayCount = hasActiveFilters ? filteredAndSortedComments.length : totalCommentsCount;
+    // Display count always comes from totalCommentsCount (synced from IndexedDB)
+    // since filtering now happens at the database level
+    const displayCount = totalCommentsCount;
 
     const tabs = React.useMemo(() => [
         {
@@ -76,7 +66,7 @@ const App: React.FC = () => {
                             filters={filters}
                             setFilters={setFiltersCallback}
                             comments={filteredAndSortedComments}
-                            allComments={comments}
+                            allComments={filteredAndSortedComments}
                         />
                     </div>
                     <CommentList />

@@ -20,7 +20,8 @@ const useAppState = () => {
     const [activeTab, setActiveTab] = useState('comments');
     const [bookmarkedOnlyComments, setBookmarkedOnlyComments] = useState<Comment[]>([]);
 
-    const comments = useSelector((state: RootState) => state.comments);
+    // Redux is now a "View Buffer" - comments filtering/sorting is handled at the DB level
+    // We only keep filters, search keyword, and UI state in Redux
     const filters = useSelector((state: RootState) => state.filters);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
     const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
@@ -29,6 +30,7 @@ const useAppState = () => {
     const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
     const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
 
+    // Sorting/filtering hooks are still used for bookmarks (which may span multiple videos)
     const { sortComments } = useSortedComments(false);
     const { filterComments } = useFilteredComments();
     const { initialLoadCompleted } = useCommentsIncrementalLoader();
@@ -68,16 +70,11 @@ const useAppState = () => {
         return returnComments;
     }, [filters, sortComments, filterComments, bookmarkedOnlyComments, searchKeyword]);
 
-    const filteredAndSortedComments = useMemo(() => {
-        if (!filters) return [];
-        let returnComments = comments;
-        if (searchKeyword) {
-            returnComments = searchComments(returnComments, searchKeyword);
-        }
-        returnComments = sortComments(returnComments, filters.sortBy, filters.sortOrder);
-        returnComments = filterComments(returnComments, filters);
-        return returnComments;
-    }, [filters, sortComments, filterComments, comments, searchKeyword]);
+    // NOTE: In-memory comment filtering/sorting has been moved to the IndexedDB layer.
+    // CommentList now uses useCommentsFromDB hook which queries the database directly.
+    // This empty array is kept for backward compatibility with components that may still reference it.
+    // Bookmarks still use in-memory filtering above since they span multiple videos.
+    const filteredAndSortedComments: Comment[] = [];
 
     const searchedTranscripts = useMemo(() => {
         let filteredTranscripts = transcripts;
@@ -124,11 +121,12 @@ const useAppState = () => {
     useFetchDataOnUrlChange();
 
     return {
-        comments,
+        // Note: 'comments' is no longer returned as it's now managed by useCommentsFromDB hook
+        // Components should use the hook directly for reactive comment data
         filters,
         transcripts,
         initialLoadCompleted,
-        filteredAndSortedComments,
+        filteredAndSortedComments, // Now an empty array - use useCommentsFromDB instead
         setFiltersCallback,
         showBookmarked,
         toggleShowBookmarked,

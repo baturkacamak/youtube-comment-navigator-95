@@ -5,6 +5,23 @@ import {LiveChatMessage, LiveChatErrorType} from '../types/liveChatTypes';
 import {FilterState} from '../types/filterTypes';
 import {saveSettings} from "../features/settings/utils/settingsUtils";
 
+/**
+ * Redux Store - View Buffer Architecture
+ *
+ * IndexedDB (Dexie) is the single source of truth for comment data.
+ * Redux now serves as a "View Buffer" that holds:
+ * - UI state (filters, settings, active tab, etc.)
+ * - Temporary view data (currently displayed comments synced from DB queries)
+ * - Count syncs from reactive database queries
+ *
+ * Data Flow:
+ * 1. YouTube API -> fetchAndProcessComments -> IndexedDB (write)
+ * 2. useCommentsFromDB hook -> IndexedDB query -> Component state
+ * 3. totalCommentsCount synced to Redux for header/stat displays
+ *
+ * @see useCommentsFromDB for the main data consumption hook
+ * @see pagination.ts for database query logic
+ */
 const initialState: RootState = {
     // Settings and filters
     settings: {
@@ -37,7 +54,9 @@ const initialState: RootState = {
         },
     },
 
-    // Comments and transcripts data
+    // Comments View Buffer - holds currently displayed comments
+    // Source of truth is IndexedDB, this is just for component rendering
+    // @deprecated Use useCommentsFromDB hook instead of accessing this directly
     comments: [],
     liveChat: [],
     liveChatState: {
@@ -67,7 +86,9 @@ const initialState: RootState = {
     // Search keyword
     searchKeyword: '',
 
+    // @deprecated Filtering/sorting now happens at DB level via pagination.ts
     filteredAndSortedComments: [],
+    // Bookmarks still use in-memory filtering (may span multiple videos)
     filteredAndSortedBookmarks: [],
 };
 
@@ -104,11 +125,11 @@ const commentsSlice = createSlice({
         setFilteredTranscripts: (state, action: PayloadAction<any[]>) => {
             state.filteredTranscripts = action.payload;
         },
+        // @deprecated Replies are now added directly to IndexedDB by replyQueueService
+        // UI updates via useLiveQuery in useCommentsFromDB hook
         addProcessedReplies: (state, action: PayloadAction<Comment[]>) => {
-            action.payload.forEach(reply => {
-                state.comments.push(reply);
-                state.filteredAndSortedComments.push(reply);
-            });
+            // No-op: Kept for backward compatibility
+            // Replies are persisted to IndexedDB and UI updates reactively
         },
         // Bookmark actions
         setBookmarkedComments: (state, action: PayloadAction<Comment[]>) => {

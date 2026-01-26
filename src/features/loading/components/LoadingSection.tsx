@@ -17,7 +17,8 @@ const LoadingSection = () => {
     const { loadComments, loadTranscript, loadLiveChat, loadAll } = useLoadContent();
 
     const { t } = useTranslation();
-    const commentsCount = useSelector((state: RootState) => state.comments.length);
+    // Use totalCommentsCount from IndexedDB (via Redux sync) instead of in-memory array length
+    const commentsCount = useSelector((state: RootState) => state.totalCommentsCount);
     const liveChatCount = useSelector((state: RootState) => state.liveChatMessageCount);
 
     return (
