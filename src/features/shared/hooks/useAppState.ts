@@ -14,6 +14,8 @@ import { searchComments } from "../../comments/services/commentSearchService";
 import { searchTranscripts } from "../../comments/services/transcriptSearchService";
 import useFetchDataOnUrlChange from "../hooks/urlChange/useFetchDataOnUrlChange";
 import logger from '../utils/logger';
+import { useLiveCommentCount } from '../../comments/hooks/useCommentsFromDB';
+import { extractYouTubeVideoIdFromUrl } from '../utils/extractYouTubeVideoIdFromUrl';
 
 const useAppState = () => {
     const dispatch = useDispatch();
@@ -23,9 +25,7 @@ const useAppState = () => {
     const comments = useSelector((state: RootState) => state.comments);
     const filters = useSelector((state: RootState) => state.filters);
     const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
-    const bookmarkedComments = useSelector((state: RootState) => state.bookmarkedComments);
     const transcripts = useSelector((state: RootState) => state.transcripts);
-    const filteredTranscripts = useSelector((state: RootState) => state.filteredTranscripts);
     const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
     const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
 
@@ -33,6 +33,16 @@ const useAppState = () => {
     const { filterComments } = useFilteredComments();
     const { initialLoadCompleted } = useCommentsIncrementalLoader();
     const { loadTranscript } = useTranscript();
+
+    const videoId = extractYouTubeVideoIdFromUrl();
+
+    // Use reactive hook to get the count of comments matching current filters/search
+    const liveFilteredCommentCount = useLiveCommentCount(
+        videoId,
+        filters,
+        searchKeyword,
+        { topLevelOnly: true, excludeLiveChat: true }
+    );
 
     const fetchBookmarkedComments = useCallback(async () => {
         const bookmarks = await db.comments.where('bookmarkAddedDate').above('').toArray();
@@ -68,6 +78,8 @@ const useAppState = () => {
         return returnComments;
     }, [filters, sortComments, filterComments, bookmarkedOnlyComments, searchKeyword]);
 
+    // @deprecated - This will only sort/filter the VIEW BUFFER (current page)
+    // Use liveFilteredCommentCount for total counts instead
     const filteredAndSortedComments = useMemo(() => {
         if (!filters) return [];
         let returnComments = comments;
@@ -96,23 +108,19 @@ const useAppState = () => {
     }, [dispatch, showBookmarked]);
 
     const fetchTotalCommentsCount = useCallback(async () => {
-        try {
-            // Get current video ID from URL or wherever you store it
-            const currentVideoId = window.location.href.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\?]*)/)?.[1] || '';
-
-            if (currentVideoId) {
-                // Count comments for this video
+        // Redundant if using useLiveCommentCount, but keeping for compatibility
+        if (videoId) {
+            try {
                 const count = await db.comments
                     .where('videoId')
-                    .equals(currentVideoId)
+                    .equals(videoId)
                     .count();
-
                 dispatch(setTotalCommentsCount(count));
+            } catch (error) {
+                logger.error('Error fetching total comments count:', error);
             }
-        } catch (error) {
-            logger.error('Error fetching total comments count:', error);
         }
-    }, [dispatch]);
+    }, [dispatch, videoId]);
 
     useEffect(() => {
         fetchTotalCommentsCount();
@@ -138,6 +146,7 @@ const useAppState = () => {
         filteredAndSortedBookmarks,
         transcript: searchedTranscripts,
         totalCommentsCount,
+        liveFilteredCommentCount, // Expose the new reactive count
         fetchTotalCommentsCount,
         bookmarkedOnlyComments
     };

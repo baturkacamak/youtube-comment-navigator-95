@@ -4,7 +4,6 @@ import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTube
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
 import { dbEvents } from "../../../shared/utils/database/dbEvents";
-import { setTotalCommentsCount } from "../../../../store/store";
 import logger from "../../../shared/utils/logger";
 
 export interface FetchAndProcessResult {
@@ -104,7 +103,6 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         await db.transaction('rw', db.comments, async () => {
             await upsertComments(mainProcessedData.items);
             localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
-            dispatch(setTotalCommentsCount(localCommentCount));
         });
         
         logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
@@ -197,9 +195,8 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                     }
                 }
                 
-                // Update Redux store once after all batches are processed
-                localCommentCount = await getExistingCommentCount(videoId); // Recalculate count
-                dispatch(setTotalCommentsCount(localCommentCount));
+                // Recalculate count
+                localCommentCount = await getExistingCommentCount(videoId); 
             });
             
             // Emit final event

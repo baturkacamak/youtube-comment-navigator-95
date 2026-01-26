@@ -16,6 +16,8 @@ import Tabs from "./features/shared/components/Tabs";
 import {useDispatch, useSelector} from 'react-redux';
 import { RootState } from "./types/rootState";
 import i18n from "i18next";
+import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
+import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 
 const App: React.FC = () => {
     const { t } = useTranslation();
@@ -40,10 +42,13 @@ const App: React.FC = () => {
         transcriptWordCount,
         filteredAndSortedBookmarks,
         transcript,
-        totalCommentsCount,
+        liveFilteredCommentCount, // Use the new reactive count
         comments,
         bookmarkedOnlyComments
     } = useAppState();
+
+    const videoId = extractYouTubeVideoIdFromUrl();
+    const liveTotalUnfilteredCount = useTotalUnfilteredCount(videoId);
 
     const hasActiveFilters =
         !!filters.keyword ||
@@ -59,8 +64,9 @@ const App: React.FC = () => {
         !!filters.dateTimeRange.end ||
         !!searchKeyword;
 
-    // Show either filtered count or total count
-    const displayCount = hasActiveFilters ? filteredAndSortedComments.length : totalCommentsCount;
+    // Show either filtered count (from DB) or total count (from DB)
+    // Both are now fully reactive via useLiveQuery, bypassing Redux conflicts
+    const displayCount = hasActiveFilters ? liveFilteredCommentCount : liveTotalUnfilteredCount;
 
     const tabs = React.useMemo(() => [
         {
