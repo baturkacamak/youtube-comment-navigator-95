@@ -3,7 +3,7 @@ import { fetchRepliesJsonDataFromRemote } from "./fetchReplies";
 import { processRawJsonCommentsData } from "../../utils/comments/retrieveYouTubeCommentPaths";
 import { extractContinuationToken } from "./continuationTokenUtils";
 import { db } from "../../../shared/utils/database/database";
-import { addProcessedReplies, setTotalCommentsCount } from "../../../../store/store";
+import { dbEvents } from "../../../shared/utils/database/dbEvents";
 import logger from "../../../shared/utils/logger";
 
 export interface FetchAndProcessResult {
@@ -56,7 +56,6 @@ async function upsertComments(comments: any[]) {
             return { ...c, id: idMap.get(c.commentId) };
         }
         // If it's new, ensure 'id' is undefined so Dexie generates it
-        // (Removing 'id' property if it exists but is null/undefined just in case)
         const { id, ...rest } = c;
         return rest;
     });
@@ -100,16 +99,25 @@ export const fetchAndProcessComments = async (token: string | null, videoId: str
         }
 
         // Use a single transaction for all operations
+        const insertedCount = mainProcessedData.items.length;
         await db.transaction('rw', db.comments, async () => {
             await upsertComments(mainProcessedData.items);
             localCommentCount = await getExistingCommentCount(videoId); // Recalculate count accurately
-            dispatch(setTotalCommentsCount(localCommentCount));
         });
-        logger.success(`Inserted ${mainProcessedData.items.length} main comments into IndexedDB. Total count: ${localCommentCount}`);
+        
+        logger.success(`Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`);
+
+        // Emit database event for reactive UI updates
+        if (insertedCount > 0) {
+            const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);
+            dbEvents.emitCommentsAdded(videoId, insertedCount, commentIds);
+            dbEvents.emitCountUpdated(videoId, localCommentCount);
+        }
 
         const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId, dispatch);
 
         logger.end("fetchAndProcessComments");
+        
         return {
             processedData: mainProcessedData,
             token: continuationToken,
@@ -146,6 +154,7 @@ async function queueReplyProcessing(rawJsonData: any, windowObj: any, signal: Ab
 async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: AbortSignal, videoId: string, dispatch: any): Promise<void> {
     const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     logger.start(timerId);
+    
     try {
         // Check if already aborted
         if (signal.aborted) {
@@ -185,10 +194,15 @@ async function fetchRepliesAndProcess(rawJsonData: any, windowObj: any, signal: 
                         throw new DOMException('Reply processing aborted', 'AbortError');
                     }
                 }
-                // Update Redux store once after all batches are processed
-                localCommentCount = await getExistingCommentCount(videoId); // Recalculate count
-                dispatch(setTotalCommentsCount(localCommentCount));
+                
+                // Recalculate count
+                localCommentCount = await getExistingCommentCount(videoId); 
             });
+            
+            // Emit final event
+            dbEvents.emitRepliesAdded(videoId, replies.length); // Approximate count
+            dbEvents.emitCountUpdated(videoId, localCommentCount);
+
             logger.success(`Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`);
         } else {
             logger.info("No replies to process.");

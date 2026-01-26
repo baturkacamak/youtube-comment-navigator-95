@@ -203,12 +203,10 @@ class hoverAction {
         }
     }
 
-    // Clean up listeners and state
+        // Clean up listeners and state
     destroy(): void {
         if (!this.isInitialized) return;
         
-        logger.debug(`[${this.eventNamePrefix}]`, 'Destroying instance...');
-
         this.abortAction('destroy'); // Abort any ongoing action
 
         // Remove event listeners safely using optional chaining
@@ -249,8 +247,6 @@ class hoverAction {
         this.touchStartY = null;
 
         this.isInitialized = false; // Mark as uninitialized *last*
-        
-        logger.debug(`[${this.eventNamePrefix}]`, 'Destroyed.');
     }
 
     // Set up listeners and debounce
@@ -283,8 +279,6 @@ class hoverAction {
         if (this.supportFocus) {
             this.element.addEventListener('focus', this.handleFocus);
             this.element.addEventListener('blur', this.handleBlur);
-            
-            logger.debug(`[${this.eventNamePrefix}]`, 'Focus support enabled');
         }
         if (this.supportTouch && this.isTouchDevice) {
             // Use passive: true where appropriate for performance
@@ -295,7 +289,6 @@ class hoverAction {
             
             logger.debug(`[${this.eventNamePrefix}]`, 'Touch support enabled');
         }
-        logger.debug(`[${this.eventNamePrefix}]`, 'Initialized for element', this.element);
     }
 
     // --- Event Handlers ---

@@ -50,7 +50,6 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
     useEffect(() => {
         let hoverActionInstance: hoverAction | null = null;
         if (viewRepliesButtonRef.current && comment.replyCount > 0) {
-            logger.start(`[CommentFooter] Setting up hoverAction for comment: ${comment.commentId}`);
             try {
                 hoverActionInstance = new hoverAction({
                     element: viewRepliesButtonRef.current,
@@ -92,14 +91,9 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                     supportTouch: true,
                     executeOnlyOnce: true,
                 });
-                logger.success(`[CommentFooter] HoverAction setup complete for comment: ${comment.commentId}`);
             } catch (error) {
-                logger.error(`[CommentFooter] Error setting up hoverAction for comment: ${comment.commentId}`, error);
+                // Silent catch for setup errors to avoid noise
             }
-        } else if (comment.replyCount === 0) {
-            logger.info(`[CommentFooter] No replies to prefetch for comment: ${comment.commentId}`);
-        } else if (!viewRepliesButtonRef.current) {
-            logger.warn(`[CommentFooter] Button ref not available for comment: ${comment.commentId}`);
         }
 
         return () => {
@@ -107,7 +101,7 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
                 try {
                     hoverActionInstance.destroy();
                 } catch (e) {
-                    logger.error(`[CommentFooter] Error destroying hoverAction for comment: ${comment.commentId}`, e);
+                    // Silent catch for destroy errors
                 }
             }
         };
