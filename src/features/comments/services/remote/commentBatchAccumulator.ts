@@ -96,6 +96,7 @@ async function upsertCommentsBatch(comments: any[], skipLookup: boolean = false)
 /**
  * Add comments to the accumulator buffer.
  * Automatically flushes when the buffer reaches the batch size.
+ * IMPORTANT: Flushes immediately on the first batch so users see content right away.
  *
  * @param videoId - The video ID
  * @param comments - Array of processed comment objects
@@ -118,6 +119,13 @@ export async function accumulateComments(
     acc.buffer.push(...comments);
 
     logger.debug(`[BatchAccumulator] Added ${comments.length} comments to buffer. Total buffered: ${acc.buffer.length}`);
+
+    // IMMEDIATE FLUSH: Show first batch immediately so users don't stare at empty screen
+    // This ensures good UX while still batching subsequent fetches for performance
+    if (acc.totalFlushed === 0) {
+        logger.info(`[BatchAccumulator] First batch - flushing immediately for instant display`);
+        return await flushAccumulator(videoId);
+    }
 
     // Auto-flush if buffer reaches threshold
     if (acc.buffer.length >= batchSize) {
