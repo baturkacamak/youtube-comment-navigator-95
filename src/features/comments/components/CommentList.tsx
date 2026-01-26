@@ -1,17 +1,30 @@
 // src/features/comments/components/CommentList.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CommentItem from './CommentItem';
 import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import Box from "../../shared/components/Box";
 import { motion } from 'framer-motion';
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
-import { CommentListProps } from "../../../types/commentTypes";
+import { CommentListProps, Comment } from "../../../types/commentTypes";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from "../../../types/rootState";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { setTotalCommentsCount } from "../../../store/store";
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
+
+// Pre-compute alternating colors once (they only depend on even/odd index)
+const CACHED_COLORS = {
+    even: getCommentBackgroundColor({} as Comment, 0),
+    odd: getCommentBackgroundColor({} as Comment, 1),
+};
+
+// Simplified animation variants - removed expensive 'layout' prop
+const itemVariants = {
+    initial: { opacity: 0, y: -5 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 5 },
+};
 
 const CommentList: React.FC<CommentListProps> = () => {
     const { t } = useTranslation();
@@ -72,25 +85,29 @@ const CommentList: React.FC<CommentListProps> = () => {
     return (
         <div className="flex flex-col">
             {comments.map((comment, idx) => {
-                const { bgColor, darkBgColor, borderColor, darkBorderColor } = getCommentBackgroundColor(comment, idx);
+                // PERF: Use cached colors instead of computing on every render
+                // Colors only alternate based on even/odd index
+                const colors = idx % 2 === 0 ? CACHED_COLORS.even : CACHED_COLORS.odd;
                 return (
                     <motion.div
                         key={comment.commentId}
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        layout
-                        transition={{ duration: 0.5 }}
+                        variants={itemVariants}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        // PERF: Removed 'layout' prop - was causing O(n) recalculations
+                        // for ALL items whenever any single item changed
+                        transition={{ duration: 0.2 }}
                         role="listitem"
                         aria-labelledby={`comment-${comment.commentId}`}
                     >
                         <CommentItem
                             comment={comment}
                             className="text-gray-800 dark:text-gray-200"
-                            bgColor={bgColor}
-                            darkBgColor={darkBgColor}
-                            borderColor={borderColor}
-                            darkBorderColor={darkBorderColor}
+                            bgColor={colors.bgColor}
+                            darkBgColor={colors.darkBgColor}
+                            borderColor={colors.borderColor}
+                            darkBorderColor={colors.darkBorderColor}
                         />
                     </motion.div>
                 );

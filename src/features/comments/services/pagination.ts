@@ -143,24 +143,33 @@ export const loadPagedComments = async (
         }
 
         if (sortBy === 'random') {
-            logger.warn(`${logPrefix} Sorting by ${sortBy} requires full table scan. Applying search filter during scan.`);
-            const scanTimer = `${timerId}-fullScan`;
+            // PERF: Random sort requires loading all matching comments
+            // For very large datasets (10k+), consider limiting or using reservoir sampling
+            logger.warn(`${logPrefix} Random sort: loading filtered comments for shuffle.`);
+            const scanTimer = `${timerId}-randomShuffle`;
             logger.start(scanTimer);
 
             let allTopLevelCollection = commentsTable
                 .where(buildIndexKey('publishedDate'))
                 .between(bounds.lower, bounds.upper, true, true);
 
-            // Use helper function for filtering during random sort scan
             allTopLevelCollection = allTopLevelCollection.filter(comment =>
                 applyFiltersAndSearch(comment, filters, searchKeyword)
             );
 
             let allTopLevel = await allTopLevelCollection.toArray();
-            allTopLevel.sort(() => Math.random() - 0.5);
+
+            // Fisher-Yates shuffle (unbiased, O(n))
+            // The previous Math.random()-0.5 comparator was biased and O(n log n)
+            for (let i = allTopLevel.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allTopLevel[i], allTopLevel[j]] = [allTopLevel[j], allTopLevel[i]];
+            }
+
             logger.end(scanTimer);
-            logger.success(`${logPrefix} Successfully loaded ${allTopLevel.slice(offset, offset + pageSize).length} comments (random sort).`);
-            return allTopLevel.slice(offset, offset + pageSize);
+            const result = allTopLevel.slice(offset, offset + pageSize);
+            logger.success(`${logPrefix} Shuffled ${allTopLevel.length} comments, returning page of ${result.length}.`);
+            return result;
         }
 
         logger.success(`${logPrefix} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`);

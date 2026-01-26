@@ -10,6 +10,25 @@ interface BookmarkedCommentsProps {
     comments: Comment[];
 }
 
+// Pre-computed alternating colors for bookmarked comments
+const BOOKMARK_COLORS = {
+    even: {
+        bgColor: 'bg-gradient-to-r from-zinc-50 to-zinc-100',
+        darkBgColor: 'dark:from-gray-800 dark:to-gray-900',
+    },
+    odd: {
+        bgColor: 'bg-gradient-to-r from-stone-50 to-stone-100',
+        darkBgColor: 'dark:from-gray-700 dark:to-gray-800',
+    },
+};
+
+// Animation variants - no expensive 'layout' prop
+const itemVariants = {
+    initial: { opacity: 0, y: -5 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 5 },
+};
+
 const BookmarkedComments: React.FC<BookmarkedCommentsProps> = ({ comments }) => {
     const { t } = useTranslation();
 
@@ -25,30 +44,34 @@ const BookmarkedComments: React.FC<BookmarkedCommentsProps> = ({ comments }) => 
     return (
         <div className="flex flex-col">
             <AnimatePresence>
-                {comments.map((comment, index) => (
-                    <motion.div
-                        key={comment.commentId}
-                        initial={{ opacity: 0, y: -5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        layout // Add layout property to enable layout animations
-                        transition={{ duration: 0.5 }}
-                        role="listitem"
-                        aria-labelledby={`comment-${comment.commentId}`}
-                    >
-                        <CommentItem
-                            comment={comment}
-                            replies={[]} // Add logic to fetch and display replies if necessary
-                            className={`text-gray-800 dark:text-gray-200`}
-                            bgColor={index % 2 === 0 ? 'bg-gradient-to-r from-zinc-50 to-zinc-100' : 'bg-gradient-to-r from-stone-50 to-stone-100'}
-                            darkBgColor={index % 2 === 0 ? 'dark:from-gray-800 dark:to-gray-900' : 'dark:from-gray-700 dark:to-gray-800'}
-                            borderColor="border-gray-300"
-                            darkBorderColor="dark:border-gray-600"
-                            videoTitle={comment.videoTitle} // Assuming videoTitle is part of the comment object
-                            videoThumbnailUrl={`https://img.youtube.com/vi/${comment.videoId}/default.jpg`} // Generate thumbnail URL
-                        />
-                    </motion.div>
-                ))}
+                {comments.map((comment, index) => {
+                    const colors = index % 2 === 0 ? BOOKMARK_COLORS.even : BOOKMARK_COLORS.odd;
+                    return (
+                        <motion.div
+                            key={comment.commentId}
+                            variants={itemVariants}
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                            // PERF: Removed 'layout' prop - was causing O(n) recalculations
+                            transition={{ duration: 0.2 }}
+                            role="listitem"
+                            aria-labelledby={`comment-${comment.commentId}`}
+                        >
+                            <CommentItem
+                                comment={comment}
+                                replies={[]}
+                                className="text-gray-800 dark:text-gray-200"
+                                bgColor={colors.bgColor}
+                                darkBgColor={colors.darkBgColor}
+                                borderColor="border-gray-300"
+                                darkBorderColor="dark:border-gray-600"
+                                videoTitle={comment.videoTitle}
+                                videoThumbnailUrl={`https://img.youtube.com/vi/${comment.videoId}/default.jpg`}
+                            />
+                        </motion.div>
+                    );
+                })}
             </AnimatePresence>
         </div>
     );
