@@ -32,7 +32,7 @@ interface CommentFooterProps {
     copySuccess: boolean;
 }
 
-const CommentFooter: React.FC<CommentFooterProps> = ({
+const CommentFooter: React.FC<CommentFooterProps> = React.memo(({
                                                          comment,
                                                          showReplies,
                                                          onToggleReplies,
@@ -237,6 +237,6 @@ const CommentFooter: React.FC<CommentFooterProps> = ({
             </div>
         </div>
     );
-};
+});
 
 export default CommentFooter;

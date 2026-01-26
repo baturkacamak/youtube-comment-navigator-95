@@ -8,7 +8,7 @@ interface CommentNoteProps {
     comment: Comment;
 }
 
-const CommentNote: React.FC<CommentNoteProps> = ({ comment }) => {
+const CommentNote: React.FC<CommentNoteProps> = React.memo(({ comment }) => {
     const { t } = useTranslation();
     const {
         note,
@@ -81,6 +81,6 @@ const CommentNote: React.FC<CommentNoteProps> = ({ comment }) => {
             </div>
         </div>
     );
-};
+});
 
 export default CommentNote;

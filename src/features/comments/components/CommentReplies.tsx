@@ -1,9 +1,9 @@
-import React, {useEffect, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import CommentItem from './CommentItem';
 import {CommentRepliesProps} from "../../../types/commentTypes";
 import {useTranslation} from 'react-i18next';
 
-const CommentReplies: React.FC<CommentRepliesProps> = ({
+const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
                                                            replies,
                                                            showReplies,
                                                            repliesRef,
@@ -13,12 +13,10 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({
                                                        }) => {
     const {t} = useTranslation();
 
-    useEffect(() => {
-        if (showReplies && repliesRef.current && replies.length > 0) {
-            // Emit a resize event to force browsers to recalculate layout
-            window.dispatchEvent(new Event('resize'));
-        }
-    }, [showReplies, replies.length, repliesRef]);
+    // REMOVED: window.dispatchEvent(new Event('resize'))
+    // This was causing expensive page-wide layout recalculation.
+    // The height is already calculated in CommentItem's useEffect,
+    // and CSS transitions handle the animation without forcing layout.
 
     const memoizedReplies = useMemo(() => {
         if (isLoading) {
@@ -64,6 +62,6 @@ const CommentReplies: React.FC<CommentRepliesProps> = ({
             {showReplies && memoizedReplies}
         </div>
     );
-};
+});
 
 export default CommentReplies;

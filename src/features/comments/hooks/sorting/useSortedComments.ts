@@ -10,9 +10,9 @@ import sortByReplies from "./normal/sortByReplies";
 import sortByLength from "./normal/sortByLength";
 import sortByAuthor from "./normal/sortByAuthor";
 import sortByRandom from "./normal/sortByRandom";
-import { calculateNormalized, getMaxValues } from './advanced/calculateNormalized';
-import { calculateWeightedZScore, getStats } from './advanced/calculateWeightedZScore';
-import { calculateBayesianAverage, getAvgValues } from './advanced/calculateBayesianAverage';
+import { calculateNormalized, getMaxValues, MaxValues } from './advanced/calculateNormalized';
+import { calculateWeightedZScore, getStats, ZScoreStats } from './advanced/calculateWeightedZScore';
+import { calculateBayesianAverage, getAvgValues, AvgValues } from './advanced/calculateBayesianAverage';
 
 const useSortedComments = (initialLoadCompleted: boolean) => {
     const dispatch = useDispatch();
@@ -26,6 +26,21 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
     const sortComments = useCallback((comments: Comment[], sortBy: string, sortOrder: string) => {
         const filteredComments = applyFilters(comments);
         const commentsToSort = [...filteredComments];
+
+        // PERFORMANCE FIX: Precompute stats ONCE before sorting, not inside comparator
+        // This changes complexity from O(n² log n) to O(n log n)
+        let precomputedMaxValues: MaxValues | null = null;
+        let precomputedStats: ZScoreStats | null = null;
+        let precomputedAvgValues: AvgValues | null = null;
+
+        // Only compute the stats needed for the current sort type
+        if (sortBy === 'normalized') {
+            precomputedMaxValues = getMaxValues(commentsToSort);
+        } else if (sortBy === 'zscore') {
+            precomputedStats = getStats(commentsToSort);
+        } else if (sortBy === 'bayesian') {
+            precomputedAvgValues = getAvgValues(commentsToSort);
+        }
 
         const sortFunc = (a: Comment, b: Comment) => {
             switch (sortBy) {
@@ -41,15 +56,24 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
                     return sortByAuthor(a, b, sortOrder);
                 case 'random':
                     return sortByRandom();
-                case 'normalized':
-                    const maxValues = getMaxValues(commentsToSort);
-                    return sortOrder === 'asc' ? calculateNormalized(a, maxValues) - calculateNormalized(b, maxValues) : calculateNormalized(b, maxValues) - calculateNormalized(a, maxValues);
-                case 'zscore':
-                    const stats = getStats(commentsToSort);
-                    return sortOrder === 'asc' ? calculateWeightedZScore(a, stats) - calculateWeightedZScore(b, stats) : calculateWeightedZScore(b, stats) - calculateWeightedZScore(a, stats);
-                case 'bayesian':
-                    const avgValues = getAvgValues(commentsToSort);
-                    return sortOrder === 'asc' ? calculateBayesianAverage(a, avgValues) - calculateBayesianAverage(b, avgValues) : calculateBayesianAverage(b, avgValues) - calculateBayesianAverage(a, avgValues);
+                case 'normalized': {
+                    // Use precomputed values (already computed above)
+                    const scoreA = calculateNormalized(a, precomputedMaxValues!);
+                    const scoreB = calculateNormalized(b, precomputedMaxValues!);
+                    return sortOrder === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+                }
+                case 'zscore': {
+                    // Use precomputed values (already computed above)
+                    const scoreA = calculateWeightedZScore(a, precomputedStats!);
+                    const scoreB = calculateWeightedZScore(b, precomputedStats!);
+                    return sortOrder === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+                }
+                case 'bayesian': {
+                    // Use precomputed values (already computed above)
+                    const scoreA = calculateBayesianAverage(a, precomputedAvgValues!);
+                    const scoreB = calculateBayesianAverage(b, precomputedAvgValues!);
+                    return sortOrder === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+                }
                 default:
                     return 0;
             }
@@ -57,7 +81,7 @@ const useSortedComments = (initialLoadCompleted: boolean) => {
 
         const sortedComments = commentsToSort.sort(sortFunc);
         return sortedComments;
-    }, [applyFilters, calculateNormalized, getMaxValues, calculateWeightedZScore, getStats, calculateBayesianAverage, getAvgValues, sortByDate, sortByLikes, sortByReplies, sortByLength, sortByAuthor, sortByRandom]);
+    }, [applyFilters]);
 
     const getInitialSortedComments = useCallback(
         (comments: Comment[], sortBy: string, sortOrder: string) => {

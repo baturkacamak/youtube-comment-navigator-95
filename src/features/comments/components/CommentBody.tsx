@@ -6,7 +6,7 @@ import { CommentContentProps } from "../../../types/commentTypes";
 import { useSelector } from 'react-redux';
 import { RootState } from "../../../types/rootState";
 
-const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampClick }) => {
+const CommentBody: React.FC<CommentContentProps> = React.memo(({ content, handleTimestampClick }) => {
     const keyword = useSelector((state: RootState) => state.searchKeyword);
     const textSize = useSelector((state: RootState) => state.settings.textSize);
     const fontFamily = useSelector((state: RootState) => state.settings.fontFamily); // Get the selected font
@@ -24,6 +24,6 @@ const CommentBody: React.FC<CommentContentProps> = ({ content, handleTimestampCl
             {highlightedText}
         </p>
     );
-};
+});
 
 export default CommentBody;

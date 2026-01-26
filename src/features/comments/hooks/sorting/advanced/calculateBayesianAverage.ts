@@ -1,16 +1,48 @@
 import { Comment } from '../../../../../types/commentTypes';
 
-const calculateBayesianAverage = (comment: Comment, avgValues: any, m = 5) => {
+export interface AvgValues {
+    likes: number;
+    replies: number;
+}
+
+const DEFAULT_M = 5;
+
+/**
+ * Calculate Bayesian average for a comment.
+ * Use with precomputed avgValues from getAvgValues() for performance.
+ */
+const calculateBayesianAverage = (comment: Comment, avgValues: AvgValues, wordCount?: number, m = DEFAULT_M) => {
     const totalEngagement = comment.likes + comment.replyCount;
     const overallAverage = avgValues.likes + avgValues.replies;
-    const totalCount = comment.content.split(' ').length + m;
+    // Use cached word count if provided
+    const wc = wordCount ?? comment.wordCount ?? comment.content.split(' ').length;
+    const totalCount = wc + m;
 
-    return ((totalEngagement + (m * overallAverage)) / totalCount);
+    return totalCount > 0 ? (totalEngagement + (m * overallAverage)) / totalCount : 0;
 };
 
-const getAvgValues = (comments: Comment[]) => ({
-    likes: comments.reduce((sum, c) => sum + c.likes, 0) / comments.length,
-    replies: comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length
-});
+/**
+ * Compute average values in a single pass.
+ * O(n) complexity - should be called ONCE before sorting, not inside comparator.
+ */
+const getAvgValues = (comments: Comment[]): AvgValues => {
+    const n = comments.length;
+    if (n === 0) {
+        return { likes: 0, replies: 0 };
+    }
+
+    let likesSum = 0;
+    let repliesSum = 0;
+
+    for (const c of comments) {
+        likesSum += c.likes;
+        repliesSum += c.replyCount;
+    }
+
+    return {
+        likes: likesSum / n,
+        replies: repliesSum / n,
+    };
+};
 
 export { calculateBayesianAverage, getAvgValues };
