@@ -78,7 +78,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@types/chrome": "^0.1.36",
     "@types/classnames": "^2.3.1",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.4",
     "@types/node": "^25.0.10",
     "@types/react-transition-group": "^4.4.10",
