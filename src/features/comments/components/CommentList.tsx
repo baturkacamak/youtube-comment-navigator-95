@@ -1,8 +1,9 @@
 // src/features/comments/components/CommentList.tsx
-import React, { useEffect, useCallback, useRef, useState } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 import { VariableSizeList as List } from 'react-window';
+import { AutoSizer } from 'react-virtualized-auto-sizer';
 import CommentItem from './CommentItem';
-import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ExclamationCircleIcon, ChevronDownIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import Box from "../../shared/components/Box";
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
 import { CommentListProps, Comment } from "../../../types/commentTypes";
@@ -12,6 +13,8 @@ import { RootState } from "../../../types/rootState";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { setTotalCommentsCount } from "../../../store/store";
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
+
+import logger from '../../shared/utils/logger';
 
 // Pre-compute alternating colors once (they only depend on even/odd index)
 const CACHED_COLORS = {
@@ -45,6 +48,8 @@ const CommentList: React.FC<CommentListProps> = () => {
 
     const videoId = extractYouTubeVideoIdFromUrl();
 
+
+
     // Use the new reactive hook - IndexedDB is the source of truth
     const {
         comments,
@@ -52,6 +57,8 @@ const CommentList: React.FC<CommentListProps> = () => {
         isLoading,
         hasMore,
         loadMore,
+        error,
+        clearError,
     } = useCommentsFromDB({
         videoId,
         filters,
@@ -59,6 +66,8 @@ const CommentList: React.FC<CommentListProps> = () => {
         topLevelOnly: true,
         excludeLiveChat: true,
     });
+
+
 
     // Sync totalCount to Redux for components that still need it
     useEffect(() => {
@@ -141,6 +150,22 @@ const CommentList: React.FC<CommentListProps> = () => {
     }
 
     if (!comments.length) {
+        if (error) {
+            return (
+                <div className="flex flex-col items-center justify-center p-8 mt-4 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 rounded-lg bg-red-50 dark:bg-red-900/20" role="alert">
+                    <XCircleIcon className="w-16 h-16 mb-4" />
+                    <h3 className="text-lg font-bold mb-2">{t('Error loading comments')}</h3>
+                    <p className="text-center mb-4">{error.message}</p>
+                    <button 
+                        onClick={clearError} 
+                        className="px-6 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors font-medium"
+                    >
+                        {t('Dismiss')}
+                    </button>
+                </div>
+            );
+        }
+
         return (
             <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
                 <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
@@ -152,42 +177,55 @@ const CommentList: React.FC<CommentListProps> = () => {
     // Item count includes the "Load More" button as the last item
     const itemCount = comments.length + (hasMore ? 1 : 0);
 
-    // Calculate container dimensions
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [dimensions, setDimensions] = useState({ width: 0, height: 600 });
-
-    useEffect(() => {
-        const updateDimensions = () => {
-            if (containerRef.current) {
-                const rect = containerRef.current.getBoundingClientRect();
-                // Use viewport height minus some offset for the container
-                const availableHeight = window.innerHeight - rect.top - 50;
-                setDimensions({
-                    width: rect.width || containerRef.current.offsetWidth,
-                    height: Math.max(400, availableHeight),
-                });
-            }
-        };
-
-        updateDimensions();
-        window.addEventListener('resize', updateDimensions);
-        return () => window.removeEventListener('resize', updateDimensions);
-    }, []);
-
     return (
-        <div ref={containerRef} className="flex flex-col" style={{ height: dimensions.height, minHeight: '400px' }}>
-            {dimensions.width > 0 && (
-                <List
-                    ref={listRef}
-                    height={dimensions.height}
-                    width={dimensions.width}
-                    itemCount={itemCount}
-                    itemSize={getRowHeight}
-                    overscanCount={5}
-                >
-                    {Row}
-                </List>
+        <div className="w-full flex flex-col" style={{ height: '75vh', minHeight: '400px' }}>
+            {error && (
+                <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 flex items-center justify-between shadow-sm" role="alert">
+                    <div className="flex items-center">
+                        <XCircleIcon className="w-5 h-5 mr-2" />
+                        <span className="block sm:inline">{error.message}</span>
+                    </div>
+                    <button onClick={clearError} className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold ml-2">
+                        <span className="sr-only">Close</span>
+                        <svg className="fill-current h-6 w-6" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                    </button>
+                </div>
             )}
+            <div className="flex-1 w-full min-h-0">
+                {/* @ts-ignore */}
+                <AutoSizer renderProp={({ height, width }: { height: number; width: number }) => {
+                    if (height === 0 || width === 0) {
+                        logger.warn('[CommentList] AutoSizer returned 0 dimensions:', { width, height });
+                        return <div className="p-4 text-red-500">Error: List container has no size. ({width}x{height})</div>;
+                    }
+
+                    if (typeof height !== 'number' || typeof width !== 'number') {
+                        return null;
+                    }
+
+                    // Sanity check for infinite growth loop
+                    if (height > 50000) {
+                        logger.error('[CommentList] Layout loop detected! Height is absurdly large:', height);
+                        return <div className="p-4 text-red-500">Error: Layout loop detected. Height: {height}px</div>;
+                    }
+                    
+                    // Only log periodically or on significant changes to avoid spam, but for now debug everything
+                    logger.debug('[CommentList] Rendering list:', { itemCount, width, height });
+
+                    return (
+                        <List
+                            ref={listRef}
+                            height={height}
+                            width={width}
+                            itemCount={itemCount}
+                            itemSize={getRowHeight}
+                            overscanCount={5}
+                        >
+                            {Row}
+                        </List>
+                    );
+                }} />
+            </div>
         </div>
     );
 };

@@ -65,11 +65,25 @@ const getLoadPath = (): string | null => {
     return null; // In production, we will use the injected resources
 };
 
+// Track missing keys to prevent duplicate logs
+const missingKeys = new Set<string>();
+
 // Create the configuration object dynamically
 const i18nConfig: any = {
     fallbackLng: 'en',
     lng: 'en',
-    debug: isLocalEnvironment(),
+    debug: false, // Disable verbose default logging
+    saveMissing: true, // Enable missing key handler
+    missingKeyHandler: (lng: string, ns: string, key: string) => {
+        if (isLocalEnvironment()) {
+            const uniqueKey = `${lng}:${ns}:${key}`;
+            if (!missingKeys.has(uniqueKey)) {
+                missingKeys.add(uniqueKey);
+                // Log with a cleaner format
+                console.warn(`[YCN-i18n] Missing key: "${key}" in language: "${lng}"`);
+            }
+        }
+    },
     interpolation: {
         escapeValue: false,
     },

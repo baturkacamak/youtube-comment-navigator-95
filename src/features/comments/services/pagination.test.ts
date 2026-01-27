@@ -13,6 +13,7 @@ vi.mock('../../shared/utils/logger', () => ({
         warn: vi.fn(),
         error: vi.fn(),
         success: vi.fn(),
+        debug: vi.fn(),
     }
 }));
 
@@ -180,7 +181,7 @@ describe('Pagination Services', () => {
             const result = await loadPagedComments(mockTable, 'v1', -1);
             expect(result).toEqual([]);
             expect(mockCommentsTable.where).not.toHaveBeenCalled();
-            expect(require('../../shared/utils/logger').error).toHaveBeenCalledWith(expect.stringContaining('Invalid page number'));
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Invalid page number'));
         });
 
          it('should return empty array on database error', async () => {
@@ -190,7 +191,7 @@ describe('Pagination Services', () => {
             const result = await loadPagedComments(mockTable, 'v1');
 
             expect(result).toEqual([]);
-            expect(require('../../shared/utils/logger').error).toHaveBeenCalledWith(expect.stringContaining('Error loading paged comments'), error);
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Error loading paged comments'), error);
         });
 
         it('should apply sorting by author ascending', async () => {
@@ -346,7 +347,7 @@ describe('Pagination Services', () => {
             const result = await countComments(mockTable, 'v1');
 
             expect(result).toBe(0);
-            expect(require('../../shared/utils/logger').error).toHaveBeenCalledWith(expect.stringContaining('Error counting comments'), error);
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Error counting comments'), error);
         });
 
         it('should count comments matching multiple filters', async () => {
@@ -449,7 +450,7 @@ describe('Pagination Services', () => {
             expect(mockCommentsTable.where).toHaveBeenCalledWith('commentId');
             expect(mockEquals).toHaveBeenCalledWith(parentId);
             expect(mockFirst).toHaveBeenCalled();
-            expect(require('../../shared/utils/logger').info).toHaveBeenCalledWith(expect.stringContaining('No replies found, and parent comment does not indicate any replies'));
+            expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('No replies found, and parent comment does not indicate any replies'));
         });
 
          it('should return an empty array and log warning if parent expects replies but none found', async () => {
@@ -467,7 +468,7 @@ describe('Pagination Services', () => {
             expect(mockCommentsTable.where).toHaveBeenCalledWith('commentId');
             expect(mockEquals).toHaveBeenCalledWith(parentId);
             expect(mockFirst).toHaveBeenCalled();
-            expect(require('../../shared/utils/logger').warn).toHaveBeenCalledWith(expect.stringContaining('No replies found in DB, but parent comment (replyCount: 1) indicates replies should exist.'));
+            expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('No replies found in DB, but parent comment (replyCount: 1) indicates replies should exist.'));
         });
 
         it('should return empty array on database error', async () => {
@@ -480,14 +481,14 @@ describe('Pagination Services', () => {
              });
             const result = await fetchRepliesForComment(mockTable, 'v1', parentId);
             expect(result).toEqual([]);
-            expect(require('../../shared/utils/logger').error).toHaveBeenCalledWith(expect.stringContaining('Failed to fetch replies'), error);
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('Failed to fetch replies'), error);
         });
 
          it('should return empty array on validation error (missing parentId)', async () => {
             const result = await fetchRepliesForComment(mockTable, 'v1', '');
             expect(result).toEqual([]);
             expect(mockCommentsTable.where).not.toHaveBeenCalled();
-            expect(require('../../shared/utils/logger').error).toHaveBeenCalledWith(expect.stringContaining('parentId is required'));
+            expect(logger.error).toHaveBeenCalledWith(expect.stringContaining('parentId is required'));
         });
 
         it('should fetch multiple replies for a comment', async () => {
@@ -522,7 +523,7 @@ describe('Pagination Services', () => {
             expect(mockCommentsTable.where).toHaveBeenCalledWith('commentId');
             expect(mockEquals).toHaveBeenCalledWith(parentId);
             expect(mockFirst).toHaveBeenCalled();
-            expect(require('../../shared/utils/logger').info).toHaveBeenCalledWith(expect.stringContaining('No replies found, and parent comment does not indicate any replies (or parent not found)'));
+            expect(logger.info).toHaveBeenCalledWith(expect.stringContaining('No replies found, and parent comment does not indicate any replies (or parent not found)'));
         });
     });
 });
