@@ -4,14 +4,14 @@
  */
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { LiveChatTranscriptProps, LiveChatMessage } from '../../../types/liveChatTypes';
+import { LiveChatTranscriptProps } from '../../../types/liveChatTypes';
 import LiveChatMessageItem from './LiveChatMessageItem';
 import logger from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import {
   ChatBubbleLeftRightIcon,
   ArrowPathIcon,
-  ChevronDownIcon
+  ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 import CopyButton from '../../transcripts/components/buttons/CopyButton';
 import DownloadButton from '../../transcripts/components/buttons/DownloadButton';
@@ -26,7 +26,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   onTimestampClick,
   onLoadMore,
   hasMore = false,
-  fetchAllMessages
+  fetchAllMessages,
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -34,10 +34,13 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
 
   // Generate text for export/copy
   const transcriptText = useMemo(() => {
-    return messages.map(msg => {
-      const time = msg.videoOffsetTimeSec !== undefined ? formatTimestamp(msg.videoOffsetTimeSec) : '--:--';
-      return `[${time}] ${msg.author}: ${msg.message}`;
-    }).join('\n');
+    return messages
+      .map((msg) => {
+        const time =
+          msg.videoOffsetTimeSec !== undefined ? formatTimestamp(msg.videoOffsetTimeSec) : '--:--';
+        return `[${time}] ${msg.author}: ${msg.message}`;
+      })
+      .join('\n');
   }, [messages]);
 
   // Auto-scroll to bottom when new messages arrive (optional)
@@ -68,9 +71,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
           <ArrowPathIcon className="w-12 h-12 animate-spin text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">
-            {t('Loading live chat transcript...')}
-          </p>
+          <p className="text-gray-600 dark:text-gray-400">{t('Loading live chat transcript...')}</p>
         </div>
       </div>
     );
@@ -93,24 +94,31 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   }
 
   return (
-    <div className="livechat-transcript flex flex-col h-full rounded" aria-label="Live Chat Transcript">
+    <div
+      className="livechat-transcript flex flex-col h-full rounded"
+      aria-label="Live Chat Transcript"
+    >
       {/* Sticky Action Bar */}
       <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-4">
           <CopyButton textToCopy={transcriptText} />
-          <DownloadButton transcriptText={transcriptText} fileNamePrefix="livechat" allContent={fetchAllMessages} />
+          <DownloadButton
+            transcriptText={transcriptText}
+            fileNamePrefix="livechat"
+            allContent={fetchAllMessages}
+          />
           <PrintButton transcriptText={transcriptText} />
           <ShareButton textToShare={transcriptText} />
         </div>
 
         <div className="flex items-center">
-           <CheckboxFilter
-              name={t('Auto-scroll')}
-              value="auto-scroll"
-              checked={autoScroll}
-              onChange={handleAutoScrollChange}
-              icon={<ChevronDownIcon className="w-4 h-4" />}
-            />
+          <CheckboxFilter
+            name={t('Auto-scroll')}
+            value="auto-scroll"
+            checked={autoScroll}
+            onChange={handleAutoScrollChange}
+            icon={<ChevronDownIcon className="w-4 h-4" />}
+          />
         </div>
       </div>
 
@@ -120,7 +128,6 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto bg-white dark:bg-gray-900 list-none p-4 rounded-lg border border-gray-200 dark:border-gray-700"
         style={{ maxHeight: 'calc(100vh - 200px)' }}
-        role="list"
       >
         {messages.map((message, index) => (
           <LiveChatMessageItem
