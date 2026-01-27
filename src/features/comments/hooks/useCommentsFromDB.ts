@@ -98,10 +98,9 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
     // Debug logger helper
     const debugLog = useCallback((message: string, ...args: any[]) => {
-        if (debug) {
-            logger.debug(`${logPrefix} ${message}`, ...args);
-        }
-    }, [debug, logPrefix]);
+        // Force info logging for debugging pagination issues
+        logger.info(`${logPrefix} ${message}`, ...args);
+    }, [logPrefix]);
 
     // Memoize sort values from filters
     const sortBy = useMemo(() => {
@@ -190,6 +189,12 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         return result;
     }, [totalCount, comments.length, debugLog]);
 
+    // Track comments length in ref for logging without breaking memoization
+    const commentsLengthRef = useRef(0);
+    useEffect(() => {
+        commentsLengthRef.current = comments.length;
+    }, [comments.length]);
+
     // Fetch a specific page of comments
     const fetchPage = useCallback(async (pageNum: number, append: boolean = false): Promise<Comment[]> => {
         if (!videoId) {
@@ -208,7 +213,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             sortBy,
             sortOrder,
             append,
-            currentCommentsCount: comments.length,
+            currentCommentsCount: commentsLengthRef.current,
         });
 
         metricsRef.current.totalFetches++;
@@ -259,9 +264,9 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             }
 
             // Clear any previous error on successful fetch
-            if (error) {
-                setError(null);
-            }
+            // We use a functional update or just check the ref if we wanted to be perfectly safe,
+            // but calling setError(null) is safe even if stale.
+            setError(prev => prev ? null : prev);
 
             return data;
         } catch (err) {
@@ -280,7 +285,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             setError(fetchError);
             return [];
         }
-    }, [videoId, pageSize, sortBy, sortOrder, filters, searchKeyword, paginationOptions, comments.length, error, logPrefix, debugLog]);
+    }, [videoId, pageSize, sortBy, sortOrder, filters, searchKeyword, paginationOptions, logPrefix, debugLog]);
 
     // Initial load and refresh when dependencies change
     useEffect(() => {
@@ -410,16 +415,25 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
         setLoadingMore(true);
 
+        const failuresBefore = metricsRef.current.failedFetches;
         try {
             const data = await fetchPage(nextPage, true);
             if (data && data.length > 0) {
                 setPage(nextPage);
-                logger.debug(`${logPrefix} Page incremented to ${nextPage}`);
+                logger.debug(`${logPrefix} Page incremented to ${nextPage}. Appended ${data.length} comments.`);
             } else {
                 logger.warn(`${logPrefix} loadMore returned no new comments`);
+                // If no error occurred during fetch (metrics didn't increase), but result is empty
+                // it means the database returned 0 results despite hasMore being true.
+                if (metricsRef.current.failedFetches === failuresBefore) {
+                    setError(new Error('Unable to load more comments. The database might be empty or out of sync.'));
+                }
             }
         } catch (err) {
+            // This catch block might catch errors from fetchPage if it re-threw, but currently it doesn't.
+            // It catches local errors in loadMore logic.
             logger.error(`${logPrefix} loadMore failed:`, err);
+            setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
             setLoadingMore(false);
         }
