@@ -1,4 +1,4 @@
-export {}
+export {};
 chrome.runtime.onInstalled.addListener(() => {
-    console.log('YouTube Comment Navigator 95 installed');
+  console.log('YouTube Comment Navigator 95 installed');
 });

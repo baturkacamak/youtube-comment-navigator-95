@@ -9,27 +9,30 @@ import { useEffect, useRef } from 'react';
  * itself is stable and doesn't need to be re-added when the handler changes.
  * This prevents memory leaks from accumulated listeners.
  */
-const useGlobalEventListener = <T extends Event>(eventName: string, handler: (event: T) => void) => {
-    // Store handler in ref so we don't re-add listener when handler changes
-    const handlerRef = useRef(handler);
+const useGlobalEventListener = <T extends Event>(
+  eventName: string,
+  handler: (event: T) => void
+) => {
+  // Store handler in ref so we don't re-add listener when handler changes
+  const handlerRef = useRef(handler);
 
-    // Update the ref when handler changes
-    useEffect(() => {
-        handlerRef.current = handler;
-    }, [handler]);
+  // Update the ref when handler changes
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
 
-    useEffect(() => {
-        // Use a stable event handler that calls the current handler via ref
-        const eventHandler = (event: Event) => {
-            handlerRef.current(event as T);
-        };
+  useEffect(() => {
+    // Use a stable event handler that calls the current handler via ref
+    const eventHandler = (event: Event) => {
+      handlerRef.current(event as T);
+    };
 
-        window.addEventListener(eventName, eventHandler);
+    window.addEventListener(eventName, eventHandler);
 
-        return () => {
-            window.removeEventListener(eventName, eventHandler);
-        };
-    }, [eventName]); // Only re-run when eventName changes, not handler
+    return () => {
+      window.removeEventListener(eventName, eventHandler);
+    };
+  }, [eventName]); // Only re-run when eventName changes, not handler
 };
 
 export default useGlobalEventListener;

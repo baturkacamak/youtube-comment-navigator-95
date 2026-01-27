@@ -1,6 +1,6 @@
 // src/features/transcripts/services/remoteFetch.ts
 import { ProcessedTranscript, processTranscriptData } from '../utils/processTranscriptData';
-import { extractYouTubeVideoIdFromUrl } from "../../shared/utils/extractYouTubeVideoIdFromUrl";
+import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { youtubeApi } from '../../shared/services/youtubeApi';
 import logger from '../../shared/utils/logger';
 import httpService from '../../shared/services/httpService';
@@ -11,7 +11,10 @@ import httpService from '../../shared/services/httpService';
  * @param language Optional language code.
  * @returns A promise that resolves to the processed transcript data.
  */
-export async function fetchTranscriptFromRemote(url: string, language?: string): Promise<ProcessedTranscript> {
+export async function fetchTranscriptFromRemote(
+  url: string,
+  language?: string
+): Promise<ProcessedTranscript> {
   try {
     logger.debug('Fetching transcript from remote URL:', url);
     logger.debug('Language:', language);
@@ -24,28 +27,30 @@ export async function fetchTranscriptFromRemote(url: string, language?: string):
     let potToken = await youtubeApi.waitForPotToken(3000);
 
     if (potToken) {
-        logger.debug('Using intercepted POT token:', potToken);
-        urlObj.searchParams.set('pot', potToken);
-        urlObj.searchParams.set('potc', '1');
+      logger.debug('Using intercepted POT token:', potToken);
+      urlObj.searchParams.set('pot', potToken);
+      urlObj.searchParams.set('potc', '1');
     } else {
-        // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
-        logger.warn('Intercepted POT token not available after wait. Attempting to fetch from player API...');
-        try {
-            const playerResponse = await youtubeApi.fetchPlayer();
-            potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
-            
-            if (potToken) {
-                logger.debug('Found POT token from manual player fetch:', potToken);
-                urlObj.searchParams.set('pot', potToken);
-                urlObj.searchParams.set('potc', '1');
-            } else {
-                logger.warn('POT token not found in manual player response either.', playerResponse);
-            }
-        } catch (e) {
-            logger.error('Error fetching player response for POT token:', e);
+      // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
+      logger.warn(
+        'Intercepted POT token not available after wait. Attempting to fetch from player API...'
+      );
+      try {
+        const playerResponse = await youtubeApi.fetchPlayer();
+        potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
+
+        if (potToken) {
+          logger.debug('Found POT token from manual player fetch:', potToken);
+          urlObj.searchParams.set('pot', potToken);
+          urlObj.searchParams.set('potc', '1');
+        } else {
+          logger.warn('POT token not found in manual player response either.', playerResponse);
         }
+      } catch (e) {
+        logger.error('Error fetching player response for POT token:', e);
+      }
     }
-    
+
     const finalUrl = urlObj.toString();
     logger.debug('Fetching transcript from URL:', finalUrl);
 
@@ -107,17 +112,17 @@ export async function fetchCaptionTracks(url: string): Promise<string> {
 }
 
 export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
-    try {
-        const videoId = extractYouTubeVideoIdFromUrl();
-        
-        // Use the new YouTube API service to fetch player data
-        const data = await youtubeApi.fetchPlayer(videoId);
-        
-        return data?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl || null;
-    } catch (error) {
-        logger.error("Failed to fetch video details:", error);
-        return null;
-    }
+  try {
+    const videoId = extractYouTubeVideoIdFromUrl();
+
+    // Use the new YouTube API service to fetch player data
+    const data = await youtubeApi.fetchPlayer(videoId);
+
+    return data?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl || null;
+  } catch (error) {
+    logger.error('Failed to fetch video details:', error);
+    return null;
+  }
 };
 
 /*

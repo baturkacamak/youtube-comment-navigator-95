@@ -1,25 +1,27 @@
 import Dexie, { Table } from 'dexie';
-import { Comment } from "../../../../types/commentTypes";
-import { LiveChatMessage } from "../../../../types/liveChatTypes";
-import logger from "../logger";
+import { Comment } from '../../../../types/commentTypes';
+import { LiveChatMessage } from '../../../../types/liveChatTypes';
+import logger from '../logger';
 
 class Database extends Dexie {
-    public comments!: Table<Comment, number>;
-    public liveChatMessages!: Table<LiveChatMessage, number>;
-    public kvStore!: Table<{ key: string; value: any }, string>;
+  public comments!: Table<Comment, number>;
+  public liveChatMessages!: Table<LiveChatMessage, number>;
+  public kvStore!: Table<{ key: string; value: any }, string>;
 
-    constructor() {
-        super('youtube-comment-navigator-95');
+  constructor() {
+    super('youtube-comment-navigator-95');
 
-        try {
-            logger.info('[Dexie] Initializing IndexedDB...');
+    try {
+      logger.info('[Dexie] Initializing IndexedDB...');
 
-            this.version(3).stores({
-                comments: '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId'
-            });
+      this.version(3).stores({
+        comments:
+          '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId',
+      });
 
-            this.version(4).stores({
-                comments: `
+      this.version(4)
+        .stores({
+          comments: `
                     ++id,
                     commentId,
                     videoId,
@@ -57,18 +59,19 @@ class Database extends Dexie {
                     [videoId+replyLevel+normalizedScore],
                     [videoId+replyLevel+weightedZScore],
                     [videoId+replyLevel+bayesianAverage]
-                `
-            }).upgrade(async tx => {
-                const count = await tx.table('comments').count();
-                logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
-            });
+                `,
+        })
+        .upgrade(async (tx) => {
+          const count = await tx.table('comments').count();
+          logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
+        });
 
-            this.version(5).stores({
-                kvStore: 'key'
-            });
+      this.version(5).stores({
+        kvStore: 'key',
+      });
 
-            this.version(6).stores({
-                comments: `
+      this.version(6).stores({
+        comments: `
                     ++id,
                     commentId,
                     videoId,
@@ -108,12 +111,13 @@ class Database extends Dexie {
                     [videoId+replyLevel+weightedZScore],
                     [videoId+replyLevel+bayesianAverage],
                     [videoId+isLiveChat]
-                `
-            });
+                `,
+      });
 
-            // Version 7: Add separate liveChatMessages table
-            this.version(7).stores({
-                liveChatMessages: `
+      // Version 7: Add separate liveChatMessages table
+      this.version(7)
+        .stores({
+          liveChatMessages: `
                     ++id,
                     messageId,
                     videoId,
@@ -133,75 +137,81 @@ class Database extends Dexie {
                     [videoId+isMembership],
                     [videoId+isModerator],
                     [videoId+isBookmarked]
-                `
-            }).upgrade(async tx => {
-                try {
-                    logger.info('[Dexie] Upgrading to version 7: Adding liveChatMessages table');
+                `,
+        })
+        .upgrade(async (tx) => {
+          try {
+            logger.info('[Dexie] Upgrading to version 7: Adding liveChatMessages table');
 
-                    // Migrate existing livechat from comments to liveChatMessages table
-                    const liveChatComments = await tx.table('comments')
-                        .where('isLiveChat')
-                        .equals(1)
-                        .toArray();
+            // Migrate existing livechat from comments to liveChatMessages table
+            const liveChatComments = await tx
+              .table('comments')
+              .where('isLiveChat')
+              .equals(1)
+              .toArray();
 
-                    if (liveChatComments.length > 0) {
-                        logger.info(`[Dexie] Migrating ${liveChatComments.length} livechat messages to new table`);
+            if (liveChatComments.length > 0) {
+              logger.info(
+                `[Dexie] Migrating ${liveChatComments.length} livechat messages to new table`
+              );
 
-                        const liveChatMessages: LiveChatMessage[] = liveChatComments.map(comment => ({
-                            messageId: comment.commentId,
-                            videoId: comment.videoId || '',
-                            author: comment.author,
-                            authorChannelId: comment.authorChannelId,
-                            authorAvatarUrl: comment.authorAvatarUrl,
-                            isAuthorContentCreator: comment.isAuthorContentCreator,
-                            message: comment.content,
-                            timestampUsec: String(comment.publishedDate * 1000),
-                            timestampMs: comment.publishedDate,
-                            publishedDate: comment.publishedDate,
-                            published: comment.published,
-                            videoOffsetTimeSec: comment.timestamp,
-                            isDonation: comment.isDonated,
-                            donationAmount: comment.donationAmount,
-                            isMembership: comment.isMember,
-                            isBookmarked: comment.isBookmarked,
-                            bookmarkAddedDate: comment.bookmarkAddedDate,
-                            note: comment.note
-                        }));
+              const liveChatMessages: LiveChatMessage[] = liveChatComments.map((comment) => ({
+                messageId: comment.commentId,
+                videoId: comment.videoId || '',
+                author: comment.author,
+                authorChannelId: comment.authorChannelId,
+                authorAvatarUrl: comment.authorAvatarUrl,
+                isAuthorContentCreator: comment.isAuthorContentCreator,
+                message: comment.content,
+                timestampUsec: String(comment.publishedDate * 1000),
+                timestampMs: comment.publishedDate,
+                publishedDate: comment.publishedDate,
+                published: comment.published,
+                videoOffsetTimeSec: comment.timestamp,
+                isDonation: comment.isDonated,
+                donationAmount: comment.donationAmount,
+                isMembership: comment.isMember,
+                isBookmarked: comment.isBookmarked,
+                bookmarkAddedDate: comment.bookmarkAddedDate,
+                note: comment.note,
+              }));
 
-                        await tx.table('liveChatMessages').bulkAdd(liveChatMessages);
-                        logger.success('[Dexie] Successfully migrated livechat messages');
+              await tx.table('liveChatMessages').bulkAdd(liveChatMessages);
+              logger.success('[Dexie] Successfully migrated livechat messages');
 
-                        // Optionally delete migrated livechat from comments table
-                        // Keeping them for now in case of rollback needs
-                        // await tx.table('comments').where('isLiveChat').equals(1).delete();
-                    }
-                } catch (error: any) {
-                    logger.error('[Dexie] Error during version 7 upgrade:', error);
-                    throw error;
-                }
-            });
+              // Optionally delete migrated livechat from comments table
+              // Keeping them for now in case of rollback needs
+              // await tx.table('comments').where('isLiveChat').equals(1).delete();
+            }
+          } catch (error: any) {
+            logger.error('[Dexie] Error during version 7 upgrade:', error);
+            throw error;
+          }
+        });
 
-            this.comments = this.table('comments');
-            this.liveChatMessages = this.table('liveChatMessages');
-            this.kvStore = this.table('kvStore');
-            logger.success('[Dexie] IndexedDB initialized. Tables ready: comments, liveChatMessages, kvStore');
-        } catch (err: any) {
-            logger.error('[Dexie] Failed to initialize IndexedDB:', err);
-        }
+      this.comments = this.table('comments');
+      this.liveChatMessages = this.table('liveChatMessages');
+      this.kvStore = this.table('kvStore');
+      logger.success(
+        '[Dexie] IndexedDB initialized. Tables ready: comments, liveChatMessages, kvStore'
+      );
+    } catch (err: any) {
+      logger.error('[Dexie] Failed to initialize IndexedDB:', err);
     }
+  }
 
-    async setItem(key: string, value: any): Promise<void> {
-        await this.kvStore.put({ key, value });
-    }
+  async setItem(key: string, value: any): Promise<void> {
+    await this.kvStore.put({ key, value });
+  }
 
-    async getItem<T>(key: string): Promise<T | null> {
-        const result = await this.kvStore.get(key);
-        return result ? result.value : null;
-    }
+  async getItem<T>(key: string): Promise<T | null> {
+    const result = await this.kvStore.get(key);
+    return result ? result.value : null;
+  }
 
-    async removeItem(key: string): Promise<void> {
-        await this.kvStore.delete(key);
-    }
+  async removeItem(key: string): Promise<void> {
+    await this.kvStore.delete(key);
+  }
 }
 
 export const db = new Database();
