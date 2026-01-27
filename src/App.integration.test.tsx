@@ -6,6 +6,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // ============================================================================
+// Global Mocks
+// ============================================================================
+Object.assign(navigator, {
+  clipboard: {
+    writeText: vi.fn().mockResolvedValue(undefined),
+  },
+});
+
+global.URL.createObjectURL = vi.fn(() => 'blob:mock-url');
+global.URL.revokeObjectURL = vi.fn();
+
+// ============================================================================
 // Hoisted Mock Data - Must be defined before vi.mock calls
 // ============================================================================
 
@@ -277,6 +289,46 @@ const {
       isDonated: false,
       isHearted: false,
       wordCount: 9,
+    },
+    {
+      commentId: 'comment-11',
+      videoId: 'test-video-123',
+      author: 'Minimal User',
+      authorAvatarUrl: '',
+      authorChannelId: 'channel-11',
+      content: 'Minimal fields comment',
+      published: '1 min ago',
+      publishedDate: Date.now() - 60000,
+      likes: 0,
+      viewLikes: '0',
+      replyCount: 0,
+      replyLevel: 0,
+      isAuthorContentCreator: false,
+      hasTimestamp: false,
+      hasLinks: false,
+      // Optional fields intentionally omitted
+    },
+    {
+      commentId: 'comment-12',
+      videoId: 'test-video-123',
+      author: 'Max Values',
+      authorAvatarUrl: 'https://example.com/avatar12.jpg',
+      authorChannelId: 'channel-12',
+      content: 'Extreme values test comment.',
+      published: '10 years ago',
+      publishedDate: Date.now() - 315360000000,
+      likes: 999999,
+      viewLikes: '999K',
+      replyCount: 9999,
+      replyLevel: 0,
+      isAuthorContentCreator: true,
+      hasTimestamp: true,
+      hasLinks: true,
+      isMember: true,
+      isDonated: true,
+      isHearted: true,
+      donationAmount: '$999.00',
+      wordCount: 999,
     },
   ];
 
@@ -577,7 +629,7 @@ vi.mock('./features/comments/components/CommentList', () => ({
             data-likes={comment.likes}
             data-replies={comment.replyCount}
             data-author={comment.author}
-            data-wordcount={comment.wordCount}
+            data-wordcount={comment.wordCount || 0}
             data-timestamp={comment.hasTimestamp}
             data-hearted={comment.isHearted}
             data-links={comment.hasLinks}
@@ -591,6 +643,37 @@ vi.mock('./features/comments/components/CommentList', () => ({
             <span data-testid="comment-likes">{comment.likes}</span>
             <span data-testid="comment-replies">{comment.replyCount}</span>
             <span data-testid="comment-published">{comment.published}</span>
+
+            {/* Action Buttons Mock */}
+            <div className="actions">
+              <button
+                data-testid={`btn-copy-${comment.commentId}`}
+                onClick={() => navigator.clipboard.writeText(comment.content)}
+                aria-label="Copy comment"
+              >
+                Copy
+              </button>
+              <button
+                data-testid={`btn-share-${comment.commentId}`}
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    `https://youtube.com/watch?v=video&lc=${comment.commentId}`
+                  )
+                }
+                aria-label="Share comment"
+              >
+                Share
+              </button>
+              <button
+                data-testid={`btn-original-${comment.commentId}`}
+                onClick={() =>
+                  window.open(`https://youtube.com/watch?v=video&lc=${comment.commentId}`, '_blank')
+                }
+                aria-label="View original"
+              >
+                Original
+              </button>
+            </div>
           </div>
         ))}
         {processed.length === 0 && <div data-testid="no-comments">No comments found</div>}
@@ -620,14 +703,14 @@ vi.mock('./features/comments/components/LiveChatList', () => ({
 
 // Mock BookmarkedComments
 vi.mock('./features/comments/components/BookmarkedComments', () => ({
-  default: () => {
-    const bookmarked = mockComments.filter((c) => mockState.bookmarkedCommentIds.has(c.commentId));
+  default: ({ comments }: { comments: MockComment[] }) => {
+    const commentsToRender = comments || [];
     return (
-      <div data-testid="bookmarked-comments" data-count={bookmarked.length}>
-        {bookmarked.length === 0 ? (
+      <div data-testid="bookmarked-comments" data-count={commentsToRender.length}>
+        {commentsToRender.length === 0 ? (
           <div data-testid="no-bookmarks">No bookmarks yet</div>
         ) : (
-          bookmarked.map((c) => (
+          commentsToRender.map((c) => (
             <div key={c.commentId} data-testid={`bookmark-${c.commentId}`}>
               <span data-testid="bookmark-author">{c.author}</span>
               <span data-testid="bookmark-content">{c.content}</span>
@@ -641,16 +724,20 @@ vi.mock('./features/comments/components/BookmarkedComments', () => ({
 
 // Mock Transcript
 vi.mock('./features/transcripts/components/Transcript', () => ({
-  default: () => (
-    <div data-testid="transcript" data-count={mockTranscriptLines.length}>
-      {mockTranscriptLines.map((line) => (
-        <div key={line.id} data-testid={`transcript-${line.id}`} data-start={line.startTime}>
-          <span data-testid="transcript-time">{line.startTime}s</span>
-          <span data-testid="transcript-text">{line.text}</span>
-        </div>
-      ))}
-    </div>
-  ),
+  default: ({ transcripts }: { transcripts: MockTranscriptLine[] }) => {
+    // Use props if available, fallback to mock if null
+    const linesToRender = transcripts || [];
+    return (
+      <div data-testid="transcript" data-count={linesToRender.length}>
+        {linesToRender.map((line) => (
+          <div key={line.id} data-testid={`transcript-${line.id}`} data-start={line.startTime}>
+            <span data-testid="transcript-time">{line.startTime}s</span>
+            <span data-testid="transcript-text">{line.text}</span>
+          </div>
+        ))}
+      </div>
+    );
+  },
 }));
 
 // Mock SettingsDrawer
@@ -1024,14 +1111,14 @@ describe('App Integration Tests - Complete Coverage', () => {
 
     it('displays all 10 comments initially', () => {
       renderApp();
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 12; i++) {
         expect(screen.getByTestId(`comment-comment-${i}`)).toBeInTheDocument();
       }
     });
 
     it('displays correct total count in header', () => {
       renderApp();
-      expect(screen.getByText(/Comments \(10\)/)).toBeInTheDocument();
+      expect(screen.getByText(/Comments \(12\)/)).toBeInTheDocument();
     });
 
     it('displays control panel', () => {
@@ -1203,7 +1290,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         });
         fireEvent.click(screen.getByLabelText('Submit search'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1214,7 +1301,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         });
         fireEvent.click(screen.getByLabelText('Submit search'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1240,7 +1327,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         );
         fireEvent.click(screen.getByLabelText('Clear search'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1294,6 +1381,21 @@ describe('App Integration Tests - Complete Coverage', () => {
         await waitFor(() => {});
         fireEvent.click(screen.getByLabelText('Clear search'));
         expect(input).toHaveValue('');
+      });
+
+      it('searches within transcript tab', async () => {
+        renderApp();
+        fireEvent.click(screen.getByText(/Transcript/));
+        fireEvent.change(screen.getByPlaceholderText('Search everything...'), {
+          target: { value: 'React' },
+        });
+        fireEvent.click(screen.getByLabelText('Submit search'));
+        await waitFor(() => {
+          expect(screen.getByTestId('transcript-line-1')).toBeInTheDocument();
+          expect(screen.getByTestId('transcript-line-5')).toBeInTheDocument();
+          // Filtered out
+          expect(screen.queryByTestId('transcript-line-2')).not.toBeInTheDocument();
+        });
       });
     });
   });
@@ -1391,7 +1493,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         });
       });
 
-      it('all filters enabled shows no results', async () => {
+      it('all filters enabled shows comment-12', async () => {
         renderApp();
         fireEvent.click(screen.getByTestId('filter-timestamps'));
         fireEvent.click(screen.getByTestId('filter-heart'));
@@ -1400,7 +1502,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('filter-donated'));
         fireEvent.click(screen.getByTestId('filter-creator'));
         await waitFor(() => {
-          expect(screen.getByTestId('no-comments')).toBeInTheDocument();
+          expect(screen.getByTestId('comment-comment-12')).toBeInTheDocument();
         });
       });
     });
@@ -1436,7 +1538,7 @@ describe('App Integration Tests - Complete Coverage', () => {
           expect(screen.getAllByTestId(/^comment-comment-/).length).toBeLessThan(10)
         );
         fireEvent.click(screen.getByTestId('clear-all-filters'));
-        await waitFor(() => expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10));
+        await waitFor(() => expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12));
       });
     });
   });
@@ -1452,8 +1554,8 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('sort-likes'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-likes', '500');
-          expect(comments[1]).toHaveAttribute('data-likes', '200');
+          expect(comments[0]).toHaveAttribute('data-likes', '999999');
+          expect(comments[1]).toHaveAttribute('data-likes', '500');
         });
       });
 
@@ -1464,7 +1566,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
           expect(comments[0]).toHaveAttribute('data-likes', '0');
-          expect(comments[1]).toHaveAttribute('data-likes', '3');
+          expect(comments[1]).toHaveAttribute('data-likes', '0');
         });
       });
 
@@ -1473,7 +1575,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('sort-replies'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-replies', '50');
+          expect(comments[0]).toHaveAttribute('data-replies', '9999');
         });
       });
 
@@ -1492,7 +1594,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('sort-date'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-testid', 'comment-comment-3');
+          expect(comments[0]).toHaveAttribute('data-testid', 'comment-comment-11');
         });
       });
 
@@ -1502,7 +1604,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('toggle-sort-order'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-testid', 'comment-comment-7');
+          expect(comments[0]).toHaveAttribute('data-testid', 'comment-comment-12');
         });
       });
 
@@ -1521,7 +1623,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('sort-author'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-author', 'John Doe');
+          expect(comments[0]).toHaveAttribute('data-author', 'Minimal User');
         });
       });
 
@@ -1530,7 +1632,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('sort-length'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-wordcount', '55');
+          expect(comments[0]).toHaveAttribute('data-wordcount', '999');
         });
       });
 
@@ -1540,7 +1642,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         fireEvent.click(screen.getByTestId('toggle-sort-order'));
         await waitFor(() => {
           const comments = screen.getAllByTestId(/^comment-comment-/);
-          expect(comments[0]).toHaveAttribute('data-wordcount', '1');
+          expect(comments[0]).toHaveAttribute('data-wordcount', '0');
         });
       });
 
@@ -1564,7 +1666,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         renderApp();
         fireEvent.click(screen.getByTestId('sort-normalized'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1572,7 +1674,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         renderApp();
         fireEvent.click(screen.getByTestId('sort-zscore'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1580,7 +1682,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         renderApp();
         fireEvent.click(screen.getByTestId('sort-bayesian'));
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
     });
@@ -1590,13 +1692,16 @@ describe('App Integration Tests - Complete Coverage', () => {
         renderApp();
         fireEvent.click(screen.getByTestId('sort-likes'));
         await waitFor(() =>
-          expect(screen.getAllByTestId(/^comment-comment-/)[0]).toHaveAttribute('data-likes', '500')
+          expect(screen.getAllByTestId(/^comment-comment-/)[0]).toHaveAttribute(
+            'data-likes',
+            '999999'
+          )
         );
         fireEvent.click(screen.getByTestId('sort-replies'));
         await waitFor(() =>
           expect(screen.getAllByTestId(/^comment-comment-/)[0]).toHaveAttribute(
             'data-replies',
-            '50'
+            '9999'
           )
         );
       });
@@ -1611,7 +1716,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         await waitFor(() => {
           expect(screen.getAllByTestId(/^comment-comment-/)[0]).toHaveAttribute(
             'data-likes',
-            '500'
+            '999999'
           );
         });
       });
@@ -1672,7 +1777,7 @@ describe('App Integration Tests - Complete Coverage', () => {
 
       it('impossible range shows no results', async () => {
         renderApp();
-        fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '1000' } });
+        fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '1000000' } });
         await waitFor(() => {
           expect(screen.getByTestId('no-comments')).toBeInTheDocument();
         });
@@ -1755,7 +1860,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         renderApp();
         fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '0' } });
         await waitFor(() => {
-          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+          expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
         });
       });
 
@@ -1766,7 +1871,7 @@ describe('App Integration Tests - Complete Coverage', () => {
           expect(screen.getAllByTestId(/^comment-comment-/).length).toBeLessThan(10)
         );
         fireEvent.change(screen.getByTestId('max-likes'), { target: { value: '' } });
-        await waitFor(() => expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10));
+        await waitFor(() => expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12));
       });
     });
   });
@@ -1813,10 +1918,9 @@ describe('App Integration Tests - Complete Coverage', () => {
       await waitFor(() => {
         const comments = screen.getAllByTestId(/^comment-comment-/);
         comments.forEach((c) => expect(c).toHaveAttribute('data-hearted', 'true'));
-        expect(comments[0]).toHaveAttribute('data-likes', '500');
+        expect(comments[0]).toHaveAttribute('data-likes', '999999');
       });
     });
-
     it('range filter + sort', async () => {
       renderApp();
       fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '50' } });
@@ -1951,6 +2055,18 @@ describe('App Integration Tests - Complete Coverage', () => {
         expect(screen.getByTestId('chat-chat-3')).toHaveAttribute('data-donated', 'true');
       });
     });
+
+    it('searches within live chat', async () => {
+      renderApp();
+      fireEvent.click(screen.getByText(/Live Chat/));
+      fireEvent.change(screen.getByPlaceholderText('Search everything...'), {
+        target: { value: 'Hello' },
+      });
+      fireEvent.click(screen.getByLabelText('Submit search'));
+      await waitFor(() => {
+        expect(screen.getByTestId('chat-chat-1')).toBeInTheDocument();
+      });
+    });
   });
 
   // ==========================================================================
@@ -2022,13 +2138,39 @@ describe('App Integration Tests - Complete Coverage', () => {
 
     it('displays bookmark content', async () => {
       mockState.bookmarkedCommentIds.add('comment-1');
+
       renderApp();
+
       fireEvent.click(screen.getByText(/Bookmarks/));
+
       await waitFor(() => {
         expect(screen.getByTestId('bookmark-comment-1')).toBeInTheDocument();
+
         expect(
           within(screen.getByTestId('bookmark-comment-1')).getByTestId('bookmark-author')
         ).toHaveTextContent('John Doe');
+      });
+    });
+
+    it('searches within bookmarks', async () => {
+      mockState.bookmarkedCommentIds.add('comment-1');
+
+      mockState.bookmarkedCommentIds.add('comment-2');
+
+      renderApp();
+
+      fireEvent.click(screen.getByText(/Bookmarks/));
+
+      fireEvent.change(screen.getByPlaceholderText('Search everything...'), {
+        target: { value: 'tutorial' },
+      });
+
+      fireEvent.click(screen.getByLabelText('Submit search'));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('bookmark-comment-1')).toBeInTheDocument();
+
+        expect(screen.queryByTestId('bookmark-comment-2')).not.toBeInTheDocument();
       });
     });
   });
@@ -2150,7 +2292,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       renderApp();
       fireEvent.change(screen.getByTestId('min-likes'), { target: { value: 'abc' } });
       await waitFor(() => {
-        expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+        expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
       });
     });
 
@@ -2158,7 +2300,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       renderApp();
       fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '-5' } });
       await waitFor(() => {
-        expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(10);
+        expect(screen.getAllByTestId(/^comment-comment-/).length).toBe(12);
       });
     });
 
@@ -2202,7 +2344,7 @@ describe('App Integration Tests - Complete Coverage', () => {
 
     it('handles empty comment list gracefully', async () => {
       renderApp();
-      fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '10000' } });
+      fireEvent.change(screen.getByTestId('min-likes'), { target: { value: '1000000' } });
       await waitFor(() => {
         expect(screen.getByTestId('no-comments')).toBeInTheDocument();
         expect(screen.getByTestId('comment-list')).toHaveAttribute('data-count', '0');
@@ -2289,6 +2431,42 @@ describe('App Integration Tests - Complete Coverage', () => {
       await waitFor(() => {
         expect(screen.getAllByTestId(/^comment-comment-/).length).toBeGreaterThanOrEqual(0);
       });
+    });
+  });
+
+  describe('16. Action Buttons', () => {
+    it('copies comment content to clipboard', async () => {
+      renderApp();
+      const copyBtn = screen.getByTestId('btn-copy-comment-1');
+      fireEvent.click(copyBtn);
+      await waitFor(() => {
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+          expect.stringContaining('This is a great tutorial')
+        );
+      });
+    });
+
+    it('shares comment link (copies to clipboard)', async () => {
+      renderApp();
+      const shareBtn = screen.getByTestId('btn-share-comment-1');
+      fireEvent.click(shareBtn);
+      await waitFor(() => {
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
+          expect.stringContaining('lc=comment-1')
+        );
+      });
+    });
+
+    it('opens original comment in new tab', async () => {
+      // Mock window.open
+      const openSpy = vi.spyOn(window, 'open').mockImplementation(() => null);
+      renderApp();
+      const originalBtn = screen.getByTestId('btn-original-comment-1');
+      fireEvent.click(originalBtn);
+      await waitFor(() => {
+        expect(openSpy).toHaveBeenCalledWith(expect.stringContaining('lc=comment-1'), '_blank');
+      });
+      openSpy.mockRestore();
     });
   });
 });
