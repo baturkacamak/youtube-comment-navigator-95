@@ -30,7 +30,14 @@ vi.mock('../services/pagination', () => ({
 // Mock child components to isolate CommentItem logic
 const CommentFooterSpy = vi.fn();
 vi.mock('./CommentFooter', () => ({
-  default: (props: any) => {
+  default: (props: {
+    comment: Comment;
+    onToggleReplies: () => void;
+    showReplies: boolean;
+    isFetchingReplies: boolean;
+    cacheFetchedReplies: (replies: Comment[]) => void;
+    handleCopyToClipboard: () => void;
+  }) => {
     CommentFooterSpy(props);
     const { onToggleReplies, showReplies, isFetchingReplies } = props;
     return (
@@ -45,7 +52,15 @@ vi.mock('./CommentFooter', () => ({
 }));
 
 vi.mock('./CommentReplies', () => ({
-  default: ({ replies, showReplies, repliesHeight }: any) => (
+  default: ({
+    replies,
+    showReplies,
+    repliesHeight,
+  }: {
+    replies: Comment[];
+    showReplies: boolean;
+    repliesHeight: string;
+  }) => (
     <div
       data-testid="comment-replies"
       style={{ maxHeight: repliesHeight, opacity: showReplies ? 1 : 0 }}

@@ -58,8 +58,8 @@ class PubSub {
     if (!this.events[event]) {
       this.events[event] = [];
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.events[event].push(callback as any);
+
+    this.events[event].push(callback as (...args: unknown[]) => void);
   }
 
   publish(event: string, data: any) {

@@ -15,7 +15,7 @@ vi.mock('react-i18next', () => ({
 const mockDispatch = vi.fn();
 vi.mock('react-redux', () => ({
   useDispatch: () => mockDispatch,
-  useSelector: (selector: any) =>
+  useSelector: (selector: (state: unknown) => unknown) =>
     selector({
       bookmarkedComments: [{ commentId: 'bookmarked-comment', bookmarkAddedDate: '2023-01-01' }],
     }),
@@ -58,12 +58,12 @@ describe('BookmarkButton', () => {
     replyCount: 0,
     replyLevel: 0,
     // ... add other required fields or use partial cast if Typescript complains too much in test
-  } as any;
+  } as unknown as Comment;
 
   const bookmarkedComment: Comment = {
     ...mockComment,
     commentId: 'bookmarked-comment',
-  } as any;
+  } as unknown as Comment;
 
   beforeEach(() => {
     mockDispatch.mockClear();
