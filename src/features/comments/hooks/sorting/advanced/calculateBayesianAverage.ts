@@ -11,12 +11,11 @@ const DEFAULT_M = 5;
  * Calculate Bayesian average for a comment.
  * Use with precomputed avgValues from getAvgValues() for performance.
  */
-const calculateBayesianAverage = (comment: Comment, avgValues: AvgValues, wordCount?: number, m = DEFAULT_M) => {
+const calculateBayesianAverage = (comment: Comment, avgValues: AvgValues, m = DEFAULT_M) => {
     const totalEngagement = comment.likes + comment.replyCount;
     const overallAverage = avgValues.likes + avgValues.replies;
-    // Use cached word count if provided
-    const wc = wordCount ?? comment.wordCount ?? comment.content.split(' ').length;
-    const totalCount = wc + m;
+    // wordCount is always set in transformCommentsData, default to 0 for type safety
+    const totalCount = (comment.wordCount ?? 0) + m;
 
     return totalCount > 0 ? (totalEngagement + (m * overallAverage)) / totalCount : 0;
 };

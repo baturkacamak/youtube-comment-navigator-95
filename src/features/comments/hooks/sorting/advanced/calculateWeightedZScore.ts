@@ -17,15 +17,14 @@ const WORD_WEIGHT = 0.2;
  * Calculate weighted z-score for a comment.
  * Use with precomputed stats from getStats() for performance.
  */
-const calculateWeightedZScore = (comment: Comment, stats: ZScoreStats, wordCount?: number) => {
+const calculateWeightedZScore = (comment: Comment, stats: ZScoreStats) => {
     const zScore = (value: number, mean: number, stdDev: number) =>
         stdDev === 0 ? 0 : (value - mean) / stdDev;
 
     const likesZ = zScore(comment.likes, stats.likesMean, stats.likesStdDev);
     const repliesZ = zScore(comment.replyCount, stats.repliesMean, stats.repliesStdDev);
-    // Use cached word count if provided, otherwise compute
-    const wc = wordCount ?? comment.wordCount ?? comment.content.split(' ').length;
-    const wordCountZ = zScore(wc, stats.wordCountMean, stats.wordCountStdDev);
+    // wordCount is always set in transformCommentsData, default to 0 for type safety
+    const wordCountZ = zScore(comment.wordCount ?? 0, stats.wordCountMean, stats.wordCountStdDev);
 
     return (likesZ * LIKE_WEIGHT) + (repliesZ * REPLY_WEIGHT) + (wordCountZ * WORD_WEIGHT);
 };
@@ -52,8 +51,7 @@ const getStats = (comments: Comment[]): ZScoreStats => {
     for (const c of comments) {
         likesSum += c.likes;
         repliesSum += c.replyCount;
-        // Use cached wordCount if available, otherwise compute
-        wordCountSum += c.wordCount ?? c.content.split(' ').length;
+        wordCountSum += c.wordCount ?? 0;
     }
 
     const likesMean = likesSum / n;
@@ -68,8 +66,7 @@ const getStats = (comments: Comment[]): ZScoreStats => {
     for (const c of comments) {
         likesVariance += Math.pow(c.likes - likesMean, 2);
         repliesVariance += Math.pow(c.replyCount - repliesMean, 2);
-        const wc = c.wordCount ?? c.content.split(' ').length;
-        wordCountVariance += Math.pow(wc - wordCountMean, 2);
+        wordCountVariance += Math.pow((c.wordCount ?? 0) - wordCountMean, 2);
     }
 
     return {

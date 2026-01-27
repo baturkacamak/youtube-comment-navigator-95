@@ -14,12 +14,11 @@ const WORD_WEIGHT = 0.2;
  * Calculate normalized score for a comment.
  * Use with precomputed maxValues from getMaxValues() for performance.
  */
-const calculateNormalized = (comment: Comment, maxValues: MaxValues, wordCount?: number) => {
+const calculateNormalized = (comment: Comment, maxValues: MaxValues) => {
     const normalizedLikes = maxValues.likes > 0 ? comment.likes / maxValues.likes : 0;
     const normalizedReplies = maxValues.replies > 0 ? comment.replyCount / maxValues.replies : 0;
-    // Use cached word count if provided
-    const wc = wordCount ?? comment.wordCount ?? comment.content.split(' ').length;
-    const normalizedWordCount = maxValues.wordCount > 0 ? wc / maxValues.wordCount : 0;
+    // wordCount is always set in transformCommentsData, default to 0 for type safety
+    const normalizedWordCount = maxValues.wordCount > 0 ? (comment.wordCount ?? 0) / maxValues.wordCount : 0;
 
     return (normalizedLikes * LIKE_WEIGHT) + (normalizedReplies * REPLY_WEIGHT) + (normalizedWordCount * WORD_WEIGHT);
 };
@@ -40,7 +39,7 @@ const getMaxValues = (comments: Comment[]): MaxValues => {
     for (const c of comments) {
         if (c.likes > maxLikes) maxLikes = c.likes;
         if (c.replyCount > maxReplies) maxReplies = c.replyCount;
-        const wc = c.wordCount ?? c.content.split(' ').length;
+        const wc = c.wordCount ?? 0;
         if (wc > maxWordCount) maxWordCount = wc;
     }
 

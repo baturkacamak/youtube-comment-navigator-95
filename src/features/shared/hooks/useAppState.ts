@@ -1,7 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { RootState } from '../../../types/rootState';
-import {setBookmarkedComments, setFilters, setShowBookmarked, setTotalCommentsCount} from '../../../store/store';
+import {setBookmarkedComments, setFilters, setShowBookmarked} from '../../../store/store';
+import {
+    selectComments,
+    selectFilters,
+    selectShowBookmarked,
+    selectTranscripts,
+    selectSearchKeyword,
+    selectTotalCommentsCount,
+} from '../../../store/selectors';
 import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import { Filters } from '../../../types/filterTypes';
@@ -13,7 +20,6 @@ import { Comment } from "../../../types/commentTypes";
 import { searchComments } from "../../comments/services/commentSearchService";
 import { searchTranscripts } from "../../comments/services/transcriptSearchService";
 import useFetchDataOnUrlChange from "../hooks/urlChange/useFetchDataOnUrlChange";
-import logger from '../utils/logger';
 import { useLiveCommentCount } from '../../comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from '../utils/extractYouTubeVideoIdFromUrl';
 
@@ -22,12 +28,13 @@ const useAppState = () => {
     const [activeTab, setActiveTab] = useState('comments');
     const [bookmarkedOnlyComments, setBookmarkedOnlyComments] = useState<Comment[]>([]);
 
-    const comments = useSelector((state: RootState) => state.comments);
-    const filters = useSelector((state: RootState) => state.filters);
-    const showBookmarked = useSelector((state: RootState) => state.showBookmarked);
-    const transcripts = useSelector((state: RootState) => state.transcripts);
-    const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
-    const totalCommentsCount = useSelector((state: RootState) => state.totalCommentsCount);
+    // Use memoized selectors to prevent unnecessary re-renders
+    const comments = useSelector(selectComments);
+    const filters = useSelector(selectFilters);
+    const showBookmarked = useSelector(selectShowBookmarked);
+    const transcripts = useSelector(selectTranscripts);
+    const searchKeyword = useSelector(selectSearchKeyword);
+    const totalCommentsCount = useSelector(selectTotalCommentsCount);
 
     const { sortComments } = useSortedComments(false);
     const { filterComments } = useFilteredComments();
@@ -107,24 +114,8 @@ const useAppState = () => {
         dispatch(setShowBookmarked(!showBookmarked));
     }, [dispatch, showBookmarked]);
 
-    const fetchTotalCommentsCount = useCallback(async () => {
-        // Redundant if using useLiveCommentCount, but keeping for compatibility
-        if (videoId) {
-            try {
-                const count = await db.comments
-                    .where('videoId')
-                    .equals(videoId)
-                    .count();
-                dispatch(setTotalCommentsCount(count));
-            } catch (error) {
-                logger.error('Error fetching total comments count:', error);
-            }
-        }
-    }, [dispatch, videoId]);
-
-    useEffect(() => {
-        fetchTotalCommentsCount();
-    }, [fetchTotalCommentsCount]);
+    // Note: fetchTotalCommentsCount was removed as redundant.
+    // useLiveCommentCount provides the same data reactively without extra DB queries.
 
     const transcriptWordCount = calculateFilteredWordCount(searchedTranscripts, searchKeyword);
 
@@ -147,7 +138,6 @@ const useAppState = () => {
         transcript: searchedTranscripts,
         totalCommentsCount,
         liveFilteredCommentCount, // Expose the new reactive count
-        fetchTotalCommentsCount,
         bookmarkedOnlyComments
     };
 };
