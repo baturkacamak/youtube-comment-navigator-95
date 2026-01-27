@@ -11,6 +11,8 @@ import {
   getBufferSize,
   clearAccumulator,
 } from './commentBatchAccumulator';
+import { performanceMonitor } from '../../../shared/utils/PerformanceMonitor';
+import { setTotalCommentsCount } from '../../../../store/store';
 
 export interface FetchAndProcessResult {
   processedData: {
@@ -127,8 +129,13 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
 async function upsertComments(comments: any[], skipLookup: boolean = false) {
   if (!comments || comments.length === 0) return;
 
+  performanceMonitor.start(`IndexedDB Upsert (${comments.length} items)`);
+
   const incomingIds = comments.map((c) => c.commentId).filter(Boolean);
-  if (incomingIds.length === 0) return;
+  if (incomingIds.length === 0) {
+    performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
+    return;
+  }
 
   // Fast path: For fresh videos, skip the lookup entirely
   if (skipLookup) {
@@ -141,10 +148,12 @@ async function upsertComments(comments: any[], skipLookup: boolean = false) {
 
     try {
       await db.comments.bulkAdd(commentsToAdd);
+      performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
       return;
     } catch (error: any) {
       // If bulkAdd fails due to constraint violation (duplicates), fall through to upsert logic
       if (error.name !== 'BulkError') {
+        performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
         throw error;
       }
       logger.warn(
@@ -172,15 +181,20 @@ async function upsertComments(comments: any[], skipLookup: boolean = false) {
   });
 
   await db.comments.bulkPut(commentsToSave);
+  performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
 }
 
 export const fetchAndProcessComments = async (
   token: string | null,
   videoId: string,
   windowObj: any,
-  signal: AbortSignal
+  signal: AbortSignal,
+  dispatch?: any // Make dispatch optional to match signature if needed
 ): Promise<FetchAndProcessResult> => {
   logger.start('fetchAndProcessComments');
+  performanceMonitor.start('Total Fetch & Process Operation');
+  performanceMonitor.measureMemory('Start Fetch');
+
   try {
     // Check if operation is already aborted before starting
     if (signal.aborted) {
@@ -199,7 +213,9 @@ export const fetchAndProcessComments = async (
       `Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`
     );
 
+    performanceMonitor.start('Network Fetch (Main)');
     const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
+    performanceMonitor.end('Network Fetch (Main)');
 
     // Check if operation was aborted during fetch
     if (signal.aborted) {
@@ -215,7 +231,9 @@ export const fetchAndProcessComments = async (
         []
     );
 
+    performanceMonitor.start('Process JSON Logic');
     const mainProcessedData = processRawJsonCommentsData([rawJsonData], videoId);
+    performanceMonitor.end('Process JSON Logic', { count: mainProcessedData.items.length });
 
     // Check if operation was aborted before database transaction
     if (signal.aborted) {
@@ -227,6 +245,7 @@ export const fetchAndProcessComments = async (
     const insertedCount = mainProcessedData.items.length;
     const skipLookup = isVideoFresh(videoId);
 
+    performanceMonitor.start('IndexedDB Transaction (Main)');
     if (BATCH_CONFIG.USE_ACCUMULATOR) {
       // Batch accumulator mode: buffer comments and flush in larger batches
       const flushed = await accumulateComments(videoId, mainProcessedData.items, {
@@ -267,9 +286,22 @@ export const fetchAndProcessComments = async (
         dbEvents.emitCountUpdated(videoId, localCommentCount);
       }
     }
+    performanceMonitor.end('IndexedDB Transaction (Main)');
 
-    const hasQueuedReplies = await queueReplyProcessing(rawJsonData, windowObj, signal, videoId);
+    if (dispatch) {
+      dispatch(setTotalCommentsCount(localCommentCount));
+    }
 
+    const hasQueuedReplies = await queueReplyProcessing(
+      rawJsonData,
+      windowObj,
+      signal,
+      videoId,
+      dispatch
+    );
+
+    performanceMonitor.measureMemory('End Fetch');
+    performanceMonitor.end('Total Fetch & Process Operation');
     logger.end('fetchAndProcessComments');
 
     return {
@@ -284,6 +316,7 @@ export const fetchAndProcessComments = async (
     }
     logger.error('Failed to fetch and process comments:', err);
     logger.end('fetchAndProcessComments');
+    performanceMonitor.end('Total Fetch & Process Operation');
     return {
       processedData: { items: [] },
       token: null,
@@ -296,14 +329,15 @@ async function queueReplyProcessing(
   rawJsonData: any,
   windowObj: any,
   signal: AbortSignal,
-  videoId: string
+  videoId: string,
+  dispatch?: any
 ): Promise<boolean> {
   if (!rawJsonData || signal.aborted) {
     return false;
   }
 
   activeReplyTasks++;
-  fetchRepliesAndProcess(rawJsonData, windowObj, signal, videoId).finally(() => {
+  fetchRepliesAndProcess(rawJsonData, windowObj, signal, videoId, dispatch).finally(() => {
     activeReplyTasks--;
   });
 
@@ -314,10 +348,12 @@ async function fetchRepliesAndProcess(
   rawJsonData: any,
   windowObj: any,
   signal: AbortSignal,
-  videoId: string
+  videoId: string,
+  dispatch?: any
 ): Promise<void> {
   const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   logger.start(timerId);
+  performanceMonitor.start('Reply Processing (Total)');
 
   try {
     // Check if already aborted
@@ -326,7 +362,9 @@ async function fetchRepliesAndProcess(
       throw new DOMException('Reply processing aborted', 'AbortError');
     }
 
+    performanceMonitor.start('Network Fetch (Replies)');
     const replies = await fetchRepliesJsonDataFromRemote(rawJsonData, windowObj, signal);
+    performanceMonitor.end('Network Fetch (Replies)');
 
     if (signal.aborted) {
       logger.info('Reply processing was aborted after fetching replies.');
@@ -336,6 +374,8 @@ async function fetchRepliesAndProcess(
     if (replies && replies.length > 0) {
       const BATCH_SIZE = BATCH_CONFIG.REPLY_BATCH_SIZE;
       logger.debug(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
+
+      performanceMonitor.start(`Process & Save Replies (${replies.length})`);
 
       // Process all batches in a single transaction
       await db.transaction('rw', db.comments, async () => {
@@ -367,9 +407,15 @@ async function fetchRepliesAndProcess(
       dbEvents.emitRepliesAdded(videoId, replies.length); // Approximate count
       dbEvents.emitCountUpdated(videoId, localCommentCount);
 
+      if (dispatch) {
+        dispatch(setTotalCommentsCount(localCommentCount));
+      }
+
       logger.debug(
         `Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`
       );
+
+      performanceMonitor.end(`Process & Save Replies (${replies.length})`);
     } else {
       logger.debug('No replies to process.');
     }
@@ -382,5 +428,6 @@ async function fetchRepliesAndProcess(
     }
   } finally {
     logger.end(timerId);
+    performanceMonitor.end('Reply Processing (Total)');
   }
 }
