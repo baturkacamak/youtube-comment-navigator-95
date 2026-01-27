@@ -160,7 +160,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
                     <div className="flex items-start w-full relative">
                         {videoThumbnailUrl && (
                             <a href={videoUrl} target="_blank" rel="noopener noreferrer">
-                                <img src={videoThumbnailUrl} alt="Video Thumbnail" className="w-20 h-12 mr-4 rounded-lg" />
+                                <img src={videoThumbnailUrl} alt="Video Thumbnail" className="w-20 h-12 mr-4 rounded-lg" loading="lazy" decoding="async" />
                             </a>
                         )}
                         <div className="flex-1">

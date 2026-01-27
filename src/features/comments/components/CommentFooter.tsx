@@ -215,6 +215,8 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(({
                             alt={t('Member Badge')}
                             className="ml-2 w-4 h-4"
                             aria-label={t('Member Badge')}
+                            loading="lazy"
+                            decoding="async"
                         />
                     </Tooltip>
                 )}
@@ -229,6 +231,8 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(({
                         src={comment.authorAvatarUrl}
                         alt={`${comment.author}'s avatar`}
                         className="w-8 h-8 rounded-full border border-solid border-gray-400 dark:border-gray-600"
+                        loading="lazy"
+                        decoding="async"
                     />
                     <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
                         {comment.author}

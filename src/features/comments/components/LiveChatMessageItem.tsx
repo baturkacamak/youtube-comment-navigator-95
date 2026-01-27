@@ -147,6 +147,8 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
                   alt={badge.label}
                   title={badge.tooltipText || badge.label}
                   className="w-4 h-4"
+                  loading="lazy"
+                  decoding="async"
                 />
               ))
             )}
