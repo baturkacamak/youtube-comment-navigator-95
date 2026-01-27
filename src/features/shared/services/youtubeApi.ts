@@ -1,15 +1,15 @@
-import { extractYouTubeVideoIdFromUrl } from "../utils/extractYouTubeVideoIdFromUrl";
+import { extractYouTubeVideoIdFromUrl } from '../utils/extractYouTubeVideoIdFromUrl';
 import logger from '../utils/logger';
 import { YOUTUBE_API_KEY, YOUTUBE_API_URL } from '../utils/appConstants';
 import httpService from './httpService';
 
-const BASE_URL = "https://www.youtube.com/youtubei/v1";
+const BASE_URL = 'https://www.youtube.com/youtubei/v1';
 
 export interface YouTubeApiOptions {
   endpoint: string;
   queryParams?: Record<string, string>;
   body?: any;
-  method?: "GET" | "POST";
+  method?: 'GET' | 'POST';
   signal?: AbortSignal;
 }
 
@@ -54,25 +54,25 @@ export class YouTubeApiService {
   private capturedPotToken: string | null = null;
   private potTokenResolver: ((token: string) => void) | null = null;
   private potTokenPromise: Promise<string>;
-  
+
   private constructor() {
     this.potTokenPromise = new Promise((resolve) => {
-        this.potTokenResolver = resolve;
+      this.potTokenResolver = resolve;
     });
 
     // Listen for the POT token from the main world script
     window.addEventListener('message', (event) => {
-        if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
-            const token = event.data.token;
-            this.capturedPotToken = token;
-            logger.debug('YouTubeApiService received POT token via message:', token);
-            if (this.potTokenResolver) {
-                this.potTokenResolver(token);
-            }
+      if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
+        const token = event.data.token;
+        this.capturedPotToken = token;
+        logger.debug('YouTubeApiService received POT token via message:', token);
+        if (this.potTokenResolver) {
+          this.potTokenResolver(token);
         }
+      }
     });
   }
-  
+
   public static getInstance(): YouTubeApiService {
     if (!YouTubeApiService.instance) {
       YouTubeApiService.instance = new YouTubeApiService();
@@ -86,34 +86,31 @@ export class YouTubeApiService {
    * @returns The POT token if received, or undefined if timed out.
    */
   public async waitForPotToken(timeoutMs: number = 5000): Promise<string | undefined> {
-      if (this.capturedPotToken) {
-          return this.capturedPotToken;
-      }
+    if (this.capturedPotToken) {
+      return this.capturedPotToken;
+    }
 
-      logger.debug('Waiting for POT token... sending request to main world.');
-      window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
+    logger.debug('Waiting for POT token... sending request to main world.');
+    window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
 
-      let timeoutHandle: NodeJS.Timeout;
-      const timeoutPromise = new Promise<undefined>((resolve) => {
-          timeoutHandle = setTimeout(() => {
-              logger.warn(`Timed out waiting for POT token after ${timeoutMs}ms`);
-              resolve(undefined);
-          }, timeoutMs);
-      });
+    let timeoutHandle: NodeJS.Timeout;
+    const timeoutPromise = new Promise<undefined>((resolve) => {
+      timeoutHandle = setTimeout(() => {
+        logger.warn(`Timed out waiting for POT token after ${timeoutMs}ms`);
+        resolve(undefined);
+      }, timeoutMs);
+    });
 
-      return Promise.race([
-          this.potTokenPromise,
-          timeoutPromise
-      ]).finally(() => {
-          clearTimeout(timeoutHandle);
-      });
+    return Promise.race([this.potTokenPromise, timeoutPromise]).finally(() => {
+      clearTimeout(timeoutHandle);
+    });
   }
-  
+
   public getPotToken(): string | undefined {
-      if (this.capturedPotToken) {
-          return this.capturedPotToken;
-      }
-      return undefined;
+    if (this.capturedPotToken) {
+      return this.capturedPotToken;
+    }
+    return undefined;
   }
 
   private getYtcfgData(): any {
@@ -171,7 +168,12 @@ export class YouTubeApiService {
     }
   }
 
-  private async buildSapSidToken(headerName: string, secret: string, origin: string, timestamp: number): Promise<string | undefined> {
+  private async buildSapSidToken(
+    headerName: string,
+    secret: string,
+    origin: string,
+    timestamp: number
+  ): Promise<string | undefined> {
     if (!secret) {
       return undefined;
     }
@@ -223,13 +225,16 @@ export class YouTubeApiService {
 
       return (
         ytcfgData?.INNERTUBE_API_KEY ||
-        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH?.innertubeApiKey ||
-        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_CHANNEL_TRAILER?.innertubeApiKey ||
-        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_PLAYLIST_OVERVIEW?.innertubeApiKey ||
-        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_VERTICAL_LANDING_PAGE_PROMO
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH
           ?.innertubeApiKey ||
-        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_SPONSORSHIPS_OFFER
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_CHANNEL_TRAILER
           ?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_PLAYLIST_OVERVIEW
+          ?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS
+          ?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_VERTICAL_LANDING_PAGE_PROMO?.innertubeApiKey ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS
+          ?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_SPONSORSHIPS_OFFER?.innertubeApiKey ||
         windowObj?.ytplayer?.web_player_context_config?.innertubeApiKey ||
         windowObj?.ytcfg?.INNERTUBE_API_KEY
       );
@@ -243,70 +248,71 @@ export class YouTubeApiService {
     const ytcfgData = this.getYtcfgData();
     return ytcfgData?.INNERTUBE_CONTEXT?.client || this.getClientContext(videoId);
   }
-  
+
   private getClientContext(videoId?: string, customContext?: Partial<ClientContext>): any {
     if (!videoId) {
       videoId = extractYouTubeVideoIdFromUrl();
     }
-    
+
     const windowObj = window as any;
     const ytcfg = windowObj.ytcfg;
     const ytcfgData = ytcfg?.data_;
-    const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || "1";
-    const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || "2.20240620.05.00";
-    
+    const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || '1';
+    const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || '2.20240620.05.00';
+
     // Default client context
     const defaultContext: ClientContext = {
-      deviceMake: "",
-      deviceModel: "",
+      deviceMake: '',
+      deviceModel: '',
       userAgent: navigator.userAgent,
       clientName,
       clientVersion,
       osName: navigator.platform,
-      osVersion: "",
+      osVersion: '',
       originalUrl: window.location.href,
-      platform: "DESKTOP",
-      clientFormFactor: "UNKNOWN_FORM_FACTOR",
+      platform: 'DESKTOP',
+      clientFormFactor: 'UNKNOWN_FORM_FACTOR',
       screenDensityFloat: window.devicePixelRatio,
-      userInterfaceTheme: "USER_INTERFACE_THEME_DARK",
+      userInterfaceTheme: 'USER_INTERFACE_THEME_DARK',
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       browserVersion: clientVersion,
-      acceptHeader: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      acceptHeader:
+        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
       screenWidthPoints: window.innerWidth,
       screenHeightPoints: window.innerHeight,
       utcOffsetMinutes: new Date().getTimezoneOffset() * -1,
-      clientScreen: "WATCH",
+      clientScreen: 'WATCH',
       mainAppWebInfo: {
         graftUrl: `/watch?v=${videoId}`,
-        pwaInstallabilityStatus: "PWA_INSTALLABILITY_STATUS_CAN_BE_INSTALLED",
-        webDisplayMode: "WEB_DISPLAY_MODE_BROWSER",
-        isWebNativeShareAvailable: false
-      }
+        pwaInstallabilityStatus: 'PWA_INSTALLABILITY_STATUS_CAN_BE_INSTALLED',
+        webDisplayMode: 'WEB_DISPLAY_MODE_BROWSER',
+        isWebNativeShareAvailable: false,
+      },
     };
-    
+
     // Merge custom context with default context
     return { ...defaultContext, ...customContext };
   }
-  
+
   private async getStandardRequestHeaders(): Promise<HeadersInit> {
     const ytcfgData = this.getYtcfgData();
     const feedbackData = ytcfgData?.GOOGLE_FEEDBACK_PRODUCT_DATA;
-    const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || "1";
-    const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || "2.20240620.05.00";
-    
+    const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || '1';
+    const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || '2.20240620.05.00';
+
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-      "Accept": "*/*",
-      "Accept-Language": feedbackData?.accept_language || navigator.language,
-      "x-goog-visitor-id": ytcfgData?.VISITOR_DATA,
-      "x-youtube-identity-token": ytcfgData?.ID_TOKEN || '',
-      "x-youtube-client-name": clientName,
-      "x-youtube-client-version": clientVersion,
-      "Origin": window.location.origin,
-      "Cache-Control": "no-store",
-      "Pragma": "no-cache"
+      'Content-Type': 'application/json',
+      Accept: '*/*',
+      'Accept-Language': feedbackData?.accept_language || navigator.language,
+      'x-goog-visitor-id': ytcfgData?.VISITOR_DATA,
+      'x-youtube-identity-token': ytcfgData?.ID_TOKEN || '',
+      'x-youtube-client-name': clientName,
+      'x-youtube-client-version': clientVersion,
+      Origin: window.location.origin,
+      'Cache-Control': 'no-store',
+      Pragma: 'no-cache',
     };
-    
+
     const authHeader = await this.buildSapSidAuthorizationHeader();
     if (authHeader) {
       headers.Authorization = authHeader;
@@ -324,27 +330,33 @@ export class YouTubeApiService {
     return normalizedHeaders;
   }
 
-  public async fetchFromApi<T>({ endpoint, queryParams = {}, body = {}, method = "POST", signal }: YouTubeApiOptions): Promise<T> {
+  public async fetchFromApi<T>({
+    endpoint,
+    queryParams = {},
+    body = {},
+    method = 'POST',
+    signal,
+  }: YouTubeApiOptions): Promise<T> {
     try {
       // Build URL with query params
       const queryString = Object.entries(queryParams)
         .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-        .join("&");
-      
-      const url = `${BASE_URL}/${endpoint}${queryString ? `?${queryString}` : ""}`;
-      
+        .join('&');
+
+      const url = `${BASE_URL}/${endpoint}${queryString ? `?${queryString}` : ''}`;
+
       const response = await fetch(url, {
         method,
         headers: await this.getStandardRequestHeaders(),
-        body: method === "POST" ? JSON.stringify(body) : undefined,
-        credentials: "include",
+        body: method === 'POST' ? JSON.stringify(body) : undefined,
+        credentials: 'include',
         signal,
-        cache: "no-store",
-        mode: "cors",
+        cache: 'no-store',
+        mode: 'cors',
         referrer: window.location.href,
-        referrerPolicy: "strict-origin-when-cross-origin"
+        referrerPolicy: 'strict-origin-when-cross-origin',
       });
-      
+
       if (!response.ok) {
         let errorText = '';
         try {
@@ -356,129 +368,132 @@ export class YouTubeApiService {
         logger.error(`YouTube API error response (${endpoint}):`, {
           status: response.status,
           statusText: response.statusText,
-          body: errorText
+          body: errorText,
         });
 
         throw new Error(
           `YouTube API error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
         );
       }
-      
-      return await response.json() as T;
+
+      return (await response.json()) as T;
     } catch (error) {
       logger.error(`Error fetching from YouTube API (${endpoint}):`, error);
       throw error;
     }
   }
-  
+
   // Specific API endpoints
-  
+
   public async fetchPlayer(videoId?: string): Promise<any> {
     if (!videoId) {
       videoId = extractYouTubeVideoIdFromUrl();
     }
-    
+
     const clientContext = this.getClientContext(videoId);
-    
+
     return this.fetchFromApi({
-      endpoint: "player",
-      queryParams: { 
-        prettyPrint: "false",
-        ycn: "95"
+      endpoint: 'player',
+      queryParams: {
+        prettyPrint: 'false',
+        ycn: '95',
       },
       body: {
         context: {
-          client: clientContext
+          client: clientContext,
         },
         videoId,
         playbackContext: {
           contentPlaybackContext: {
-            currentUrl: `/watch?v=${videoId}`
-          }
-        }
-      }
+            currentUrl: `/watch?v=${videoId}`,
+          },
+        },
+      },
     });
   }
-  
-  public async fetchNext(options: { 
-    videoId?: string, 
-    continuationToken?: string, 
-    isFetchingReply?: boolean,
-    signal?: AbortSignal 
+
+  public async fetchNext(options: {
+    videoId?: string;
+    continuationToken?: string;
+    isFetchingReply?: boolean;
+    signal?: AbortSignal;
   }): Promise<any> {
     const { videoId: inputVideoId, continuationToken, isFetchingReply = false, signal } = options;
     const videoId = inputVideoId || extractYouTubeVideoIdFromUrl();
     const clientContext = this.getClientContext(videoId);
-    
-    const body: any = continuationToken 
+
+    const body: any = continuationToken
       ? {
-          context: { 
-            client: clientContext 
+          context: {
+            client: clientContext,
           },
-          continuation: continuationToken
+          continuation: continuationToken,
         }
       : {
           context: {
             client: clientContext,
             user: {
-              lockedSafetyMode: false
+              lockedSafetyMode: false,
             },
             request: {
               useSsl: true,
               internalExperimentFlags: [],
-              consistencyTokenJars: []
+              consistencyTokenJars: [],
             },
             adSignalsInfo: {
               params: [
-                {key: "dt", value: String(Date.now())},
-                {key: "flash", value: "0"},
-                {key: "frm", value: "0"},
-                {key: "u_tz", value: String(new Date().getTimezoneOffset() * -1)},
-                {key: "u_h", value: String(window.innerHeight)},
-                {key: "u_w", value: String(window.innerWidth)},
-                {key: "u_ah", value: String(window.screen.availHeight)},
-                {key: "u_aw", value: String(window.screen.availWidth)},
-                {key: "u_cd", value: String(window.screen.colorDepth)},
-                {key: "bc", value: "31"},
-                {key: "bih", value: String(window.innerHeight)},
-                {key: "biw", value: String(window.innerWidth - (window.outerWidth - window.innerWidth))},
+                { key: 'dt', value: String(Date.now()) },
+                { key: 'flash', value: '0' },
+                { key: 'frm', value: '0' },
+                { key: 'u_tz', value: String(new Date().getTimezoneOffset() * -1) },
+                { key: 'u_h', value: String(window.innerHeight) },
+                { key: 'u_w', value: String(window.innerWidth) },
+                { key: 'u_ah', value: String(window.screen.availHeight) },
+                { key: 'u_aw', value: String(window.screen.availWidth) },
+                { key: 'u_cd', value: String(window.screen.colorDepth) },
+                { key: 'bc', value: '31' },
+                { key: 'bih', value: String(window.innerHeight) },
                 {
-                  key: "brdim",
-                  value: `${window.outerWidth},${window.outerHeight},${window.screenX},${window.screenY},${window.innerWidth},${window.innerHeight},${window.screen.availWidth},${window.screen.availHeight}`
+                  key: 'biw',
+                  value: String(window.innerWidth - (window.outerWidth - window.innerWidth)),
                 },
-                {key: "vis", value: "1"},
-                {key: "wgl", value: String(!!window.WebGLRenderingContext)},
-                {key: "ca_type", value: "image"}
-              ]
-            }
+                {
+                  key: 'brdim',
+                  value: `${window.outerWidth},${window.outerHeight},${window.screenX},${window.screenY},${window.innerWidth},${window.innerHeight},${window.screen.availWidth},${window.screen.availHeight}`,
+                },
+                { key: 'vis', value: '1' },
+                { key: 'wgl', value: String(!!window.WebGLRenderingContext) },
+                { key: 'ca_type', value: 'image' },
+              ],
+            },
           },
           videoId,
           racyCheckOk: false,
           contentCheckOk: false,
-          autonavState: "STATE_OFF",
+          autonavState: 'STATE_OFF',
           playbackContext: {
             vis: 0,
-            lactMilliseconds: "-1"
+            lactMilliseconds: '-1',
           },
-          captionsRequested: false
+          captionsRequested: false,
         };
-    
+
     return this.fetchFromApi({
-      endpoint: "next",
-      queryParams: continuationToken 
-        ? { replies: isFetchingReply ? "true" : "false" }
-        : { fetchContinuationTokenFromRemote: "true" },
+      endpoint: 'next',
+      queryParams: continuationToken
+        ? { replies: isFetchingReply ? 'true' : 'false' }
+        : { fetchContinuationTokenFromRemote: 'true' },
       body,
-      signal
+      signal,
     });
   }
 
   public async fetchLiveChat(options: {
-    continuation: string,
-    isReplay?: boolean,
-    playerOffsetMs?: string,
-    clickTrackingParams?: string,
-    signal?: AbortSignal
+    continuation: string;
+    isReplay?: boolean;
+    playerOffsetMs?: string;
+    clickTrackingParams?: string;
+    signal?: AbortSignal;
   }): Promise<any> {
     const { continuation, isReplay = false, playerOffsetMs, clickTrackingParams, signal } = options;
     const clientContext = this.getInnertubeClientContext();
@@ -491,9 +506,9 @@ export class YouTubeApiService {
 
     const body: any = {
       context: {
-        client: clientContext
+        client: clientContext,
       },
-      continuation
+      continuation,
     };
 
     if (playerOffsetMs) {
@@ -505,10 +520,10 @@ export class YouTubeApiService {
     }
 
     return this.fetchFromApi({
-      endpoint: isReplay ? "live_chat/get_live_chat_replay" : "live_chat/get_live_chat",
-      queryParams: { prettyPrint: "false", key: apiKey },
+      endpoint: isReplay ? 'live_chat/get_live_chat_replay' : 'live_chat/get_live_chat',
+      queryParams: { prettyPrint: 'false', key: apiKey },
       body,
-      signal
+      signal,
     });
   }
 
@@ -529,7 +544,7 @@ export class YouTubeApiService {
           description: snippet.description,
           thumbnailUrl: this.getThumbnailUrl(videoId),
           channelTitle: snippet.channelTitle,
-          publishedAt: snippet.publishedAt
+          publishedAt: snippet.publishedAt,
         };
         logger.info('Fetched video details:', details);
         return details;
@@ -548,4 +563,4 @@ export class YouTubeApiService {
 }
 
 // Export singleton instance
-export const youtubeApi = YouTubeApiService.getInstance(); 
+export const youtubeApi = YouTubeApiService.getInstance();

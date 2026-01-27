@@ -1,11 +1,11 @@
-import {ComponentType, SVGProps} from "react";
+import { ComponentType, SVGProps } from 'react';
 
 export interface ExtractOptions {
-    defaultValue?: any;
+  defaultValue?: any;
 }
 
 export interface Option {
-    value: string;
-    label: string;
-    icon?: ComponentType<SVGProps<SVGSVGElement>>;
+  value: string;
+  label: string;
+  icon?: ComponentType<SVGProps<SVGSVGElement>>;
 }

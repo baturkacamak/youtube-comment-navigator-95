@@ -1,120 +1,113 @@
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchCommentsFromRemote } from '../../../comments/services/remote/remoteFetch';
 import useDetectUrlChange from './useDetectUrlChange';
 import {
-    resetState,
-    setBookmarkedComments,
-    setFilteredTranscripts,
-    setIsLoading,
-    setTranscripts,
-    setLiveChatLoading,
-    setBookmarkedLiveChatMessages,
-} from "../../../../store/store";
-import { fetchCaptionTrackBaseUrl, fetchTranscriptFromRemote } from "../../../transcripts/services/remoteFetch";
-import { fetchAndProcessLiveChat } from "../../../comments/services/liveChat/fetchLiveChat";
-import { extractVideoId } from "../../../comments/services/remote/utils";
-import {db} from "../../utils/database/database";
-import logger from "../../utils/logger";
-import { seedMockData } from "../../utils/mockDataSeeder";
-import { isLocalEnvironment } from "../../utils/appConstants";
+  resetState,
+  setBookmarkedComments,
+  setFilteredTranscripts,
+  setIsLoading,
+  setTranscripts,
+  setLiveChatLoading,
+  setBookmarkedLiveChatMessages,
+} from '../../../../store/store';
+import {
+  fetchCaptionTrackBaseUrl,
+  fetchTranscriptFromRemote,
+} from '../../../transcripts/services/remoteFetch';
+import { fetchAndProcessLiveChat } from '../../../comments/services/liveChat/fetchLiveChat';
+import { extractVideoId } from '../../../comments/services/remote/utils';
+import { db } from '../../utils/database/database';
+import logger from '../../utils/logger';
+import { seedMockData } from '../../utils/mockDataSeeder';
+import { isLocalEnvironment } from '../../utils/appConstants';
 
 const useFetchDataOnUrlChange = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    useDetectUrlChange(async () => {
-        logger.info('[useFetchDataOnUrlChange] URL Change Detected');
-        dispatch(resetState());
+  useDetectUrlChange(async () => {
+    logger.info('[useFetchDataOnUrlChange] URL Change Detected');
+    dispatch(resetState());
 
-        const isLocal = isLocalEnvironment();
-        const hostname = window.location.hostname;
-        logger.info(`[useFetchDataOnUrlChange] Environment check: isLocal=${isLocal}, hostname=${hostname}`);
+    const isLocal = isLocalEnvironment();
+    const hostname = window.location.hostname;
+    logger.info(
+      `[useFetchDataOnUrlChange] Environment check: isLocal=${isLocal}, hostname=${hostname}`
+    );
 
-        if (isLocal && (hostname === 'localhost' || hostname === '127.0.0.1')) {
-            logger.info('[useFetchDataOnUrlChange] Triggering Mock Data Seeder');
-            await seedMockData(dispatch);
-            return;
-        }
-
-        await fetchAndSetBookmarks(dispatch);
-        await fetchAndSetTranscripts(dispatch);
-        await fetchAndSetLiveChat(dispatch); // Load live chat immediately
-        dispatch(setIsLoading(false));
-        await fetchCommentsFromRemote(
-            dispatch,
-            false
-        );
-    });
-};
-
-const handleAbortController = (abortControllerRef: React.MutableRefObject<AbortController | null>) => {
-    if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
+    if (isLocal && (hostname === 'localhost' || hostname === '127.0.0.1')) {
+      logger.info('[useFetchDataOnUrlChange] Triggering Mock Data Seeder');
+      await seedMockData(dispatch);
+      return;
     }
-    abortControllerRef.current = new AbortController();
+
+    await fetchAndSetBookmarks(dispatch);
+    await fetchAndSetTranscripts(dispatch);
+    await fetchAndSetLiveChat(dispatch); // Load live chat immediately
+    dispatch(setIsLoading(false));
+    await fetchCommentsFromRemote(dispatch, false);
+  });
 };
 
 const fetchAndSetBookmarks = async (dispatch: any) => {
-    const bookmarks = await db.comments.where('isBookmarked').equals(1).toArray();
-    if (bookmarks) {
-        dispatch(setBookmarkedComments(bookmarks));
-    }
+  const bookmarks = await db.comments.where('isBookmarked').equals(1).toArray();
+  if (bookmarks) {
+    dispatch(setBookmarkedComments(bookmarks));
+  }
 
-    const liveChatBookmarks = await db.liveChatMessages.where('isBookmarked').equals(1).toArray();
-    if (liveChatBookmarks) {
-        dispatch(setBookmarkedLiveChatMessages(liveChatBookmarks));
-    }
+  const liveChatBookmarks = await db.liveChatMessages.where('isBookmarked').equals(1).toArray();
+  if (liveChatBookmarks) {
+    dispatch(setBookmarkedLiveChatMessages(liveChatBookmarks));
+  }
 };
 
 const fetchAndSetTranscripts = async (dispatch: any) => {
-    const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
-    if (captionTrackBaseUrl) {
-        const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
-        if (transcriptData) {
-            dispatch(setTranscripts(transcriptData.items));
-            dispatch(setFilteredTranscripts(transcriptData.items));
-        }
+  const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
+  if (captionTrackBaseUrl) {
+    const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
+    if (transcriptData) {
+      dispatch(setTranscripts(transcriptData.items));
+      dispatch(setFilteredTranscripts(transcriptData.items));
     }
+  }
 };
 
 const fetchAndSetLiveChat = async (dispatch: any) => {
-    const videoId = extractVideoId();
-    if (!videoId) {
-        logger.debug('[useFetchDataOnUrlChange] No videoId found for live chat');
-        return;
+  const videoId = extractVideoId();
+  if (!videoId) {
+    logger.debug('[useFetchDataOnUrlChange] No videoId found for live chat');
+    return;
+  }
+
+  try {
+    // Check if live chat already exists in DB
+    const existingMessages = await db.liveChatMessages.where('videoId').equals(videoId).count();
+
+    if (existingMessages > 0) {
+      logger.info(
+        `[useFetchDataOnUrlChange] Live chat already exists (${existingMessages} messages), skipping fetch`
+      );
+      return;
     }
 
-    try {
-        // Check if live chat already exists in DB
-        const existingMessages = await db.liveChatMessages
-            .where('videoId')
-            .equals(videoId)
-            .count();
+    // Fetch live chat in background (don't block other loads)
+    dispatch(setLiveChatLoading(true));
+    const controller = new AbortController();
 
-        if (existingMessages > 0) {
-            logger.info(`[useFetchDataOnUrlChange] Live chat already exists (${existingMessages} messages), skipping fetch`);
-            return;
+    fetchAndProcessLiveChat(videoId, window, controller.signal)
+      .then(() => {
+        logger.success('[useFetchDataOnUrlChange] Live chat loaded successfully');
+      })
+      .catch((error: any) => {
+        if (error.name !== 'AbortError') {
+          logger.error('[useFetchDataOnUrlChange] Failed to load live chat:', error);
         }
-
-        // Fetch live chat in background (don't block other loads)
-        dispatch(setLiveChatLoading(true));
-        const controller = new AbortController();
-
-        fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch)
-            .then(() => {
-                logger.success('[useFetchDataOnUrlChange] Live chat loaded successfully');
-            })
-            .catch((error: any) => {
-                if (error.name !== 'AbortError') {
-                    logger.error('[useFetchDataOnUrlChange] Failed to load live chat:', error);
-                }
-            })
-            .finally(() => {
-                dispatch(setLiveChatLoading(false));
-            });
-    } catch (error: any) {
-        logger.error('[useFetchDataOnUrlChange] Error checking for live chat:', error);
-    }
+      })
+      .finally(() => {
+        dispatch(setLiveChatLoading(false));
+      });
+  } catch (error: any) {
+    logger.error('[useFetchDataOnUrlChange] Error checking for live chat:', error);
+  }
 };
 
 export default useFetchDataOnUrlChange;

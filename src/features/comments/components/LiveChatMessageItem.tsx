@@ -3,27 +3,17 @@
  * Displays a single livechat message in transcript format with clickable timestamp
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { LiveChatMessageItemProps } from '../../../types/liveChatTypes';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
-import handleClickTimestamp from '../utils/comments/handleClickTimestamp';
-import { copyToClipboard } from '../utils/clipboard/copyToClipboard';
 import { highlightText } from '../../shared/utils/highlightText';
 import logger from '../../shared/utils/logger';
 import { loadLiveChatReplies } from '../services/liveChat/liveChatDatabase';
 import { Comment } from '../../../types/commentTypes';
 import CommentReplies from './CommentReplies';
-import {
-  ChatBubbleBottomCenterTextIcon,
-  DocumentDuplicateIcon,
-  BookmarkIcon,
-  HeartIcon
-} from '@heroicons/react/24/outline';
-import {
-  HeartIcon as HeartIconSolid
-} from '@heroicons/react/24/solid';
+import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 
 interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
   index?: number;
@@ -34,7 +24,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   index = 0,
   onTimestampClick,
   showReplies: showRepliesExternal,
-  onToggleReplies
+  onToggleReplies,
 }) => {
   const textSize = useSelector((state: RootState) => state.settings.textSize);
   const keyword = useSelector((state: RootState) => state.searchKeyword);
@@ -42,9 +32,6 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   const [showReplies, setShowReplies] = useState(showRepliesExternal || false);
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
-  const [copySuccess, setCopySuccess] = useState(false);
-  const repliesRef = useRef<HTMLDivElement>(null);
-  const [repliesHeight, setRepliesHeight] = useState('0px');
 
   // Load replies when showReplies becomes true
   useEffect(() => {
@@ -67,41 +54,28 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     loadReplies();
   }, [showReplies, message.messageId, message.hasReplies, replies.length]);
 
-  // Update replies height for animation
-  useEffect(() => {
-    if (repliesRef.current) {
-      setRepliesHeight(showReplies ? `${repliesRef.current.scrollHeight}px` : '0px');
-    }
-  }, [showReplies, replies]);
-
-  const handleTimestampClickInternal = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleTimestampClickInternal = (
+    event:
+      | React.MouseEvent<HTMLAnchorElement>
+      | React.KeyboardEvent<HTMLAnchorElement>
+      | React.MouseEvent<HTMLSpanElement>
+  ) => {
     if (message.videoOffsetTimeSec !== undefined) {
-      event.preventDefault();
-      const player = document.querySelector('#movie_player') as any;
-      if (player && typeof player.seekTo === 'function') {
-        player.seekTo(message.videoOffsetTimeSec, true);
-        logger.info(`[LiveChatMessageItem] Seeking to ${message.videoOffsetTimeSec}s`);
-      } else {
-        logger.error('[LiveChatMessageItem] YouTube Player is not available');
-      }
+      if (event.type === 'click' || (event as React.KeyboardEvent).key === 'Enter') {
+        event.preventDefault();
+        const player = document.querySelector('#movie_player') as any;
+        if (player && typeof player.seekTo === 'function') {
+          player.seekTo(message.videoOffsetTimeSec, true);
+          logger.info(`[LiveChatMessageItem] Seeking to ${message.videoOffsetTimeSec}s`);
+        } else {
+          logger.error('[LiveChatMessageItem] YouTube Player is not available');
+        }
 
-      if (onTimestampClick) {
-        onTimestampClick(message.videoOffsetTimeSec);
+        if (onTimestampClick) {
+          onTimestampClick(message.videoOffsetTimeSec);
+        }
       }
     }
-  };
-
-  const handleCopyToClipboard = () => {
-    copyToClipboard(
-      message.message,
-      () => {
-        setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 2000);
-      },
-      (error) => {
-        logger.error('[LiveChatMessageItem] Failed to copy to clipboard:', error);
-      }
-    );
   };
 
   const toggleReplies = () => {
@@ -113,9 +87,10 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   };
 
   // Format timestamp for display (e.g., "1:23:45")
-  const timestampDisplay = message.videoOffsetTimeSec !== undefined
-    ? formatTimestamp(message.videoOffsetTimeSec)
-    : '--:--';
+  const timestampDisplay =
+    message.videoOffsetTimeSec !== undefined
+      ? formatTimestamp(message.videoOffsetTimeSec)
+      : '--:--';
 
   return (
     <li
@@ -127,6 +102,9 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
         <span
           className="bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 mr-2 cursor-pointer hover:bg-stone-300 dark:hover:bg-gray-400 transition-colors"
           onClick={handleTimestampClickInternal}
+          onKeyDown={(e) => handleTimestampClickInternal(e as any)}
+          role="button"
+          tabIndex={0}
           title={`Jump to ${timestampDisplay}`}
         >
           {timestampDisplay}
@@ -139,7 +117,8 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
             {message.author}
 
             {/* Badges */}
-            {message.badges && message.badges.length > 0 && (
+            {message.badges &&
+              message.badges.length > 0 &&
               message.badges.map((badge, idx) => (
                 <img
                   key={idx}
@@ -147,16 +126,19 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
                   alt={badge.label}
                   title={badge.tooltipText || badge.label}
                   className="w-4 h-4"
+                  loading="lazy"
+                  decoding="async"
                 />
-              ))
-            )}
+              ))}
 
             {message.isModerator && (
               <span className="text-xs bg-blue-500 text-white px-1 py-0.5 rounded">MOD</span>
             )}
 
             {message.isAuthorContentCreator && (
-              <span className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-1 py-0.5 rounded">Creator</span>
+              <span className="text-xs bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 px-1 py-0.5 rounded">
+                Creator
+              </span>
             )}
           </span>
 
@@ -192,8 +174,6 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
           <CommentReplies
             replies={replies}
             showReplies={showReplies}
-            repliesRef={repliesRef}
-            repliesHeight={repliesHeight}
             parentCommentId={message.messageId}
             isLoading={isLoadingReplies}
           />

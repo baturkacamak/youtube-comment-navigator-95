@@ -1,7 +1,7 @@
 export interface ButtonProps {
-    onClick: () => void;
-    icon: any;
-    label: string;
-    className?: string;
-    iconOnly?: boolean;
+  onClick: () => void;
+  icon: any;
+  label: string;
+  className?: string;
+  iconOnly?: boolean;
 }

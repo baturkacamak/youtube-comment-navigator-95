@@ -1,26 +1,85 @@
 import { Comment } from '../../../../../types/commentTypes';
 
-const calculateWeightedZScore = (comment: Comment, stats: any) => {
-    const likeWeight = 0.3;
-    const replyWeight = 0.5;
-    const wordWeight = 0.2;
+export interface ZScoreStats {
+  likesMean: number;
+  likesStdDev: number;
+  repliesMean: number;
+  repliesStdDev: number;
+  wordCountMean: number;
+  wordCountStdDev: number;
+}
 
-    const zScore = (value: number, mean: number, stdDev: number) => (value - mean) / stdDev;
+const LIKE_WEIGHT = 0.3;
+const REPLY_WEIGHT = 0.5;
+const WORD_WEIGHT = 0.2;
 
-    const likesZ = zScore(comment.likes, stats.likesMean, stats.likesStdDev);
-    const repliesZ = zScore(comment.replyCount, stats.repliesMean, stats.repliesStdDev);
-    const wordCountZ = zScore(comment.content.split(' ').length, stats.wordCountMean, stats.wordCountStdDev);
+/**
+ * Calculate weighted z-score for a comment.
+ * Use with precomputed stats from getStats() for performance.
+ */
+const calculateWeightedZScore = (comment: Comment, stats: ZScoreStats) => {
+  const zScore = (value: number, mean: number, stdDev: number) =>
+    stdDev === 0 ? 0 : (value - mean) / stdDev;
 
-    return (likesZ * likeWeight) + (repliesZ * replyWeight) + (wordCountZ * wordWeight);
+  const likesZ = zScore(comment.likes, stats.likesMean, stats.likesStdDev);
+  const repliesZ = zScore(comment.replyCount, stats.repliesMean, stats.repliesStdDev);
+  // wordCount is always set in transformCommentsData, default to 0 for type safety
+  const wordCountZ = zScore(comment.wordCount ?? 0, stats.wordCountMean, stats.wordCountStdDev);
+
+  return likesZ * LIKE_WEIGHT + repliesZ * REPLY_WEIGHT + wordCountZ * WORD_WEIGHT;
 };
 
-const getStats = (comments: Comment[]) => ({
-    likesMean: comments.reduce((sum, c) => sum + c.likes, 0) / comments.length,
-    likesStdDev: Math.sqrt(comments.map(c => Math.pow(c.likes - (comments.reduce((sum, c) => sum + c.likes, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length),
-    repliesMean: comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length,
-    repliesStdDev: Math.sqrt(comments.map(c => Math.pow(c.replyCount - (comments.reduce((sum, c) => sum + c.replyCount, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length),
-    wordCountMean: comments.reduce((sum, c) => sum + c.content.split(' ').length, 0) / comments.length,
-    wordCountStdDev: Math.sqrt(comments.map(c => Math.pow(c.content.split(' ').length - (comments.reduce((sum, c) => sum + c.content.split(' ').length, 0) / comments.length), 2)).reduce((a, b) => a + b) / comments.length)
-});
+/**
+ * Compute statistics for z-score calculation in a single pass.
+ * O(n) complexity - should be called ONCE before sorting, not inside comparator.
+ */
+const getStats = (comments: Comment[]): ZScoreStats => {
+  const n = comments.length;
+  if (n === 0) {
+    return {
+      likesMean: 0,
+      likesStdDev: 1,
+      repliesMean: 0,
+      repliesStdDev: 1,
+      wordCountMean: 0,
+      wordCountStdDev: 1,
+    };
+  }
+
+  // Single pass to compute sums
+  let likesSum = 0;
+  let repliesSum = 0;
+  let wordCountSum = 0;
+
+  for (const c of comments) {
+    likesSum += c.likes;
+    repliesSum += c.replyCount;
+    wordCountSum += c.wordCount ?? 0;
+  }
+
+  const likesMean = likesSum / n;
+  const repliesMean = repliesSum / n;
+  const wordCountMean = wordCountSum / n;
+
+  // Second pass for standard deviation
+  let likesVariance = 0;
+  let repliesVariance = 0;
+  let wordCountVariance = 0;
+
+  for (const c of comments) {
+    likesVariance += Math.pow(c.likes - likesMean, 2);
+    repliesVariance += Math.pow(c.replyCount - repliesMean, 2);
+    wordCountVariance += Math.pow((c.wordCount ?? 0) - wordCountMean, 2);
+  }
+
+  return {
+    likesMean,
+    likesStdDev: Math.sqrt(likesVariance / n) || 1, // Avoid division by zero
+    repliesMean,
+    repliesStdDev: Math.sqrt(repliesVariance / n) || 1,
+    wordCountMean,
+    wordCountStdDev: Math.sqrt(wordCountVariance / n) || 1,
+  };
+};
 
 export { calculateWeightedZScore, getStats };

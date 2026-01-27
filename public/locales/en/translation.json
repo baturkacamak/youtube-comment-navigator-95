@@ -151,5 +151,10 @@
   "Export Comments": "Export Comments",
   "Export as JSON": "Export as JSON",
   "Export as CSV": "Export as CSV",
+  "Export Visible (JSON)": "Export Visible (JSON)",
+  "Export Visible (CSV)": "Export Visible (CSV)",
+  "Export All (JSON)": "Export All (JSON)",
+  "Export All (CSV)": "Export All (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Load More Comments ({{remaining}} remaining)",
   "Font": "Font"
 }

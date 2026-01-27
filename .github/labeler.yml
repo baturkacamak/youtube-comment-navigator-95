@@ -1,0 +1,47 @@
+# Label PRs based on changed files
+# https://github.com/actions/labeler
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**/*'
+
+source:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/**/*'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/**/*.test.ts'
+          - 'src/**/*.test.tsx'
+          - 'src/tests/**/*'
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/**/*.css'
+          - 'src/**/*.scss'
+          - 'tailwind.config.js'
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.config.js'
+          - '*.config.ts'
+          - 'tsconfig.json'
+          - 'package.json'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**/*'
+
+i18n:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'public/_locales/**/*'
+          - 'public/locales/**/*'
+          - 'src/i18n.ts'

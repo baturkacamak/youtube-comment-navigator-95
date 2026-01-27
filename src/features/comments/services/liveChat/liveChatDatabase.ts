@@ -3,12 +3,13 @@
  * Handles all database interactions for livechat messages with extensive error handling
  */
 
+import Dexie from 'dexie';
 import { db } from '../../../shared/utils/database/database';
 import {
   LiveChatMessage,
   LiveChatFilter,
   LiveChatError,
-  LiveChatErrorType
+  LiveChatErrorType,
 } from '../../../../types/liveChatTypes';
 import { Comment } from '../../../../types/commentTypes';
 import logger from '../../../shared/utils/logger';
@@ -27,7 +28,7 @@ function createLiveChatError(
     message,
     originalError,
     context,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 }
 
@@ -60,7 +61,7 @@ export async function saveLiveChatMessages(
     logger.info(`[LiveChatDB] Saving ${messages.length} livechat messages for video ${videoId}`);
 
     // Validate messages before saving
-    const validMessages = messages.filter(msg => {
+    const validMessages = messages.filter((msg) => {
       if (!msg.messageId) {
         logger.warn('[LiveChatDB] Skipping message without messageId', { message: msg });
         return false;
@@ -69,10 +70,12 @@ export async function saveLiveChatMessages(
         logger.warn('[LiveChatDB] Adding videoId to message', { messageId: msg.messageId });
         msg.videoId = videoId;
       }
-      
+
       // Ensure timestampMs is present (critical for sorting)
       if (msg.timestampMs === undefined || msg.timestampMs === null) {
-        logger.warn('[LiveChatDB] Message missing timestampMs, defaulting to 0', { messageId: msg.messageId });
+        logger.warn('[LiveChatDB] Message missing timestampMs, defaulting to 0', {
+          messageId: msg.messageId,
+        });
         msg.timestampMs = 0;
       }
 
@@ -89,22 +92,26 @@ export async function saveLiveChatMessages(
     }
 
     // Check for existing messages to prevent duplicates
-    const messageIds = validMessages.map(m => m.messageId);
+    const messageIds = validMessages.map((m) => m.messageId);
     const existingMessages = await db.liveChatMessages
       .where('messageId')
       .anyOf(messageIds)
       .toArray();
 
-    const existingIds = new Set(existingMessages.map(m => m.messageId));
-    const newMessages = validMessages.filter(msg => !existingIds.has(msg.messageId));
+    const existingIds = new Set(existingMessages.map((m) => m.messageId));
+    const newMessages = validMessages.filter((msg) => !existingIds.has(msg.messageId));
 
     if (newMessages.length === 0) {
-      logger.info(`[LiveChatDB] All ${validMessages.length} messages already exist in DB, skipping save`);
+      logger.info(
+        `[LiveChatDB] All ${validMessages.length} messages already exist in DB, skipping save`
+      );
       return 0;
     }
 
     if (newMessages.length < validMessages.length) {
-      logger.info(`[LiveChatDB] ${validMessages.length - newMessages.length} messages already exist, saving ${newMessages.length} new messages`);
+      logger.info(
+        `[LiveChatDB] ${validMessages.length - newMessages.length} messages already exist, saving ${newMessages.length} new messages`
+      );
     }
 
     // Use bulkAdd for new messages only
@@ -126,6 +133,52 @@ export async function saveLiveChatMessages(
       { videoId, messageCount: messages.length }
     );
   }
+}
+
+/**
+ * Check if a message passes the given filter criteria
+ */
+function messagePassesFilter(msg: LiveChatMessage, filter: LiveChatFilter): boolean {
+  if (filter.startTime !== undefined && msg.timestampMs < (filter.startTime || 0)) {
+    return false;
+  }
+  if (filter.endTime !== undefined && msg.timestampMs > (filter.endTime || Infinity)) {
+    return false;
+  }
+  if (filter.includeDonations === false && msg.isDonation) {
+    return false;
+  }
+  if (filter.includeMembers === false && msg.isMembership) {
+    return false;
+  }
+  if (filter.includeModerators === false && msg.isModerator) {
+    return false;
+  }
+  if (filter.searchTerm) {
+    const searchLower = filter.searchTerm.toLowerCase();
+    if (
+      !msg.message.toLowerCase().includes(searchLower) &&
+      !msg.author.toLowerCase().includes(searchLower)
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Check if any filters are active that require in-memory filtering
+ */
+function hasActiveFilters(filter?: LiveChatFilter): boolean {
+  if (!filter) return false;
+  return (
+    filter.startTime !== undefined ||
+    filter.endTime !== undefined ||
+    filter.includeDonations === false ||
+    filter.includeMembers === false ||
+    filter.includeModerators === false ||
+    !!filter.searchTerm
+  );
 }
 
 /**
@@ -154,48 +207,48 @@ export async function loadLiveChatMessages(
     logger.info(`[LiveChatDB] Loading livechat messages for video ${videoId}`, {
       offset,
       limit,
-      filter
+      filter,
     });
 
-    let collection = db.liveChatMessages.where('videoId').equals(videoId);
+    // OPTIMIZATION: Use compound index [videoId+timestampMs] for sorted access
+    // This avoids loading ALL messages into memory just to sort and slice
 
-    // Apply filters
-    if (filter) {
-      if (filter.startTime !== undefined) {
-        collection = collection.and(msg => msg.timestampMs >= (filter.startTime || 0));
-      }
-      if (filter.endTime !== undefined) {
-        collection = collection.and(msg => msg.timestampMs <= (filter.endTime || Infinity));
-      }
-      if (filter.includeDonations === false) {
-        collection = collection.and(msg => !msg.isDonation);
-      }
-      if (filter.includeMembers === false) {
-        collection = collection.and(msg => !msg.isMembership);
-      }
-      if (filter.includeModerators === false) {
-        collection = collection.and(msg => !msg.isModerator);
-      }
-      if (filter.searchTerm) {
-        const searchLower = filter.searchTerm.toLowerCase();
-        collection = collection.and(msg =>
-          msg.message.toLowerCase().includes(searchLower) ||
-          msg.author.toLowerCase().includes(searchLower)
-        );
-      }
+    if (!hasActiveFilters(filter)) {
+      // FAST PATH: No filters - use index-based pagination directly
+      // The compound index [videoId+timestampMs] gives us sorted results
+      const messages = await db.liveChatMessages
+        .where('[videoId+timestampMs]')
+        .between([videoId, Dexie.minKey], [videoId, Dexie.maxKey], true, true)
+        .offset(offset)
+        .limit(limit)
+        .toArray();
+
+      logger.success(`[LiveChatDB] Loaded ${messages.length} messages (fast path, no filters)`);
+      return messages;
     }
 
-    // Sort by timestamp (chronological order for transcript view)
-    // We use in-memory sort to ensure messages with missing timestamps are included
-    // (Dexie's sortBy uses the index which excludes records with missing keys)
-    const allMessages = await collection.toArray();
-    const messages = allMessages.sort((a, b) => (a.timestampMs || 0) - (b.timestampMs || 0));
+    // FILTERED PATH: Need to scan with early termination
+    // Still use the index for sorted iteration, but filter in-memory
+    // Use cursor-based iteration to stop early once we have enough results
+    const results: LiveChatMessage[] = [];
+    let skipped = 0;
 
-    // Apply pagination
-    const paginatedMessages = messages.slice(offset, offset + limit);
+    await db.liveChatMessages
+      .where('[videoId+timestampMs]')
+      .between([videoId, Dexie.minKey], [videoId, Dexie.maxKey], true, true)
+      .until(() => results.length >= limit) // Stop once we have enough
+      .each((msg) => {
+        if (messagePassesFilter(msg, filter!)) {
+          if (skipped < offset) {
+            skipped++;
+          } else {
+            results.push(msg);
+          }
+        }
+      });
 
-    logger.success(`[LiveChatDB] Loaded ${paginatedMessages.length} messages (total: ${messages.length})`);
-    return paginatedMessages;
+    logger.success(`[LiveChatDB] Loaded ${results.length} messages (filtered path)`);
+    return results;
   } catch (error: any) {
     logger.error('[LiveChatDB] Failed to load livechat messages:', error);
 
@@ -227,10 +280,7 @@ export async function getLiveChatMessageCount(videoId: string): Promise<number> 
       );
     }
 
-    const count = await db.liveChatMessages
-      .where('videoId')
-      .equals(videoId)
-      .count();
+    const count = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
     logger.info(`[LiveChatDB] Message count for video ${videoId}: ${count}`);
     return count;
@@ -257,16 +307,10 @@ export async function getLiveChatMessageCount(videoId: string): Promise<number> 
  * @returns Saved comment ID
  * @throws LiveChatError if save operation fails
  */
-export async function saveLiveChatReply(
-  reply: Comment,
-  parentMessageId: string
-): Promise<number> {
+export async function saveLiveChatReply(reply: Comment, parentMessageId: string): Promise<number> {
   try {
     if (!reply) {
-      throw createLiveChatError(
-        LiveChatErrorType.DATABASE_ERROR,
-        'Reply data is required'
-      );
+      throw createLiveChatError(LiveChatErrorType.DATABASE_ERROR, 'Reply data is required');
     }
 
     if (!parentMessageId) {
@@ -285,7 +329,7 @@ export async function saveLiveChatReply(
       ...reply,
       isLiveChat: true, // Mark as livechat-related
       commentParentId: parentMessageId, // Link to parent message
-      replyLevel: 1 // Direct reply to livechat message
+      replyLevel: 1, // Direct reply to livechat message
     };
 
     const id = await db.comments.add(replyWithFlags);
@@ -331,7 +375,7 @@ export async function loadLiveChatReplies(parentMessageId: string): Promise<Comm
     const replies = await db.comments
       .where('commentParentId')
       .equals(parentMessageId)
-      .and(comment => comment.isLiveChat === true)
+      .and((comment) => comment.isLiveChat === true)
       .sortBy('publishedDate');
 
     logger.success(`[LiveChatDB] Loaded ${replies.length} replies`);
@@ -359,10 +403,7 @@ export async function loadLiveChatReplies(parentMessageId: string): Promise<Comm
  */
 async function incrementMessageReplyCount(messageId: string): Promise<void> {
   try {
-    const message = await db.liveChatMessages
-      .where('messageId')
-      .equals(messageId)
-      .first();
+    const message = await db.liveChatMessages.where('messageId').equals(messageId).first();
 
     if (message) {
       const currentCount = message.replyCount || 0;
@@ -371,7 +412,9 @@ async function incrementMessageReplyCount(messageId: string): Promise<void> {
         .equals(messageId)
         .modify({ replyCount: currentCount + 1, hasReplies: true });
 
-      logger.info(`[LiveChatDB] Incremented reply count for message ${messageId} to ${currentCount + 1}`);
+      logger.info(
+        `[LiveChatDB] Incremented reply count for message ${messageId} to ${currentCount + 1}`
+      );
     } else {
       logger.warn(`[LiveChatDB] Message ${messageId} not found for reply count update`);
     }
@@ -398,10 +441,7 @@ export async function deleteLiveChatMessages(videoId: string): Promise<number> {
 
     logger.info(`[LiveChatDB] Deleting livechat messages for video ${videoId}`);
 
-    const count = await db.liveChatMessages
-      .where('videoId')
-      .equals(videoId)
-      .delete();
+    const count = await db.liveChatMessages.where('videoId').equals(videoId).delete();
 
     logger.success(`[LiveChatDB] Deleted ${count} messages`);
     return count;
@@ -442,7 +482,7 @@ export async function deleteLiveChatReplies(videoId: string): Promise<number> {
     const count = await db.comments
       .where('videoId')
       .equals(videoId)
-      .and(comment => comment.isLiveChat === true)
+      .and((comment) => comment.isLiveChat === true)
       .delete();
 
     logger.success(`[LiveChatDB] Deleted ${count} livechat replies`);
@@ -474,10 +514,7 @@ export async function hasLiveChatMessages(videoId: string): Promise<boolean> {
       return false;
     }
 
-    const count = await db.liveChatMessages
-      .where('videoId')
-      .equals(videoId)
-      .count();
+    const count = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
     logger.info(`[LiveChatDB] Video ${videoId} has ${count} livechat messages`);
     return count > 0;
@@ -493,10 +530,7 @@ export async function hasLiveChatMessages(videoId: string): Promise<boolean> {
  * @param note Optional note to add to bookmark
  * @throws LiveChatError if bookmark operation fails
  */
-export async function bookmarkLiveChatMessage(
-  messageId: string,
-  note?: string
-): Promise<void> {
+export async function bookmarkLiveChatMessage(messageId: string, note?: string): Promise<void> {
   try {
     if (!messageId) {
       throw createLiveChatError(
@@ -513,7 +547,7 @@ export async function bookmarkLiveChatMessage(
       .modify({
         isBookmarked: true,
         bookmarkAddedDate: new Date().toISOString(),
-        note: note || undefined
+        note: note || undefined,
       });
 
     if (updated === 0) {
@@ -558,14 +592,11 @@ export async function unbookmarkLiveChatMessage(messageId: string): Promise<void
 
     logger.info(`[LiveChatDB] Removing bookmark from message ${messageId}`);
 
-    const updated = await db.liveChatMessages
-      .where('messageId')
-      .equals(messageId)
-      .modify({
-        isBookmarked: false,
-        bookmarkAddedDate: undefined,
-        note: undefined
-      });
+    const updated = await db.liveChatMessages.where('messageId').equals(messageId).modify({
+      isBookmarked: false,
+      bookmarkAddedDate: undefined,
+      note: undefined,
+    });
 
     if (updated === 0) {
       throw createLiveChatError(

@@ -1,7 +1,7 @@
 interface Window {
-    YT: {
-        Player: new (id: string) => {
-            seekTo: (seconds: number, allowSeekAhead: boolean) => void;
-        };
+  YT: {
+    Player: new (id: string) => {
+      seekTo: (seconds: number, allowSeekAhead: boolean) => void;
     };
+  };
 }
