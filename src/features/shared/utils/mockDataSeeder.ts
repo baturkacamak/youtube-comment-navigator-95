@@ -23,9 +23,15 @@ export const seedMockData = async (dispatch: any) => {
     try {
         // Check if data already exists to avoid re-seeding every time
         const existingCount = await db.comments.where('videoId').equals(MOCK_VIDEO_ID).count();
+        const jsonCount = mockCommentsData.length;
         
-        if (existingCount === 0) {
-            logger.info('[MockDataSeeder] No existing mock data found. Seeding from JSON...');
+        if (existingCount === 0 || existingCount !== jsonCount) {
+            if (existingCount === 0) {
+                logger.info('[MockDataSeeder] No existing mock data found. Seeding from JSON...');
+            } else {
+                logger.info(`[MockDataSeeder] Data mismatch (DB: ${existingCount}, JSON: ${jsonCount}). Re-seeding...`);
+                await db.comments.where('videoId').equals(MOCK_VIDEO_ID).delete();
+            }
             
             // Process raw JSON into Comment objects
             // We need to ensure the data matches the Comment interface and has the mock video ID
@@ -61,7 +67,7 @@ export const seedMockData = async (dispatch: any) => {
             await db.comments.bulkAdd(commentsToInsert);
             logger.success(`[MockDataSeeder] Successfully seeded ${commentsToInsert.length} mock comments.`);
         } else {
-            logger.info(`[MockDataSeeder] Mock data already exists (${existingCount} comments). Skipping seed.`);
+            logger.info(`[MockDataSeeder] Mock data is up to date (${existingCount} comments). Skipping seed.`);
         }
 
         // Now load the initial page of comments from the DB, just like the real app does
