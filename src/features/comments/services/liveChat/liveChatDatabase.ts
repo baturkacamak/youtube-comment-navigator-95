@@ -3,6 +3,7 @@
  * Handles all database interactions for livechat messages with extensive error handling
  */
 
+import Dexie from 'dexie';
 import { db } from '../../../shared/utils/database/database';
 import {
   LiveChatMessage,
@@ -129,6 +130,50 @@ export async function saveLiveChatMessages(
 }
 
 /**
+ * Check if a message passes the given filter criteria
+ */
+function messagePassesFilter(msg: LiveChatMessage, filter: LiveChatFilter): boolean {
+  if (filter.startTime !== undefined && msg.timestampMs < (filter.startTime || 0)) {
+    return false;
+  }
+  if (filter.endTime !== undefined && msg.timestampMs > (filter.endTime || Infinity)) {
+    return false;
+  }
+  if (filter.includeDonations === false && msg.isDonation) {
+    return false;
+  }
+  if (filter.includeMembers === false && msg.isMembership) {
+    return false;
+  }
+  if (filter.includeModerators === false && msg.isModerator) {
+    return false;
+  }
+  if (filter.searchTerm) {
+    const searchLower = filter.searchTerm.toLowerCase();
+    if (!msg.message.toLowerCase().includes(searchLower) &&
+        !msg.author.toLowerCase().includes(searchLower)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Check if any filters are active that require in-memory filtering
+ */
+function hasActiveFilters(filter?: LiveChatFilter): boolean {
+  if (!filter) return false;
+  return (
+    filter.startTime !== undefined ||
+    filter.endTime !== undefined ||
+    filter.includeDonations === false ||
+    filter.includeMembers === false ||
+    filter.includeModerators === false ||
+    !!filter.searchTerm
+  );
+}
+
+/**
  * Load livechat messages for a video with pagination
  * @param videoId Video ID to load messages for
  * @param offset Number of messages to skip
@@ -157,45 +202,55 @@ export async function loadLiveChatMessages(
       filter
     });
 
-    let collection = db.liveChatMessages.where('videoId').equals(videoId);
+    // OPTIMIZATION: Use compound index [videoId+timestampMs] for sorted access
+    // This avoids loading ALL messages into memory just to sort and slice
 
-    // Apply filters
-    if (filter) {
-      if (filter.startTime !== undefined) {
-        collection = collection.and(msg => msg.timestampMs >= (filter.startTime || 0));
-      }
-      if (filter.endTime !== undefined) {
-        collection = collection.and(msg => msg.timestampMs <= (filter.endTime || Infinity));
-      }
-      if (filter.includeDonations === false) {
-        collection = collection.and(msg => !msg.isDonation);
-      }
-      if (filter.includeMembers === false) {
-        collection = collection.and(msg => !msg.isMembership);
-      }
-      if (filter.includeModerators === false) {
-        collection = collection.and(msg => !msg.isModerator);
-      }
-      if (filter.searchTerm) {
-        const searchLower = filter.searchTerm.toLowerCase();
-        collection = collection.and(msg =>
-          msg.message.toLowerCase().includes(searchLower) ||
-          msg.author.toLowerCase().includes(searchLower)
-        );
-      }
+    if (!hasActiveFilters(filter)) {
+      // FAST PATH: No filters - use index-based pagination directly
+      // The compound index [videoId+timestampMs] gives us sorted results
+      const messages = await db.liveChatMessages
+        .where('[videoId+timestampMs]')
+        .between(
+          [videoId, Dexie.minKey],
+          [videoId, Dexie.maxKey],
+          true,
+          true
+        )
+        .offset(offset)
+        .limit(limit)
+        .toArray();
+
+      logger.success(`[LiveChatDB] Loaded ${messages.length} messages (fast path, no filters)`);
+      return messages;
     }
 
-    // Sort by timestamp (chronological order for transcript view)
-    // We use in-memory sort to ensure messages with missing timestamps are included
-    // (Dexie's sortBy uses the index which excludes records with missing keys)
-    const allMessages = await collection.toArray();
-    const messages = allMessages.sort((a, b) => (a.timestampMs || 0) - (b.timestampMs || 0));
+    // FILTERED PATH: Need to scan with early termination
+    // Still use the index for sorted iteration, but filter in-memory
+    // Use cursor-based iteration to stop early once we have enough results
+    const results: LiveChatMessage[] = [];
+    let skipped = 0;
 
-    // Apply pagination
-    const paginatedMessages = messages.slice(offset, offset + limit);
+    await db.liveChatMessages
+      .where('[videoId+timestampMs]')
+      .between(
+        [videoId, Dexie.minKey],
+        [videoId, Dexie.maxKey],
+        true,
+        true
+      )
+      .until(() => results.length >= limit) // Stop once we have enough
+      .each(msg => {
+        if (messagePassesFilter(msg, filter!)) {
+          if (skipped < offset) {
+            skipped++;
+          } else {
+            results.push(msg);
+          }
+        }
+      });
 
-    logger.success(`[LiveChatDB] Loaded ${paginatedMessages.length} messages (total: ${messages.length})`);
-    return paginatedMessages;
+    logger.success(`[LiveChatDB] Loaded ${results.length} messages (filtered path)`);
+    return results;
   } catch (error: any) {
     logger.error('[LiveChatDB] Failed to load livechat messages:', error);
 
