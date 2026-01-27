@@ -56,7 +56,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
         };
     }, [comment.commentId]);
 
-    const handleCopy = () => {
+    const handleCopy = React.useCallback(() => {
         copyToClipboard(
             comment.content,
             () => {
@@ -67,16 +67,19 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
                 logger.error('Could not copy text: ', err);
             }
         );
-    };
+    }, [comment.content]);
 
-    const cacheFetchedReplies = (replies: Comment[]) => {
-        if (fetchedReplies === null) {
-            setFetchedReplies(replies);
-            setError(null);
-        }
-    };
+    const cacheFetchedReplies = React.useCallback((replies: Comment[]) => {
+        setFetchedReplies(prev => {
+            if (prev === null) {
+                return replies;
+            }
+            return prev;
+        });
+        setError(null);
+    }, []);
 
-    const handleToggleReplies = async () => {
+    const handleToggleReplies = React.useCallback(async () => {
         const newShowReplies = !showReplies;
         setShowReplies(newShowReplies);
 
@@ -97,7 +100,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
                 setIsFetchingReplies(false);
             }
         }
-    };
+    }, [showReplies, fetchedReplies, videoId, comment.commentId, t]);
 
     const isSticky = useSticky(parentCommentRef, showReplies);
     const videoUrl = `https://www.youtube.com/watch?v=${comment.videoId}`;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { ShareIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
 import { AiOutlineWhatsApp, AiOutlineX, AiOutlineFacebook, AiOutlineLinkedin, AiOutlineReddit } from 'react-icons/ai';
 import { FaTelegramPlane } from 'react-icons/fa';
@@ -18,18 +18,18 @@ interface ShareOption {
     handler: () => void;
 }
 
-const ShareButton: React.FC<ShareButtonProps> = ({ textToShare, subject = 'Check this out', url }) => {
+const ShareButton: React.FC<ShareButtonProps> = React.memo(({ textToShare, subject = 'Check this out', url }) => {
     const { t } = useTranslation();
 
-    const getSelectedText = () => {
+    const getSelectedText = useCallback(() => {
         if (window.getSelection) {
             const selectedText = window.getSelection()?.toString();
             return selectedText ? selectedText : textToShare;
         }
         return textToShare;
-    };
+    }, [textToShare]);
 
-    const shareHandler = (shareType: 'email' | 'whatsapp' | 'twitter' | 'facebook' | 'linkedin' | 'reddit' | 'telegram') => {
+    const shareHandler = useCallback((shareType: 'email' | 'whatsapp' | 'twitter' | 'facebook' | 'linkedin' | 'reddit' | 'telegram') => {
         const text = getSelectedText();
         const encodedText = encodeURIComponent(text + (url ? `\n\n${url}` : ''));
         const encodedUrl = encodeURIComponent(url || text);
@@ -54,9 +54,9 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare, subject = 'Check
                 alert('Text copied to clipboard. You can share it manually.');
             }).catch(error => logger.error('Could not copy text', error));
         }
-    };
+    }, [getSelectedText, subject, url]);
 
-    const shareOptions: ShareOption[] = [
+    const shareOptions: ShareOption[] = useMemo(() => [
         { name: t('E-mail'), icon: <EnvelopeIcon className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('email') },
         { name: 'Whatsapp', icon: <AiOutlineWhatsApp className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('whatsapp') },
         { name: 'X', icon: <AiOutlineX className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('twitter') },
@@ -64,7 +64,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare, subject = 'Check
         { name: 'LinkedIn', icon: <AiOutlineLinkedin className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('linkedin') },
         { name: 'Reddit', icon: <AiOutlineReddit className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('reddit') },
         { name: 'Telegram', icon: <FaTelegramPlane className="w-5 h-5 mr-2" aria-hidden="true" />, handler: () => shareHandler('telegram') },
-    ];
+    ], [t, shareHandler]);
 
     return (
         <DropdownMenu buttonContent={<><ShareIcon className="w-5 h-5 mr-1" aria-hidden="true" /><span className="text-sm">{t('Share')}</span></>}>
@@ -76,6 +76,6 @@ const ShareButton: React.FC<ShareButtonProps> = ({ textToShare, subject = 'Check
             ))}
         </DropdownMenu>
     );
-};
+});
 
 export default ShareButton;

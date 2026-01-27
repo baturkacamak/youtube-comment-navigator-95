@@ -28,15 +28,20 @@ vi.mock('../services/pagination', () => ({
 }));
 
 // Mock child components to isolate CommentItem logic
+const CommentFooterSpy = vi.fn();
 vi.mock('./CommentFooter', () => ({
-  default: ({ onToggleReplies, showReplies, isFetchingReplies }: any) => (
-    <div data-testid="comment-footer">
-      <button onClick={onToggleReplies} data-testid="toggle-replies-btn">
-        {showReplies ? 'Hide replies' : 'Show replies'}
-      </button>
-      {isFetchingReplies && <span>Loading replies...</span>}
-    </div>
-  ),
+  default: (props: any) => {
+    CommentFooterSpy(props);
+    const { onToggleReplies, showReplies, isFetchingReplies } = props;
+    return (
+        <div data-testid="comment-footer">
+          <button onClick={onToggleReplies} data-testid="toggle-replies-btn">
+            {showReplies ? 'Hide replies' : 'Show replies'}
+          </button>
+          {isFetchingReplies && <span>Loading replies...</span>}
+        </div>
+    );
+  },
 }));
 
 vi.mock('./CommentReplies', () => ({
@@ -98,6 +103,10 @@ describe('CommentItem', () => {
     timestamp: Date.now()
   };
 
+  beforeEach(() => {
+    CommentFooterSpy.mockClear();
+  });
+
   it('renders comment content', () => {
     render(<CommentItem comment={mockComment} />);
     expect(screen.getByText('Test content')).toBeInTheDocument();
@@ -122,4 +131,22 @@ describe('CommentItem', () => {
         expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
     });
   });
+
+  it('passes stable handlers to CommentFooter across re-renders', () => {
+    const { rerender } = render(<CommentItem comment={mockComment} />);
+    
+    expect(CommentFooterSpy).toHaveBeenCalledTimes(1);
+    const initialProps = CommentFooterSpy.mock.calls[0][0];
+
+    // Force a re-render by passing a CLONED comment (new ref, same content)
+    rerender(<CommentItem comment={{ ...mockComment }} />);
+
+    expect(CommentFooterSpy).toHaveBeenCalledTimes(2);
+    const secondProps = CommentFooterSpy.mock.calls[1][0];
+
+    // Handlers should be referentially equal due to useCallback
+    expect(secondProps.cacheFetchedReplies).toBe(initialProps.cacheFetchedReplies);
+    expect(secondProps.handleCopyToClipboard).toBe(initialProps.handleCopyToClipboard);
+  });
 });
+
