@@ -1,10 +1,9 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import LiveChatList from './LiveChatList';
-import { setLiveChat } from '../../../store/store';
 import { extractVideoId } from '../services/remote/utils';
 
 // Mock dependencies
@@ -41,7 +40,7 @@ const initialState = {
     textSize: 'text-base',
     fontFamily: 'Arial',
   },
-  searchKeyword: ''
+  searchKeyword: '',
 };
 
 const mockReducer = (state = initialState, action: any) => {
@@ -49,9 +48,9 @@ const mockReducer = (state = initialState, action: any) => {
     case 'comments/setLiveChat':
       return { ...state, liveChat: action.payload };
     case 'comments/setLiveChatLoading':
-        return { ...state, liveChatState: { ...state.liveChatState, isLoading: action.payload } };
+      return { ...state, liveChatState: { ...state.liveChatState, isLoading: action.payload } };
     case 'comments/setLiveChatError':
-        return { ...state, liveChatState: { ...state.liveChatState, error: action.payload } };
+      return { ...state, liveChatState: { ...state.liveChatState, error: action.payload } };
     default:
       return state;
   }
@@ -64,7 +63,6 @@ const createMockStore = (preloadedState = {}) => {
   });
 };
 
-
 describe('LiveChatList', () => {
   beforeEach(() => {
     (extractVideoId as unknown as ReturnType<typeof vi.fn>).mockReturnValue('test-video-id');
@@ -72,7 +70,7 @@ describe('LiveChatList', () => {
 
   it('renders loading state initially', () => {
     const store = createMockStore({
-        liveChatState: { isLoading: true, error: null, messageCount: 0 }
+      liveChatState: { isLoading: true, error: null, messageCount: 0 },
     });
     render(
       <Provider store={store}>
@@ -85,7 +83,7 @@ describe('LiveChatList', () => {
 
   it('renders no chat message when empty and not loading', async () => {
     const store = createMockStore({
-        liveChatState: { isLoading: false, error: null, messageCount: 0 }
+      liveChatState: { isLoading: false, error: null, messageCount: 0 },
     });
     render(
       <Provider store={store}>

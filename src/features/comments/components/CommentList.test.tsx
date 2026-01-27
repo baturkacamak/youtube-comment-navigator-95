@@ -14,7 +14,7 @@ vi.mock('react-i18next', () => ({
         return key.replace('{{remaining}}', options.remaining);
       }
       return key;
-    }
+    },
   }),
 }));
 
@@ -27,8 +27,8 @@ vi.mock('../hooks/useCommentsFromDB');
 // Mock AutoSizer to render children with fixed dimensions
 vi.mock('react-virtualized-auto-sizer', () => ({
   AutoSizer: ({ children, renderProp }: any) => {
-      const render = children || renderProp;
-      return render ? render({ height: 500, width: 500 }) : null;
+    const render = children || renderProp;
+    return render ? render({ height: 500, width: 500 }) : null;
   },
 }));
 
@@ -37,9 +37,7 @@ vi.mock('react-window', () => ({
   VariableSizeList: ({ children, itemCount }: any) => (
     <div data-testid="virtual-list">
       {Array.from({ length: itemCount }).map((_, index) => (
-        <div key={index}>
-          {children({ index, style: {} })}
-        </div>
+        <div key={index}>{children({ index, style: {} })}</div>
       ))}
     </div>
   ),
@@ -50,19 +48,17 @@ vi.mock('./CommentItem', () => ({
   default: ({ comment }: any) => <div data-testid="comment-item">{comment.content}</div>,
 }));
 
-const mockReducer = (state = {}, action: any) => state;
-
 const createMockStore = (preloadedState = {}) => {
   return configureStore({
     reducer: {
-      filters: (state = {}, action) => state,
-      searchKeyword: (state = '', action) => state,
-      ...preloadedState
+      filters: (state = {}) => state,
+      searchKeyword: (state = '') => state,
+      ...preloadedState,
     },
     preloadedState: {
       filters: {},
       searchKeyword: '',
-      ...preloadedState
+      ...preloadedState,
     },
   });
 };
@@ -107,7 +103,9 @@ describe('CommentList', () => {
       </Provider>
     );
 
-    expect(screen.getByText('No comments found. Try a different search or filter.')).toBeInTheDocument();
+    expect(
+      screen.getByText('No comments found. Try a different search or filter.')
+    ).toBeInTheDocument();
   });
 
   it('renders list of comments', () => {
@@ -139,25 +137,23 @@ describe('CommentList', () => {
   });
 
   it('renders load more button when hasMore is true', () => {
-    const mockComments = [
-        { commentId: '1', content: 'First comment', replyCount: 0 },
-    ];
-  
+    const mockComments = [{ commentId: '1', content: 'First comment', replyCount: 0 }];
+
     (useCommentsFromDB as any).mockReturnValue({
-        comments: mockComments,
-        totalCount: 5,
-        isLoading: false,
-        hasMore: true,
-        loadMore: vi.fn(),
+      comments: mockComments,
+      totalCount: 5,
+      isLoading: false,
+      hasMore: true,
+      loadMore: vi.fn(),
     });
-  
+
     const store = createMockStore();
     render(
-        <Provider store={store}>
+      <Provider store={store}>
         <CommentList />
-        </Provider>
+      </Provider>
     );
-  
+
     // Should have 1 comment + load more button
     expect(screen.getByText('Load More Comments (4 remaining)')).toBeInTheDocument();
   });
@@ -201,6 +197,8 @@ describe('CommentList', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Unable to load more comments. The database might be empty or out of sync.')).toBeInTheDocument();
+    expect(
+      screen.getByText('Unable to load more comments. The database might be empty or out of sync.')
+    ).toBeInTheDocument();
   });
 });
