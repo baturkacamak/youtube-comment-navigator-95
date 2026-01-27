@@ -57,7 +57,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(({
                         logger.start(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
                         try {
                             const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
-                            logger.success(`[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`);
+                            logger.debug(`[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`);
                             return replies;
                         } catch (error) {
                             logger.error(`[RepliesHover] Error fetching replies for comment: ${comment.commentId}`, error);
@@ -70,15 +70,15 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(({
                     onResult: (result) => {
                         try {
                             if (!result || result.length === 0) {
-                                logger.warn(`[RepliesHover] No result returned for comment: ${comment.commentId}`);
+                                logger.debug(`[RepliesHover] No result returned for comment: ${comment.commentId}`);
                                 return;
                             }
                             // Cache the fetched replies instead of dispatching
-                            logger.info(`[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`);
+                            logger.debug(`[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`);
                             cacheFetchedReplies(result);
                             // Emit event that replies are loaded
                             eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
-                            logger.success(`[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`);
+                            logger.debug(`[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`);
                         } catch (error) {
                             logger.error(`[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`, error);
                         }

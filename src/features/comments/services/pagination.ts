@@ -254,7 +254,7 @@ export const fetchRepliesForComment = async (
     }
 
     try {
-        logger.info(`${logPrefix} Starting to fetch replies.`);
+        logger.debug(`${logPrefix} Starting to fetch replies.`);
         const replies = await commentsTable
             .where('videoId')
             .equals(videoId)
@@ -265,10 +265,10 @@ export const fetchRepliesForComment = async (
             })
             .toArray();
 
-        logger.info(`${logPrefix} Found ${replies.length} replies.`);
+        logger.debug(`${logPrefix} Found ${replies.length} replies.`);
 
         if (replies.length > 0) {
-            logger.success(`${logPrefix} Successfully retrieved ${replies.length} replies.`);
+            logger.debug(`${logPrefix} Successfully retrieved ${replies.length} replies.`);
         } else {
             const parentComment = await commentsTable.where('commentId').equals(parentId).first();
             const expectedReplies = parentComment?.replyCount || 0;

@@ -752,9 +752,13 @@ class hoverAction {
             })
             .catch(err => {
                 
-                (logger.warn as any)(`[${this.eventNamePrefix}]`, 'Action execution failed or was aborted.', err);
-
                 const isAbort = err instanceof DOMException && err.name === 'AbortError';
+
+                if (isAbort) {
+                    logger.debug(`[${this.eventNamePrefix}]`, 'Action aborted.');
+                } else {
+                    (logger.warn as any)(`[${this.eventNamePrefix}]`, 'Action execution failed.', err);
+                }
 
                 // === Error/Abort State Update ===
                 this.setLoading(false);
