@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef, useState, useEffect} from 'react';
 import CommentItem from './CommentItem';
 import {CommentRepliesProps} from "../../../types/commentTypes";
 import {useTranslation} from 'react-i18next';
@@ -10,6 +10,25 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
                                                           parentCommentId
                                                       }) => {
     const {t} = useTranslation();
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [height, setHeight] = useState(0);
+
+    // Measure content height when replies change or visibility changes
+    useEffect(() => {
+        if (showReplies && contentRef.current) {
+            const resizeObserver = new ResizeObserver((entries) => {
+                for (const entry of entries) {
+                    setHeight(entry.contentRect.height);
+                }
+            });
+
+            resizeObserver.observe(contentRef.current);
+            // Initial measurement
+            setHeight(contentRef.current.scrollHeight);
+
+            return () => resizeObserver.disconnect();
+        }
+    }, [showReplies, replies, isLoading]);
 
     const memoizedReplies = useMemo(() => {
         if (isLoading) {
@@ -28,7 +47,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
         }
 
         return (
-            <div className="mt-4 space-y-4">
+            <div className="space-y-4">
                 {replies.map((reply, index) => (
                     <CommentItem
                         key={`${reply.commentId}-${index}`}
@@ -44,17 +63,20 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
         );
     }, [replies, isLoading, t]);
 
-    if (!showReplies) {
-        return null;
-    }
-
     return (
         <div
-            className="w-full mt-4"
+            className="w-full overflow-hidden transition-all duration-300 ease-in-out"
+            style={{
+                maxHeight: showReplies ? `${height}px` : '0px',
+                opacity: showReplies ? 1 : 0,
+                marginTop: showReplies ? '1rem' : '0'
+            }}
             aria-expanded={showReplies}
             aria-label={t('Replies')}
         >
-            {memoizedReplies}
+            <div ref={contentRef}>
+                {memoizedReplies}
+            </div>
         </div>
     );
 });
