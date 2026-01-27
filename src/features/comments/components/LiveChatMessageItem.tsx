@@ -3,7 +3,7 @@
  * Displays a single livechat message in transcript format with clickable timestamp
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { LiveChatMessageItemProps } from '../../../types/liveChatTypes';
@@ -43,8 +43,6 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   const [replies, setReplies] = useState<Comment[]>([]);
   const [isLoadingReplies, setIsLoadingReplies] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const repliesRef = useRef<HTMLDivElement>(null);
-  const [repliesHeight, setRepliesHeight] = useState('0px');
 
   // Load replies when showReplies becomes true
   useEffect(() => {
@@ -66,13 +64,6 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
 
     loadReplies();
   }, [showReplies, message.messageId, message.hasReplies, replies.length]);
-
-  // Update replies height for animation
-  useEffect(() => {
-    if (repliesRef.current) {
-      setRepliesHeight(showReplies ? `${repliesRef.current.scrollHeight}px` : '0px');
-    }
-  }, [showReplies, replies]);
 
   const handleTimestampClickInternal = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (message.videoOffsetTimeSec !== undefined) {
@@ -194,8 +185,6 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
           <CommentReplies
             replies={replies}
             showReplies={showReplies}
-            repliesRef={repliesRef}
-            repliesHeight={repliesHeight}
             parentCommentId={message.messageId}
             isLoading={isLoadingReplies}
           />

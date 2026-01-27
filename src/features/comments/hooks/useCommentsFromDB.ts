@@ -93,27 +93,11 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     // Clear error state
     const clearError = useCallback(() => {
         setError(null);
-        logger.debug(`${logPrefix} Error state cleared`);
-    }, [logPrefix]);
-
-    // Debug logger helper
-    const debugLog = useCallback((message: string, ...args: any[]) => {
-        // Force info logging for debugging pagination issues
-        logger.info(`${logPrefix} ${message}`, ...args);
-    }, [logPrefix]);
+    }, []);
 
     // Memoize sort values from filters
-    const sortBy = useMemo(() => {
-        const value = filters.sortBy || 'date';
-        debugLog(`Sort by computed: ${value}`);
-        return value;
-    }, [filters.sortBy, debugLog]);
-
-    const sortOrder = useMemo(() => {
-        const value = filters.sortOrder || 'desc';
-        debugLog(`Sort order computed: ${value}`);
-        return value;
-    }, [filters.sortOrder, debugLog]);
+    const sortBy = useMemo(() => filters.sortBy || 'date', [filters.sortBy]);
+    const sortOrder = useMemo(() => filters.sortOrder || 'desc', [filters.sortOrder]);
 
     // Memoize filter options for pagination queries
     const paginationOptions = useMemo(() => ({
@@ -121,30 +105,16 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         excludeLiveChat,
     }), [topLevelOnly, excludeLiveChat]);
 
-    // Log when options change
-    useEffect(() => {
-        logger.info(`${logPrefix} Hook initialized/updated`, {
-            videoId: videoId || '(none)',
-            sortBy,
-            sortOrder,
-            searchKeyword: searchKeyword || '(none)',
-            pageSize,
-            topLevelOnly,
-            excludeLiveChat,
-        });
-    }, [videoId, sortBy, sortOrder, searchKeyword, pageSize, topLevelOnly, excludeLiveChat, logPrefix]);
 
     // Reactive total count using useLiveQuery
     // This will automatically re-run when the database changes
     const totalCount = useLiveQuery(
         async () => {
             if (!videoId) {
-                debugLog('Skipping count query - no videoId');
                 return 0;
             }
 
             const startTime = performance.now();
-            debugLog(`Starting count query for video: ${videoId}`);
 
             try {
                 const count = await countComments(
@@ -155,25 +125,11 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
                     paginationOptions
                 );
 
-                const duration = performance.now() - startTime;
-                metricsRef.current.lastCountDuration = duration;
-
-                logger.debug(`${logPrefix} Count query completed`, {
-                    videoId,
-                    count,
-                    duration: `${duration.toFixed(2)}ms`,
-                    hasFilters: Object.values(filters).some(v => v && v !== 'date' && v !== 'desc'),
-                    hasSearch: !!searchKeyword,
-                });
-
+                metricsRef.current.lastCountDuration = performance.now() - startTime;
                 return count;
             } catch (err) {
                 const error = err instanceof Error ? err : new Error(String(err));
-                logger.error(`${logPrefix} Count query failed`, {
-                    videoId,
-                    error: error.message,
-                    stack: error.stack,
-                });
+                logger.error(`${logPrefix} Count query failed:`, error);
                 setError(error);
                 return 0;
             }
@@ -184,10 +140,8 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
     // Calculate hasMore based on loaded comments vs total count
     const hasMore = useMemo(() => {
-        const result = totalCount > comments.length;
-        debugLog(`hasMore calculated: ${result} (total: ${totalCount}, loaded: ${comments.length})`);
-        return result;
-    }, [totalCount, comments.length, debugLog]);
+        return totalCount > comments.length;
+    }, [totalCount, comments.length]);
 
     // Track comments length in ref for logging without breaking memoization
     const commentsLengthRef = useRef(0);
@@ -198,24 +152,10 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     // Fetch a specific page of comments
     const fetchPage = useCallback(async (pageNum: number, append: boolean = false): Promise<Comment[]> => {
         if (!videoId) {
-            logger.warn(`${logPrefix} fetchPage called without videoId`);
             return [];
         }
 
         const startTime = performance.now();
-        const fetchId = `fetch-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`;
-
-        logger.debug(`${logPrefix} Fetching page ${pageNum}`, {
-            fetchId,
-            videoId,
-            pageNum,
-            pageSize,
-            sortBy,
-            sortOrder,
-            append,
-            currentCommentsCount: commentsLengthRef.current,
-        });
-
         metricsRef.current.totalFetches++;
 
         try {
@@ -234,63 +174,26 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             const duration = performance.now() - startTime;
             metricsRef.current.lastFetchDuration = duration;
 
-            if (data.length === 0 && pageNum === 0) {
-                logger.warn(`${logPrefix} No comments found for video`, {
-                    fetchId,
-                    videoId,
-                    filters: JSON.stringify(filters),
-                    searchKeyword,
-                });
-            } else {
-                logger.debug(`${logPrefix} Page fetch completed`, {
-                    fetchId,
-                    videoId,
-                    pageNum,
-                    commentsReturned: data.length,
-                    duration: `${duration.toFixed(2)}ms`,
-                    append,
-                });
-            }
-
             if (append) {
-                setComments(prev => {
-                    const newComments = [...prev, ...data];
-                    debugLog(`Appended ${data.length} comments, new total: ${newComments.length}`);
-                    return newComments;
-                });
+                setComments(prev => [...prev, ...data]);
             } else {
                 setComments(data);
-                debugLog(`Set ${data.length} comments (replaced previous)`);
             }
 
-            // Clear any previous error on successful fetch
-            // We use a functional update or just check the ref if we wanted to be perfectly safe,
-            // but calling setError(null) is safe even if stale.
             setError(prev => prev ? null : prev);
-
             return data;
         } catch (err) {
             const fetchError = err instanceof Error ? err : new Error(String(err));
             metricsRef.current.failedFetches++;
-
-            logger.error(`${logPrefix} Page fetch failed`, {
-                fetchId,
-                videoId,
-                pageNum,
-                error: fetchError.message,
-                stack: fetchError.stack,
-                totalFailedFetches: metricsRef.current.failedFetches,
-            });
-
+            logger.error(`${logPrefix} Page fetch failed:`, fetchError);
             setError(fetchError);
             return [];
         }
-    }, [videoId, pageSize, sortBy, sortOrder, filters, searchKeyword, paginationOptions, logPrefix, debugLog]);
+    }, [videoId, pageSize, sortBy, sortOrder, filters, searchKeyword, paginationOptions, logPrefix]);
 
     // Initial load and refresh when dependencies change
     useEffect(() => {
         if (!videoId) {
-            debugLog('No videoId - clearing comments');
             setComments([]);
             setIsLoading(false);
             setError(null);
@@ -299,27 +202,15 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
         // Cancel any pending requests
         if (abortControllerRef.current) {
-            debugLog('Aborting previous request');
             abortControllerRef.current.abort();
         }
         abortControllerRef.current = new AbortController();
-
-        logger.info(`${logPrefix} Dependencies changed - reloading`, {
-            videoId,
-            sortBy,
-            sortOrder,
-            searchKeyword: searchKeyword || '(none)',
-            filterCount: Object.values(filters).filter(Boolean).length,
-        });
 
         setIsLoading(true);
         setPage(0);
         setError(null);
 
         fetchPage(0, false)
-            .then(data => {
-                logger.debug(`${logPrefix} Initial load completed with ${data.length} comments`);
-            })
             .catch(err => {
                 logger.error(`${logPrefix} Initial load failed:`, err);
             })
@@ -329,27 +220,22 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
         return () => {
             if (abortControllerRef.current) {
-                debugLog('Cleanup: aborting pending request');
                 abortControllerRef.current.abort();
             }
         };
-    }, [videoId, sortBy, sortOrder, filters, searchKeyword, fetchPage, logPrefix, debugLog]);
+    }, [videoId, sortBy, sortOrder, filters, searchKeyword, fetchPage, logPrefix]);
 
     // Subscribe to database events for this video with throttled updates
     useEffect(() => {
         if (!videoId) return;
 
-        debugLog(`Subscribing to database events for video: ${videoId}`);
-
         // Track pending refresh to coalesce multiple events
         let pendingRefresh = false;
 
         // Create a throttled refresh function to limit UI updates during heavy fetching
-        // This ensures we update at most once per UI_UPDATE_THROTTLE_MS
         const throttledRefresh = throttle(() => {
             if (pendingRefresh) {
                 pendingRefresh = false;
-                logger.debug(`${logPrefix} Throttled data update, refreshing view`);
                 fetchPage(0, false).then(data => {
                     if (data.length > 0) {
                         setIsLoading(false);
@@ -360,11 +246,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
         const unsubscribe = dbEvents.onAll((event) => {
             if (event.videoId === videoId) {
-                debugLog(`Database event received: ${event.type}`, {
-                    count: event.count,
-                    commentIds: event.commentIds?.length,
-                });
-
                 // Refresh data when new content arrives
                 if (
                     event.type === 'comments:added' ||
@@ -372,7 +253,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
                     event.type === 'replies:added'
                 ) {
                     // Only refresh if we are on the first page or if the list is empty
-                    // This prevents disrupting the user if they have scrolled down
                     if (page === 0 || comments.length === 0) {
                         pendingRefresh = true;
                         throttledRefresh();
@@ -382,37 +262,18 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         });
 
         return () => {
-            debugLog('Unsubscribing from database events');
             throttledRefresh.cancel();
             unsubscribe();
         };
-    }, [videoId, page, comments.length, fetchPage, debugLog, logPrefix]);
+    }, [videoId, page, comments.length, fetchPage]);
 
     // Load more comments (next page)
     const loadMore = useCallback(async () => {
-        if (loadingMore) {
-            logger.warn(`${logPrefix} loadMore called while already loading`);
-            return;
-        }
-
-        if (!hasMore) {
-            logger.debug(`${logPrefix} loadMore called but no more comments available`);
-            return;
-        }
-
-        if (!videoId) {
-            logger.warn(`${logPrefix} loadMore called without videoId`);
+        if (loadingMore || !hasMore || !videoId) {
             return;
         }
 
         const nextPage = page + 1;
-        logger.debug(`${logPrefix} Loading more comments`, {
-            currentPage: page,
-            nextPage,
-            currentCommentsCount: comments.length,
-            totalCount,
-        });
-
         setLoadingMore(true);
 
         const failuresBefore = metricsRef.current.failedFetches;
@@ -420,50 +281,39 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
             const data = await fetchPage(nextPage, true);
             if (data && data.length > 0) {
                 setPage(nextPage);
-                logger.debug(`${logPrefix} Page incremented to ${nextPage}. Appended ${data.length} comments.`);
             } else {
-                logger.warn(`${logPrefix} loadMore returned no new comments`);
-                // If no error occurred during fetch (metrics didn't increase), but result is empty
-                // it means the database returned 0 results despite hasMore being true.
+                // If no error occurred during fetch but result is empty,
+                // the database returned 0 results despite hasMore being true.
                 if (metricsRef.current.failedFetches === failuresBefore) {
                     setError(new Error('Unable to load more comments. The database might be empty or out of sync.'));
                 }
             }
         } catch (err) {
-            // This catch block might catch errors from fetchPage if it re-threw, but currently it doesn't.
-            // It catches local errors in loadMore logic.
             logger.error(`${logPrefix} loadMore failed:`, err);
             setError(err instanceof Error ? err : new Error(String(err)));
         } finally {
             setLoadingMore(false);
         }
-    }, [loadingMore, hasMore, videoId, page, fetchPage, comments.length, totalCount, logPrefix]);
+    }, [loadingMore, hasMore, videoId, page, fetchPage, logPrefix]);
 
     // Manual refresh - reload from page 0
     const refresh = useCallback(async () => {
         if (!videoId) {
-            logger.warn(`${logPrefix} refresh called without videoId`);
             return;
         }
-
-        logger.info(`${logPrefix} Manual refresh triggered`, {
-            videoId,
-            previousCommentsCount: comments.length,
-        });
 
         setIsLoading(true);
         setPage(0);
         setError(null);
 
         try {
-            const data = await fetchPage(0, false);
-            logger.success(`${logPrefix} Refresh completed with ${data.length} comments`);
+            await fetchPage(0, false);
         } catch (err) {
             logger.error(`${logPrefix} Refresh failed:`, err);
         } finally {
             setIsLoading(false);
         }
-    }, [videoId, fetchPage, comments.length, logPrefix]);
+    }, [videoId, fetchPage, logPrefix]);
 
     // Log performance metrics periodically in debug mode
     useEffect(() => {
@@ -521,40 +371,22 @@ export const useLiveCommentCount = (
     searchKeyword?: string,
     options?: { topLevelOnly?: boolean; excludeLiveChat?: boolean }
 ): number => {
-    const logPrefix = '[useLiveCommentCount]';
-
     return useLiveQuery(
         async () => {
             if (!videoId) {
-                logger.debug(`${logPrefix} No videoId provided, returning 0`);
                 return 0;
             }
 
-            const startTime = performance.now();
-
             try {
-                const count = await countComments(
+                return await countComments(
                     db.comments,
                     videoId,
                     filters || {},
                     searchKeyword || '',
                     options || {}
                 );
-
-                const duration = performance.now() - startTime;
-                logger.debug(`${logPrefix} Count query completed`, {
-                    videoId,
-                    count,
-                    duration: `${duration.toFixed(2)}ms`,
-                });
-
-                return count;
             } catch (err) {
-                const error = err instanceof Error ? err : new Error(String(err));
-                logger.error(`${logPrefix} Count query failed`, {
-                    videoId,
-                    error: error.message,
-                });
+                logger.error('[useLiveCommentCount] Count query failed:', err);
                 return 0;
             }
         },
@@ -586,20 +418,7 @@ export const useNewCommentsAvailable = (
     loadedCount: number
 ): boolean => {
     const totalCount = useLiveCommentCount(videoId);
-    const hasNew = totalCount > loadedCount;
-
-    useEffect(() => {
-        if (hasNew && videoId) {
-            logger.debug('[useNewCommentsAvailable] New comments available', {
-                videoId,
-                totalCount,
-                loadedCount,
-                newCount: totalCount - loadedCount,
-            });
-        }
-    }, [hasNew, videoId, totalCount, loadedCount]);
-
-    return hasNew;
+    return totalCount > loadedCount;
 };
 
 /**

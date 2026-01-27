@@ -4,19 +4,12 @@ import {CommentRepliesProps} from "../../../types/commentTypes";
 import {useTranslation} from 'react-i18next';
 
 const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
-                                                           replies,
-                                                           showReplies,
-                                                           repliesRef,
-                                                           repliesHeight,
-                                                           isLoading,
-                                                           parentCommentId
-                                                       }) => {
+                                                          replies,
+                                                          showReplies,
+                                                          isLoading,
+                                                          parentCommentId
+                                                      }) => {
     const {t} = useTranslation();
-
-    // REMOVED: window.dispatchEvent(new Event('resize'))
-    // This was causing expensive page-wide layout recalculation.
-    // The height is already calculated in CommentItem's useEffect,
-    // and CSS transitions handle the animation without forcing layout.
 
     const memoizedReplies = useMemo(() => {
         if (isLoading) {
@@ -29,7 +22,7 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
                 </div>
             );
         }
-        
+
         if (!replies || replies.length === 0) {
             return <div className="ml-10 text-sm text-gray-500 dark:text-gray-400 italic">{t('No replies yet.')}</div>;
         }
@@ -51,15 +44,17 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(({
         );
     }, [replies, isLoading, t]);
 
+    if (!showReplies) {
+        return null;
+    }
+
     return (
         <div
-            className={`w-full transition-all duration-500 ease-in-out ${showReplies ? 'animate-slide-in mt-4' : 'animate-slide-out overflow-hidden '}`}
-            style={{maxHeight: showReplies ? repliesHeight : '0px'}}
-            ref={repliesRef}
+            className="w-full mt-4"
             aria-expanded={showReplies}
             aria-label={t('Replies')}
         >
-            {showReplies && memoizedReplies}
+            {memoizedReplies}
         </div>
     );
 });

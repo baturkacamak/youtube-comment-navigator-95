@@ -79,8 +79,6 @@ export interface CommentListProps {
 export interface CommentRepliesProps {
     replies: Comment[];
     showReplies: boolean;
-    repliesRef: React.RefObject<HTMLDivElement>;
-    repliesHeight: string;
     parentCommentId: string;
     isLoading?: boolean;
 }

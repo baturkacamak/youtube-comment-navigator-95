@@ -17,12 +17,6 @@ import { Comment } from "../../../types/commentTypes";
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import {db} from "../../shared/utils/database/database";
 import {eventEmitter} from "../../shared/utils/eventEmitter";
-import {
-  HeartIcon as HeartIconSolid,
-  ChatBubbleBottomCenterTextIcon,
-  EllipsisVerticalIcon
-} from '@heroicons/react/24/solid';
-import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 
 const CommentItem: React.FC<CommentItemProps> = React.memo(({
                                                      comment,
@@ -40,33 +34,10 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
     const [showReplies, setShowReplies] = useState(comment.showRepliesDefault || false);
     const [fetchedReplies, setFetchedReplies] = useState<Comment[] | null>(null);
     const [isFetchingReplies, setIsFetchingReplies] = useState(false);
-    const repliesHeight = useRef('0px');
-    const repliesRef = useRef<HTMLDivElement>(null);
+    const [error, setError] = useState<string | null>(null);
+
     const parentCommentRef = useRef<HTMLDivElement>(null);
     const videoId = comment.videoId || extractYouTubeVideoIdFromUrl();
-
-    useEffect(() => {
-        if (showReplies && repliesRef.current) {
-            // Add a small delay to ensure the content has rendered
-            const recalculateHeight = () => {
-                if (repliesRef.current) {
-                    repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
-                    // Force re-render to apply the new height
-                    setShowReplies(prev => !!prev);
-                }
-            };
-
-            if (fetchedReplies && fetchedReplies.length > 0) {
-                // If replies are already loaded, recalculate immediately
-                recalculateHeight();
-            } else {
-                // If replies aren't loaded yet, set a temporary reasonable height
-                repliesHeight.current = comment.replyCount ? `${comment.replyCount * 100}px` : '0px';
-            }
-        } else {
-            repliesHeight.current = '0px';
-        }
-    }, [showReplies, fetchedReplies, comment.replyCount]);
 
     useEffect(() => {
         // Create unique event name for this comment
@@ -76,14 +47,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
         const unsubscribe = eventEmitter.on(eventName, (loadedReplies) => {
             if (loadedReplies && Array.isArray(loadedReplies)) {
                 setFetchedReplies(loadedReplies);
-                // Force recalculation of height in next tick to ensure DOM is updated
-                setTimeout(() => {
-                    if (repliesRef.current) {
-                        repliesHeight.current = `${repliesRef.current.scrollHeight}px`;
-                        // Force a re-render to apply the new height
-                        setShowReplies(prev => prev);
-                    }
-                }, 0);
+                setError(null);
             }
         });
 
@@ -107,8 +71,8 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
 
     const cacheFetchedReplies = (replies: Comment[]) => {
         if (fetchedReplies === null) {
-            logger.info(`[CommentItem ${comment.commentId}] Caching ${replies.length} replies from hover.`);
             setFetchedReplies(replies);
+            setError(null);
         }
     };
 
@@ -118,16 +82,16 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
 
         if (newShowReplies && fetchedReplies === null) {
             setIsFetchingReplies(true);
+            setError(null);
             try {
-                logger.info(`[CommentItem ${comment.commentId}] Fetching replies onClick...`);
                 const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
                 setFetchedReplies(replies);
                 // Emit event that replies are loaded
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, replies);
-                logger.success(`[CommentItem ${comment.commentId}] Fetched ${replies.length} replies onClick.`);
             } catch (error) {
-                logger.error(`[CommentItem ${comment.commentId}] Error fetching replies onClick`, error);
+                logger.error(`[CommentItem ${comment.commentId}] Error fetching replies`, error);
                 setFetchedReplies([]);
+                setError(t('Failed to load replies. Please try again.'));
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, []);
             } finally {
                 setIsFetchingReplies(false);
@@ -195,13 +159,16 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(({
                         handleCopyToClipboard={handleCopy}
                         copySuccess={copySuccess}
                     />
+                    {error && (
+                        <div className="mt-2 p-2 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
+                            {error}
+                        </div>
+                    )}
                 </div>
                 {Number(comment.replyCount) > 0 && (
                     <CommentReplies
                         replies={fetchedReplies ?? []}
                         showReplies={showReplies}
-                        repliesRef={repliesRef}
-                        repliesHeight={repliesHeight.current}
                         isLoading={isFetchingReplies}
                         parentCommentId={comment.commentId}
                     />

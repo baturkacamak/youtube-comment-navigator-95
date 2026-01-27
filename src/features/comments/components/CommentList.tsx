@@ -126,7 +126,7 @@ const CommentList: React.FC<CommentListProps> = () => {
 
         return (
             <div
-                style={style}
+                style={{ ...style, overflow: 'visible' }}
                 role="listitem"
                 aria-labelledby={`comment-${comment.commentId}`}
             >
@@ -220,6 +220,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                             itemCount={itemCount}
                             itemSize={getRowHeight}
                             overscanCount={5}
+                            style={{ overflow: 'visible auto' }}
                         >
                             {Row}
                         </List>
@@ -246,12 +247,32 @@ const MeasuredCommentItem: React.FC<MeasuredCommentItemProps> = React.memo(({
 }) => {
     const measureRef = useRef<HTMLDivElement>(null);
 
+    // Use ResizeObserver to detect height changes (e.g., when replies are expanded)
     useEffect(() => {
-        if (measureRef.current) {
-            const height = measureRef.current.getBoundingClientRect().height;
-            onHeightChange(index, height);
+        const element = measureRef.current;
+        if (!element) return;
+
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const height = entry.contentRect.height;
+                if (height > 0) {
+                    onHeightChange(index, height);
+                }
+            }
+        });
+
+        resizeObserver.observe(element);
+
+        // Initial measurement
+        const initialHeight = element.getBoundingClientRect().height;
+        if (initialHeight > 0) {
+            onHeightChange(index, initialHeight);
         }
-    }, [index, onHeightChange, comment.content]);
+
+        return () => {
+            resizeObserver.disconnect();
+        };
+    }, [index, onHeightChange]);
 
     return (
         <div ref={measureRef}>
