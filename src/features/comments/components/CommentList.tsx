@@ -219,10 +219,15 @@ const CommentList: React.FC<CommentListProps> = () => {
         </div>
       )}
       <div className="flex-1 w-full min-h-0">
-        {/* @ts-expect-error AutoSizer type mismatch */}
         <AutoSizer
-          renderProp={({ height, width }: { height: number; width: number }) => {
-            if (height === 0 || width === 0) {
+          renderProp={({
+            height,
+            width,
+          }: {
+            height: number | undefined;
+            width: number | undefined;
+          }) => {
+            if (!height || !width) {
               logger.warn('[CommentList] AutoSizer returned 0 dimensions:', { width, height });
               return (
                 <div className="p-4 text-red-500">

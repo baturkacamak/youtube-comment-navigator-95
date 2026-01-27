@@ -55,7 +55,10 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   }, [showReplies, message.messageId, message.hasReplies, replies.length]);
 
   const handleTimestampClickInternal = (
-    event: React.MouseEvent<HTMLAnchorElement> | React.KeyboardEvent<HTMLAnchorElement>
+    event:
+      | React.MouseEvent<HTMLAnchorElement>
+      | React.KeyboardEvent<HTMLAnchorElement>
+      | React.MouseEvent<HTMLSpanElement>
   ) => {
     if (message.videoOffsetTimeSec !== undefined) {
       if (event.type === 'click' || (event as React.KeyboardEvent).key === 'Enter') {

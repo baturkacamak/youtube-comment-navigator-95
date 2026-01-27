@@ -93,7 +93,7 @@ const fetchAndSetLiveChat = async (dispatch: any) => {
     dispatch(setLiveChatLoading(true));
     const controller = new AbortController();
 
-    fetchAndProcessLiveChat(videoId, window, controller.signal, dispatch)
+    fetchAndProcessLiveChat(videoId, window, controller.signal)
       .then(() => {
         logger.success('[useFetchDataOnUrlChange] Live chat loaded successfully');
       })

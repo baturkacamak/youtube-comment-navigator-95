@@ -5,6 +5,35 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
+// Define Mock Types globally for usage in mocks
+interface MockComment {
+  commentId: string;
+  videoId: string;
+  author: string;
+  authorAvatarUrl: string;
+  authorChannelId: string;
+  content: string;
+  published: string;
+  publishedDate: number;
+  likes: number;
+  viewLikes: string;
+  replyCount: number;
+  replyLevel: number;
+  isAuthorContentCreator: boolean;
+  isHearted: boolean;
+  isPinned: boolean;
+  hasTimestamp: boolean;
+  hasLinks: boolean;
+  replies?: MockComment[];
+}
+
+interface MockTranscriptLine {
+  id: string;
+  text: string;
+  startTime: number;
+  duration: number;
+}
+
 // ============================================================================
 // Global Mocks
 // ============================================================================
