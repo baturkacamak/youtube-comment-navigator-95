@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "default_locale": "en",
   "action": {
     "default_icon": {
@@ -11,13 +11,8 @@
       "128": "icon128.png"
     }
   },
-  "permissions": [
-    "storage",
-    "scripting"
-  ],
-  "host_permissions": [
-    "*://*.youtube.com/*"
-  ],
+  "permissions": ["storage", "scripting"],
+  "host_permissions": ["*://*.youtube.com/*"],
   "background": {
     "service_worker": "src/background.ts"
   },
@@ -29,7 +24,13 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["locales/*", "retrieve-pot-token.js", "icon128.png", "icon48.png", "icon16.png"],
+      "resources": [
+        "locales/*",
+        "retrieve-pot-token.js",
+        "icon128.png",
+        "icon48.png",
+        "icon16.png"
+      ],
       "matches": ["*://*.youtube.com/*"]
     }
   ],
