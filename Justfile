@@ -54,3 +54,11 @@ check: lint format-check test
 
 # Prepare for commit (lint-fix, format, test)
 pre-commit: lint-fix format test
+
+# Bump project version (interactive or with argument)
+bump version="":
+    ./scripts/bump.sh {{version}}
+
+# Build and package the extension into a zip file
+package:
+    ./scripts/pack.sh

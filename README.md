@@ -28,12 +28,15 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 - 📈 **Analytics Dashboard**: View analytics on comment activity, such as the most active users or trending topics.
 - 🔒 **Privacy Controls**: Manage your data with robust privacy controls, ensuring your information is secure.
 - ⚙️ **Customizable Settings**: Adjust settings to tailor the extension to your needs, including notification preferences and display options.
+- 🚀 **High Performance**: Built with **IndexedDB** for massive storage capacity and **Virtualization** (React Window) to render thousands of comments smoothly without lag.
 
 ## 🚀 Installation
 
 ### Prerequisites
 
 - A Chromium-based browser (e.g., Google Chrome, Microsoft Edge, Brave, Opera)
+- **Node.js** (v18 or higher)
+- **Just** command runner (optional, for easier workflow)
 
 ### Steps to Install
 
@@ -95,6 +98,8 @@ This project is licensed under the MIT License. For more details, see the [LICEN
 - 💅 **TailwindCSS**
 - 🧪 **Vitest**
 - 📝 **TypeScript**
+- 💾 **Dexie.js** (IndexedDB wrapper)
+- 🏎️ **React Window** (Virtualization)
 
 I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your YouTube browsing experience! 😊
 
@@ -124,12 +129,15 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 
     ```bash
     npm run build
+    # OR
+    just package
     ```
 
     - Creates an optimized build in the `dist/` folder.
-    - The build is ready to be zipped and uploaded to the Chrome Web Store.
+    - `just package` will creates a generic zip file for distribution.
 
 4.  **Run Tests:**
+
     ```bash
     npm test
     ```
@@ -146,6 +154,25 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 - **build:css**: Converts `rem` units to `em` in the build output for better scaling within the extension.
 - **build:css:rtl**: Generates RTL CSS support.
 
+### Release Workflow
+
+We use `just` to simplify release tasks:
+
+- **Update Version:**
+
+  ```bash
+  just bump        # Interactive menu
+  just bump 1.8.0  # Direct update
+  ```
+
+  Updates `package.json` and `manifest.json`, creates a git commit and tag.
+
+- **Package Extension:**
+  ```bash
+  just package
+  ```
+  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.8.0.zip`).
+
 ## 🛠️ Tech Stack
 
 - ❤️ **React** (v18)
@@ -155,3 +182,5 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 - 📦 **Redux Toolkit** (State Management)
 - 💅 **TailwindCSS** (Styling)
 - 📝 **TypeScript** (Language)
+- 💾 **Dexie.js** (IndexedDB)
+- 🪟 **React Window** (List Virtualization)
