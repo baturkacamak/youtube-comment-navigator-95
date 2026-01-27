@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CommentItem from './CommentItem';
-import { Comment } from "../../../types/commentTypes";
+import { Comment } from '../../../types/commentTypes';
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -34,21 +34,21 @@ vi.mock('./CommentFooter', () => ({
     CommentFooterSpy(props);
     const { onToggleReplies, showReplies, isFetchingReplies } = props;
     return (
-        <div data-testid="comment-footer">
-          <button onClick={onToggleReplies} data-testid="toggle-replies-btn">
-            {showReplies ? 'Hide replies' : 'Show replies'}
-          </button>
-          {isFetchingReplies && <span>Loading replies...</span>}
-        </div>
+      <div data-testid="comment-footer">
+        <button onClick={onToggleReplies} data-testid="toggle-replies-btn">
+          {showReplies ? 'Hide replies' : 'Show replies'}
+        </button>
+        {isFetchingReplies && <span>Loading replies...</span>}
+      </div>
     );
   },
 }));
 
 vi.mock('./CommentReplies', () => ({
   default: ({ replies, showReplies, repliesHeight }: any) => (
-    <div 
-        data-testid="comment-replies" 
-        style={{ maxHeight: repliesHeight, opacity: showReplies ? 1 : 0 }}
+    <div
+      data-testid="comment-replies"
+      style={{ maxHeight: repliesHeight, opacity: showReplies ? 1 : 0 }}
     >
       Replies count: {replies.length}
     </div>
@@ -68,7 +68,7 @@ vi.mock('../../shared/components/Box', () => ({
 }));
 
 vi.mock('../../shared/hooks/useSticky', () => ({
-    default: () => false,
+  default: () => false,
 }));
 
 describe('CommentItem', () => {
@@ -79,6 +79,7 @@ describe('CommentItem', () => {
     authorAvatarUrl: 'http://example.com/avatar.jpg',
     authorChannelId: 'channel-1',
     content: 'Test content',
+    published: '1 day ago',
     publishedDate: Date.now(),
     likes: 10,
     replyCount: 5,
@@ -100,7 +101,7 @@ describe('CommentItem', () => {
     normalizedScore: 0,
     weightedZScore: 0,
     bayesianAverage: 0,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   };
 
   beforeEach(() => {
@@ -115,11 +116,11 @@ describe('CommentItem', () => {
   it('toggles replies visibility on button click', async () => {
     const { fetchRepliesForComment } = await import('../services/pagination');
     (fetchRepliesForComment as any).mockResolvedValue([
-        { ...mockComment, commentId: 'reply-1', replyLevel: 1 }
+      { ...mockComment, commentId: 'reply-1', replyLevel: 1 },
     ]);
 
     render(<CommentItem comment={mockComment} />);
-    
+
     const toggleBtn = screen.getByTestId('toggle-replies-btn');
     fireEvent.click(toggleBtn);
 
@@ -128,13 +129,13 @@ describe('CommentItem', () => {
 
     // Wait for replies to load
     await waitFor(() => {
-        expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
+      expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
     });
   });
 
   it('passes stable handlers to CommentFooter across re-renders', () => {
     const { rerender } = render(<CommentItem comment={mockComment} />);
-    
+
     expect(CommentFooterSpy).toHaveBeenCalledTimes(1);
     const initialProps = CommentFooterSpy.mock.calls[0][0];
 
@@ -149,4 +150,3 @@ describe('CommentItem', () => {
     expect(secondProps.handleCopyToClipboard).toBe(initialProps.handleCopyToClipboard);
   });
 });
-

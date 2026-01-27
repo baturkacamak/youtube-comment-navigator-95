@@ -1,4 +1,8 @@
-# 🎉 YouTube Comment Navigator 95 🎉
+# YouTube Comment Navigator 95
+
+[![CI](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml/badge.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
 
 ## Overview
 
@@ -99,32 +103,38 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 ### Setting Up
 
 1.  **Install Dependencies:**
+
     ```bash
     npm install
     ```
 
 2.  **Start Development Server (with Hot Module Replacement):**
+
     ```bash
     npm run dev
     ```
-    *   This starts Vite in watch mode.
-    *   Go to `chrome://extensions/` in your browser.
-    *   Enable **Developer mode**.
-    *   Click **Load unpacked** and select the `dist` folder in this project.
-    *   Any changes you make to `src/` will instantly update in the browser.
+
+    - This starts Vite in watch mode.
+    - Go to `chrome://extensions/` in your browser.
+    - Enable **Developer mode**.
+    - Click **Load unpacked** and select the `dist` folder in this project.
+    - Any changes you make to `src/` will instantly update in the browser.
 
 3.  **Build for Production:**
+
     ```bash
     npm run build
     ```
-    *   Creates an optimized build in the `dist/` folder.
-    *   The build is ready to be zipped and uploaded to the Chrome Web Store.
+
+    - Creates an optimized build in the `dist/` folder.
+    - The build is ready to be zipped and uploaded to the Chrome Web Store.
 
 4.  **Run Tests:**
     ```bash
     npm test
     ```
-    *   Runs the test suite using Vitest.
+
+    - Runs the test suite using Vitest.
 
 ### Available Scripts
 

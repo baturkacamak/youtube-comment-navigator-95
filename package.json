@@ -1,6 +1,7 @@
 {
   "name": "youtube-comment-navigator-95",
   "version": "1.7.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.1.3",
@@ -35,18 +36,17 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run build:css",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "build:css": "sed -i 's/rem/em/g' dist/assets/*.css",
-    "build:css:rtl": "rtlcss input.css output-rtl.css"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "build:css:rtl": "rtlcss input.css output-rtl.css",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,scss,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,scss,json}\"",
+    "prepare": "husky"
   },
   "browserslist": {
     "production": [
@@ -61,7 +61,20 @@
     ]
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.6.1",
+    "@commitlint/config-conventional": "^19.6.0",
     "@crxjs/vite-plugin": "^2.0.0-beta.33",
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.21.0",
     "@reduxjs/toolkit": "^2.2.5",
     "@types/chrome": "^0.1.36",
     "@types/classnames": "^2.3.1",
