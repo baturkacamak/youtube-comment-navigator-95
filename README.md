@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml/badge.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.7.0-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
+[![Version](https://img.shields.io/badge/version-1.8.0-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
 
 ## Overview
 
