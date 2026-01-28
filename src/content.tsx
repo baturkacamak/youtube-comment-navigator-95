@@ -6,7 +6,7 @@ import App from './App';
 import './styles/index.css';
 import './i18n';
 import i18n, { getLanguageDirection } from './i18n';
-import { isLocalEnvironment } from './features/shared/utils/appConstants';
+import { isLocalEnvironment, languageOptions } from './features/shared/utils/appConstants';
 
 // --- Helper Classes ---
 
@@ -17,14 +17,12 @@ class DOMHelper {
       return null;
     }
 
-    // Check if already exists
     const existing = document.getElementById(containerId);
     if (existing) return existing;
 
     const newAppContainer = document.createElement('div');
     newAppContainer.id = containerId;
     newAppContainer.style.width = '100%';
-    // Insert before comments
     if (commentsSection.parentNode) {
       commentsSection.parentNode.insertBefore(newAppContainer, commentsSection);
     }
@@ -45,24 +43,23 @@ class DOMHelper {
   }
 }
 
+type EventCallback = (data: string) => void;
+
 class PubSub {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  events: { [key: string]: ((...args: any[]) => void)[] };
+  events: Record<string, EventCallback[]>;
 
   constructor() {
     this.events = {};
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  subscribe(event: string, callback: Function) {
+  subscribe(event: string, callback: EventCallback) {
     if (!this.events[event]) {
       this.events[event] = [];
     }
-
-    this.events[event].push(callback as (...args: unknown[]) => void);
+    this.events[event].push(callback);
   }
 
-  publish(event: string, data: any) {
+  publish(event: string, data: string) {
     if (this.events[event]) {
       this.events[event].forEach((callback) => callback(data));
     }
@@ -123,7 +120,6 @@ class YouTubeCommentNavigator {
         this.removeInjectedContent();
         return;
       }
-      // Wait for comments section to appear
       if (document.getElementById(this.commentsSectionId)) {
         clearInterval(intervalId);
         await this.checkAndInject();
@@ -191,35 +187,87 @@ class YouTubeCommentNavigator {
   }
 
   setupInitialLoad() {
-    // Inject POT Token Retriever (Legacy support, maybe needed?)
-    // If the original content.js injected it, we should too.
-    // It was: assetInjector.injectPotTokenRetriever();
-    this.injectPotTokenRetriever();
+    Promise.all([this.injectTranslations(), this.injectPotTokenRetriever()]).catch(() => {
+      // Errors are handled in individual methods
+    });
 
     this.checkAndInjectWithInterval();
   }
 
-  injectPotTokenRetriever() {
-    const scriptName = 'retrieve-pot-token.js';
-    // In Vite/CRXJS, resources in public/ are accessible via chrome.runtime.getURL
-    // provided they are in web_accessible_resources.
-    if (!document.querySelector(`script[src="${chrome.runtime.getURL(scriptName)}"]`)) {
+  injectScript(scriptName: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const scriptUrl = chrome.runtime.getURL(scriptName);
+
+      if (document.querySelector(`script[src="${scriptUrl}"]`)) {
+        resolve();
+        return;
+      }
+
       const script = document.createElement('script');
-      script.src = chrome.runtime.getURL(scriptName);
-      (document.head || document.documentElement).appendChild(script);
-      script.onload = function () {
+      script.src = scriptUrl;
+
+      script.onload = () => {
         script.remove();
+        resolve();
       };
+
+      script.onerror = () => {
+        reject(new Error(`Failed to load script: ${scriptName}`));
+      };
+
+      (document.head || document.documentElement).appendChild(script);
+    });
+  }
+
+  async injectTranslations() {
+    try {
+      const userLanguage = chrome.i18n.getUILanguage().split('-')[0];
+      const supportedLanguages = languageOptions.map((opt) => opt.value);
+      const language = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
+
+      await this.loadAndInjectLanguage(language);
+    } catch {
+      await this.loadAndInjectLanguage('en').catch(() => {
+        // Silent fail - app will work with fallback keys
+      });
     }
   }
 
+  async loadAndInjectLanguage(language: string): Promise<void> {
+    const supportedLanguages = languageOptions.map((opt) => opt.value);
+
+    if (!supportedLanguages.includes(language)) {
+      language = 'en';
+    }
+
+    const translationUrl = chrome.runtime.getURL(`locales/${language}/translation.json`);
+    const response = await fetch(translationUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch translations for '${language}': ${response.status}`);
+    }
+
+    const translations = await response.json();
+
+    if (!window.__YCN_TRANSLATIONS__) {
+      window.__YCN_TRANSLATIONS__ = {};
+    }
+    window.__YCN_TRANSLATIONS__[language] = translations;
+
+    window.postMessage(
+      {
+        type: 'LANGUAGE_LOADED',
+        payload: { language },
+      },
+      '*'
+    );
+  }
+
+  injectPotTokenRetriever(): Promise<void> {
+    return this.injectScript('retrieve-pot-token.js');
+  }
+
   async onUrlChange() {
-    // If we have a root, we might want to unmount/remount or just let Redux handle state reset?
-    // Original logic: checkAndInjectWithInterval(true);
-    // It didn't explicitly unmount on URL change *to another video*, but it did publish 'urlchange'.
-    // React App handles data fetching on URL change?
-    // looking at App.tsx, it uses useAppState which likely reacts to data.
-    // But let's follow the original flow:
     this.checkAndInjectWithInterval(true);
     window.postMessage({ type: 'URL_CHANGED', url: window.location.href }, '*');
   }
@@ -237,9 +285,28 @@ class YouTubeCommentNavigator {
 // Start
 const pubSub = new PubSub();
 new URLChangeHandler(pubSub);
-new YouTubeCommentNavigator(pubSub);
+const navigator = new YouTubeCommentNavigator(pubSub);
 
-// Handle unmount on page unload
 window.addEventListener('beforeunload', () => {
   // Cleanup if needed
+});
+
+// Listen for language change requests from the React app
+window.addEventListener('message', (event: MessageEvent) => {
+  if (event.source !== window) return;
+
+  const { type, payload } = event.data;
+
+  if (type === 'CHANGE_LANGUAGE') {
+    const { language } = payload || {};
+    if (!language) return;
+
+    navigator.loadAndInjectLanguage(language).catch(() => {
+      if (language !== 'en') {
+        navigator.loadAndInjectLanguage('en').catch(() => {
+          // Silent fail
+        });
+      }
+    });
+  }
 });
