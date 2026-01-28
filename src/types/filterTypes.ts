@@ -68,6 +68,7 @@ export interface SelectBoxProps {
   buttonClassName?: string;
   isSearchable?: boolean;
   DefaultIcon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  testId?: string;
 }
 
 export interface ControlPanelProps {

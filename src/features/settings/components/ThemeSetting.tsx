@@ -65,6 +65,7 @@ const ThemeSetting: React.FC = () => {
         selectedOption={themeOptions.find((option) => option.value === selectedTheme.value)!}
         setSelectedOption={setSelectedTheme}
         buttonClassName="w-full rounded-lg"
+        testId="theme-select"
       />
     </>
   );

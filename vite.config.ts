@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 // Custom plugin to replace 'rem' with 'em' in CSS files
 const remToEmPlugin = (): Plugin => {
   return {
@@ -22,7 +24,15 @@ const remToEmPlugin = (): Plugin => {
 };
 
 export default defineConfig({
-  plugins: [react(), crx({ manifest }), remToEmPlugin()],
+  plugins: [
+    react({
+      babel: {
+        plugins: isProduction ? [['react-remove-properties', { properties: ['data-testid'] }]] : [],
+      },
+    }),
+    crx({ manifest }),
+    remToEmPlugin(),
+  ],
   server: {
     port: 3000,
   },

@@ -55,6 +55,7 @@ const TextSizeSetting: React.FC = () => {
         selectedOption={textSizeOptions.find((option) => option.value === textSize)!}
         setSelectedOption={handleTextSizeChange}
         buttonClassName="w-full rounded-lg"
+        testId="text-size-select"
       />
     </>
   );

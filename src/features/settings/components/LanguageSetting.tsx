@@ -80,6 +80,7 @@ const LanguageSetting: React.FC = () => {
         buttonClassName="w-full rounded-lg"
         isSearchable={true}
         DefaultIcon={LanguageIcon}
+        testId="language-select"
       />
     </>
   );

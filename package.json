@@ -85,6 +85,7 @@
     "@types/uuid": "^11.0.0",
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.19",
+    "babel-plugin-react-remove-properties": "^0.3.1",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^9.18.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",

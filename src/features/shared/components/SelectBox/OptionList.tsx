@@ -33,6 +33,7 @@ const OptionList: React.FC<OptionListProps> = ({
             role="option"
             aria-selected={highlightedIndex === index}
             id={`option-${index}`}
+            data-testid={`option-${option.value}`}
           >
             {option.icon && <option.icon className="w-5 h-5 mr-2" />}
             <span

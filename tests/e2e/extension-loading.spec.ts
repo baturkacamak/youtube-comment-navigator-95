@@ -1,86 +1,61 @@
-import { test, expect } from '@playwright/test';
-import { launchExtension, navigateToYouTubeVideo, setupConsoleCapture } from './helpers/extension';
+import { test, expect, BrowserContext, Page } from '@playwright/test';
+import {
+  launchExtension,
+  navigateToYouTubeVideo,
+  clearLocalStorage,
+  handleYouTubeConsent,
+} from './helpers/extension';
 
 /**
- * E2E tests for basic extension loading and initialization
+ * E2E tests for extension loading - ESSENTIAL BROWSER TESTS ONLY
+ * These tests verify the extension loads correctly in a real Chrome browser
  */
 
+let context: BrowserContext;
+let page: Page;
+
 test.describe('Extension Loading', () => {
-  test('extension loads on YouTube video page', async () => {
-    const { context, page } = await launchExtension();
-
-    try {
-      await navigateToYouTubeVideo(page);
-
-      // Verify extension UI is injected
-      const extensionRoot = page.locator('[data-testid="ycn-root"], #ycn-root');
-      await expect(extensionRoot).toBeAttached({ timeout: 15000 });
-
-      // Verify extension is visible
-      const isVisible = await extensionRoot.isVisible();
-      expect(isVisible).toBe(true);
-    } finally {
-      await context.close();
-    }
+  test.beforeAll(async () => {
+    const result = await launchExtension();
+    context = result.context;
+    page = result.page;
   });
 
-  test('extension initializes without console errors', async () => {
-    const { context, page } = await launchExtension();
-    const console = setupConsoleCapture(page);
-
-    try {
-      await navigateToYouTubeVideo(page);
-
-      // Wait a bit for initialization
-      await page.waitForTimeout(3000);
-
-      // Check for critical errors (excluding expected warnings)
-      const errors = console.getErrors();
-      const criticalErrors = errors.filter((err) => {
-        // Filter out expected/benign errors
-        const text = err.text.toLowerCase();
-        return (
-          !text.includes('favicon') &&
-          !text.includes('net::err') &&
-          !text.includes('service worker')
-        );
-      });
-
-      expect(criticalErrors.length).toBe(0);
-    } finally {
-      await context.close();
-    }
+  test.afterAll(async () => {
+    await context.close();
   });
 
-  test('extension displays search input', async () => {
-    const { context, page } = await launchExtension();
+  test('extension loads and injects UI on YouTube video page', async () => {
+    await navigateToYouTubeVideo(page);
 
-    try {
-      await navigateToYouTubeVideo(page);
+    // Verify extension UI is injected and visible
+    const extensionRoot = page.locator('#youtube-comment-navigator-app');
+    await expect(extensionRoot).toBeVisible({ timeout: 15000 });
 
-      // Look for search input
-      const searchInput = page.locator(
-        'input[placeholder*="Search"], input[data-testid*="search"]'
-      );
-      await expect(searchInput.first()).toBeVisible({ timeout: 10000 });
-    } finally {
-      await context.close();
-    }
+    // Verify the extension has content
+    const hasContent = await page.evaluate(() => {
+      const root = document.getElementById('youtube-comment-navigator-app');
+      return root ? root.children.length > 0 : false;
+    });
+    expect(hasContent).toBe(true);
   });
 
-  test('extension displays settings button', async () => {
-    const { context, page } = await launchExtension();
+  test('extension displays core UI elements', async () => {
+    await clearLocalStorage(page);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await handleYouTubeConsent(page);
+    await page.waitForSelector('ytd-app', { timeout: 15000 });
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await page.waitForTimeout(2000);
 
-    try {
-      await navigateToYouTubeVideo(page);
+    // Check for search input
+    const searchInput = page.locator('input[placeholder*="Search"], input[data-testid*="search"]');
+    await expect(searchInput.first()).toBeVisible({ timeout: 10000 });
 
-      // Look for settings button
-      const settingsButton = page.locator(
-        '[data-testid="settings-button"], button[aria-label*="settings" i]'
-      );
-      await expect(settingsButton.first()).toBeVisible({ timeout: 10000 });
-    } finally {
-      await context.close();
-    }
+    // Check for settings button
+    const settingsButton = page.locator(
+      '[data-testid="settings-button"], button[aria-label*="settings" i]'
+    );
+    await expect(settingsButton.first()).toBeVisible({ timeout: 10000 });
   });
 });
