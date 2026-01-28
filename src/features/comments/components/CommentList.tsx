@@ -313,7 +313,7 @@ const MeasuredCommentItem: React.FC<MeasuredCommentItemProps> = React.memo(
     }, [index, onHeightChange]);
 
     return (
-      <div ref={measureRef}>
+      <div ref={measureRef} className="flow-root">
         <CommentItem
           comment={comment}
           className="text-gray-800 dark:text-gray-200"
