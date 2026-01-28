@@ -106,6 +106,7 @@ class YouTubeCommentNavigator {
   commentsSectionId = 'comments';
   pubSub: PubSub;
   root: ReactDOM.Root | null = null;
+  private isInitialized = false;
 
   constructor(pubSub: PubSub) {
     this.pubSub = pubSub;
@@ -133,9 +134,22 @@ class YouTubeCommentNavigator {
   async checkAndInject() {
     if (!DOMHelper.isVideoWatchPage()) return;
 
+    await this.ensureInitialized();
+
     const appContainer = DOMHelper.createAppContainer(this.commentsSectionId, this.appContainerId);
     if (appContainer && !this.root) {
       this.mountReactApp(appContainer);
+    }
+  }
+
+  async ensureInitialized() {
+    if (this.isInitialized) return;
+
+    try {
+      await Promise.all([this.injectTranslations(), this.injectPotTokenRetriever()]);
+      this.isInitialized = true;
+    } catch {
+      // Errors are handled in individual methods or ignored if non-critical
     }
   }
 
@@ -187,10 +201,6 @@ class YouTubeCommentNavigator {
   }
 
   setupInitialLoad() {
-    Promise.all([this.injectTranslations(), this.injectPotTokenRetriever()]).catch(() => {
-      // Errors are handled in individual methods
-    });
-
     this.checkAndInjectWithInterval();
   }
 
