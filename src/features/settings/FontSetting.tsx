@@ -64,7 +64,7 @@ const FontSetting: React.FC = () => {
   const getInitialFont = (): Option => {
     try {
       const settings = getSettings();
-      const detectedFont = settings.fontFamily || 'Arial, sans-serif';
+      const detectedFont = (settings.fontFamily as string) || 'Arial, sans-serif';
       return fonts.find((option) => option.value === detectedFont) || fonts[0];
     } catch (error) {
       console.error('Error getting initial font:', error);
@@ -97,7 +97,7 @@ const FontSetting: React.FC = () => {
 
   useEffect(() => {
     const settings = getSettings();
-    applyFont(settings.fontFamily || selectedFont.value);
+    applyFont((settings.fontFamily as string) || selectedFont.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

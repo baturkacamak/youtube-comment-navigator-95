@@ -13,7 +13,7 @@ const LanguageSetting: React.FC = () => {
   const getInitialLanguage = (): Option => {
     try {
       const settings = getSettings();
-      let detectedLanguage = settings.language;
+      let detectedLanguage = settings.language as string | undefined;
 
       if (!detectedLanguage) {
         // Safely get browser language with fallback
@@ -64,7 +64,7 @@ const LanguageSetting: React.FC = () => {
 
   useEffect(() => {
     const settings = getSettings();
-    applyLanguage(settings.language || selectedLanguage.value);
+    applyLanguage((settings.language as string) || selectedLanguage.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

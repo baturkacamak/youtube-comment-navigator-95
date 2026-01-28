@@ -16,7 +16,7 @@ const ThemeSetting: React.FC = () => {
   const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
     try {
       const settings = getSettings();
-      const themeValue = settings.theme || 'light';
+      const themeValue = (settings.theme as string) || 'light';
       return themeOptions.find((option) => option.value === themeValue) || themeOptions[0];
     } catch (error) {
       console.error('Error initializing theme setting:', error);
@@ -52,7 +52,7 @@ const ThemeSetting: React.FC = () => {
 
   useEffect(() => {
     const settings = getSettings();
-    applyTheme(settings.theme || 'light');
+    applyTheme((settings.theme as string) || 'light');
   }, []);
 
   return (

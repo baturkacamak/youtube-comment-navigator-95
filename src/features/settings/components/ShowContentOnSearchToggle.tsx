@@ -14,7 +14,7 @@ const ShowContentOnSearchToggle: React.FC = () => {
   useEffect(() => {
     try {
       const settings = getSettings();
-      dispatch(setShowFiltersSorts(settings.showContentOnSearch ?? false));
+      dispatch(setShowFiltersSorts((settings.showContentOnSearch as boolean) ?? false));
     } catch (error) {
       console.error('Error loading show content on search setting:', error);
       dispatch(setShowFiltersSorts(false)); // Default to false on error

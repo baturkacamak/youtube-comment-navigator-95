@@ -28,7 +28,7 @@ const TextSizeSetting: React.FC = () => {
   useEffect(() => {
     try {
       const settings = getSettings();
-      const textSizeValue = settings.textSize || 'text-base';
+      const textSizeValue = (settings.textSize as string) || 'text-base';
 
       // Validate text size value
       const validSizes = ['text-sm', 'text-base', 'text-lg', 'text-xl'];
