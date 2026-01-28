@@ -14,17 +14,36 @@ const ThemeSetting: React.FC = () => {
   ];
 
   const [selectedTheme, setSelectedTheme] = useState<Option>(() => {
-    const settings = getSettings();
-    return (
-      themeOptions.find((option) => option.value === (settings.theme || 'light')) || themeOptions[0]
-    );
+    try {
+      const settings = getSettings();
+      const themeValue = settings.theme || 'light';
+      return themeOptions.find((option) => option.value === themeValue) || themeOptions[0];
+    } catch (error) {
+      console.error('Error initializing theme setting:', error);
+      return themeOptions[0]; // Default to light theme
+    }
   });
 
   const applyTheme = (theme: string) => {
-    const settings = getSettings();
-    settings.theme = theme;
-    saveSettings(settings);
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    try {
+      if (!theme || typeof theme !== 'string') {
+        console.warn('Invalid theme value provided to applyTheme');
+        return;
+      }
+
+      const settings = getSettings();
+      settings.theme = theme;
+      saveSettings(settings);
+
+      // Safely toggle dark class
+      try {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+      } catch (domError) {
+        console.error('Error toggling dark class on document element:', domError);
+      }
+    } catch (error) {
+      console.error('Error applying theme:', error);
+    }
   };
 
   useEffect(() => {

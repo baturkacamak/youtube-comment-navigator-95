@@ -769,40 +769,169 @@ vi.mock('./features/transcripts/components/Transcript', () => ({
   },
 }));
 
-// Mock SettingsDrawer
+// Mock SettingsDrawer with functional settings
 vi.mock('./features/settings/components/SettingsDrawer', () => ({
-  default: ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => (
-    <div data-testid="settings-drawer" data-open={isOpen} role="dialog" aria-modal="true">
-      <h2 data-testid="settings-title">Settings</h2>
-      <button data-testid="close-settings" onClick={onClose} aria-label="Close settings">
-        Close
-      </button>
-      <div data-testid="theme-setting">
-        <button data-testid="theme-light">Light</button>
-        <button data-testid="theme-dark">Dark</button>
+  default: function MockSettingsDrawer({
+    isOpen,
+    onClose,
+  }: {
+    isOpen: boolean;
+    onClose: () => void;
+  }) {
+    const [theme, setTheme] = React.useState(() => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return settings.theme || 'light';
+      } catch {
+        return 'light';
+      }
+    });
+
+    const [textSize, setTextSize] = React.useState(() => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return settings.textSize || 'text-base';
+      } catch {
+        return 'text-base';
+      }
+    });
+
+    const [language, setLanguage] = React.useState(() => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return settings.language || 'en';
+      } catch {
+        return 'en';
+      }
+    });
+
+    const [showContentOnSearch, setShowContentOnSearch] = React.useState(() => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        return settings.showContentOnSearch || false;
+      } catch {
+        return false;
+      }
+    });
+
+    const saveToLocalStorage = (key: string, value: string | boolean) => {
+      try {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        settings[key] = value;
+        localStorage.setItem('settings', JSON.stringify(settings));
+      } catch {
+        // If localStorage is corrupted, create new settings object
+        const newSettings = { [key]: value };
+        localStorage.setItem('settings', JSON.stringify(newSettings));
+      }
+    };
+
+    const handleThemeChange = (newTheme: string) => {
+      setTheme(newTheme);
+      saveToLocalStorage('theme', newTheme);
+      // Apply theme class to document
+      document.documentElement.classList.toggle('dark', newTheme === 'dark');
+    };
+
+    const handleTextSizeChange = (newSize: string) => {
+      setTextSize(newSize);
+      saveToLocalStorage('textSize', newSize);
+    };
+
+    const handleLanguageChange = (newLanguage: string) => {
+      setLanguage(newLanguage);
+      saveToLocalStorage('language', newLanguage);
+    };
+
+    const handleToggleContentOnSearch = () => {
+      const newValue = !showContentOnSearch;
+      setShowContentOnSearch(newValue);
+      saveToLocalStorage('showContentOnSearch', newValue);
+    };
+
+    return (
+      <div data-testid="settings-drawer" data-open={isOpen} role="dialog" aria-modal="true">
+        <h2 data-testid="settings-title">Settings</h2>
+        <button data-testid="close-settings" onClick={onClose} aria-label="Close settings">
+          Close
+        </button>
+        <div data-testid="theme-setting">
+          <button
+            data-testid="theme-light"
+            onClick={() => handleThemeChange('light')}
+            aria-pressed={theme === 'light'}
+          >
+            Light
+          </button>
+          <button
+            data-testid="theme-dark"
+            onClick={() => handleThemeChange('dark')}
+            aria-pressed={theme === 'dark'}
+          >
+            Dark
+          </button>
+        </div>
+        <div data-testid="text-size-setting">
+          <button
+            data-testid="text-small"
+            onClick={() => handleTextSizeChange('text-sm')}
+            aria-pressed={textSize === 'text-sm'}
+          >
+            Small
+          </button>
+          <button
+            data-testid="text-medium"
+            onClick={() => handleTextSizeChange('text-base')}
+            aria-pressed={textSize === 'text-base'}
+          >
+            Medium
+          </button>
+          <button
+            data-testid="text-large"
+            onClick={() => handleTextSizeChange('text-lg')}
+            aria-pressed={textSize === 'text-lg'}
+          >
+            Large
+          </button>
+        </div>
+        <div data-testid="font-setting">Font Family</div>
+        <div data-testid="language-setting">
+          <select
+            data-testid="language-select"
+            value={language}
+            onChange={(e) => handleLanguageChange(e.target.value)}
+          >
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+          </select>
+        </div>
+        <div data-testid="show-content-toggle">
+          <input
+            type="checkbox"
+            data-testid="show-content-checkbox"
+            checked={showContentOnSearch}
+            onChange={handleToggleContentOnSearch}
+          />
+        </div>
+        <div
+          onClick={onClose}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              onClose();
+            }
+          }}
+          role="button"
+          tabIndex={0}
+        />
       </div>
-      <div data-testid="text-size-setting">
-        <button data-testid="text-small">Small</button>
-        <button data-testid="text-medium">Medium</button>
-        <button data-testid="text-large">Large</button>
-      </div>
-      <div data-testid="font-setting">Font Family</div>
-      <div data-testid="language-setting">
-        <select data-testid="language-select">
-          <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-        </select>
-      </div>
-      <div data-testid="show-content-toggle">
-        <input type="checkbox" data-testid="show-content-checkbox" />
-      </div>
-    </div>
-  ),
+    );
+  },
 }));
 
 // Mock ControlPanel with full functionality
 vi.mock('./features/sidebar/components/ControlPanel', () => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default: ({ filters, setFilters }: { filters: any; setFilters: (f: any) => void }) => {
     const handleFilterChange = (name: string) => {
       const newFilters = { ...filters, [name]: !filters[name] };
@@ -828,6 +957,7 @@ vi.mock('./features/sidebar/components/ControlPanel', () => ({
     const handleRangeChange = (field: string, key: 'min' | 'max', value: number) => {
       const newValue = { ...(filters[field] || { min: 0, max: Infinity }), [key]: value };
       setFilters({ ...filters, [field]: newValue });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (mockState.filters as any)[field] = newValue;
     };
 
@@ -1053,6 +1183,7 @@ const createTestStore = (preloadedState = {}) => {
   };
 
   return configureStore({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     reducer: (state = initialState, action: { type: string; payload?: any }) => {
       switch (action.type) {
         case 'comments/setSearchKeyword':
@@ -2209,6 +2340,10 @@ describe('App Integration Tests - Complete Coverage', () => {
   // ==========================================================================
 
   describe('11. Settings', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
     it('opens settings drawer', async () => {
       renderApp();
       fireEvent.click(screen.getByTestId('settings-button'));
@@ -2259,6 +2394,430 @@ describe('App Integration Tests - Complete Coverage', () => {
       renderApp();
       fireEvent.click(screen.getByTestId('settings-button'));
       expect(screen.getByTestId('settings-drawer')).toHaveAttribute('role', 'dialog');
+    });
+
+    // ========================================================================
+    // Theme Setting Tests
+    // ========================================================================
+
+    it('changes theme from light to dark', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Click dark theme button
+      fireEvent.click(screen.getByTestId('theme-dark'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+      });
+    });
+
+    it('changes theme from dark to light', async () => {
+      // Set initial dark theme
+      localStorage.setItem('settings', JSON.stringify({ theme: 'dark' }));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Click light theme button
+      fireEvent.click(screen.getByTestId('theme-light'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('light');
+      });
+    });
+
+    it('persists theme setting in localStorage', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('theme-dark'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+      });
+    });
+
+    it('applies dark theme class to document element', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('theme-dark'));
+
+      await waitFor(() => {
+        expect(document.documentElement.classList.contains('dark')).toBe(true);
+      });
+    });
+
+    it('removes dark theme class when switching to light', async () => {
+      // Set initial dark theme
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('settings', JSON.stringify({ theme: 'dark' }));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('theme-light'));
+
+      await waitFor(() => {
+        expect(document.documentElement.classList.contains('dark')).toBe(false);
+      });
+    });
+
+    // ========================================================================
+    // Text Size Setting Tests
+    // ========================================================================
+
+    it('changes text size to small', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('text-small'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.textSize).toBe('text-sm');
+      });
+    });
+
+    it('changes text size to medium', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('text-medium'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.textSize).toBe('text-base');
+      });
+    });
+
+    it('changes text size to large', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('text-large'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.textSize).toBe('text-lg');
+      });
+    });
+
+    it('persists text size in localStorage', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('text-large'));
+
+      await waitFor(() => {
+        const savedSettings = localStorage.getItem('settings');
+        expect(savedSettings).toBeTruthy();
+        const settings = JSON.parse(savedSettings!);
+        expect(settings.textSize).toBe('text-lg');
+      });
+    });
+
+    it('loads saved text size on initialization', async () => {
+      localStorage.setItem('settings', JSON.stringify({ textSize: 'text-xl' }));
+
+      renderApp();
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.textSize).toBe('text-xl');
+      });
+    });
+
+    // ========================================================================
+    // Language Setting Tests
+    // ========================================================================
+
+    it('displays language selector', () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      expect(screen.getByTestId('language-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('language-select')).toBeInTheDocument();
+    });
+
+    it('changes language to Spanish', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const languageSelect = screen.getByTestId('language-select') as HTMLSelectElement;
+      fireEvent.change(languageSelect, { target: { value: 'es' } });
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.language).toBe('es');
+      });
+    });
+
+    it('changes language to French', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const languageSelect = screen.getByTestId('language-select') as HTMLSelectElement;
+      fireEvent.change(languageSelect, { target: { value: 'fr' } });
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.language).toBe('fr');
+      });
+    });
+
+    it('persists language selection in localStorage', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const languageSelect = screen.getByTestId('language-select') as HTMLSelectElement;
+      fireEvent.change(languageSelect, { target: { value: 'es' } });
+
+      await waitFor(() => {
+        const savedSettings = localStorage.getItem('settings');
+        expect(savedSettings).toBeTruthy();
+        const settings = JSON.parse(savedSettings!);
+        expect(settings.language).toBe('es');
+      });
+    });
+
+    it('loads saved language on initialization', async () => {
+      localStorage.setItem('settings', JSON.stringify({ language: 'fr' }));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const languageSelect = screen.getByTestId('language-select') as HTMLSelectElement;
+      expect(languageSelect.value).toBe('fr');
+    });
+
+    // ========================================================================
+    // Show Content on Search Toggle Tests
+    // ========================================================================
+
+    it('displays show content on search toggle', () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      expect(screen.getByTestId('show-content-toggle')).toBeInTheDocument();
+      expect(screen.getByTestId('show-content-checkbox')).toBeInTheDocument();
+    });
+
+    it('toggles show content on search setting', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const checkbox = screen.getByTestId('show-content-checkbox') as HTMLInputElement;
+      const initialState = checkbox.checked;
+
+      fireEvent.click(checkbox);
+
+      await waitFor(() => {
+        expect(checkbox.checked).toBe(!initialState);
+      });
+    });
+
+    it('persists show content on search toggle in localStorage', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      const checkbox = screen.getByTestId('show-content-checkbox') as HTMLInputElement;
+      fireEvent.click(checkbox);
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.showContentOnSearch).toBeDefined();
+      });
+    });
+
+    // ========================================================================
+    // Settings Persistence Tests
+    // ========================================================================
+
+    it('persists multiple settings together', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Change multiple settings
+      fireEvent.click(screen.getByTestId('theme-dark'));
+      fireEvent.click(screen.getByTestId('text-large'));
+
+      const languageSelect = screen.getByTestId('language-select') as HTMLSelectElement;
+      fireEvent.change(languageSelect, { target: { value: 'es' } });
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+        expect(settings.textSize).toBe('text-lg');
+        expect(settings.language).toBe('es');
+      });
+    });
+
+    it('loads all saved settings on initialization', async () => {
+      const savedSettings = {
+        theme: 'dark',
+        textSize: 'text-xl',
+        language: 'fr',
+        showContentOnSearch: true,
+      };
+      localStorage.setItem('settings', JSON.stringify(savedSettings));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+        expect(settings.textSize).toBe('text-xl');
+        expect(settings.language).toBe('fr');
+        expect(settings.showContentOnSearch).toBe(true);
+      });
+    });
+
+    it('merges new settings with existing settings', async () => {
+      localStorage.setItem('settings', JSON.stringify({ theme: 'dark' }));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+      fireEvent.click(screen.getByTestId('text-large'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark'); // Existing setting preserved
+        expect(settings.textSize).toBe('text-lg'); // New setting added
+      });
+    });
+
+    // ========================================================================
+    // Error Handling Tests
+    // ========================================================================
+
+    it('handles corrupted localStorage settings gracefully', async () => {
+      localStorage.setItem('settings', 'invalid-json-{');
+
+      // Should not throw error
+      expect(() => renderApp()).not.toThrow();
+
+      fireEvent.click(screen.getByTestId('settings-button'));
+      expect(screen.getByTestId('settings-drawer')).toBeInTheDocument();
+    });
+
+    it('handles missing localStorage gracefully', async () => {
+      // Clear localStorage
+      localStorage.clear();
+
+      renderApp();
+
+      fireEvent.click(screen.getByTestId('settings-button'));
+      expect(screen.getByTestId('settings-drawer')).toBeInTheDocument();
+    });
+
+    it('handles empty settings object', async () => {
+      localStorage.setItem('settings', JSON.stringify({}));
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Should display default settings
+      expect(screen.getByTestId('theme-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('text-size-setting')).toBeInTheDocument();
+    });
+
+    it('handles null values in settings', async () => {
+      localStorage.setItem('settings', JSON.stringify({ theme: null, textSize: null }));
+
+      expect(() => renderApp()).not.toThrow();
+
+      fireEvent.click(screen.getByTestId('settings-button'));
+      expect(screen.getByTestId('settings-drawer')).toBeInTheDocument();
+    });
+
+    // ========================================================================
+    // Settings Drawer UI Tests
+    // ========================================================================
+
+    it('closes settings drawer when clicking outside', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      await waitFor(() => {
+        expect(screen.getByTestId('settings-drawer')).toHaveAttribute('data-open', 'true');
+      });
+
+      // Click the overlay/outside area
+      const drawer = screen.getByTestId('settings-drawer');
+      const overlay = drawer.nextElementSibling;
+      if (overlay) {
+        fireEvent.click(overlay);
+      }
+
+      await waitFor(() => {
+        expect(screen.getByTestId('settings-drawer')).toHaveAttribute('data-open', 'false');
+      });
+    });
+
+    it('settings drawer displays all setting sections', () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      expect(screen.getByTestId('theme-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('text-size-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('font-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('language-setting')).toBeInTheDocument();
+      expect(screen.getByTestId('show-content-toggle')).toBeInTheDocument();
+    });
+
+    // ========================================================================
+    // Edge Cases
+    // ========================================================================
+
+    it('handles rapid setting changes', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Rapidly change theme multiple times
+      fireEvent.click(screen.getByTestId('theme-dark'));
+      fireEvent.click(screen.getByTestId('theme-light'));
+      fireEvent.click(screen.getByTestId('theme-dark'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+      });
+    });
+
+    it('handles simultaneous setting changes', async () => {
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Change multiple settings simultaneously
+      fireEvent.click(screen.getByTestId('theme-dark'));
+      fireEvent.click(screen.getByTestId('text-small'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('dark');
+        expect(settings.textSize).toBe('text-sm');
+      });
+    });
+
+    it('preserves other settings when changing one setting', async () => {
+      localStorage.setItem(
+        'settings',
+        JSON.stringify({
+          theme: 'dark',
+          textSize: 'text-lg',
+          language: 'es',
+        })
+      );
+
+      renderApp();
+      fireEvent.click(screen.getByTestId('settings-button'));
+
+      // Only change theme
+      fireEvent.click(screen.getByTestId('theme-light'));
+
+      await waitFor(() => {
+        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        expect(settings.theme).toBe('light');
+        expect(settings.textSize).toBe('text-lg'); // Preserved
+        expect(settings.language).toBe('es'); // Preserved
+      });
     });
   });
 

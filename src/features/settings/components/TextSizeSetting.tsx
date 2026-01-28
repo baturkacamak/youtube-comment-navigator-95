@@ -26,8 +26,19 @@ const TextSizeSetting: React.FC = () => {
   ];
 
   useEffect(() => {
-    const settings = getSettings();
-    dispatch(setTextSize(settings.textSize || 'text-base'));
+    try {
+      const settings = getSettings();
+      const textSizeValue = settings.textSize || 'text-base';
+
+      // Validate text size value
+      const validSizes = ['text-sm', 'text-base', 'text-lg', 'text-xl'];
+      const sanitizedSize = validSizes.includes(textSizeValue) ? textSizeValue : 'text-base';
+
+      dispatch(setTextSize(sanitizedSize));
+    } catch (error) {
+      console.error('Error loading text size setting:', error);
+      dispatch(setTextSize('text-base')); // Default to medium on error
+    }
   }, [dispatch]);
 
   const handleTextSizeChange = (option: Option) => {
