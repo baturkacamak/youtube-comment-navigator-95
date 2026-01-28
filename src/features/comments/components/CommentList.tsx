@@ -68,6 +68,33 @@ const CommentList: React.FC<CommentListProps> = () => {
     dispatch(setTotalCommentsCount(totalCount));
   }, [totalCount, dispatch]);
 
+  // Calculate container dimensions to fill remaining space (prevent double scrollbar)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = React.useState(600);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calculate available height: Viewport - Top Position - Buffer (20px)
+        const availableHeight = window.innerHeight - rect.top - 20;
+        // Ensure minimum height of 400px
+        setListHeight(Math.max(400, availableHeight));
+      }
+    };
+
+    // Initial calculation
+    updateDimensions();
+
+    // Recalculate on resize
+    window.addEventListener('resize', updateDimensions);
+
+    // Also recalculate when comments/filters change as layout might shift
+    // (Optional but helpful if header size changes)
+
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, [comments.length, filters, searchKeyword]);
+
   // Reset cached heights when comments change significantly
   useEffect(() => {
     rowHeightsRef.current.clear();
@@ -191,7 +218,11 @@ const CommentList: React.FC<CommentListProps> = () => {
   const itemCount = comments.length + (hasMore ? 1 : 0);
 
   return (
-    <div className="w-full flex flex-col" style={{ height: '75vh', minHeight: '400px' }}>
+    <div
+      ref={containerRef}
+      className="w-full flex flex-col"
+      style={{ height: listHeight, minHeight: '400px' }}
+    >
       {error && (
         <div
           className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 flex items-center justify-between shadow-sm"
@@ -262,6 +293,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 itemSize={getRowHeight}
                 overscanCount={5}
                 style={{ overflow: 'visible auto' }}
+                className="custom-scrollbar"
               >
                 {Row}
               </List>
