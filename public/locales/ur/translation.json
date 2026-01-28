@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "لائیو چیٹ لوڈ کریں",
+  "Load Live Chat ({{count}})": "لائیو چیٹ لوڈ کریں ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "سب لوڈ کریں (تبصرے، ٹرانسکرپٹ، لائیو چیٹ)",
+  "Export Visible (JSON)": "مرئی برآمد کریں (JSON)",
+  "Export Visible (CSV)": "مرئی برآمد کریں (CSV)",
+  "Export All (JSON)": "سب برآمد کریں (JSON)",
+  "Export All (CSV)": "سب برآمد کریں (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "مزید تبصرے لوڈ کریں ({{remaining}} باقی)"
 }

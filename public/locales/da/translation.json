@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Indlæs live chat",
+  "Load Live Chat ({{count}})": "Indlæs live chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Indlæs alt (Kommentarer, Udskrift, Live chat)",
+  "Export Visible (JSON)": "Eksportér synlige (JSON)",
+  "Export Visible (CSV)": "Eksportér synlige (CSV)",
+  "Export All (JSON)": "Eksportér alt (JSON)",
+  "Export All (CSV)": "Eksportér alt (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Indlæs flere kommentarer ({{remaining}} tilbage)"
 }

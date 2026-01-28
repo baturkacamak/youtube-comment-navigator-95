@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "ਲਾਈਵ ਚੈਟ ਲੋਡ ਕਰੋ",
+  "Load Live Chat ({{count}})": "ਲਾਈਵ ਚੈਟ ਲੋਡ ਕਰੋ ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "ਸਭ ਲੋਡ ਕਰੋ (ਟਿੱਪਣੀਆਂ, ਟ੍ਰਾਂਸਕ੍ਰਿਪਟ, ਲਾਈਵ ਚੈਟ)",
+  "Export Visible (JSON)": "ਦਿਸਦੇ ਨਿਰਯਾਤ ਕਰੋ (JSON)",
+  "Export Visible (CSV)": "ਦਿਸਦੇ ਨਿਰਯਾਤ ਕਰੋ (CSV)",
+  "Export All (JSON)": "ਸਭ ਨਿਰਯਾਤ ਕਰੋ (JSON)",
+  "Export All (CSV)": "ਸਭ ਨਿਰਯਾਤ ਕਰੋ (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "ਹੋਰ ਟਿੱਪਣੀਆਂ ਲੋਡ ਕਰੋ ({{remaining}} ਬਾਕੀ)"
 }

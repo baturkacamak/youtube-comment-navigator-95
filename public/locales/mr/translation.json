@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "थेट चॅट लोड करा",
+  "Load Live Chat ({{count}})": "थेट चॅट लोड करा ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "सर्व लोड करा (टिप्पण्या, उतारा, थेट चॅट)",
+  "Export Visible (JSON)": "दृश्यमान निर्यात करा (JSON)",
+  "Export Visible (CSV)": "दृश्यमान निर्यात करा (CSV)",
+  "Export All (JSON)": "सर्व निर्यात करा (JSON)",
+  "Export All (CSV)": "सर्व निर्यात करा (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "आणखी टिप्पण्या लोड करा ({{remaining}} उर्वरित)"
 }

@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Загрузить чат",
+  "Load Live Chat ({{count}})": "Загрузить чат ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Загрузить всё (Комментарии, Транскрипцию, Чат)",
+  "Export Visible (JSON)": "Экспорт видимых (JSON)",
+  "Export Visible (CSV)": "Экспорт видимых (CSV)",
+  "Export All (JSON)": "Экспорт всех (JSON)",
+  "Export All (CSV)": "Экспорт всех (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Загрузить ещё комментарии (осталось {{remaining}})"
 }

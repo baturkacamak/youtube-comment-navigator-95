@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Načítať živý chat",
+  "Load Live Chat ({{count}})": "Načítať živý chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Načítať všetko (Komentáre, Prepis, Živý chat)",
+  "Export Visible (JSON)": "Exportovať viditeľné (JSON)",
+  "Export Visible (CSV)": "Exportovať viditeľné (CSV)",
+  "Export All (JSON)": "Exportovať všetko (JSON)",
+  "Export All (CSV)": "Exportovať všetko (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Načítať ďalšie komentáre (ostáva {{remaining}})"
 }

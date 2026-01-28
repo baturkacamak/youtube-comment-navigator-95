@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Ladda livechatt",
+  "Load Live Chat ({{count}})": "Ladda livechatt ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Ladda allt (Kommentarer, Transkription, Livechatt)",
+  "Export Visible (JSON)": "Exportera synliga (JSON)",
+  "Export Visible (CSV)": "Exportera synliga (CSV)",
+  "Export All (JSON)": "Exportera allt (JSON)",
+  "Export All (CSV)": "Exportera allt (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Ladda fler kommentarer ({{remaining}} återstår)"
 }

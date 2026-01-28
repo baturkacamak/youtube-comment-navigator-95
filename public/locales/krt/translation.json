@@ -152,5 +152,14 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Canlı Sobetni Yükle",
+  "Load Live Chat ({{count}})": "Canlı Sobetni Yükle ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Epsini Yükle (Yorumlar, Transkript, Canlı Sobet)",
+  "Export Visible (JSON)": "Körüngenni Tışka Avdar (JSON)",
+  "Export Visible (CSV)": "Körüngenni Tışka Avdar (CSV)",
+  "Export All (JSON)": "Epsini Tışka Avdar (JSON)",
+  "Export All (CSV)": "Epsini Tışka Avdar (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Tağa Kop Yorum Yükle ({{remaining}} qaldı)",
+  "Load more comments": "Tağa kop yorum yükle"
 }

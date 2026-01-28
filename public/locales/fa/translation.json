@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "بارگیری گفتگوی زنده",
+  "Load Live Chat ({{count}})": "بارگیری گفتگوی زنده ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "بارگیری همه (نظرات، رونوشت، گفتگوی زنده)",
+  "Export Visible (JSON)": "خروجی گرفتن از موارد قابل مشاهده (JSON)",
+  "Export Visible (CSV)": "خروجی گرفتن از موارد قابل مشاهده (CSV)",
+  "Export All (JSON)": "خروجی گرفتن از همه (JSON)",
+  "Export All (CSV)": "خروجی گرفتن از همه (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "بارگیری نظرات بیشتر ({{remaining}} باقی‌مانده)"
 }

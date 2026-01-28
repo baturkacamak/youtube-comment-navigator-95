@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Încarcă chat live",
+  "Load Live Chat ({{count}})": "Încarcă chat live ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Încarcă tot (Comentarii, Transcriere, Chat live)",
+  "Export Visible (JSON)": "Exportă vizibile (JSON)",
+  "Export Visible (CSV)": "Exportă vizibile (CSV)",
+  "Export All (JSON)": "Exportă tot (JSON)",
+  "Export All (CSV)": "Exportă tot (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Încarcă mai multe comentarii ({{remaining}} rămase)"
 }

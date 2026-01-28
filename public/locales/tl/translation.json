@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "I-load ang Live Chat",
+  "Load Live Chat ({{count}})": "I-load ang Live Chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "I-load Lahat (Mga Komento, Transcript, Live Chat)",
+  "Export Visible (JSON)": "I-export ang Nakikita (JSON)",
+  "Export Visible (CSV)": "I-export ang Nakikita (CSV)",
+  "Export All (JSON)": "I-export Lahat (JSON)",
+  "Export All (CSV)": "I-export Lahat (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "I-load ang Marami pang Komento ({{remaining}} natitira)"
 }

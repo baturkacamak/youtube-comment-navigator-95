@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Charger le chat en direct",
+  "Load Live Chat ({{count}})": "Charger le chat en direct ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Tout charger (Commentaires, Transcription, Chat en direct)",
+  "Export Visible (JSON)": "Exporter visibles (JSON)",
+  "Export Visible (CSV)": "Exporter visibles (CSV)",
+  "Export All (JSON)": "Exporter tout (JSON)",
+  "Export All (CSV)": "Exporter tout (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Charger plus de commentaires ({{remaining}} restants)"
 }

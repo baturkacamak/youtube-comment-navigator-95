@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "טען צ'אט חי",
+  "Load Live Chat ({{count}})": "טען צ'אט חי ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "טען הכל (תגובות, תמליל, צ'אט חי)",
+  "Export Visible (JSON)": "ייצוא גלויים (JSON)",
+  "Export Visible (CSV)": "ייצוא גלויים (CSV)",
+  "Export All (JSON)": "ייצוא הכל (JSON)",
+  "Export All (CSV)": "ייצוא הכל (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "טען תגובות נוספות ({{remaining}} נותרו)"
 }

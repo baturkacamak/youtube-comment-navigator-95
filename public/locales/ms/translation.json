@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Muat Sembang Langsung",
+  "Load Live Chat ({{count}})": "Muat Sembang Langsung ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Muat Semua (Komen, Transkrip, Sembang Langsung)",
+  "Export Visible (JSON)": "Eksport Kelihatan (JSON)",
+  "Export Visible (CSV)": "Eksport Kelihatan (CSV)",
+  "Export All (JSON)": "Eksport Semua (JSON)",
+  "Export All (CSV)": "Eksport Semua (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Muat Lebih Banyak Komen ({{remaining}} tinggal)"
 }

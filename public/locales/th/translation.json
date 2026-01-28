@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "โหลดแชทสด",
+  "Load Live Chat ({{count}})": "โหลดแชทสด ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "โหลดทั้งหมด (ความคิดเห็น, คำบรรยาย, แชทสด)",
+  "Export Visible (JSON)": "ส่งออกที่มองเห็น (JSON)",
+  "Export Visible (CSV)": "ส่งออกที่มองเห็น (CSV)",
+  "Export All (JSON)": "ส่งออกทั้งหมด (JSON)",
+  "Export All (CSV)": "ส่งออกทั้งหมด (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "โหลดความคิดเห็นเพิ่มเติม (เหลือ {{remaining}})"
 }

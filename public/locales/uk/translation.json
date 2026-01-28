@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Завантажити чат",
+  "Load Live Chat ({{count}})": "Завантажити чат ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Завантажити все (Коментарі, Транскрипт, Чат)",
+  "Export Visible (JSON)": "Експортувати видимі (JSON)",
+  "Export Visible (CSV)": "Експортувати видимі (CSV)",
+  "Export All (JSON)": "Експортувати все (JSON)",
+  "Export All (CSV)": "Експортувати все (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Завантажити ще коментарі (залишилось {{remaining}})"
 }

@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Canlı Sohbeti Yükle",
+  "Load Live Chat ({{count}})": "Canlı Sohbeti Yükle ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Tümünü Yükle (Yorumlar, Transkript, Canlı Sohbet)",
+  "Export Visible (JSON)": "Görünenleri Dışa Aktar (JSON)",
+  "Export Visible (CSV)": "Görünenleri Dışa Aktar (CSV)",
+  "Export All (JSON)": "Tümünü Dışa Aktar (JSON)",
+  "Export All (CSV)": "Tümünü Dışa Aktar (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Daha Fazla Yorum Yükle ({{remaining}} kalan)"
 }

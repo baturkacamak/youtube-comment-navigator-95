@@ -153,5 +153,13 @@
   "Content": "Content",
   "Visible Only": "Visible Only",
   "Download Now": "Download Now",
-  "Downloading...": "Downloading..."
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "ライブチャットを読み込む",
+  "Load Live Chat ({{count}})": "ライブチャットを読み込む ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "すべて読み込む (コメント、文字起こし、ライブチャット)",
+  "Export Visible (JSON)": "表示中をエクスポート (JSON)",
+  "Export Visible (CSV)": "表示中をエクスポート (CSV)",
+  "Export All (JSON)": "すべてエクスポート (JSON)",
+  "Export All (CSV)": "すべてエクスポート (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "コメントをさらに読み込む (残り {{remaining}})"
 }
