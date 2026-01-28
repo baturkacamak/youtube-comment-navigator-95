@@ -22,16 +22,15 @@ const remToEmPlugin = (): Plugin => {
 };
 
 export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest }),
-    remToEmPlugin(),
-  ],
+  plugins: [react(), crx({ manifest }), remToEmPlugin()],
   server: {
     port: 3000,
   },
   esbuild: {
     charset: 'ascii',
+    // Keep console.error and console.warn in production builds
+    drop: ['debugger'],
+    pure: [],
   },
   build: {
     rollupOptions: {

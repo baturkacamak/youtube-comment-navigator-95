@@ -53,16 +53,22 @@ const loadLocaleFromDOM = (locale: string): Resources | null => {
     };
   }
 
-  // Changing to debug as this often happens initially before the LANGUAGE_LOADED event fires
-  console.debug(`[YCN-i18n] Failed to load locale '${locale}' from DOM or Global Variable.`);
+  // Use console.warn instead of console.debug so it's not stripped in production
+  console.warn(`[YCN-i18n] Failed to load locale '${locale}' from DOM or Global Variable.`);
   return null;
 };
 
-const getLoadPath = (): string | null => {
-  if (isLocalEnvironment()) {
+const getLoadPath = (): string => {
+  // Use chrome.runtime.getURL in production for extension context
+  if (!isLocalEnvironment()) {
+    // In production extension, use chrome.runtime.getURL to get the correct path
+    if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.getURL) {
+      return chrome.runtime.getURL('locales/{{lng}}/{{ns}}.json');
+    }
+    // Fallback for production if chrome API is not available
     return '/locales/{{lng}}/{{ns}}.json';
   }
-  return null; // In production, we will use the injected resources
+  return '/locales/{{lng}}/{{ns}}.json';
 };
 
 // Track missing keys to prevent duplicate logs
@@ -88,7 +94,29 @@ const i18nConfig: any = {
     escapeValue: false,
   },
   backend: {
-    loadPath: getLoadPath() || undefined, // Handle the null case
+    loadPath: getLoadPath(),
+    // Add custom error handling for failed loads
+    request: (options: any, url: string, payload: any, callback: (err: any, res: any) => void) => {
+      // Use fetch API to load translation files
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            // Use console.error instead of throwing to ensure it's visible in production
+            console.error(`[YCN-i18n] Failed to load translations from ${url}: ${response.status}`);
+            return callback(new Error(`HTTP ${response.status}`), null);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data) {
+            callback(null, { status: 200, data });
+          }
+        })
+        .catch((error) => {
+          console.error(`[YCN-i18n] Error loading translations from ${url}:`, error);
+          callback(error, null);
+        });
+    },
   },
   supportedLngs: supportedLanguages,
 };
@@ -110,18 +138,20 @@ if (isLocalEnvironment()) {
 
 if (initialResources) {
   i18nConfig.resources = initialResources;
-  // If we have resources, disable the backend fetch to avoid 404s
-  if (i18nConfig.backend) {
-    i18nConfig.backend.loadPath = undefined;
-  }
+  // Keep backend enabled to load other languages when needed
+  console.log('[YCN-i18n] Initial resources loaded from DOM, backend will load other languages');
 }
 
-// Only use HttpBackend in local environment to avoid 404s/parsing errors in production
-if (isLocalEnvironment()) {
-  i18n.use(HttpBackend);
-}
+// Always use HttpBackend with custom request handler for proper error logging
+i18n.use(HttpBackend);
 
-i18n.use(LanguageDetector).use(initReactI18next).init(i18nConfig);
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init(i18nConfig)
+  .catch((error) => {
+    console.error('[YCN-i18n] Failed to initialize i18n:', error);
+  });
 
 // Listen for the language change and reload the necessary resources
 window.addEventListener('message', (event: MessageEvent) => {
@@ -133,7 +163,11 @@ window.addEventListener('message', (event: MessageEvent) => {
     const resources = loadLocaleFromDOM(language);
     if (resources) {
       i18n.addResources(language, 'translation', resources[language]['translation']);
-      i18n.changeLanguage(language);
+      i18n.changeLanguage(language).catch((error) => {
+        console.error(`[YCN-i18n] Failed to change language to ${language}:`, error);
+      });
+    } else {
+      console.error(`[YCN-i18n] No resources found for language: ${language}`);
     }
   }
 });
