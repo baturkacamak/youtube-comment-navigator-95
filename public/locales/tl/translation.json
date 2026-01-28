@@ -148,5 +148,10 @@
   "Export Comments": "I-export ang Mga Komento",
   "Export as JSON": "I-export bilang JSON",
   "Export as CSV": "I-export bilang CSV",
-  "Font": "Font"
+  "Font": "Font",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

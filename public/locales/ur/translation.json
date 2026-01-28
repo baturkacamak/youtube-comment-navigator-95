@@ -148,5 +148,10 @@
   "Export Comments": "تبصرے برآمد کریں",
   "Export as JSON": "JSON کے طور پر برآمد کریں",
   "Export as CSV": "CSV کے طور پر برآمد کریں",
-  "Font": "فونٹ"
+  "Font": "فونٹ",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

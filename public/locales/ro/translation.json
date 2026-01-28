@@ -148,5 +148,10 @@
   "Export Comments": "Exportați comentarii",
   "Export as JSON": "Exportați ca JSON",
   "Export as CSV": "Exportați ca CSV",
-  "Font": "Font"
+  "Font": "Font",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

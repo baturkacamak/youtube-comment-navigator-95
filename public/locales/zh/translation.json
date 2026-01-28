@@ -148,5 +148,10 @@
   "Export Comments": "导出评论",
   "Export as JSON": "导出为JSON",
   "Export as CSV": "导出为CSV",
-  "Font": "字体"
+  "Font": "字体",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

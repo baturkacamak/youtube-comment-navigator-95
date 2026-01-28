@@ -148,5 +148,10 @@
   "Export Comments": "Εξαγωγή σχολίων",
   "Export as JSON": "Εξαγωγή ως JSON",
   "Export as CSV": "Εξαγωγή ως CSV",
-  "Font": "Γραμματοσειρά"
+  "Font": "Γραμματοσειρά",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

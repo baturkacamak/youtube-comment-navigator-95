@@ -14,10 +14,10 @@ import {
   ChevronDownIcon,
 } from '@heroicons/react/24/outline';
 import CopyButton from '../../transcripts/components/buttons/CopyButton';
-import DownloadButton from '../../transcripts/components/buttons/DownloadButton';
 import PrintButton from '../../transcripts/components/buttons/PrintButton';
 import ShareButton from '../../shared/components/ShareButton';
 import CheckboxFilter from '../../shared/components/CheckboxFilter';
+import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 
 const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
@@ -102,10 +102,23 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       <div className="sticky top-0 bg-gray-100 rounded-lg py-3 px-2 dark:bg-gray-900 dark:border-gray-600 dark:border-solid dark:border mb-4 z-10 flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-4">
           <CopyButton textToCopy={transcriptText} />
-          <DownloadButton
-            transcriptText={transcriptText}
+          <DownloadAccordion
+            contentType="livechat"
+            visibleData={messages}
+            allData={fetchAllMessages}
             fileNamePrefix="livechat"
-            allContent={fetchAllMessages}
+            formatTextContent={(data) => {
+              const msgs = data as typeof messages;
+              return msgs
+                .map((msg) => {
+                  const time =
+                    msg.videoOffsetTimeSec !== undefined
+                      ? formatTimestamp(msg.videoOffsetTimeSec)
+                      : '--:--';
+                  return `[${time}] ${msg.author}: ${msg.message}`;
+                })
+                .join('\n');
+            }}
           />
           <PrintButton transcriptText={transcriptText} />
           <ShareButton textToShare={transcriptText} />

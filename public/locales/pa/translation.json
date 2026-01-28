@@ -148,5 +148,10 @@
   "Export Comments": "ਟਿੱਪਣੀਆਂ ਨਿਰਯਾਤ ਕਰੋ",
   "Export as JSON": "JSON ਦੇ ਤੌਰ ਤੇ ਨਿਰਯਾਤ ਕਰੋ",
   "Export as CSV": "CSV ਦੇ ਤੌਰ ਤੇ ਨਿਰਯਾਤ ਕਰੋ",
-  "Font": "ਫੋਂਟ"
+  "Font": "ਫੋਂਟ",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

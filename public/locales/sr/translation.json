@@ -131,5 +131,10 @@
   "Export Comments": "Извези коментаре",
   "Export as JSON": "Извези као JSON",
   "Export as CSV": "Извези као CSV",
-  "Font": "Фонт"
+  "Font": "Фонт",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

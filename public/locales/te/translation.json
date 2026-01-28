@@ -148,5 +148,10 @@
   "Export Comments": "వ్యాఖ్యలను ఎగుమతి చేయండి",
   "Export as JSON": "JSON గా ఎగుమతి చేయండి",
   "Export as CSV": "CSV గా ఎగుమతి చేయండి",
-  "Font": "ఫాంట్"
+  "Font": "ఫాంట్",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

@@ -148,5 +148,10 @@
   "Export Comments": "মন্তব্য রপ্তানি করুন",
   "Export as JSON": "JSON হিসাবে রপ্তানি করুন",
   "Export as CSV": "CSV হিসাবে রপ্তানি করুন",
-  "Font": "ফন্ট"
+  "Font": "ফন্ট",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

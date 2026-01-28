@@ -147,5 +147,10 @@
   "Export Comments": "Yorumlarnı tışga avdar",
   "Export as JSON": "JSON bolarak tışga avdar",
   "Export as CSV": "JSV bolarak tışga avdar",
-  "Font": "Yazıv tipi"
+  "Font": "Yazıv tipi",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

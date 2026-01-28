@@ -148,5 +148,10 @@
   "Export Comments": "Exportera kommentarer",
   "Export as JSON": "Exportera som JSON",
   "Export as CSV": "Exportera som CSV",
-  "Font": "Typsnitt"
+  "Font": "Typsnitt",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

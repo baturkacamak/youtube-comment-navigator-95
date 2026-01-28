@@ -148,5 +148,10 @@
   "Export Comments": "Експортувати коментарі",
   "Export as JSON": "Експортувати як JSON",
   "Export as CSV": "Експортувати як CSV",
-  "Font": "Шрифт"
+  "Font": "Шрифт",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

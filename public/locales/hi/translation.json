@@ -148,5 +148,10 @@
   "Export Comments": "टिप्पणियाँ निर्यात करें",
   "Export as JSON": "JSON के रूप में निर्यात करें",
   "Export as CSV": "CSV के रूप में निर्यात करें",
-  "Font": "फ़ॉन्ट"
+  "Font": "फ़ॉन्ट",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

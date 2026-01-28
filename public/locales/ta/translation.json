@@ -148,5 +148,10 @@
   "Export Comments": "கருத்துகளை ஏற்றுமதி செய்க",
   "Export as JSON": "JSON ஆக ஏற்றுமதி செய்க",
   "Export as CSV": "CSV ஆக ஏற்றுமதி செய்க",
-  "Font": "எழுத்துரு"
+  "Font": "எழுத்துரு",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

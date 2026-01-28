@@ -156,5 +156,10 @@
   "Export All (JSON)": "Export All (JSON)",
   "Export All (CSV)": "Export All (CSV)",
   "Load More Comments ({{remaining}} remaining)": "Load More Comments ({{remaining}} remaining)",
-  "Font": "Font"
+  "Font": "Font",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

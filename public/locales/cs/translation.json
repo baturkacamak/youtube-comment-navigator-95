@@ -148,5 +148,10 @@
   "Export Comments": "Exportovat komentáře",
   "Export as JSON": "Exportovat jako JSON",
   "Export as CSV": "Exportovat jako CSV",
-  "Font": "Písmo"
+  "Font": "Písmo",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

@@ -148,5 +148,10 @@
   "Export Comments": "Eksport Komen",
   "Export as JSON": "Eksport sebagai JSON",
   "Export as CSV": "Eksport sebagai CSV",
-  "Font": "Fon"
+  "Font": "Fon",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

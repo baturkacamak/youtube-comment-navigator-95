@@ -148,5 +148,10 @@
   "Export Comments": "コメントをエクスポート",
   "Export as JSON": "JSONとしてエクスポート",
   "Export as CSV": "CSVとしてエクスポート",
-  "Font": "フォント"
+  "Font": "フォント",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

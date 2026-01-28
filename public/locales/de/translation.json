@@ -148,5 +148,10 @@
   "Export Comments": "Kommentare exportieren",
   "Export as JSON": "Als JSON exportieren",
   "Export as CSV": "Als CSV exportieren",
-  "Font": "Schriftart"
+  "Font": "Schriftart",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

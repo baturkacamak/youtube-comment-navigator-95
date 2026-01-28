@@ -148,5 +148,10 @@
   "Export Comments": "Yorumları Dışa Aktar",
   "Export as JSON": "JSON Olarak Dışa Aktar",
   "Export as CSV": "CSV Olarak Dışa Aktar",
-  "Font": "Yazı Tipi"
+  "Font": "Yazı Tipi",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

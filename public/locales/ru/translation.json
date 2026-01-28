@@ -148,5 +148,10 @@
   "Export Comments": "Экспорт комментариев",
   "Export as JSON": "Экспортировать как JSON",
   "Export as CSV": "Экспортировать как CSV",
-  "Font": "Шрифт"
+  "Font": "Шрифт",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

@@ -148,5 +148,10 @@
   "Export Comments": "صادرات نظرات",
   "Export as JSON": "صادرات به صورت JSON",
   "Export as CSV": "صادرات به صورت CSV",
-  "Font": "فونت"
+  "Font": "فونت",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }

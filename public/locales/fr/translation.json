@@ -148,5 +148,10 @@
   "Export Comments": "Exporter les commentaires",
   "Export as JSON": "Exporter en JSON",
   "Export as CSV": "Exporter en CSV",
-  "Font": "Police"
+  "Font": "Police",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading..."
 }
