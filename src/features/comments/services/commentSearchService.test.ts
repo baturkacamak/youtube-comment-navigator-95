@@ -1,5 +1,5 @@
 import { searchComments } from './commentSearchService'; // Adjust the import path as necessary
-import { mockComments } from '../../../tests/mocks/mockComments';
+import { mockComments } from '../../../../tests/mocks/mockComments';
 
 describe('searchComments', () => {
   it('should return comments that match the keyword', () => {

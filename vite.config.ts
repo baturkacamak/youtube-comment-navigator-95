@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === 'production' && process.env.KEEP_TEST_IDS !== 'true';
 
 // Custom plugin to replace 'rem' with 'em' in CSS files
 const remToEmPlugin = (): Plugin => {
