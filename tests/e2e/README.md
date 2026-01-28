@@ -163,15 +163,39 @@ npx playwright show-trace test-results/*/trace.zip
 
 ## CI/CD Integration
 
-Tests can run in GitHub Actions:
+E2E tests run automatically on **Pull Requests** via GitHub Actions (`.github/workflows/e2e-tests.yml`).
 
-```yaml
-- name: Run E2E tests
-  run: |
-    npm run build
-    npx playwright install --with-deps chromium
-    npm run test:e2e
-```
+### Two-Stage Testing
+
+1. **Build Verification** (fast, always runs)
+   - Runs on every PR
+   - No browser required
+   - Catches console stripping, CSS issues, missing files
+   - Must pass before browser tests run
+
+2. **Browser Tests** (slower, optional)
+   - Only runs if build verification passes
+   - Requires Playwright chromium
+   - Tests on real YouTube pages
+   - Set to `continue-on-error` (won't block PR if YouTube is inaccessible)
+
+### Artifacts on Failure
+
+When tests fail, GitHub Actions uploads:
+
+- Build artifacts (dist/ folder)
+- Playwright HTML report
+- Test results with screenshots/traces
+
+### Why Pull Request (Not Pre-commit or Push)?
+
+- ✅ **Pull Request**: Perfect timing - catches bugs before merge, doesn't slow down development
+- ❌ **Pre-commit**: Too slow (1-2 min), would frustrate developers
+- ❌ **On Push**: Wastes CI resources, too frequent
+
+### Manual Workflow Trigger
+
+You can also run the workflow manually from GitHub Actions tab if needed.
 
 ## Notes
 
