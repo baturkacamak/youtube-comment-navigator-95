@@ -136,7 +136,7 @@ describe('CommentList', () => {
     expect(screen.getByText('Second comment')).toBeInTheDocument();
   });
 
-  it('renders load more button when hasMore is true', () => {
+  it('renders loading indicator when hasMore is true', () => {
     const mockComments = [{ commentId: '1', content: 'First comment', replyCount: 0 }];
 
     (useCommentsFromDB as any).mockReturnValue({
@@ -154,8 +154,8 @@ describe('CommentList', () => {
       </Provider>
     );
 
-    // Should have 1 comment + load more button
-    expect(screen.getByText('Load More Comments (4 remaining)')).toBeInTheDocument();
+    // Should have 1 comment + loading indicator
+    expect(screen.getByText('Loading more comments...')).toBeInTheDocument();
   });
 
   it('renders error alert when error is present', () => {

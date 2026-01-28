@@ -3,12 +3,7 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import { AutoSizer } from 'react-virtualized-auto-sizer';
 import CommentItem from './CommentItem';
-import {
-  ArrowPathIcon,
-  ExclamationCircleIcon,
-  ChevronDownIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ExclamationCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import Box from '../../shared/components/Box';
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
 import { CommentListProps, Comment } from '../../../types/commentTypes';
@@ -127,25 +122,16 @@ const CommentList: React.FC<CommentListProps> = () => {
   // Row renderer for virtualized list
   const Row = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      // Render "Load More" button as last item
+      // Render "Loading" indicator as last item
       if (index === comments.length) {
         if (!hasMore) return null;
-        const remaining = totalCount - comments.length;
         return (
-          <div style={style} className="flex justify-center py-2">
-            <button
-              onClick={loadMore}
-              disabled={isLoading}
-              className={`py-2 px-4 bg-zinc-600 text-white rounded hover:bg-zinc-800 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center justify-center ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-              aria-label={t('Load more comments')}
-            >
-              {isLoading ? (
-                <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
-              ) : (
-                <ChevronDownIcon className="w-5 h-5 mr-2" />
-              )}
-              {t('Load More Comments ({{remaining}} remaining)', { remaining })}
-            </button>
+          <div
+            style={style}
+            className="flex justify-center py-4 items-center text-gray-500 dark:text-gray-400"
+          >
+            <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
+            <span>{t('Loading more comments...')}</span>
           </div>
         );
       }
@@ -168,7 +154,17 @@ const CommentList: React.FC<CommentListProps> = () => {
         </div>
       );
     },
-    [comments, hasMore, totalCount, loadMore, isLoading, t, setRowHeight]
+    [comments, hasMore, t, setRowHeight]
+  );
+
+  const handleItemsRendered = useCallback(
+    ({ visibleStopIndex }: { visibleStopIndex: number }) => {
+      // Trigger load more when we get close to the end (5 items buffer)
+      if (hasMore && !isLoading && visibleStopIndex >= comments.length - 5) {
+        loadMore();
+      }
+    },
+    [comments.length, hasMore, isLoading, loadMore]
   );
 
   if (isLoading && comments.length === 0) {
@@ -294,6 +290,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 overscanCount={5}
                 style={{ overflow: 'visible auto' }}
                 className="custom-scrollbar"
+                onItemsRendered={handleItemsRendered}
               >
                 {Row}
               </List>
