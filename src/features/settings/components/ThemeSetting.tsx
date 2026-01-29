@@ -35,9 +35,12 @@ const ThemeSetting: React.FC = () => {
       settings.theme = theme;
       saveSettings(settings);
 
-      // Safely toggle dark class
+      // Safely toggle dark class on both document and app container
       try {
-        document.documentElement.classList.toggle('dark', theme === 'dark');
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        const appContainer = document.getElementById('youtube-comment-navigator-app');
+        appContainer?.classList.toggle('dark', isDark);
       } catch (domError) {
         console.error('Error toggling dark class on document element:', domError);
       }

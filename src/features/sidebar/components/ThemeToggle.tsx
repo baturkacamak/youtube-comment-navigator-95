@@ -10,11 +10,14 @@ const ThemeToggle: React.FC = () => {
   });
 
   useEffect(() => {
+    const appContainer = document.getElementById('youtube-comment-navigator-app');
     if (darkMode) {
       document.documentElement.classList.add('dark');
+      appContainer?.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      appContainer?.classList.remove('dark');
       localStorage.setItem('theme', 'light');
     }
   }, [darkMode]);

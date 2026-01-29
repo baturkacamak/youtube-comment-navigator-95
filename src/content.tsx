@@ -160,6 +160,21 @@ class YouTubeCommentNavigator {
   mountReactApp(container: HTMLElement) {
     this.root = ReactDOM.createRoot(container);
 
+    // Apply initial theme to container
+    const applyInitialTheme = () => {
+      try {
+        const savedSettings = localStorage.getItem('settings');
+        const settings = savedSettings ? JSON.parse(savedSettings) : {};
+        const theme = settings.theme || localStorage.getItem('theme') || 'light';
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        container.classList.toggle('dark', isDark);
+      } catch {
+        // Ignore errors, default to light theme
+      }
+    };
+    applyInitialTheme();
+
     const AppWrapper = () => {
       const [languageDirection, setLanguageDirection] = useState(
         getLanguageDirection(i18n.language)

@@ -5,9 +5,6 @@ module.exports = {
     "./public/index.html",
   ],
   darkMode: 'class',
-  corePlugins: {
-    preflight: false,
-  },
   important: '#youtube-comment-navigator-app',
   theme: {
     extend: {
