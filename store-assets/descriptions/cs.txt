@@ -1,0 +1,28 @@
+🚀 Zvyšte svůj zážitek z YouTube s ultimátním nástrojem pro komentáře!
+
+YouTube Comment Navigator 95 přináší bleskově rychlé vyhledávání, výkonné filtrování a nostalgickou estetiku 90. let do vašich oblíbených videí. Ať už hledáte konkrétní časovou značku, vtipnou odpověď, nebo sledujete diskuze mezi tisíci komentářů, máme pro vás řešení.
+
+✨ PROČ SI TO ZAMILUJETE:
+- 🔍 VYHLEDÁVÁNÍ V REÁLNÉM ČASE: Najděte přesně to, co hledáte, během psaní. Už žádné nekonečné posouvání.
+- 🚀 VYSOKÝ VÝKON: Vytvořeno s IndexedDB a List Virtualization. Plynule zpracujte více než 10 000 komentářů, aniž by se váš prohlížeč zpomalil.
+- 💾 ZÁLOŽKY A PŘIPNUTÍ: Uložte si důležité komentáře a oblíbená vlákna pro okamžitý přístup později.
+- 📊 POKROČILÉ FILTRY: Třiďte podle lajků, odpovědí, data, nebo dokonce náhodně zamíchejte pořadí pro novou perspektivu.
+- 🕒 PŘESNÉ ČASOVÉ ZNAČKY: Relativní časy jsou přepočítávány v reálném čase, dokonce i pro vaše uložené záložky.
+- 📁 EXPORT DAT: Uložte komentáře do souboru pro offline čtení nebo analýzu.
+- 🎨 NOSTALGICKÁ ATMOSFÉRA: Krásné, přizpůsobitelné UI inspirované klasickou érou 90. let, s plnou podporou Tmavého režimu.
+
+🛠️ KLÍČOVÉ VLASTNOSTI:
+- Funkce "Načíst vše" jedním kliknutím.
+- Sdílení hlubokých odkazů na konkrétní komentáře.
+- Oznámení v reálném čase o nových odpovědích.
+- Vícejazyčná podpora pro globální komunitu.
+- Soukromí na prvním místě: Vaše data zůstávají ve vašem prohlížeči.
+
+📖 JAK TO POUŽÍVAT:
+1. Otevřete jakékoliv video на YouTube.
+2. Klikněte na ikonu 95 ve vašem panelu nástrojů.
+3. Začněte vyhledávat, filtrovat a užívat si lepší sekci komentářů!
+
+Připojte se k tisícům uživatelů, kteří změnili své prohlížení YouTube. Navrženo a udržováno Baturem Kacamakem.
+
+Otázky nebo zpětná vazba? Kontaktujte nás на hello@batur.info

@@ -1,0 +1,28 @@
+🚀 ¡Lleva tu experiencia en YouTube al siguiente nivel con la herramienta definitiva para comentarios!
+
+YouTube Comment Navigator 95 aporta una búsqueda ultrarrápida, potentes filtros y una estética nostálgica de los 90 a tus vídeos favoritos. Tanto si buscas una marca de tiempo específica, una respuesta divertida o quieres seguir hilos de conversación entre miles de comentarios, tenemos lo que necesitas.
+
+✨ POR QUÉ TE ENCANTARÁ:
+- 🔍 BÚSQUEDA EN TIEMPO REAL: Encuentra exactamente lo que buscas mientras escribes. Se acabó el desplazamiento infinito.
+- 🚀 ALTO RENDIMIENTO: Desarrollado con IndexedDB y List Virtualization. Maneja más de 10.000 comentarios sin que tu navegador se ralentice.
+- 💾 MARCADORES Y FIJADO: Guarda comentarios importantes y tus hilos favoritos para acceder a ellos al instante.
+- 📊 FILTROS AVANZADOS: Ordena por likes, respuestas, fecha o incluso aleatoriza el orden para ver las cosas desde otra perspectiva.
+- 🕒 MARCAS DE TIEMPO PRECISAS: Las horas relativas se recalculan en tiempo real, incluso para tus marcadores guardados.
+- 📁 EXPORTAR DATOS: Guarda los comentarios en un archivo para leerlos sin conexión o analizarlos.
+- 🎨 ESTÉTICA NOSTÁLGICA: Una interfaz hermosa y personalizable inspirada en la era clásica de los 90, con soporte total para Modo Oscuro.
+
+🛠️ CARACTERÍSTICAS CLAVE:
+- Función "Cargar todo" con un solo clic.
+- Compartir enlaces directos a comentarios específicos.
+- Notificaciones en tiempo real para nuevas respuestas.
+- Soporte multilingüe para una comunidad global.
+- Privacidad ante todo: Tus datos permanecen en tu navegador.
+
+📖 CÓMO USARLO:
+1. Abre cualquier vídeo de YouTube.
+2. Haz clic en el icono 95 de tu barra de herramientas.
+3. ¡Empieza a buscar, filtrar y disfruta de una mejor sección de comentarios!
+
+Únete a miles de usuarios que han transformado su forma de navegar por YouTube. Diseñado y mantenido por Batur Kacamak.
+
+¿Preguntas o sugerencias? Escríbenos a hello@batur.info

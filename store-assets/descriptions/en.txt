@@ -1,0 +1,28 @@
+🚀 Elevate your YouTube experience with the ultimate comment power-tool!
+
+YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, or tracking discussions across thousands of comments, we've got you covered.
+
+✨ WHY YOU'LL LOVE IT:
+- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
+- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments without your browser lagging.
+- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
+- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
+- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
+- 📁 EXPORT DATA: Save comments to a file for offline reading or analysis.
+- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
+
+🛠️ KEY FEATURES:
+- One-click "Load All" functionality.
+- Deep-link sharing for specific comments.
+- Real-time notifications for new replies.
+- Multilingual support for a global community.
+- Privacy-first: Your data stays in your browser.
+
+📖 HOW TO USE:
+1. Open any YouTube video.
+2. Click the 95 icon in your toolbar.
+3. Start searching, filtering, and enjoying a better comment section!
+
+Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+
+Questions or feedback? Reach out at hello@batur.info

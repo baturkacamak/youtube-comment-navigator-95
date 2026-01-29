@@ -1,0 +1,28 @@
+🚀 YouTube deneyiminizi en güçlü yorum aracıyla zirveye taşıyın!
+
+YouTube Comment Navigator 95; en sevdiğiniz videolar için şimşek hızında arama, güçlü filtreleme ve 90'ların nostaljik estetiğini bir araya getiriyor. İster belirli bir zaman damgasını, ister komik bir yanıtı arıyor olun; binlerce yorum arasında kaybolmanıza artık gerek yok.
+
+✨ NEDEN SEVECEKSİNİZ?
+- 🔍 GERÇEK ZAMANLI ARAMA: Yazdığınız anda aradığınızı bulun. Sonsuz kaydırmaya son!
+- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Sanallaştırma ile geliştirildi. 10.000'den fazla yorumu tarayıcınız kasmadan akıcı bir şekilde yönetin.
+- 💾 YER İŞARETLERİ VE SABİTLEME: Önemli yorumları ve favori tartışmaları kaydedin, daha sonra anında erişin.
+- 📊 GELİŞMİŞ FİLTRELER: Beğenilere, yanıtlara veya tarihe göre sıralayın; hatta yeni bir bakış açısı için sırayı rastgele hale getirin.
+- 🕒 DOĞRU ZAMAN DAMGALARI: Kaydedilen yer işaretleriniz için bile zaman verileri gerçek zamanlı olarak yeniden hesaplanır.
+- 📁 VERİ DIŞA AKTARMA: Çevrimdışı okuma veya analiz için yorumları dosyaya kaydedin.
+- 🎨 NOSTALJİK HAVA: Klasik 90'lar döneminden ilham alan, tamamen özelleştirilebilir ve Karanlık Mod destekli harika bir arayüz.
+
+🛠️ ÖNE ÇIKAN ÖZELLİKLER:
+- Tek tıkla "Hepsini Yükle" fonksiyonu.
+- Belirli yorumlar için doğrudan bağlantı paylaşımı.
+- Yeni yanıtlar için gerçek zamanlı bildirimler.
+- Küresel bir topluluk için çok dilli destek.
+- Önce Gizlilik: Verileriniz tarayıcınızda kalır.
+
+📖 NASIL KULLANILIR?
+1. Herhangi bir YouTube videosunu açın.
+2. Araç çubuğunuzdaki 95 simgesine tıklayın.
+3. Aramaya, filtrelemeye ve daha iyi bir yorum bölümünün tadını çıkarmaya başlayın!
+
+YouTube gezintisini dönüştüren binlerce kullanıcıya katılın. Batur Kaçamak tarafından tasarlanmış ve geliştirilmiştir.
+
+Sorularınız veya geri bildirimleriniz için: hello@batur.info

@@ -1,0 +1,28 @@
+🚀 Tingkatkan pengalaman YouTube Anda dengan alat komentar terhebat!
+
+YouTube Comment Navigator 95 menghadirkan pencarian secepat kilat, pemfilteran canggih, dan estetika nostalgia tahun 90-an ke video favorit Anda. Baik Anda mencari stempel waktu tertentu, balasan lucu, atau melacak diskusi di antara ribuan komentar, kami siap membantu Anda.
+
+✨ MENGAPA ANDA AKAN MENYUKAINYA:
+- 🔍 PENCARIAN REAL-TIME: Temukan apa yang Anda cari saat Anda mengetik. Tidak ada lagi gulir tanpa akhir.
+- 🚀 KINERJA TINGGI: Dibuat dengan IndexedDB dan List Virtualization. Tangani 10.000+ komentar dengan lancar tanpa membuat browser Anda lambat.
+- 💾 BOOKMARK & PIN: Simpan komentar penting dan utas favorit untuk diakses secara instan nanti.
+- 📊 FILTER LANJUTAN: Urutkan berdasarkan suka, balasan, tanggal, atau bahkan acak urutan untuk perspektif baru.
+- 🕒 STEMPEL WAKTU AKURAT: Waktu relatif dihitung ulang secara real-time, bahkan untuk bookmark yang Anda simpan.
+- 📁 EKSPOR DATA: Simpan komentar ke file untuk dibaca atau dianalisis secara offline.
+- 🎨 NUANSA NOSTALGIA: UI yang indah dan dapat disesuaikan yang terinspirasi oleh era klasik tahun 90-an, dengan dukungan Mode Gelap penuh.
+
+🛠️ FITUR UTAMA:
+- Fungsionalitas "Muat Semua" sekali klik.
+- Berbagi tautan dalam untuk komentar spesifik.
+- Notifikasi real-time untuk balasan baru.
+- Dukungan multibahasa untuk komunitas global.
+- Privasi utama: Data Anda tetap ada di browser Anda.
+
+📖 CARA MENGGUNAKAN:
+1. Buka video YouTube apa pun.
+2. Klik ikon 95 di bilah alat Anda.
+3. Mulai mencari, memfilter, dan menikmati bagian komentar yang lebih baik!
+
+Bergabunglah dengan ribuan pengguna yang telah mengubah penjelajahan YouTube mereka. Dirancang dan dikelola oleh Batur Kacamak.
+
+Pertanyaan atau umpan balik? Hubungi di hello@batur.info

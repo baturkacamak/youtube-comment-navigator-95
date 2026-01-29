@@ -1,0 +1,28 @@
+🚀 Nosta YouTube-kokemuksesi uudelle tasolle täydellisellä kommenttityökalulla!
+
+YouTube Comment Navigator 95 tuo salamannopean haun, tehokkaat suodattimet ja nostalgisen 90-luvun estetiikan suosikkivideoihisi. Etsitpä sitten tiettyä aikaleimaa, hauskaa vastausta tai seuraat keskusteluja tuhansien kommenttien joukosta, meillä on ratkaisu.
+
+✨ MIKSI IHASTUT SIIHEN:
+- 🔍 REAALIAIKAINEN HAKU: Löydä juuri etsimäsi kirjoittaessasi. Ei enää loputonta vierittämistä.
+- 🚀 KORKEA SUORITUSKYKY: Rakennettu IndexedDB:n ja List Virtualizationin avulla. Käsittele sujuvasti yli 10 000 kommenttia ilman, että selaimesi hidastuu.
+- 💾 KIRJANMERKIT & KIINNITYS: Tallenna tärkeitä kommentteja ja suosikkiketjuja, jotta voit palata niihin heti myöhemmin.
+- 📊 EDISTYNEET SUODATTIMET: Lajittele tykkäysten, vastausten, päivämäärän mukaan tai jopa sekoita järjestys satunnaisesti saadaksesi uuden näkökulman.
+- 🕒 TARKAT AIKALEIMAT: Suhteelliset ajat lasketaan uudelleen reaaliajassa, jopa tallennetuille kirjanmerkeillesi.
+- 📁 VIE DATA: Tallenna kommentit tiedostoon offline-lukemista tai analysointia varten.
+- 🎨 NOSTALGINEN TUNNELMA: Kaunis, muokattavissa oleva käyttöliittymä, joka on saanut inspiraationsa klassisesta 90-luvun aikakaudesta, täydellä Pimeän tilan tuella.
+
+🛠️ KESKEISET OMINAISUUDET:
+- "Lataa kaikki" -toiminto yhdellä napsautuksella.
+- Syvälinkkien jakaminen tietyille kommenteille.
+- Reaaliaikaiset ilmoitukset uusista vastauksista.
+- Monikielinen tuki maailmanlaajuiselle yhteisölle.
+- Yksityisyys ensin: Tietosi pysyvät selaimessasi.
+
+📖 KÄYTTÖOHJEET:
+1. Avaa mikä tahansa YouTube-video.
+2. Napsauta 95-kuvaketta työkalupalkissasi.
+3. Aloita haku, suodatus ja nauti paremmasta kommenttiosiosta!
+
+Liity tuhansien käyttäjien joukkoon, jotka ovat mullistaneet YouTube-selailunsa. Suunnitellut ja ylläpitänyt Batur Kacamak.
+
+Kysymyksiä tai palautetta? Ota yhteyttä osoitteeseen hello@batur.info

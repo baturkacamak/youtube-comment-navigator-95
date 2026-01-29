@@ -1,0 +1,28 @@
+🚀 Løft din YouTube-oplevelse med det ultimative kommentar-værktøj!
+
+YouTube Comment Navigator 95 bringer lynhurtig søgning, kraftfulde filtre og en nostalgisk 90'er-æstetik til dine yndlingsvideoer. Uanset om du leder efter et specifikt tidsstempel, et sjovt svar eller sporer diskussioner på tværs af tusindvis af kommentarer, har vi dig dækket.
+
+✨ HVORFOR DU VIL ELSKE DET:
+- 🔍 REALTIDSSØGNING: Find præcis, hvad du leder efter, mens du skriver. Ikke mere endeløs scrolling.
+- 🚀 HØJ YDEEVNE: Bygget med IndexedDB og List Virtualization. Håndter problemfrit 10.000+ kommentarer, uden at din browser halter.
+- 💾 BOGMÆRK & FASTGØR: Gem vigtige kommentarer og yndlingstråde for at få adgang til dem med det samme senere.
+- 📊 AVANCEREDE FILTRE: Sorter efter likes, svar, dato, eller bland endda rækkefølgen tilfældigt for et nyt perspektiv.
+- 🕒 PRÆCISE TIDSSTEMPLER: Relative tider genberegnes i realtid, selv for dine gemte bogmærker.
+- 📁 EKSPORTER DATA: Gem kommentarer til en fil til offline læsning eller analyse.
+- 🎨 NOSTALGISK STEMNING: Et smukt, tilpasseligt UI inspireret af den klassiske 90'er-æra, med fuld Dark Mode-support.
+
+🛠️ NØGLEFUNKTIONER:
+- "Indlæs alle"-funktionalitet med et enkelt klik.
+- Deep-link deling for specifikke kommentarer.
+- Realtidsmeddelelser for nye svar.
+- Flersproget support for et globalt fællesskab.
+- Privatliv først: Dine data forbliver i din browser.
+
+📖 SÅDAN BRUGES DET:
+1. Åbn en hvilken som helst YouTube-video.
+2. Klik på 95-ikonet i din værktøjslinje.
+3. Begynd at søge, filtrere og nyde et bedre kommentarafdelingen!
+
+Slut dig til tusindvis af brugere, der har transformeret deres YouTube-browsing. Designet og vedligeholdt af Batur Kacamak.
+
+Spørgsmål eller feedback? Kontakt os på hello@batur.info

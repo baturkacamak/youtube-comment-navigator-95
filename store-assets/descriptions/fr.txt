@@ -1,0 +1,28 @@
+🚀 Améliorez votre expérience YouTube avec l'outil de gestion des commentaires ultime !
+
+YouTube Comment Navigator 95 apporte une recherche ultra-rapide, des filtres puissants et une esthétique nostalgique des années 90 à vos vidéos préférées. Que vous cherchiez un horodatage spécifique, une réponse amusante ou que vous suiviez des discussions parmi des milliers de commentaires, nous avons ce qu'il vous faut.
+
+✨ POURQUOI VOUS ALLEZ L'ADORER :
+- 🔍 RECHERCHE EN TEMPS RÉEL : Trouvez exactement ce que vous cherchez pendant que vous tapez. Plus besoin de défiler indéfiniment.
+- 🚀 HAUTE PERFORMANCE : Développé avec IndexedDB et List Virtualization. Gérez plus de 10 000 commentaires sans ralentir votre navigateur.
+- 💾 SIGNETS ET ÉPINGLAGE : Enregistrez les commentaires importants et vos fils de discussion préférés pour y accéder instantanément plus tard.
+- 📊 FILTRES AVANCÉS : Triez par mentions j'aime, réponses, date, ou même randomisez l'ordre pour une nouvelle perspective.
+- 🕒 HORODATAGES PRÉCIS : Les temps relatifs sont recalculés en temps réel, même pour vos signets enregistrés.
+- 📁 EXPORTATION DE DONNÉES : Sauvegardez les commentaires dans un fichier pour une lecture hors ligne ou une analyse.
+- 🎨 VIBES NOSTALGIQUES : Une interface magnifique et personnalisable inspirée des années 90, avec support complet du Mode Sombre.
+
+🛠️ CARACTÉRISTIQUES CLÉS :
+- Fonctionnalité "Tout charger" en un clic.
+- Partage de liens profonds vers des commentaires spécifiques.
+- Notifications en temps réel pour les nouvelles réponses.
+- Support multilingue pour une communauté mondiale.
+- Priorité à la confidentialité : Vos données restent dans votre navigateur.
+
+📖 COMMENT L'UTILISER :
+1. Ouvrez n'importe quelle vidéo YouTube.
+2. Cliquez sur l'icône 95 dans votre barre d'outils.
+3. Commencez à rechercher, filtrer et profitez d'une meilleure section de commentaires !
+
+Rejoignez des milliers d'utilisateurs qui ont transformé leur navigation sur YouTube. Conçu et maintenu par Batur Kacamak.
+
+Des questions ou des retours ? Contactez-nous à hello@batur.info

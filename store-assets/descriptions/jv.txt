@@ -1,0 +1,28 @@
+🚀 Tingkatake pengalaman YouTube sampeyan nganggo piranti komentar paling apik!
+
+YouTube Comment Navigator 95 nggawa telusuran cepet kilat, penyaringan kuat, lan estetika nostalgia taun 90-an menyang video favorit sampeyan. Apa sampeyan nggoleki cap wektu tartamtu, balesan lucu, utawa nglacak diskusi ing antarane ewonan komentar, kita siap mbantu.
+
+✨ KENAPA SAMPEYAN BAKAL SENENG:
+- 🔍 TELUSURAN REAL-TIME: Temokake persis apa sing sampeyan goleki nalika ngetik. Ora ana maneh nggulung tanpa wates.
+- 🚀 KINERJA TINGGI: Dibangun nganggo IndexedDB lan List Virtualization. Nangani 10.000+ komentar kanthi lancar tanpa nggawe browser sampeyan alon.
+- 💾 BOOKMARK & PIN: Simpen komentar penting lan utas favorit kanggo diakses kanthi cepet mengko.
+- 📊 FILTER LANJUTAN: Urutake miturut seneng, balesan, tanggal, utawa acak urutan kanggo perspektif anyar.
+- 🕒 CAP WEKTU AKURAT: Wektu relatif diitung maneh kanthi nyata, sanajan kanggo bookmark sing disimpen.
+- 📁 EKSPOR DATA: Simpen komentar menyang file kanggo diwaca utawa dianalisis offline.
+- 🎨 NUANSA NOSTALGIA: UI sing apik lan bisa disesuaikan sing diilhami dening jaman klasik taun 90-an, kanthi dhukungan Mode Gelap lengkap.
+
+🛠️ FITUR UTAMA:
+- Fungsionalitas "Muat Kabeh" siji klik.
+- Nuduhake link jero kanggo komentar tartamtu.
+- Notifikasi nyata kanggo balesan anyar.
+- Dhukungan multibasa kanggo komunitas global.
+- Privasi utama: Data sampeyan tetep ana ing browser sampeyan.
+
+📖 CARA NGGUNAKAKE:
+1. Bukak video YouTube apa wae.
+2. Klik lambang 95 ing bilah alat sampeyan.
+3. Mulai nggoleki, nyaring, lan nikmati bagean komentar sing luwih apik!
+
+Gabung karo ewonan pangguna sing wis ngowahi browsing YouTube. Dirancang lan dikelola dening Batur Kacamak.
+
+Pitakonan utawa umpan balik? Hubungi ing hello@batur.info
