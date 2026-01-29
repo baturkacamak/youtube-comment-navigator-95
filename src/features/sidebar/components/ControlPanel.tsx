@@ -54,7 +54,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         style={{ maxHeight }}
         className={`transition-all duration-500  ${showAdvanced ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}
       >
-        <AdvancedFilters comments={comments} allComments={allComments} />
+        <AdvancedFilters />
       </div>
     </div>
   );
