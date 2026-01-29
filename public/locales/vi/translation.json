@@ -148,5 +148,18 @@
   "Export Comments": "Xuất Bình luận",
   "Export as JSON": "Xuất dưới dạng JSON",
   "Export as CSV": "Xuất dưới dạng CSV",
-  "Font": "Phông chữ"
+  "Font": "Phông chữ",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Tải trò chuyện trực tiếp",
+  "Load Live Chat ({{count}})": "Tải trò chuyện trực tiếp ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Tải tất cả (Bình luận, Bản ghi, Trò chuyện trực tiếp)",
+  "Export Visible (JSON)": "Xuất hiển thị (JSON)",
+  "Export Visible (CSV)": "Xuất hiển thị (CSV)",
+  "Export All (JSON)": "Xuất tất cả (JSON)",
+  "Export All (CSV)": "Xuất tất cả (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Tải thêm bình luận (còn lại {{remaining}})"
 }

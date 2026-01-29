@@ -3,12 +3,7 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { VariableSizeList as List } from 'react-window';
 import { AutoSizer } from 'react-virtualized-auto-sizer';
 import CommentItem from './CommentItem';
-import {
-  ArrowPathIcon,
-  ExclamationCircleIcon,
-  ChevronDownIcon,
-  XCircleIcon,
-} from '@heroicons/react/24/outline';
+import { ArrowPathIcon, ExclamationCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 import Box from '../../shared/components/Box';
 import { getCommentBackgroundColor } from '../../shared/utils/colorUtils';
 import { CommentListProps, Comment } from '../../../types/commentTypes';
@@ -68,6 +63,33 @@ const CommentList: React.FC<CommentListProps> = () => {
     dispatch(setTotalCommentsCount(totalCount));
   }, [totalCount, dispatch]);
 
+  // Calculate container dimensions to fill remaining space (prevent double scrollbar)
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [listHeight, setListHeight] = React.useState(600);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        // Calculate available height: Viewport - Top Position - Buffer (20px)
+        const availableHeight = window.innerHeight - rect.top - 20;
+        // Ensure minimum height of 400px
+        setListHeight(Math.max(400, availableHeight));
+      }
+    };
+
+    // Initial calculation
+    updateDimensions();
+
+    // Recalculate on resize
+    window.addEventListener('resize', updateDimensions);
+
+    // Also recalculate when comments/filters change as layout might shift
+    // (Optional but helpful if header size changes)
+
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, [comments.length, filters, searchKeyword]);
+
   // Reset cached heights when comments change significantly
   useEffect(() => {
     rowHeightsRef.current.clear();
@@ -100,25 +122,16 @@ const CommentList: React.FC<CommentListProps> = () => {
   // Row renderer for virtualized list
   const Row = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      // Render "Load More" button as last item
+      // Render "Loading" indicator as last item
       if (index === comments.length) {
         if (!hasMore) return null;
-        const remaining = totalCount - comments.length;
         return (
-          <div style={style} className="flex justify-center py-2">
-            <button
-              onClick={loadMore}
-              disabled={isLoading}
-              className={`py-2 px-4 bg-zinc-600 text-white rounded hover:bg-zinc-800 dark:bg-blue-700 dark:hover:bg-blue-800 flex items-center justify-center ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-              aria-label={t('Load more comments')}
-            >
-              {isLoading ? (
-                <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
-              ) : (
-                <ChevronDownIcon className="w-5 h-5 mr-2" />
-              )}
-              {t('Load More Comments ({{remaining}} remaining)', { remaining })}
-            </button>
+          <div
+            style={style}
+            className="flex justify-center py-4 items-center text-gray-500 dark:text-gray-400"
+          >
+            <ArrowPathIcon className="w-5 h-5 mr-2 animate-spin" />
+            <span>{t('Loading more comments...')}</span>
           </div>
         );
       }
@@ -141,7 +154,17 @@ const CommentList: React.FC<CommentListProps> = () => {
         </div>
       );
     },
-    [comments, hasMore, totalCount, loadMore, isLoading, t, setRowHeight]
+    [comments, hasMore, t, setRowHeight]
+  );
+
+  const handleItemsRendered = useCallback(
+    ({ visibleStopIndex }: { visibleStopIndex: number }) => {
+      // Trigger load more when we get close to the end (5 items buffer)
+      if (hasMore && !isLoading && visibleStopIndex >= comments.length - 5) {
+        loadMore();
+      }
+    },
+    [comments.length, hasMore, isLoading, loadMore]
   );
 
   if (isLoading && comments.length === 0) {
@@ -191,7 +214,11 @@ const CommentList: React.FC<CommentListProps> = () => {
   const itemCount = comments.length + (hasMore ? 1 : 0);
 
   return (
-    <div className="w-full flex flex-col" style={{ height: '75vh', minHeight: '400px' }}>
+    <div
+      ref={containerRef}
+      className="w-full flex flex-col"
+      style={{ height: listHeight, minHeight: '400px' }}
+    >
       {error && (
         <div
           className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 flex items-center justify-between shadow-sm"
@@ -262,6 +289,8 @@ const CommentList: React.FC<CommentListProps> = () => {
                 itemSize={getRowHeight}
                 overscanCount={5}
                 style={{ overflow: 'visible auto' }}
+                className="custom-scrollbar"
+                onItemsRendered={handleItemsRendered}
               >
                 {Row}
               </List>
@@ -313,7 +342,7 @@ const MeasuredCommentItem: React.FC<MeasuredCommentItemProps> = React.memo(
     }, [index, onHeightChange]);
 
     return (
-      <div ref={measureRef}>
+      <div ref={measureRef} className="flow-root">
         <CommentItem
           comment={comment}
           className="text-gray-800 dark:text-gray-200"

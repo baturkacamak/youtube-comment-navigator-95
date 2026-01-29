@@ -148,5 +148,18 @@
   "Export Comments": "Exportera kommentarer",
   "Export as JSON": "Exportera som JSON",
   "Export as CSV": "Exportera som CSV",
-  "Font": "Typsnitt"
+  "Font": "Typsnitt",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Ladda livechatt",
+  "Load Live Chat ({{count}})": "Ladda livechatt ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Ladda allt (Kommentarer, Transkription, Livechatt)",
+  "Export Visible (JSON)": "Exportera synliga (JSON)",
+  "Export Visible (CSV)": "Exportera synliga (CSV)",
+  "Export All (JSON)": "Exportera allt (JSON)",
+  "Export All (CSV)": "Exportera allt (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Ladda fler kommentarer ({{remaining}} återstår)"
 }

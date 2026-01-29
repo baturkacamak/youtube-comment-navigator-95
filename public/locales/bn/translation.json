@@ -148,5 +148,18 @@
   "Export Comments": "মন্তব্য রপ্তানি করুন",
   "Export as JSON": "JSON হিসাবে রপ্তানি করুন",
   "Export as CSV": "CSV হিসাবে রপ্তানি করুন",
-  "Font": "ফন্ট"
+  "Font": "ফন্ট",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "লাইভ চ্যাট লোড করুন",
+  "Load Live Chat ({{count}})": "লাইভ চ্যাট লোড করুন ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "সব লোড করুন (মন্তব্য, প্রতিলিপি, লাইভ চ্যাট)",
+  "Export Visible (JSON)": "দৃশ্যমান রপ্তানি করুন (JSON)",
+  "Export Visible (CSV)": "দৃশ্যমান রপ্তানি করুন (CSV)",
+  "Export All (JSON)": "সব রপ্তানি করুন (JSON)",
+  "Export All (CSV)": "সব রপ্তানি করুন (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "আরও মন্তব্য লোড করুন ({{remaining}} বাকি)"
 }

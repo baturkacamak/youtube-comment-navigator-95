@@ -148,5 +148,18 @@
   "Export Comments": "వ్యాఖ్యలను ఎగుమతి చేయండి",
   "Export as JSON": "JSON గా ఎగుమతి చేయండి",
   "Export as CSV": "CSV గా ఎగుమతి చేయండి",
-  "Font": "ఫాంట్"
+  "Font": "ఫాంట్",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "లైవ్ చాట్‌ను లోడ్ చేయండి",
+  "Load Live Chat ({{count}})": "లైవ్ చాట్‌ను లోడ్ చేయండి ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "అన్నీ లోడ్ చేయండి (కామెంట్స్, ట్రాన్‌స్క్రిప్ట్, లైవ్ చాట్)",
+  "Export Visible (JSON)": "కనిపించే వాటిని ఎగుమతి చేయండి (JSON)",
+  "Export Visible (CSV)": "కనిపించే వాటిని ఎగుమతి చేయండి (CSV)",
+  "Export All (JSON)": "అన్నింటినీ ఎగుమతి చేయండి (JSON)",
+  "Export All (CSV)": "అన్నింటినీ ఎగుమతి చేయండి (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "మరిన్ని వ్యాఖ్యలను లోడ్ చేయండి ({{remaining}} మిగిలి ఉన్నాయి)"
 }

@@ -148,5 +148,18 @@
   "Export Comments": "Exportovat komentáře",
   "Export as JSON": "Exportovat jako JSON",
   "Export as CSV": "Exportovat jako CSV",
-  "Font": "Písmo"
+  "Font": "Písmo",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Načíst živý chat",
+  "Load Live Chat ({{count}})": "Načíst živý chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Načíst vše (Komentáře, Přepis, Živý chat)",
+  "Export Visible (JSON)": "Exportovat viditelné (JSON)",
+  "Export Visible (CSV)": "Exportovat viditelné (CSV)",
+  "Export All (JSON)": "Exportovat vše (JSON)",
+  "Export All (CSV)": "Exportovat vše (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Načíst další komentáře (zbývá {{remaining}})"
 }

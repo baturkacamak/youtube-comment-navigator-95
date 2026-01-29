@@ -1,4 +1,4 @@
-import { Comment } from '../../types/commentTypes';
+import { Comment } from '../../src/types/commentTypes';
 
 export const mockComments: Comment[] = [
   {

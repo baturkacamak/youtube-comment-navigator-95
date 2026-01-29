@@ -11,31 +11,50 @@ const LanguageSetting: React.FC = () => {
   const { t } = useTranslation();
 
   const getInitialLanguage = (): Option => {
-    const settings = getSettings();
-    let detectedLanguage = settings.language;
+    try {
+      const settings = getSettings();
+      let detectedLanguage = settings.language as string | undefined;
 
-    if (!detectedLanguage) {
-      const browserLanguage = navigator.language.split('-')[0]; // Get browser language
-      detectedLanguage =
-        languageOptions.find((option) => option.value === browserLanguage)?.value || 'en';
+      if (!detectedLanguage) {
+        // Safely get browser language with fallback
+        const browserLanguage = (navigator.language || navigator.languages?.[0] || 'en').split(
+          '-'
+        )[0];
+        detectedLanguage =
+          languageOptions.find((option) => option.value === browserLanguage)?.value || 'en';
+      }
+
+      return (
+        languageOptions.find((option) => option.value === detectedLanguage) || languageOptions[0]
+      );
+    } catch (error) {
+      console.error('Error detecting initial language:', error);
+      return languageOptions[0]; // Return default (English)
     }
-
-    return (
-      languageOptions.find((option) => option.value === detectedLanguage) || languageOptions[0]
-    );
   };
 
   const [selectedLanguage, setSelectedLanguage] = useState<Option>(getInitialLanguage);
 
   const applyLanguage = (language: string) => {
-    const settings = getSettings();
-    settings.language = language;
-    saveSettings(settings);
+    try {
+      if (!language || typeof language !== 'string') {
+        console.warn('Invalid language value provided to applyLanguage');
+        return;
+      }
 
-    if (isLocalEnvironment()) {
-      i18n.changeLanguage(language);
-    } else {
-      window.postMessage({ type: 'CHANGE_LANGUAGE', payload: { language } }, '*');
+      const settings = getSettings();
+      settings.language = language;
+      saveSettings(settings);
+
+      if (isLocalEnvironment()) {
+        i18n.changeLanguage(language).catch((error) => {
+          console.error('Error changing language in i18n:', error);
+        });
+      } else {
+        window.postMessage({ type: 'CHANGE_LANGUAGE', payload: { language } }, '*');
+      }
+    } catch (error) {
+      console.error('Error applying language:', error);
     }
   };
 
@@ -45,7 +64,8 @@ const LanguageSetting: React.FC = () => {
 
   useEffect(() => {
     const settings = getSettings();
-    applyLanguage(settings.language || selectedLanguage.value);
+    applyLanguage((settings.language as string) || selectedLanguage.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -60,6 +80,7 @@ const LanguageSetting: React.FC = () => {
         buttonClassName="w-full rounded-lg"
         isSearchable={true}
         DefaultIcon={LanguageIcon}
+        testId="language-select"
       />
     </>
   );

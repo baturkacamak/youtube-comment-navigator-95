@@ -13,7 +13,7 @@ const ShowFiltersSortsToggle: React.FC = () => {
 
   useEffect(() => {
     const settings = getSettings();
-    dispatch(setShowFiltersSorts(settings.showFiltersSorts ?? true));
+    dispatch(setShowFiltersSorts((settings.showFiltersSorts as boolean) ?? true));
   }, [dispatch]);
 
   const handleToggleFiltersSorts = () => {

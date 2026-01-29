@@ -148,5 +148,18 @@
   "Export Comments": "Vie kommentit",
   "Export as JSON": "Vie JSON-muodossa",
   "Export as CSV": "Vie CSV-muodossa",
-  "Font": "Kirjasinlaji"
+  "Font": "Kirjasinlaji",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Lataa live-chat",
+  "Load Live Chat ({{count}})": "Lataa live-chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Lataa kaikki (Kommentit, Transkriptio, Live-chat)",
+  "Export Visible (JSON)": "Vie näkyvät (JSON)",
+  "Export Visible (CSV)": "Vie näkyvät (CSV)",
+  "Export All (JSON)": "Vie kaikki (JSON)",
+  "Export All (CSV)": "Vie kaikki (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Lataa lisää kommentteja ({{remaining}} jäljellä)"
 }

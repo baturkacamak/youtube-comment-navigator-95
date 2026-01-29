@@ -1,10 +1,10 @@
 import React from 'react';
 import CopyButton from './buttons/CopyButton';
-import DownloadButton from './buttons/DownloadButton';
 import PrintButton from './buttons/PrintButton';
-import ShareButton from '../../shared/components/ShareButton'; // Import the ShareButton component
+import ShareButton from '../../shared/components/ShareButton';
 import TimestampToggle from './toggles/TimestampToggle';
-import TranslateSelectBox from './toggles/TranslateSelectBox'; // Import the TranslateSelectBox component
+import TranslateSelectBox from './toggles/TranslateSelectBox';
+import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
 import { formatTime } from '../utils/formatTime';
 
 interface ActionButtonsProps {
@@ -34,8 +34,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           includeTimestamps ? transcriptTextWithTimestamps : transcriptTextWithoutTimestamps
         }
       />
-      <DownloadButton
-        transcriptText={
+      <DownloadAccordion
+        contentType="transcript"
+        visibleData={transcripts}
+        formatTextContent={() =>
           includeTimestamps ? transcriptTextWithTimestamps : transcriptTextWithoutTimestamps
         }
       />

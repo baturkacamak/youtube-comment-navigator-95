@@ -148,5 +148,18 @@
   "Export Comments": "I-export ang Mga Komento",
   "Export as JSON": "I-export bilang JSON",
   "Export as CSV": "I-export bilang CSV",
-  "Font": "Font"
+  "Font": "Font",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "I-load ang Live Chat",
+  "Load Live Chat ({{count}})": "I-load ang Live Chat ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "I-load Lahat (Mga Komento, Transcript, Live Chat)",
+  "Export Visible (JSON)": "I-export ang Nakikita (JSON)",
+  "Export Visible (CSV)": "I-export ang Nakikita (CSV)",
+  "Export All (JSON)": "I-export Lahat (JSON)",
+  "Export All (CSV)": "I-export Lahat (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "I-load ang Marami pang Komento ({{remaining}} natitira)"
 }

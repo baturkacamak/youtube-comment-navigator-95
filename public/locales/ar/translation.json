@@ -148,5 +148,18 @@
   "Export Comments": "تصدير التعليقات",
   "Export as JSON": "تصدير كـ JSON",
   "Export as CSV": "تصدير كـ CSV",
-  "Font": "الخط"
+  "Font": "الخط",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "تحميل الدردشة المباشرة",
+  "Load Live Chat ({{count}})": "تحميل الدردشة المباشرة ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "تحميل الكل (تعليقات، نص، دردشة مباشرة)",
+  "Export Visible (JSON)": "تصدير المرئي (JSON)",
+  "Export Visible (CSV)": "تصدير المرئي (CSV)",
+  "Export All (JSON)": "تصدير الكل (JSON)",
+  "Export All (CSV)": "تصدير الكل (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "تحميل المزيد من التعليقات (المتبقي {{remaining}})"
 }

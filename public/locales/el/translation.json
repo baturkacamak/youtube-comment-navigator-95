@@ -148,5 +148,18 @@
   "Export Comments": "Εξαγωγή σχολίων",
   "Export as JSON": "Εξαγωγή ως JSON",
   "Export as CSV": "Εξαγωγή ως CSV",
-  "Font": "Γραμματοσειρά"
+  "Font": "Γραμματοσειρά",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Φόρτωση ζωντανής συνομιλίας",
+  "Load Live Chat ({{count}})": "Φόρτωση ζωντανής συνομιλίας ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Φόρτωση όλων (Σχόλια, Μεταγραφή, Ζωντανή συνομιλία)",
+  "Export Visible (JSON)": "Εξαγωγή ορατών (JSON)",
+  "Export Visible (CSV)": "Εξαγωγή ορατών (CSV)",
+  "Export All (JSON)": "Εξαγωγή όλων (JSON)",
+  "Export All (CSV)": "Εξαγωγή όλων (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Φόρτωση περισσότερων σχολίων ({{remaining}} απομένουν)"
 }

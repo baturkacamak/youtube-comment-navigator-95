@@ -4,6 +4,8 @@ import react from '@vitejs/plugin-react';
 import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
 
+const isProduction = process.env.NODE_ENV === 'production' && process.env.KEEP_TEST_IDS !== 'true';
+
 // Custom plugin to replace 'rem' with 'em' in CSS files
 const remToEmPlugin = (): Plugin => {
   return {
@@ -23,7 +25,11 @@ const remToEmPlugin = (): Plugin => {
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: isProduction ? [['react-remove-properties', { properties: ['data-testid'] }]] : [],
+      },
+    }),
     crx({ manifest }),
     remToEmPlugin(),
   ],
@@ -32,6 +38,9 @@ export default defineConfig({
   },
   esbuild: {
     charset: 'ascii',
+    // Keep console.error and console.warn in production builds
+    drop: ['debugger'],
+    pure: [],
   },
   build: {
     rollupOptions: {
@@ -48,5 +57,13 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
+      '**/tests/e2e/**', // Exclude Playwright E2E tests
+    ],
   },
 });

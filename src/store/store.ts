@@ -242,6 +242,8 @@ export const {
   setTotalCommentsCount,
 } = commentsSlice.actions;
 
+export const commentsReducer = commentsSlice.reducer;
+
 const store = configureStore({
   reducer: commentsSlice.reducer,
 });

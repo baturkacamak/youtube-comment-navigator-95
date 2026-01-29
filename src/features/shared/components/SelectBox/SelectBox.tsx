@@ -14,6 +14,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   buttonClassName,
   isSearchable = false,
   DefaultIcon,
+  testId,
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -118,6 +119,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         aria-haspopup="true"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prevIsOpen) => !prevIsOpen)}
+        data-testid={testId}
       >
         <span className="flex items-center">
           {selectedOption.icon ? (

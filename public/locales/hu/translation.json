@@ -148,5 +148,18 @@
   "Export Comments": "Hozzászólások exportálása",
   "Export as JSON": "Exportálás JSON formátumban",
   "Export as CSV": "Exportálás CSV formátumban",
-  "Font": "Betűtípus"
+  "Font": "Betűtípus",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Élő csevegés betöltése",
+  "Load Live Chat ({{count}})": "Élő csevegés betöltése ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Összes betöltése (Hozzászólások, Átirat, Élő csevegés)",
+  "Export Visible (JSON)": "Láthatók exportálása (JSON)",
+  "Export Visible (CSV)": "Láthatók exportálása (CSV)",
+  "Export All (JSON)": "Összes exportálása (JSON)",
+  "Export All (CSV)": "Összes exportálása (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "További hozzászólások betöltése ({{remaining}} maradt)"
 }

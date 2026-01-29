@@ -62,27 +62,43 @@ const FontSetting: React.FC = () => {
   const dispatch = useDispatch();
 
   const getInitialFont = (): Option => {
-    const settings = getSettings();
-    const detectedFont = settings.fontFamily || 'Arial, sans-serif';
-    return fonts.find((option) => option.value === detectedFont) || fonts[0];
+    try {
+      const settings = getSettings();
+      const detectedFont = (settings.fontFamily as string) || 'Arial, sans-serif';
+      return fonts.find((option) => option.value === detectedFont) || fonts[0];
+    } catch (error) {
+      console.error('Error getting initial font:', error);
+      return fonts[0]; // Default to Arial
+    }
   };
 
   const [selectedFont, setSelectedFont] = useState<Option>(getInitialFont);
 
   const applyFont = (fontFamily: string) => {
-    const settings = getSettings();
-    settings.fontFamily = fontFamily;
-    saveSettings(settings);
-    dispatch(setFontFamily(fontFamily));
+    try {
+      if (!fontFamily || typeof fontFamily !== 'string') {
+        console.warn('Invalid font family value provided to applyFont');
+        return;
+      }
+
+      const settings = getSettings();
+      settings.fontFamily = fontFamily;
+      saveSettings(settings);
+      dispatch(setFontFamily(fontFamily));
+    } catch (error) {
+      console.error('Error applying font:', error);
+    }
   };
 
   useEffect(() => {
     applyFont(selectedFont.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFont]);
 
   useEffect(() => {
     const settings = getSettings();
-    applyFont(settings.fontFamily || selectedFont.value);
+    applyFont((settings.fontFamily as string) || selectedFont.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFontChange = (option: Option) => {

@@ -148,5 +148,18 @@
   "Export Comments": "导出评论",
   "Export as JSON": "导出为JSON",
   "Export as CSV": "导出为CSV",
-  "Font": "字体"
+  "Font": "字体",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "加载实时聊天",
+  "Load Live Chat ({{count}})": "加载实时聊天 ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "加载全部（评论，脚本，实时聊天）",
+  "Export Visible (JSON)": "导出可见 (JSON)",
+  "Export Visible (CSV)": "导出可见 (CSV)",
+  "Export All (JSON)": "导出全部 (JSON)",
+  "Export All (CSV)": "导出全部 (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "加载更多评论（剩余 {{remaining}}）"
 }

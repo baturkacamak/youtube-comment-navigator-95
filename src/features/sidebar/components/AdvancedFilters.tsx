@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { setFilters } from '../../../store/store';
 import { RootState } from '../../../types/rootState';
 import { FilterState } from '../../../types/filterTypes';
-import ExportButton from '../../shared/components/ExportButton';
+import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
 import { Comment } from '../../../types/commentTypes';
 
 /** Debounce delay for filter updates (ms) */
@@ -249,7 +249,7 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments, allComments
         </div>
         <hr className="border-solid border-t" />
         <div className="flex justify-start">
-          <ExportButton comments={comments} allComments={allComments} />
+          <DownloadAccordion contentType="comments" visibleData={comments} allData={allComments} />
         </div>
       </div>
     </div>

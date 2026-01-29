@@ -35,3 +35,8 @@ yarn-error.log*
 /dist-local/
 /dist/
 *.zip
+
+# Playwright E2E test artifacts
+/test-results/
+/playwright-report/
+/playwright/.cache/

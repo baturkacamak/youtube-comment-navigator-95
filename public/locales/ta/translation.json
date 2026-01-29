@@ -148,5 +148,18 @@
   "Export Comments": "கருத்துகளை ஏற்றுமதி செய்க",
   "Export as JSON": "JSON ஆக ஏற்றுமதி செய்க",
   "Export as CSV": "CSV ஆக ஏற்றுமதி செய்க",
-  "Font": "எழுத்துரு"
+  "Font": "எழுத்துரு",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "நேரலை அரட்டையை ஏற்றவும்",
+  "Load Live Chat ({{count}})": "நேரலை அரட்டையை ஏற்றவும் ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "அனைத்தையும் ஏற்றவும் (கருத்துகள், டிரான்ஸ்கிரிப்ட், நேரலை அரட்டை)",
+  "Export Visible (JSON)": "தெரிந்தவற்றை ஏற்றுமதி செய் (JSON)",
+  "Export Visible (CSV)": "தெரிந்தவற்றை ஏற்றுமதி செய் (CSV)",
+  "Export All (JSON)": "அனைத்தையும் ஏற்றுமதி செய் (JSON)",
+  "Export All (CSV)": "அனைத்தையும் ஏற்றுமதி செய் (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "மேலும் கருத்துகளை ஏற்றவும் ({{remaining}} மீதமுள்ளது)"
 }

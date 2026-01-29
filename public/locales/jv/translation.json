@@ -148,5 +148,18 @@
   "Export Comments": "Ekspor Komentar",
   "Export as JSON": "Ekspor minangka JSON",
   "Export as CSV": "Ekspor minangka CSV",
-  "Font": "Font"
+  "Font": "Font",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Muat Chat Langsung",
+  "Load Live Chat ({{count}})": "Muat Chat Langsung ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Muat Kabeh (Komentar, Transkrip, Chat Langsung)",
+  "Export Visible (JSON)": "Ekspor Katon (JSON)",
+  "Export Visible (CSV)": "Ekspor Katon (CSV)",
+  "Export All (JSON)": "Ekspor Kabeh (JSON)",
+  "Export All (CSV)": "Ekspor Kabeh (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Muat Komentar Liyane (sisa {{remaining}})"
 }

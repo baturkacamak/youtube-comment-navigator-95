@@ -148,5 +148,18 @@
   "Export Comments": "Exportar comentarios",
   "Export as JSON": "Exportar como JSON",
   "Export as CSV": "Exportar como CSV",
-  "Font": "Fuente"
+  "Font": "Fuente",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "Cargar chat en vivo",
+  "Load Live Chat ({{count}})": "Cargar chat en vivo ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "Cargar todo (Comentarios, Transcripción, Chat en vivo)",
+  "Export Visible (JSON)": "Exportar visibles (JSON)",
+  "Export Visible (CSV)": "Exportar visibles (CSV)",
+  "Export All (JSON)": "Exportar todo (JSON)",
+  "Export All (CSV)": "Exportar todo (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "Cargar más comentarios ({{remaining}} restantes)"
 }

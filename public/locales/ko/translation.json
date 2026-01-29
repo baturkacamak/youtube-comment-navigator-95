@@ -148,5 +148,18 @@
   "Export Comments": "댓글 내보내기",
   "Export as JSON": "JSON으로 내보내기",
   "Export as CSV": "CSV로 내보내기",
-  "Font": "글꼴"
+  "Font": "글꼴",
+  "Format": "Format",
+  "Content": "Content",
+  "Visible Only": "Visible Only",
+  "Download Now": "Download Now",
+  "Downloading...": "Downloading...",
+  "Load Live Chat": "실시간 채팅 로드",
+  "Load Live Chat ({{count}})": "실시간 채팅 로드 ({{count}})",
+  "Load All (Comments, Transcript, Live Chat)": "모두 로드 (댓글, 스크립트, 실시간 채팅)",
+  "Export Visible (JSON)": "보이는 항목 내보내기 (JSON)",
+  "Export Visible (CSV)": "보이는 항목 내보내기 (CSV)",
+  "Export All (JSON)": "모두 내보내기 (JSON)",
+  "Export All (CSV)": "모두 내보내기 (CSV)",
+  "Load More Comments ({{remaining}} remaining)": "댓글 더 보기 ({{remaining}} 남음)"
 }
