@@ -146,7 +146,11 @@ class YouTubeCommentNavigator {
     if (this.isInitialized) return;
 
     try {
-      await Promise.all([this.injectTranslations(), this.injectPotTokenRetriever()]);
+      await Promise.all([
+        this.injectTranslations(),
+        this.injectPotTokenRetriever(),
+        this.injectVideoController(),
+      ]);
       this.isInitialized = true;
     } catch {
       // Errors are handled in individual methods or ignored if non-critical
@@ -275,6 +279,10 @@ class YouTubeCommentNavigator {
 
   injectPotTokenRetriever(): Promise<void> {
     return this.injectScript('retrieve-pot-token.js');
+  }
+
+  injectVideoController(): Promise<void> {
+    return this.injectScript('video-controller.js');
   }
 
   async onUrlChange() {

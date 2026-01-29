@@ -27,6 +27,7 @@
       "resources": [
         "locales/*",
         "retrieve-pot-token.js",
+        "video-controller.js",
         "icon128.png",
         "icon48.png",
         "icon16.png"

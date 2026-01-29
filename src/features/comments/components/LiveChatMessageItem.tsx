@@ -14,6 +14,7 @@ import { loadLiveChatReplies } from '../services/liveChat/liveChatDatabase';
 import { Comment } from '../../../types/commentTypes';
 import CommentReplies from './CommentReplies';
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
+import { seekVideo } from '../../shared/utils/videoController';
 
 interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
   index?: number;
@@ -63,13 +64,8 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     if (message.videoOffsetTimeSec !== undefined) {
       if (event.type === 'click' || (event as React.KeyboardEvent).key === 'Enter') {
         event.preventDefault();
-        const player = document.querySelector('#movie_player') as any;
-        if (player && typeof player.seekTo === 'function') {
-          player.seekTo(message.videoOffsetTimeSec, true);
-          logger.info(`[LiveChatMessageItem] Seeking to ${message.videoOffsetTimeSec}s`);
-        } else {
-          logger.error('[LiveChatMessageItem] YouTube Player is not available');
-        }
+
+        seekVideo(message.videoOffsetTimeSec);
 
         if (onTimestampClick) {
           onTimestampClick(message.videoOffsetTimeSec);
