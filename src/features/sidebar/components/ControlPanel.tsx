@@ -5,6 +5,7 @@ import AdvancedFilters from './AdvancedFilters';
 import { ControlPanelProps } from '../../../types/filterTypes';
 import { useTranslation } from 'react-i18next';
 import { ArrowsUpDownIcon, ChevronDownIcon, FunnelIcon } from '@heroicons/react/24/outline';
+import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   filters,
@@ -34,16 +35,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           <FunnelIcon className="w-6 h-6 text-black dark:text-white" aria-hidden="true" />
           <FilterList filters={filters} setFilters={setFilters} />
         </div>
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="user-select flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
-        >
-          {t('Advanced')}
-          <ChevronDownIcon
-            className={`w-5 h-5 ml-1 transform transition-transform duration-500 ${showAdvanced ? 'rotate-180' : ''}`}
-            aria-hidden="true"
-          />
-        </button>
+        <div className="flex items-center gap-4">
+          <DownloadAccordion contentType="comments" visibleData={comments} allData={allComments} />
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="user-select flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+          >
+            {t('Advanced')}
+            <ChevronDownIcon
+              className={`w-5 h-5 ml-1 transform transition-transform duration-500 ${showAdvanced ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          </button>
+        </div>
       </div>
       <div
         ref={containerRef}

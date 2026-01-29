@@ -10,18 +10,11 @@ import { useTranslation } from 'react-i18next';
 import { setFilters } from '../../../store/store';
 import { RootState } from '../../../types/rootState';
 import { FilterState } from '../../../types/filterTypes';
-import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
-import { Comment } from '../../../types/commentTypes';
 
 /** Debounce delay for filter updates (ms) */
 const FILTER_DEBOUNCE_MS = 300;
 
-interface AdvancedFiltersProps {
-  comments: any[] | Comment[] | undefined;
-  allComments?: any[] | Comment[];
-}
-
-const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments, allComments }) => {
+const AdvancedFilters: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
@@ -246,10 +239,6 @@ const AdvancedFilters: React.FC<AdvancedFiltersProps> = ({ comments, allComments
               </div>
             </div>
           </div>
-        </div>
-        <hr className="border-solid border-t" />
-        <div className="flex justify-start">
-          <DownloadAccordion contentType="comments" visibleData={comments} allData={allComments} />
         </div>
       </div>
     </div>
