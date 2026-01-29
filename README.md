@@ -29,6 +29,11 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 - 🔒 **Privacy Controls**: Manage your data with robust privacy controls, ensuring your information is secure.
 - ⚙️ **Customizable Settings**: Adjust settings to tailor the extension to your needs, including notification preferences and display options.
 - 🚀 **High Performance**: Built with **IndexedDB** for massive storage capacity and **Virtualization** (React Window) to render thousands of comments smoothly without lag.
+- 🎥 **Video Transcripts**: Access and search the full video transcript with clickable timestamps to jump to specific moments.
+- 💬 **Live Chat & Replay**: Fetch and browse live chat messages from past streams (Live Chat Replay), complete with search functionality.
+- 🔡 **Typography Control**: Customize the font family and text size to ensure the most comfortable reading experience.
+- 💾 **Universal Export**: Export not just comments, but also transcripts and live chat logs, with support for formats like SRT (for transcripts).
+- 🚀 **Smart Loading**: Use the "Load All" feature to simultaneously fetch comments, transcripts, and live chat data for a comprehensive view.
 
 ## 🚀 Installation
 
