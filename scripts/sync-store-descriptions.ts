@@ -28,6 +28,9 @@ async function run() {
     // Mimic a real user agent to avoid bot detection
     userAgent:
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    // Anti-detection settings to allow Google Login
+    ignoreDefaultArgs: ['--enable-automation'],
+    args: ['--disable-blink-features=AutomationControlled', '--no-sandbox', '--disable-infobars'],
   });
 
   const page = context.pages().length > 0 ? context.pages()[0] : await context.newPage();
@@ -36,14 +39,24 @@ async function run() {
   console.log('Navigating to Chrome Web Store Developer Dashboard...');
   await page.goto(`https://chrome.google.com/webstore/dev/edit/${EXTENSION_ID}`);
 
-  // 3. Check for Login
-  if (page.url().includes('accounts.google.com') || page.url().includes('signin')) {
+  // 3. Check for Login or Missed Navigation
+  const currentUrl = page.url();
+  if (
+    currentUrl.includes('accounts.google.com') ||
+    currentUrl.includes('signin') ||
+    !currentUrl.includes(EXTENSION_ID)
+  ) {
     console.log('\n!!! ACTION REQUIRED !!!');
-    console.log('You are not logged in.');
-    console.log('Please log in manually in the browser window.');
-    console.log('Once you are on the Developer Dashboard/Edit page, return here and press ENTER.');
+    console.log('It seems we are not on the Developer Dashboard (Edit Page).');
+    console.log(`Current URL: ${currentUrl}`);
+    console.log('1. If you are not logged in, please log in manually in the browser window.');
+    console.log('2. If you are logged in, just wait a moment.');
+    console.log('3. Press ENTER here to force navigation to the Edit page again.');
 
     await new Promise((resolve) => process.stdin.once('data', resolve));
+
+    console.log('Retrying navigation to Developer Dashboard...');
+    await page.goto(`https://chrome.google.com/webstore/dev/edit/${EXTENSION_ID}`);
   }
 
   // Verify we are on the edit page
