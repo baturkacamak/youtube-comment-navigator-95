@@ -188,6 +188,25 @@ echo -e "🎯 ${BOLD}Bumping version: ${YELLOW}${CURVER}${NC} → ${GREEN}${NEW_
 print_separator
 echo ""
 
+# Check if CHANGELOG.md has the new version
+if [ -f "$ROOTDIR/CHANGELOG.md" ]; then
+    if ! grep -q "\[$NEW_VERSION\]" "$ROOTDIR/CHANGELOG.md"; then
+        echo -e "⚠️  ${YELLOW}Warning: CHANGELOG.md does not contain an entry for version ${NEW_VERSION}.${NC}"
+        echo -e "   It is recommended to update the changelog before bumping the version."
+        
+        if [ -t 1 ]; then
+            read -p "   Continue anyway? [y/N]: " -n 1 -r
+            echo ""
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "❌ ${RED}Aborted. Please update CHANGELOG.md first.${NC}"
+                exit 1
+            fi
+        fi
+    else
+        echo -e "✅ ${GREEN}CHANGELOG.md entry found for ${NEW_VERSION}.${NC}"
+    fi
+fi
+
 # Update package.json using npm version (creates commit and tag)
 echo -e "📝 ${BLUE}Updating package.json...${NC}"
 npm version "$NEW_VERSION" -m "chore(release): bump version to %s" --no-git-tag-version
