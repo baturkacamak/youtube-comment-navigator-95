@@ -291,71 +291,71 @@
   }
 }
 
-.pulse {
+#youtube-comment-navigator-app .pulse {
   animation: pulse 1.5s infinite;
 }
 
-.checkbox-animation {
+#youtube-comment-navigator-app .checkbox-animation {
   animation: checkbox-animation 0.3s ease-in-out;
 }
 
-.radio-animation {
+#youtube-comment-navigator-app .radio-animation {
   animation: radio-animation 0.3s ease-in-out;
 }
 
-.spin {
+#youtube-comment-navigator-app .spin {
   animation: spin 1s linear infinite;
 }
 
-.bounce {
+#youtube-comment-navigator-app .bounce {
   animation: bounce 1s ease infinite;
 }
 
-.pulse {
+#youtube-comment-navigator-app .pulse {
   animation: pulse 1.5s infinite;
 }
 
-.wobble {
+#youtube-comment-navigator-app .wobble {
   animation: wobble 1s ease-in-out infinite;
 }
 
-.jello {
+#youtube-comment-navigator-app .jello {
   animation: jello 1s ease-in-out infinite;
 }
 
-.shake {
+#youtube-comment-navigator-app .shake {
   animation: shake 1s ease-in-out infinite;
 }
 
-.tada {
+#youtube-comment-navigator-app .tada {
   animation: tada 1s ease-in-out infinite;
 }
 
-.swing {
+#youtube-comment-navigator-app .swing {
   animation: swing 1s ease-in-out infinite;
 }
 
-.rubberBand {
+#youtube-comment-navigator-app .rubberBand {
   animation: rubberBand 1s ease-in-out infinite;
 }
 
-.heartBeat {
+#youtube-comment-navigator-app .heartBeat {
   animation: heartBeat 1.5s ease-in-out infinite;
 }
 
-.bounceIn {
+#youtube-comment-navigator-app .bounceIn {
   animation: bounceIn 1s ease-in-out;
 }
 
-.flash {
+#youtube-comment-navigator-app .flash {
   animation: flash 1s ease-in-out infinite;
 }
 
-.flip {
+#youtube-comment-navigator-app .flip {
   animation: flip 1s ease-in-out infinite;
 }
 
-.spin-once {
+#youtube-comment-navigator-app .spin-once {
   animation: spin 0.5s ease-in-out 1;
 }
 
@@ -385,10 +385,10 @@
   }
 }
 
-.toggle-on {
+#youtube-comment-navigator-app .toggle-on {
   animation: toggle-on-animation 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.toggle-off {
+#youtube-comment-navigator-app .toggle-off {
   animation: toggle-off-animation 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
