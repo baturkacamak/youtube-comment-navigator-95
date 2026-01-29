@@ -1,5 +1,5 @@
 export type ContentType = 'transcript' | 'livechat' | 'comments' | 'bookmarks';
-export type DownloadFormat = 'txt' | 'json' | 'csv';
+export type DownloadFormat = 'txt' | 'json' | 'csv' | 'srt';
 export type DownloadScope = 'visible' | 'all';
 
 export interface DownloadOption {
@@ -30,7 +30,7 @@ export interface FormatConfig {
 export const FORMAT_CONFIG: Record<ContentType, FormatConfig> = {
   transcript: {
     default: 'txt',
-    available: ['txt', 'json'],
+    available: ['txt', 'json', 'srt'],
   },
   livechat: {
     default: 'txt',

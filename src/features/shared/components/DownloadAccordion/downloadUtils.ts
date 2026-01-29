@@ -1,6 +1,8 @@
 import { getVideoTitle } from '../../utils/getVideoTitle';
 import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdFromUrl';
 import { DownloadFormat, DownloadScope, ContentType } from './types';
+import { convertToSrt } from '../../../transcripts/utils/convertToSrt';
+import { TranscriptEntry } from '../../../transcripts/utils/processTranscriptData';
 
 /**
  * Generate a filename for the download
@@ -123,6 +125,23 @@ export const downloadAsCSV = (data: unknown, fileName: string): void => {
 };
 
 /**
+ * Download data as an SRT subtitle file
+ * @throws Error if data is not a valid transcript array
+ */
+export const downloadAsSRT = (data: unknown, fileName: string): void => {
+  if (!Array.isArray(data)) {
+    throw new Error('SRT download requires an array of transcript entries');
+  }
+
+  if (data.length === 0) {
+    throw new Error('Cannot create SRT file from empty transcript');
+  }
+
+  const content = convertToSrt(data as TranscriptEntry[]);
+  triggerDownload(content, fileName, 'text/plain;charset=utf-8');
+};
+
+/**
  * Execute download based on format
  */
 export const executeDownload = (
@@ -140,6 +159,9 @@ export const executeDownload = (
       break;
     case 'csv':
       downloadAsCSV(data, fileName);
+      break;
+    case 'srt':
+      downloadAsSRT(data, fileName);
       break;
   }
 };

@@ -62,6 +62,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
     txt: 'TXT',
     json: 'JSON',
     csv: 'CSV',
+    srt: 'SRT',
   };
 
   return (
