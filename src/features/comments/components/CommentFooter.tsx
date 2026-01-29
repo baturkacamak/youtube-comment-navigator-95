@@ -127,7 +127,10 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
     }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
     return (
-      <div className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2">
+      <div
+        className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2 select-none"
+        aria-hidden="true"
+      >
         <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
           <div className="flex items-center">
             <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true" />
