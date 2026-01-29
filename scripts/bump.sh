@@ -16,6 +16,7 @@ NC='\033[0m' # No Color
 SCRIPT_DIR=$(dirname "$0")
 ROOTDIR="${SCRIPT_DIR}/.."
 PACKAGE_FILE="${ROOTDIR}/package.json"
+LOCK_FILE="${ROOTDIR}/package-lock.json"
 MANIFEST_FILE="${ROOTDIR}/manifest.json"
 README_FILE="${ROOTDIR}/README.md"
 
@@ -222,6 +223,7 @@ fi
 # Git operations
 echo -e "📦 ${BLUE}Committing changes...${NC}"
 git add "${PACKAGE_FILE}" "${MANIFEST_FILE}"
+[ -f "$LOCK_FILE" ] && git add "${LOCK_FILE}"
 [ -f "$README_FILE" ] && git add "${README_FILE}"
 
 git commit -m "chore(release): bump version to ${NEW_VERSION}"
