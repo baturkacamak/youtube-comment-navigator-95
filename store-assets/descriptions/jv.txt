@@ -1,18 +1,21 @@
-🚀 Tingkatake pengalaman YouTube sampeyan nganggo piranti komentar paling apik!
+🚀 Tingkatake pengalaman YouTube sampeyan nganggo piranti komentar & transkrip paling apik!
 
-YouTube Comment Navigator 95 nggawa telusuran cepet kilat, penyaringan kuat, lan estetika nostalgia taun 90-an menyang video favorit sampeyan. Apa sampeyan nggoleki cap wektu tartamtu, balesan lucu, utawa nglacak diskusi ing antarane ewonan komentar, kita siap mbantu.
+YouTube Comment Navigator 95 nggawa telusuran cepet kilat, penyaringan kuat, lan estetika nostalgia taun 90-an menyang video favorit sampeyan. Apa sampeyan nggoleki cap wektu tartamtu, balesan lucu, nglacak diskusi, utawa nggoleki liwat transkrip video, kita siap mbantu.
 
 ✨ KENAPA SAMPEYAN BAKAL SENENG:
 - 🔍 TELUSURAN REAL-TIME: Temokake persis apa sing sampeyan goleki nalika ngetik. Ora ana maneh nggulung tanpa wates.
-- 🚀 KINERJA TINGGI: Dibangun nganggo IndexedDB lan List Virtualization. Nangani 10.000+ komentar kanthi lancar tanpa nggawe browser sampeyan alon.
+- 📜 TRANSKRIP VIDEO: Goleki langsung transkrip video lengkap lan mlumpat menyang wektu tartamtu nganggo cap wektu sing bisa diklik.
+- 💬 BALENI OBROLAN LANGSUNG: Jupuk lan telusuri pesen obrolan langsung saka stream kepungkur, lengkap karo fungsi telusuran.
+- 🚀 KINERJA TINGGI: Dibangun nganggo IndexedDB lan List Virtualization. Nangani 10.000+ komentar/pesen kanthi lancar tanpa nggawe browser sampeyan alon.
 - 💾 BOOKMARK & PIN: Simpen komentar penting lan utas favorit kanggo diakses kanthi cepet mengko.
 - 📊 FILTER LANJUTAN: Urutake miturut seneng, balesan, tanggal, utawa acak urutan kanggo perspektif anyar.
 - 🕒 CAP WEKTU AKURAT: Wektu relatif diitung maneh kanthi nyata, sanajan kanggo bookmark sing disimpen.
-- 📁 EKSPOR DATA: Simpen komentar menyang file kanggo diwaca utawa dianalisis offline.
+- 📁 EKSPOR UNIVERSAL: Ekspor komentar, transkrip (SRT), lan log obrolan langsung kanggo diwaca utawa dianalisis offline.
 - 🎨 NUANSA NOSTALGIA: UI sing apik lan bisa disesuaikan sing diilhami dening jaman klasik taun 90-an, kanthi dhukungan Mode Gelap lengkap.
+- 🔡 KONTROL TIPOGRAFI: Setel ukuran lan kulawarga font kanggo pengalaman maca sing sampurna.
 
 🛠️ FITUR UTAMA:
-- Fungsionalitas "Muat Kabeh" siji klik.
+- "Muat Kabeh" Pinter kanggo komentar, obrolan, lan transkrip.
 - Nuduhake link jero kanggo komentar tartamtu.
 - Notifikasi nyata kanggo balesan anyar.
 - Dhukungan multibasa kanggo komunitas global.

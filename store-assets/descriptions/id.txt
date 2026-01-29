@@ -1,18 +1,21 @@
-🚀 Tingkatkan pengalaman YouTube Anda dengan alat komentar terhebat!
+🚀 Tingkatkan pengalaman YouTube Anda dengan alat komentar & transkrip terhebat!
 
-YouTube Comment Navigator 95 menghadirkan pencarian secepat kilat, pemfilteran canggih, dan estetika nostalgia tahun 90-an ke video favorit Anda. Baik Anda mencari stempel waktu tertentu, balasan lucu, atau melacak diskusi di antara ribuan komentar, kami siap membantu Anda.
+YouTube Comment Navigator 95 menghadirkan pencarian secepat kilat, pemfilteran canggih, dan estetika nostalgia tahun 90-an ke video favorit Anda. Baik Anda mencari stempel waktu tertentu, balasan lucu, melacak diskusi, atau mencari melalui transkrip video, kami siap membantu Anda.
 
 ✨ MENGAPA ANDA AKAN MENYUKAINYA:
 - 🔍 PENCARIAN REAL-TIME: Temukan apa yang Anda cari saat Anda mengetik. Tidak ada lagi gulir tanpa akhir.
-- 🚀 KINERJA TINGGI: Dibuat dengan IndexedDB dan List Virtualization. Tangani 10.000+ komentar dengan lancar tanpa membuat browser Anda lambat.
+- 📜 TRANSKRIP VIDEO: Cari langsung transkrip video lengkap dan lompat ke momen tertentu dengan stempel waktu yang dapat diklik.
+- 💬 PEMUTARAN ULANG OBROLAN LANGSUNG: Ambil dan jelajahi pesan obrolan langsung dari streaming sebelumnya, lengkap dengan fungsi pencarian.
+- 🚀 KINERJA TINGGI: Dibuat dengan IndexedDB dan List Virtualization. Tangani 10.000+ komentar/pesan dengan lancar tanpa membuat browser Anda lambat.
 - 💾 BOOKMARK & PIN: Simpan komentar penting dan utas favorit untuk diakses secara instan nanti.
 - 📊 FILTER LANJUTAN: Urutkan berdasarkan suka, balasan, tanggal, atau bahkan acak urutan untuk perspektif baru.
 - 🕒 STEMPEL WAKTU AKURAT: Waktu relatif dihitung ulang secara real-time, bahkan untuk bookmark yang Anda simpan.
-- 📁 EKSPOR DATA: Simpan komentar ke file untuk dibaca atau dianalisis secara offline.
+- 📁 EKSPOR UNIVERSAL: Ekspor komentar, transkrip (SRT), dan log obrolan langsung untuk dibaca atau dianalisis secara offline.
 - 🎨 NUANSA NOSTALGIA: UI yang indah dan dapat disesuaikan yang terinspirasi oleh era klasik tahun 90-an, dengan dukungan Mode Gelap penuh.
+- 🔡 KONTROL TIPOGRAFI: Sesuaikan ukuran dan jenis font untuk pengalaman membaca yang sempurna.
 
 🛠️ FITUR UTAMA:
-- Fungsionalitas "Muat Semua" sekali klik.
+- "Muat Semua" Cerdas untuk komentar, obrolan, dan transkrip.
 - Berbagi tautan dalam untuk komentar spesifik.
 - Notifikasi real-time untuk balasan baru.
 - Dukungan multibahasa untuk komunitas global.

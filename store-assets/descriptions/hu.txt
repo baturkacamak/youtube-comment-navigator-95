@@ -1,18 +1,21 @@
-🚀 Emelje a YouTube-élményét a végső kommentelő eszközzel!
+🚀 Emelje a YouTube-élményét a végső komment- és átirat-eszközzel!
 
-A YouTube Comment Navigator 95 villámgyors keresést, erőteljes szűrést és nosztalgikus 90-es évekbeli esztétikát hoz a kedvenc videóidhoz. Akár egy konkrét időbélyeget, egy vicces választ keresel, vagy több ezer hozzászólás közötti beszélgetéseket követsz, mi gondoskodunk róla.
+A YouTube Comment Navigator 95 villámgyors keresést, erőteljes szűrést és nosztalgikus 90-es évekbeli esztétikát hoz a kedvenc videóidhoz. Akár egy konkrét időbélyeget, egy vicces választ keresel, beszélgetéseket követsz, vagy a videó átirataiban keresel, mi gondoskodunk róla.
 
 ✨ MIÉRT FOGOD IMÁDNI:
 - 🔍 VALÓS IDEJŰ KERESÉS: Találd meg pontosan azt, amit keresel, miközben gépelsz. Nincs több végtelen görgetés.
-- 🚀 NAGY TELJESÍTMÉNY: IndexedDB-vel és List Virtualization-nel készült. Kezelj simán 10 000+ hozzászólást anélkül, hogy a böngésződ lelassulna.
+- 📜 VIDEÓ ÁTIRATOK: Keresd azonnal a videó teljes szövegét, és ugorj konkrét pillanatokhoz a kattintható időbélyegekkel.
+- 💬 ÉLŐ CSEVEGÉS VISSZAJÁTSZÁSA: Hívd le és böngészd a korábbi közvetítések élő csevegési üzeneteit, teljes keresési funkcióval.
+- 🚀 NAGY TELJESÍTMÉNY: IndexedDB-vel és List Virtualization-nel készült. Kezelj simán 10 000+ hozzászólást/üzenetet anélkül, hogy a böngésződ lelassulna.
 - 💾 KÖNYVJELZŐK ÉS RÖGZÍTÉS: Mentsd el a fontos hozzászólásokat és kedvenc szálakat, hogy később azonnal hozzáférhess.
 - 📊 HALADÓ SZŰRŐK: Rendezz lájkok, válaszok, dátum szerint, vagy akár véletlenszerűen keverd meg a sorrendet egy új perspektíváért.
 - 🕒 PONTOS IDŐBÉLYEGZŐK: A relatív idők valós időben újra kiszámolódnak, még a mentett könyvjelzőidnél is.
-- 📁 ADATEXPORTÁLÁS: Mentsd el a hozzászólásokat egy fájlba offline olvasáshoz vagy elemzéshez.
+- 📁 UNIVERZÁLIS EXPORTÁLÁS: Exportáld a hozzászólásokat, átiratokat (SRT) és élő csevegési naplókat offline olvasáshoz vagy elemzéshez.
 - 🎨 NOSZTALGIKUS HANGULAT: Egy gyönyörű, testreszabható felület, amelyet a klasszikus 90-es évek korszaka ihletett, teljes Sötét mód támogatással.
+- 🔡 TIPOGRÁFIA VEZÉRLÉS: Testreszabhatod a betűméretet és a betűtípust a tökéletes olvasási élményért.
 
 🛠️ FŐBB JELLEMZŐK:
-- "Összes betöltése" funkció egy kattintással.
+- Okos "Összes betöltése" hozzászólásokhoz, csevegéshez és átiratokhoz.
 - Mélylink megosztás konkrét hozzászólásokhoz.
 - Valós idejű értesítések új válaszokról.
 - Többnyelvű támogatás egy globális közösség számára.

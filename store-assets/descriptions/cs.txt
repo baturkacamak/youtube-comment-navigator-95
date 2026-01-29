@@ -1,18 +1,21 @@
-🚀 Zvyšte svůj zážitek z YouTube s ultimátním nástrojem pro komentáře!
+🚀 Zvyšte svůj zážitek z YouTube s ultimátním nástrojem pro komentáře a přepisy!
 
-YouTube Comment Navigator 95 přináší bleskově rychlé vyhledávání, výkonné filtrování a nostalgickou estetiku 90. let do vašich oblíbených videí. Ať už hledáte konkrétní časovou značku, vtipnou odpověď, nebo sledujete diskuze mezi tisíci komentářů, máme pro vás řešení.
+YouTube Comment Navigator 95 přináší bleskově rychlé vyhledávání, výkonné filtrování a nostalgickou estetiku 90. let do vašich oblíbených videí. Ať už hledáte konkrétní časovou značku, vtipnou odpověď, sledujete diskuze nebo prohledáváte přepisy videí, máme pro vás řešení.
 
 ✨ PROČ SI TO ZAMILUJETE:
 - 🔍 VYHLEDÁVÁNÍ V REÁLNÉM ČASE: Najděte přesně to, co hledáte, během psaní. Už žádné nekonečné posouvání.
-- 🚀 VYSOKÝ VÝKON: Vytvořeno s IndexedDB a List Virtualization. Plynule zpracujte více než 10 000 komentářů, aniž by se váš prohlížeč zpomalil.
+- 📜 PŘEPISY VIDEÍ: Okamžitě prohledávejte celý přepis videa a přeskakujte na konkrétní momenty pomocí klikatelných časových značek.
+- 💬 PŘEHRÁVÁNÍ ŽIVÉHO CHATU: Načtěte a procházejte zprávy živého chatu z minulých streamů, včetně funkce vyhledávání.
+- 🚀 VYSOKÝ VÝKON: Vytvořeno s IndexedDB a List Virtualization. Plynule zpracujte více než 10 000 komentářů/zpráv, aniž by se váš prohlížeč zpomalil.
 - 💾 ZÁLOŽKY A PŘIPNUTÍ: Uložte si důležité komentáře a oblíbená vlákna pro okamžitý přístup později.
 - 📊 POKROČILÉ FILTRY: Třiďte podle lajků, odpovědí, data, nebo dokonce náhodně zamíchejte pořadí pro novou perspektivu.
 - 🕒 PŘESNÉ ČASOVÉ ZNAČKY: Relativní časy jsou přepočítávány v reálném čase, dokonce i pro vaše uložené záložky.
-- 📁 EXPORT DAT: Uložte komentáře do souboru pro offline čtení nebo analýzu.
+- 📁 UNIVERZÁLNÍ EXPORT: Exportujte komentáře, přepisy (SRT) a protokoly živého chatu pro offline čtení nebo analýzu.
 - 🎨 NOSTALGICKÁ ATMOSFÉRA: Krásné, přizpůsobitelné UI inspirované klasickou érou 90. let, s plnou podporou Tmavého režimu.
+- 🔡 OVLÁDÁNÍ TYPOGRAFIE: Přizpůsobte si velikost a rodinu písma pro dokonalý zážitek ze čtení.
 
 🛠️ KLÍČOVÉ VLASTNOSTI:
-- Funkce "Načíst vše" jedním kliknutím.
+- Chytré "Načíst vše" pro komentáře, chat a přepisy.
 - Sdílení hlubokých odkazů na konkrétní komentáře.
 - Oznámení v reálném čase o nových odpovědích.
 - Vícejazyčná podpora pro globální komunitu.

@@ -1,18 +1,21 @@
-🚀 YouTube deneyiminizi en güçlü yorum aracıyla zirveye taşıyın!
+🚀 YouTube deneyiminizi en güçlü yorum ve transkript aracıyla zirveye taşıyın!
 
-YouTube Comment Navigator 95; en sevdiğiniz videolar için şimşek hızında arama, güçlü filtreleme ve 90'ların nostaljik estetiğini bir araya getiriyor. İster belirli bir zaman damgasını, ister komik bir yanıtı arıyor olun; binlerce yorum arasında kaybolmanıza artık gerek yok.
+YouTube Comment Navigator 95; şimşek hızında arama, güçlü filtreleme ve 90'ların nostaljik estetiğini favori videolarınıza getiriyor. İster belirli bir zaman damgasını, ister komik bir yanıtı arıyor olun; ister binlerce yorum arasında gezinin, ister video transkriptini tarayın, ihtiyacınız olan her şey burada.
 
 ✨ NEDEN SEVECEKSİNİZ?
 - 🔍 GERÇEK ZAMANLI ARAMA: Yazdığınız anda aradığınızı bulun. Sonsuz kaydırmaya son!
-- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Sanallaştırma ile geliştirildi. 10.000'den fazla yorumu tarayıcınız kasmadan akıcı bir şekilde yönetin.
+- 📜 VİDEO TRANSKRİPTLERİ: Videonun tam metnini anında arayın ve tıklanabilir zaman damgalarıyla o ana gidin.
+- 💬 CANLI SOHBET TEKRARI: Geçmiş yayınların canlı sohbet mesajlarını getirin ve içinde arama yapın.
+- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Sanallaştırma ile geliştirildi. 10.000'den fazla yorumu/mesajı tarayıcınız kasmadan akıcı bir şekilde yönetin.
 - 💾 YER İŞARETLERİ VE SABİTLEME: Önemli yorumları ve favori tartışmaları kaydedin, daha sonra anında erişin.
 - 📊 GELİŞMİŞ FİLTRELER: Beğenilere, yanıtlara veya tarihe göre sıralayın; hatta yeni bir bakış açısı için sırayı rastgele hale getirin.
 - 🕒 DOĞRU ZAMAN DAMGALARI: Kaydedilen yer işaretleriniz için bile zaman verileri gerçek zamanlı olarak yeniden hesaplanır.
-- 📁 VERİ DIŞA AKTARMA: Çevrimdışı okuma veya analiz için yorumları dosyaya kaydedin.
+- 📁 EVRENSEL DIŞA AKTARMA: Yorumları, transkriptleri (SRT) ve canlı sohbet kayıtlarını çevrimdışı kullanım için kaydedin.
 - 🎨 NOSTALJİK HAVA: Klasik 90'lar döneminden ilham alan, tamamen özelleştirilebilir ve Karanlık Mod destekli harika bir arayüz.
+- 🔡 TİPOGRAFİ KONTROLÜ: Mükemmel okuma deneyimi için yazı tipi boyutunu ve ailesini özelleştirin.
 
 🛠️ ÖNE ÇIKAN ÖZELLİKLER:
-- Tek tıkla "Hepsini Yükle" fonksiyonu.
+- Yorumlar, sohbet ve transkriptler için akıllı "Hepsini Yükle".
 - Belirli yorumlar için doğrudan bağlantı paylaşımı.
 - Yeni yanıtlar için gerçek zamanlı bildirimler.
 - Küresel bir topluluk için çok dilli destek.

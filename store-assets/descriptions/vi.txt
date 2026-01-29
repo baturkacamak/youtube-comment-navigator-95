@@ -1,18 +1,21 @@
-🚀 Nâng cao trải nghiệm YouTube của bạn với công cụ bình luận đỉnh cao!
+🚀 Nâng cao trải nghiệm YouTube của bạn với công cụ bình luận và bản ghi đỉnh cao!
 
-YouTube Comment Navigator 95 mang đến khả năng tìm kiếm nhanh như chớp, bộ lọc mạnh mẽ và thẩm mỹ hoài cổ của thập niên 90 cho các video yêu thích của bạn. Dù bạn đang tìm kiếm một dấu thời gian cụ thể, một câu trả lời hài hước, hay theo dõi các cuộc thảo luận qua hàng nghìn bình luận, chúng tôi đều có thể giúp bạn.
+YouTube Comment Navigator 95 mang đến khả năng tìm kiếm nhanh như chớp, bộ lọc mạnh mẽ và thẩm mỹ hoài cổ của thập niên 90 cho các video yêu thích của bạn. Dù bạn đang tìm kiếm một dấu thời gian cụ thể, một câu trả lời hài hước, theo dõi các cuộc thảo luận hay tìm kiếm qua bản ghi video, chúng tôi đều có thể giúp bạn.
 
 ✨ TẠI SAO BẠN SẼ YÊU THÍCH NÓ:
 - 🔍 TÌM KIẾM THỜI GIAN THỰC: Tìm chính xác những gì bạn đang tìm kiếm ngay khi bạn gõ. Không còn phải cuộn vô tận.
-- 🚀 HIỆU SUẤT CAO: Được xây dựng với IndexedDB và List Virtualization. Xử lý mượt mà hơn 10.000 bình luận mà không làm chậm trình duyệt của bạn.
+- 📜 BẢN GHI VIDEO: Tìm kiếm ngay lập tức toàn bộ bản ghi video và chuyển đến các khoảnh khắc cụ thể bằng các dấu thời gian có thể nhấp.
+- 💬 PHÁT LẠI TRÒ CHUYỆN TRỰC TIẾP: Lấy và duyệt các tin nhắn trò chuyện trực tiếp từ các luồng trước đây, hoàn chỉnh với chức năng tìm kiếm.
+- 🚀 HIỆU SUẤT CAO: Được xây dựng với IndexedDB và List Virtualization. Xử lý mượt mà hơn 10.000 bình luận/tin nhắn mà không làm chậm trình duyệt của bạn.
 - 💾 ĐÁNH DẤU & GHIM: Lưu các bình luận quan trọng và các luồng yêu thích để truy cập chúng ngay lập tức sau này.
 - 📊 BỘ LỌC NÂNG CAO: Sắp xếp theo lượt thích, câu trả lời, ngày tháng, hoặc thậm chí xáo trộn thứ tự để có một góc nhìn mới.
 - 🕒 DẤU THỜI GIAN CHÍNH XÁC: Thời gian tương đối được tính toán lại theo thời gian thực, ngay cả đối với các dấu trang đã lưu của bạn.
-- 📁 XUẤT DỮ LIỆU: Lưu bình luận vào một tệp để đọc ngoại tuyến hoặc phân tích.
+- 📁 XUẤT TOÀN DIỆN: Xuất bình luận, bản ghi (SRT) và nhật ký trò chuyện trực tiếp để đọc ngoại tuyến hoặc phân tích.
 - 🎨 CẢM HỨNG HOÀI CỔ: Một giao diện người dùng đẹp, có thể tùy chỉnh được lấy cảm hứng từ kỷ nguyên cổ điển của thập niên 90, với sự hỗ trợ đầy đủ của Chế độ tối.
+- 🔡 KIỂM SOÁT TYPOGRAPHY: Tùy chỉnh kích thước và phông chữ để có trải nghiệm đọc hoàn hảo.
 
 🛠️ TÍNH NĂNG CHÍNH:
-- Chức năng "Tải tất cả" chỉ với một cú nhấp chuột.
+- "Tải tất cả" thông minh cho bình luận, trò chuyện và bản ghi.
 - Chia sẻ liên kết sâu cho các bình luận cụ thể.
 - Thông báo thời gian thực cho các câu trả lời mới.
 - Hỗ trợ đa ngôn ngữ cho một cộng đồng toàn cầu.

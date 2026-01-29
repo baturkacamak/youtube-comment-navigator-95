@@ -1,18 +1,21 @@
-🚀 Eleve sua experiência no YouTube com a ferramenta de comentários definitiva!
+🚀 Eleve sua experiência no YouTube com a ferramenta definitiva de comentários e transcrições!
 
-O YouTube Comment Navigator 95 traz busca ultrarrápida, filtros poderosos e uma estética nostálgica dos anos 90 para seus vídeos favoritos. Se você está procurando um carimbo de data/hora específico, uma resposta engraçada ou acompanhando discussões entre milhares de comentários, nós temos a solução.
+O YouTube Comment Navigator 95 traz busca ultrarrápida, filtros poderosos e uma estética nostálgica dos anos 90 para seus vídeos favoritos. Se você está procurando um carimbo de data/hora específico, uma resposta engraçada, acompanhando discussões ou pesquisando em transcrições de vídeo, nós temos a solução.
 
 ✨ POR QUE VOCÊ VAI ADORAR:
 - 🔍 BUSCA EM TEMPO REAL: Encontre exatamente o que você procura enquanto digita. Chega de rolagem infinita.
-- 🚀 ALTO DESEMPENHO: Construído com IndexedDB e Virtualização de Lista. Lide com mais de 10.000 comentários sem atrasar seu navegador.
+- 📜 TRANSCRIÇÕES DE VÍDEO: Pesquise instantaneamente a transcrição completa do vídeo e pule para momentos específicos com carimbos de data/hora clicáveis.
+- 💬 REPLAY DE CHAT AO VIVO: Busque e navegue por mensagens de chat ao vivo de transmissões passadas, com funcionalidade de busca completa.
+- 🚀 ALTO DESEMPENHO: Construído com IndexedDB e Virtualização de Lista. Lide com mais de 10.000 comentários/mensagens sem atrasar seu navegador.
 - 💾 MARCADORES E FIXAÇÃO: Salve comentários importantes e tópicos favoritos para acessá-los instantaneamente mais tarde.
 - 📊 FILTROS AVANÇADOS: Classifique por curtidas, respostas, data ou até mesmo randomize a ordem para uma nova perspectiva.
 - 🕒 CARIMBOS DE DATA/HORA PRECISOS: Os tempos relativos são recalculados em tempo real, mesmo para seus marcadores salvos.
-- 📁 EXPORTAR DADOS: Salve comentários em um arquivo para leitura offline ou análise.
+- 📁 EXPORTAÇÃO UNIVERSAL: Exporte comentários, transcrições (SRT) e logs de chat ao vivo para leitura offline ou análise.
 - 🎨 VIBE NOSTÁLGICO: Uma interface bonita e personalizável inspirada na era clássica dos anos 90, com suporte total ao Modo Escuro.
+- 🔡 CONTROLE DE TIPOGRAFIA: Personalize o tamanho e a família da fonte para a experiência de leitura perfeita.
 
 🛠️ PRINCIPAIS RECURSOS:
-- Funcionalidade "Carregar Tudo" com um clique.
+- "Carregar Tudo" inteligente para comentários, chat e transcrições.
 - Compartilhamento de links diretos para comentários específicos.
 - Notificações em tempo real para novas respostas.
 - Suporte multilíngue para uma comunidade global.

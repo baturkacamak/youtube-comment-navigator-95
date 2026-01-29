@@ -1,18 +1,21 @@
-🚀 Verbeter je YouTube-ervaring met de ultieme commentaar-tool!
+🚀 Verbeter je YouTube-ervaring met de ultieme tool voor reacties en transcripties!
 
-YouTube Comment Navigator 95 brengt bliksemsnel zoeken, krachtige filtering en een nostalgische jaren '90-esthetiek naar je favoriete video's. Of je nu op zoek bent naar een specifieke timestamp, een grappige reactie, of discussies volgt in duizenden reacties, wij hebben de oplossing.
+YouTube Comment Navigator 95 brengt bliksemsnel zoeken, krachtige filtering en een nostalgische jaren '90-esthetiek naar je favoriete video's. Of je nu op zoek bent naar een specifieke timestamp, een grappige reactie, discussies volgt of door videotranscripties zoekt, wij hebben de oplossing.
 
 ✨ WAAROM JE ERVAN ZULT HOUDEN:
 - 🔍 REAL-TIME ZOEKEN: Vind precies wat je zoekt terwijl je typt. Nooit meer eindeloos scrollen.
-- 🚀 HOGE PRESTATIES: Gebouwd met IndexedDB en List Virtualization. Verwerk soepel 10.000+ reacties zonder dat je browser vertraagt.
+- 📜 VIDEOTRANSCRIPTIES: Doorzoek direct de volledige videotranscriptie en spring naar specifieke momenten met aanklikbare timestamps.
+- 💬 LIVE CHAT REPLAY: Haal live chatberichten van eerdere streams op en blader erdoorheen, compleet met zoekfunctionaliteit.
+- 🚀 HOGE PRESTATIES: Gebouwd met IndexedDB en List Virtualization. Verwerk soepel 10.000+ reacties/berichten zonder dat je browser vertraagt.
 - 💾 BLADWIJZERS & VASTZETTEN: Sla belangrijke reacties en favoriete threads op om er later direct toegang toe te hebben.
 - 📊 GEAVANCEERDE FILTERS: Sorteer op likes, reacties, datum, of maak de volgorde zelfs willekeurig voor een frisse kijk.
 - 🕒 NAUWKEURIGE TIJDSTEMPELS: Relatieve tijden worden in real-time herberekend, zelfs voor je opgeslagen bladwijzers.
-- 📁 DATA EXPORTEREN: Sla reacties op in een bestand voor offline lezen of analyse.
+- 📁 UNIVERSELE EXPORT: Exporteer reacties, transcripties (SRT) en live chatlogs voor offline lezen of analyse.
 - 🎨 NOSTALGISCHE SFEER: Een prachtige, aanpasbare UI geïnspireerd op het klassieke jaren '90-tijdperk, met volledige Dark Mode-ondersteuning.
+- 🔡 TYPOGRAFIE CONTROLE: Pas lettergrootte en lettertype aan voor de perfecte leeservaring.
 
 🛠️ BELANGRIJKSTE KENMERKEN:
-- "Alles laden"-functionaliteit met één klik.
+- Slimme "Alles laden" voor reacties, chat en transcripties.
 - Dieplink delen voor specifieke reacties.
 - Real-time meldingen voor nieuwe reacties.
 - Meertalige ondersteuning voor een wereldwijde gemeenschap.

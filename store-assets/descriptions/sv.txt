@@ -1,18 +1,21 @@
-🚀 Förbättra din YouTube-upplevelse med det ultimata kommentarsverktyget!
+🚀 Förbättra din YouTube-upplevelse med det ultimata verktyget för kommentarer och transkriberingar!
 
-YouTube Comment Navigator 95 ger blixtsnabb sökning, kraftfulla filter och en nostalgisk 90-talsestetik till dina favoritvideor. Oavsett om du letar efter en specifik tidsstämpel, ett roligt svar, eller spårar diskussioner bland tusentals kommentarer, har vi lösningen.
+YouTube Comment Navigator 95 ger blixtsnabb sökning, kraftfulla filter och en nostalgisk 90-talsestetik till dina favoritvideor. Oavsett om du letar efter en specifik tidsstämpel, ett roligt svar, spårar diskussioner eller söker igenom videotranskriberingar, har vi lösningen.
 
 ✨ VARFÖR DU KOMMER ÄLSKA DET:
 - 🔍 REALTIDSSÖKNING: Hitta exakt vad du letar efter medan du skriver. Inget mer oändligt rullande.
-- 🚀 HÖG PRESTANDA: Byggd med IndexedDB och List Virtualization. Hantera smidigt 10 000+ kommentarer utan att din webbläsare laggar.
+- 📜 VIDEOTRANSKRIBERINGAR: Sök omedelbart i hela videotranskriberingen och hoppa till specifika ögonblick med klickbara tidsstämplar.
+- 💬 LIVE CHAT REPLAY: Hämta och bläddra i livechattmeddelanden från tidigare strömmar, komplett med sökfunktion.
+- 🚀 HÖG PRESTANDA: Byggd med IndexedDB och List Virtualization. Hantera smidigt 10 000+ kommentarer/meddelanden utan att din webbläsare laggar.
 - 💾 BOKMÄRK & FÄST: Spara viktiga kommentarer och favorittrådar för att omedelbart komma åt dem senare.
 - 📊 AVANCERADE FILTER: Sortera efter gillamarkeringar, svar, datum, eller till och med slumpa ordningen för ett nytt perspektiv.
 - 🕒 EXAKTA TIDSSTÄMPLAR: Relativa tider räknas om i realtid, även för dina sparade bokmärken.
-- 📁 EXPORTERA DATA: Spara kommentarer till en fil för offlineläsning eller analys.
+- 📁 UNIVERSELL EXPORT: Exportera kommentarer, transkriberingar (SRT) och livechattloggar för offlineläsning eller analys.
 - 🎨 NOSTALGISK KÄNSLA: Ett vackert, anpassningsbart gränssnitt inspirerat av den klassiska 90-talseran, med fullt stöd för mörkt läge.
+- 🔡 TYPOGRAFIKONTROLL: Anpassa teckenstorlek och teckensnitt för den perfekta läsupplevelsen.
 
 🛠️ NYCKELFUNKTIONER:
-- "Ladda alla"-funktion med ett klick.
+- Smart "Ladda alla" för kommentarer, chatt och transkriberingar.
 - Djuplänkdelning för specifika kommentarer.
 - Realtidsaviseringar för nya svar.
 - Flerspråkigt stöd för en global gemenskap.

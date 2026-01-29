@@ -1,18 +1,21 @@
-🚀 Migliora la tua esperienza su YouTube con lo strumento definitivo per i commenti!
+🚀 Migliora la tua esperienza su YouTube con lo strumento definitivo per commenti e trascrizioni!
 
-YouTube Comment Navigator 95 porta ricerca istantanea, filtri potenti e un'estetica nostalgica degli anni '90 sui tuoi video preferiti. Che tu stia cercando un timestamp specifico, una risposta divertente o seguendo discussioni tra migliaia de commenti, abbiamo la soluzione per te.
+YouTube Comment Navigator 95 porta ricerca istantanea, filtri potenti e un'estetica nostalgica degli anni '90 sui tuoi video preferiti. Che tu stia cercando un timestamp specifico, una risposta divertente, seguendo discussioni o cercando nelle trascrizioni video, abbiamo la soluzione per te.
 
 ✨ PERCHÉ LO ADORERAI:
 - 🔍 RICERCA IN TEMPO REALE: Trova esattamente quello che cerchi mentre digiti. Basta scorrere all'infinito.
-- 🚀 ALTE PRESTAZIONI: Sviluppato con IndexedDB e List Virtualization. Gestisci oltre 10.000 commenti senza rallentare il browser.
+- 📜 TRASCRIZIONI VIDEO: Cerca istantaneamente nell'intera trascrizione del video e salta a momenti specifici con timestamp cliccabili.
+- 💬 REPLAY CHAT DAL VIVO: Recupera e sfoglia i messaggi della chat dal vivo dagli stream passati, con funzionalità di ricerca completa.
+- 🚀 ALTE PRESTAZIONI: Sviluppato con IndexedDB e List Virtualization. Gestisci oltre 10.000 commenti/messaggi senza rallentare il browser.
 - 💾 SEGNALIBRI E PIN: Salva i commenti importanti e i thread preferiti per accedervi istantaneamente in seguito.
 - 📊 FILTRI AVANZATI: Ordina per like, risposte, data o randomizza l'ordine per una prospettiva fresca.
 - 🕒 TIMESTAMP PRECISI: I tempi relativi vengono ricalcolati in tempo reale, anche per i segnalibri salvati.
-- 📁 ESPORTA DATI: Salva i commenti in un file per la lettura offline o l'analisi.
+- 📁 ESPORTAZIONE UNIVERSALE: Esporta commenti, trascrizioni (SRT) e log della chat dal vivo per la lettura offline o l'analisi.
 - 🎨 VIBRAZIONI NOSTALGICHE: Un'interfaccia bellissima e personalizzabile ispirata ai classici anni '90, con supporto completo alla Dark Mode.
+- 🔡 CONTROLLO TIPOGRAFIA: Personalizza la dimensione e la famiglia del carattere per un'esperienza di lettura perfetta.
 
 🛠️ CARATTERISTICHE PRINCIPALI:
-- Funzionalità "Carica tutto" con un clic.
+- "Carica tutto" intelligente per commenti, chat e trascrizioni.
 - Condivisione di link diretti a commenti specifici.
 - Notifiche in tempo reale per nuove risposte.
 - Supporto multilingua per una community globale.

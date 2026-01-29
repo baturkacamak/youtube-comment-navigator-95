@@ -1,18 +1,21 @@
-🚀 Podnieś swoje doświadczenie na YouTube na wyższy poziom dzięki najlepszemu narzędziu do komentarzy!
+🚀 Podnieś swoje doświadczenie na YouTube na wyższy poziom dzięki najlepszemu narzędziu do komentarzy i transkrypcji!
 
-YouTube Comment Navigator 95 wprowadza błyskawiczne wyszukiwanie, potężne filtry i nostalgiczną estetykę lat 90. do Twoich ulubionych filmów. Niezależnie od tego, czy szukasz konkretnego znacznika czasu, zabawnej odpowiedzi, czy śledzisz dyskusje wśród tysięcy komentarzy, mamy coś dla Ciebie.
+YouTube Comment Navigator 95 wprowadza błyskawiczne wyszukiwanie, potężne filtry i nostalgiczną estetykę lat 90. do Twoich ulubionych filmów. Niezależnie od tego, czy szukasz konkretnego znacznika czasu, zabawnej odpowiedzi, śledzisz dyskusje, czy przeszukujesz transkrypcje wideo, mamy coś dla Ciebie.
 
 ✨ DLACZEGO TO POKOCHASZ:
 - 🔍 WYSZUKIWANIE W CZASIE RZECZYWISTYM: Znajdź dokładnie to, czego szukasz, podczas pisania. Koniec z niekończącym się przewijaniem.
-- 🚀 WYSOKA WYDAJNOŚĆ: Zbudowany z IndexedDB i wirtualizacji listy. Płynnie obsługuj ponad 10 000 komentarzy, nie spowalniając przeglądarki.
+- 📜 TRANSKRYPCJE WIDEO: Natychmiast przeszukuj pełną transkrypcję wideo i przeskakuj do konkretnych momentów dzięki klikalnym znacznikom czasu.
+- 💬 POWTÓRKA CZATU NA ŻYWO: Pobieraj i przeglądaj wiadomości czatu na żywo z przeszłych transmisji, wraz z pełną funkcją wyszukiwania.
+- 🚀 WYSOKA WYDAJNOŚĆ: Zbudowany z IndexedDB i wirtualizacji listy. Płynnie obsługuj ponad 10 000 komentarzy/wiadomości, nie spowalniając przeglądarki.
 - 💾 ZAKŁADKI I PRZYPINANIE: Zapisz ważne komentarze i ulubione wątki, aby mieć do nich natychmiastowy dostęp później.
 - 📊 ZAAWANSOWANE FILTRY: Sortuj według polubień, odpowiedzi, daty, a nawet losowo zmieniaj kolejność, aby uzyskać świeżą perspektywę.
 - 🕒 DOKŁADNE ZNACZNIKI CZASU: Względne czasy są przeliczane w czasie rzeczywistym, nawet dla zapisanych zakładek.
-- 📁 EKSPORT DANYCH: Zapisz komentarze do pliku do czytania offline lub analizy.
+- 📁 EKSPORT UNIWERSALNY: Eksportuj komentarze, transkrypcje (SRT) i logi czatu na żywo do czytania offline lub analizy.
 - 🎨 NOSTALGICZNY NASTRÓJ: Piękny, konfigurowalny interfejs inspirowany klasyczną erą lat 90., z pełnym wsparciem dla trybu ciemnego.
+- 🔡 KONTROLA TYPOGRAFII: Dostosuj rozmiar i rodzinę czcionki, aby uzyskać idealne wrażenia z czytania.
 
 🛠️ KLUCZOWE CECHY:
-- Funkcja "Załaduj wszystko" jednym kliknięciem.
+- Inteligentne "Załaduj wszystko" dla komentarzy, czatu i transkrypcji.
 - Udostępnianie głębokich linków do konkretnych komentarzy.
 - Powiadomienia w czasie rzeczywistym o nowych odpowiedziach.
 - Wsparcie wielojęzyczne dla globalnej społeczności.
