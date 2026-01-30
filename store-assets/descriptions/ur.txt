@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 حتمی تبصرہ اور ٹرانسکرپٹ پاور ٹول کے ساتھ اپنے یوٹیوب کے تجربے کو بلند کریں!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 آپ کی پسندیدہ ویڈیوز میں بجلی کی تیز رفتار تلاش، طاقتور فلٹرنگ، اور 90 کی دہائی کی پرانی جمالیات لاتا ہے۔ چاہے آپ ایک مخصوص ٹائم اسٹیمپ، ایک مضحکہ خیز جواب، مباحثوں کو ٹریک کرنے، یا ویڈیو ٹرانسکرپٹس کے ذریعے تلاش کر رہے ہوں، ہم نے آپ کا احاطہ کیا ہے۔
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ آپ اسے کیوں پسند کریں گے:
+- 🔍 حقیقی وقت کی تلاش: بالکل وہی ڈھونڈیں جو آپ تلاش کر رہے ہیں جیسے ہی آپ ٹائپ کرتے ہیں۔ مزید لامتناہی سکرولنگ نہیں۔
+- 📜 ویڈیو ٹرانسکرپٹس: فوری طور پر مکمل ویڈیو ٹرانسکرپٹ تلاش کریں اور کلک کرنے کے قابل ٹائم اسٹیمپ کے ساتھ مخصوص لمحات پر جائیں۔
+- 💬 لائیو چیٹ ری پلے: تلاش کی فعالیت کے ساتھ مکمل، ماضی کی اسٹریمز سے لائیو چیٹ کے پیغامات حاصل کریں اور براؤز کریں۔
+- 🚀 اعلی کارکردگی: IndexedDB اور فہرست ورچوئلائزیشن کے ساتھ بنایا گیا ہے۔ اپنے براؤزر کے پیچھے رہ جانے کے بغیر 10,000+ تبصروں/پیغامات کو آسانی سے ہینڈل کریں۔
+- 💾 بک مارک اور پن: اہم تبصروں اور پسندیدہ تھریڈز کو بعد میں فوری طور پر ان تک رسائی حاصل کرنے کے لیے محفوظ کریں۔
+- 📊 جدید فلٹرز: پسندیدگی، جوابات، تاریخ، یا یہاں تک کہ ایک نئے نقطہ نظر کے لیے ترتیب کو بے ترتیب بنائیں۔
+- 🕒 درست ٹائم اسٹیمپ: متعلقہ اوقات کا حقیقی وقت میں دوبارہ حساب لگایا جاتا ہے، یہاں تک کہ آپ کے محفوظ کردہ بک مارکس کے لیے بھی۔
+- 📁 یونیورسل ایکسپورٹ: آف لائن پڑھنے یا تجزیہ کے لیے تبصرے، ٹرانسکرپٹس (SRT)، اور لائیو چیٹ لاگز برآمد کریں۔
+- 🎨 پرانی یادیں: کلاسک 90 کی دہائی سے متاثر ایک خوبصورت، حسب ضرورت UI، مکمل ڈارک موڈ سپورٹ کے ساتھ۔
+- 🔡 ٹائپوگرافی کنٹرول: پڑھنے کے بہترین تجربے کے لیے فونٹ کا سائز اور فیملی حسب ضرورت بنائیں۔
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ اہم خصوصیات:
+- تبصروں، چیٹ اور ٹرانسکرپٹس کے لیے اسمارٹ "سب لوڈ کریں"۔
+- مخصوص تبصروں کے لیے گہرا لنک شیئرنگ۔
+- نئے جوابات کے لیے حقیقی وقت کی اطلاعات۔
+- عالمی برادری کے لیے کثیر لسانی تعاون۔
+- پرائیویسی سب سے پہلے: آپ کا ڈیٹا آپ کے براؤزر میں رہتا ہے۔
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 استعمال کرنے کا طریقہ:
+1. کوئی بھی YouTube ویڈیو کھولیں۔
+2. اپنے ٹول بار میں 95 آئیکن پر کلک کریں۔
+3. تلاش کرنا، فلٹر کرنا اور بہتر تبصرہ سیکشن سے لطف اندوز ہونا شروع کریں!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+ان ہزاروں صارفین میں شامل ہوں جنہوں نے اپنی YouTube براؤزنگ کو تبدیل کیا ہے۔ Batur Kacamak کی طرف سے ڈیزائن اور برقرار رکھا.
 
-Questions or feedback? Reach out at hello@batur.info
+سوالات یا آراء؟ hello@batur.info پر رابطہ کریں

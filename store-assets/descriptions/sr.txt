@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Unapredite svoje YouTube iskustvo uz vrhunski alat za komentare i transkripte!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 donosi munjevito brzu pretragu, moćno filtriranje i nostalgičnu estetiku 90-ih u vaše omiljene video zapise. Bilo da tražite određenu vremensku oznaku, smešan odgovor, pratite diskusije ili pretražujete transkripte videa, mi vas pokrivamo.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ ZAŠTO ĆETE GA ZAVOLETI:
+- 🔍 PRETRAGA U REALNOM VREMENU: Pronađite tačno ono što tražite dok kucate. Nema više beskonačnog skrolovanja.
+- 📜 TRANSKRIPTI VIDEA: Trenutno pretražite ceo transkript videa i skočite na određene trenutke pomoću klikabilnih vremenskih oznaka.
+- 💬 REPRODUKCIJA ĆASKANJA UŽIVO: Preuzmite i pregledajte poruke ćaskanja uživo sa prošlih strimova, kompletno sa funkcijom pretrage.
+- 🚀 VISOKE PERFORMANSE: Izgrađeno sa IndexedDB i virtuelizacijom liste. Glatko upravljajte sa 10.000+ komentara/poruka bez kočenja pretraživača.
+- 💾 OBELEŽIVAČ I PIN: Sačuvajte važne komentare i omiljene teme da biste im kasnije odmah pristupili.
+- 📊 NAPREDNI FILTERI: Sortirajte po lajkovima, odgovorima, datumu ili čak nasumično promešajte redosled za novu perspektivu.
+- 🕒 TAČNE VREMENSKE OZNAKE: Relativna vremena se preračunavaju u realnom vremenu, čak i za vaše sačuvane obeleživače.
+- 📁 UNIVERZALNI IZVOZ: Izvezite komentare, transkripte (SRT) i evidencije ćaskanja uživo za čitanje ili analizu van mreže.
+- 🎨 NOSTALGIČNE VIBRA: Prelep, prilagodljiv korisnički interfejs inspirisan klasičnom erom 90-ih, sa potpunom podrškom za tamni režim.
+- 🔡 KONTROLA TIPOGRAFIJE: Prilagodite veličinu i porodicu fonta za savršeno iskustvo čitanja.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ KLJUČNE KARAKTERISTIKE:
+- Pametno "Učitaj sve" za komentare, ćaskanje i transkripte.
+- Deljenje dubinskih linkova za određene komentare.
+- Obaveštenja u realnom vremenu za nove odgovore.
+- Višejezična podrška za globalnu zajednicu.
+- Privatnost na prvom mestu: Vaši podaci ostaju u vašem pretraživaču.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 KAKO KORISTITI:
+1. Otvorite bilo koji YouTube video.
+2. Kliknite na ikonu 95 u vašoj traci sa alatkama.
+3. Počnite da pretražujete, filtrirate i uživate u boljoj sekciji komentara!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Pridružite se hiljadama korisnika koji su transformisali svoje YouTube pretraživanje. Dizajnirao i održava Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Pitanja ili povratne informacije? Obratite se na hello@batur.info

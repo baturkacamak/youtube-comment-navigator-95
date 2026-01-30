@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Vylepšite svoj zážitok z YouTube s dokonalým nástrojom na komentáre a prepisy!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 prináša bleskurýchle vyhľadávanie, výkonné filtrovanie a nostalgickú estetiku 90. rokov do vašich obľúbených videí. Či už hľadáte konkrétnu časovú značku, vtipnú odpoveď, sledujete diskusie alebo prehľadávate prepisy videí, máme vás pokrytých.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ PREČO SI HO ZAMILUJETE:
+- 🔍 VYHĽADÁVANIE V REÁLNOM ČASE: Nájdite presne to, čo hľadáte, hneď ako píšete. Už žiadne nekonečné posúvanie.
+- 📜 PREPISY VIDEA: Okamžite prehľadajte celý prepis videa a skočte na konkrétne momenty pomocou klikateľných časových značiek.
+- 💬 PREHRÁVANIE LIVE CHATU: Získajte a prehliadajte správy live chatu z minulých streamov, kompletné s funkciou vyhľadávania.
+- 🚀 VYSOKÝ VÝKON: Postavené s IndexedDB a virtualizáciou zoznamu. Hladko zvládajte 10 000+ komentárov/správ bez toho, aby váš prehliadač sekal.
+- 💾 ZÁLOŽKY A PRIPNUTIE: Uložte si dôležité komentáre a obľúbené vlákna, aby ste k nim mali neskôr okamžitý prístup.
+- 📊 POKROČILÉ FILTRE: Zoraďte podľa páči sa mi, odpovedí, dátumu, alebo dokonca náhodne usporiadajte poradie pre nový pohľad.
+- 🕒 PRESNÉ ČASOVÉ ZNAČKY: Relatívne časy sa prepočítavajú v reálnom čase, dokonca aj pre vaše uložené záložky.
+- 📁 UNIVERZÁLNY EXPORT: Exportujte komentáre, prepisy (SRT) a logy live chatu na offline čítanie alebo analýzu.
+- 🎨 NOSTALGICKÉ VIBES: Krásne, prispôsobiteľné UI inšpirované klasickou érou 90. rokov, s plnou podporou tmavého režimu.
+- 🔡 OVLÁDANIE TYPOGRAFIE: Prispôsobte si veľkosť a rodinu písma pre dokonalý zážitok z čítania.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ KĽÚČOVÉ VLASTNOSTI:
+- Inteligentné "Načítať všetko" pre komentáre, chat a prepisy.
+- Zdieľanie hĺbkových odkazov pre konkrétne komentáre.
+- Oznámenia v reálnom čase o nových odpovediach.
+- Viacjazyčná podpora pre globálnu komunitu.
+- Súkromie na prvom mieste: Vaše údaje zostávajú vo vašom prehliadači.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 AKO POUŽÍVAŤ:
+1. Otvorte akékoľvek video na YouTube.
+2. Kliknite na ikonu 95 na paneli nástrojov.
+3. Začnite vyhľadávať, filtrovať a užívať si lepšiu sekciu komentárov!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Pripojte sa k tisícom používateľov, ktorí transformovali svoje prehliadanie YouTube. Navrhol a udržiava Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Otázky alebo spätná väzba? Kontaktujte nás na hello@batur.info

@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Itaas ang iyong karanasan sa YouTube gamit ang ultimate comment at transcript power-tool!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+Ang YouTube Comment Navigator 95 ay nagdadala ng napakabilis na paghahanap, makapangyarihang pag-filter, at isang nostalgic na 90s aesthetic sa iyong mga paboritong video. Naghahanap ka man ng isang partikular na timestamp, isang nakakatawang tugon, pagsubaybay sa mga talakayan, o paghahanap sa mga transcript ng video, nasasakupan ka namin.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ BAKIT MO ITO MAGUGUSTUHAN:
+- 🔍 REAL-TIME NA PAGHAHANAP: Hanapin ang eksaktong hinahanap mo habang nagta-type ka. Wala nang walang katapusang pag-scroll.
+- 📜 MGA TRANSCRIPT NG VIDEO: Agad na hanapin ang buong transcript ng video at tumalon sa mga partikular na sandali gamit ang mga naki-click na timestamp.
+- 💬 LIVE CHAT REPLAY: Kunin at i-browse ang mga mensahe sa live chat mula sa mga nakaraang stream, kumpleto sa pag-andar ng paghahanap.
+- 🚀 MATAAS NA PAGGANAP: Binuo gamit ang IndexedDB at List Virtualization. Maayos na pangasiwaan ang 10,000+ komento/mensahe nang hindi nagla-lag ang iyong browser.
+- 💾 BOOKMARK at PIN: I-save ang mahahalagang komento at paboritong thread upang ma-access ang mga ito kaagad sa ibang pagkakataon.
+- 📊 ADVANCED NA MGA FILTER: Pagbukud-bukurin ayon sa mga gusto, tugon, petsa, o kahit na i-randomize ang pagkakasunud-sunod para sa isang bagong pananaw.
+- 🕒 TUMPAK NA MGA TIMESTAMP: Ang mga kamag-anak na oras ay muling kinakalkula sa real-time, kahit para sa iyong mga naka-save na bookmark.
+- 📁 UNIVERSAL EXPORT: I-export ang mga komento, transcript (SRT), at live chat log para sa offline na pagbabasa o pagsusuri.
+- 🎨 NOSTALGIC VIBES: Isang maganda, nako-customize na UI na inspirasyon ng klasikong panahon ng 90s, na may buong suporta sa Dark Mode.
+- 🔡 KONTROL NG TYPOGRAPHY: I-customize ang laki ng font at pamilya para sa perpektong karanasan sa pagbabasa.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ PANGUNAHING TAMPOK:
+- Smart "Load All" para sa mga komento, chat, at transcript.
+- Deep-link na pagbabahagi para sa mga partikular na komento.
+- Mga real-time na notification para sa mga bagong tugon.
+- Multilingual na suporta para sa isang pandaigdigang komunidad.
+- Privacy-first: Ang iyong data ay nananatili sa iyong browser.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 PAANO GAMITIN:
+1. Buksan ang anumong video sa YouTube.
+2. I-click ang icon na 95 sa iyong toolbar.
+3. Simulan ang paghahanap, pag-filter, at pagtangkilik sa isang mas mahusay na seksyon ng komento!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Sumali sa libu-libong user na nagpabago sa kanilang pag-browse sa YouTube. Dinisenyo at pinananatili ni Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Mga tanong o feedback? Makipag-ugnayan sa hello@batur.info

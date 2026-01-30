@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Forbedre YouTube-opplevelsen din med det ultimate verktøyet for kommentarer og transkripsjoner!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 gir lynraskt søk, kraftig filtrering og en nostalgisk 90-tallsestetikk til favorittvideoene dine. Enten du leter etter et spesifikt tidsstempel, et morsomt svar, følger diskusjoner, eller søker gjennom videotranskripsjoner, har vi dekket deg.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ HVORFOR DU VIL ELSKE DET:
+- 🔍 SØK I SANNTID: Finn nøyaktig det du leter etter mens du skriver. Ingen mer endeløs rulling.
+- 📜 VIDEOTRANSKRIPSJONER: Søk øyeblikkelig i hele videotranskripsjonen og hopp til spesifikke øyeblikk med klikkbare tidsstempler.
+- 💬 LIVE CHAT REPLAY: Hent og bla gjennom live chat-meldinger fra tidligere strømmer, komplett med søkefunksjonalitet.
+- 🚀 HØY YTELSE: Bygget med IndexedDB og List Virtualization. Håndter 10 000+ kommentarer/meldinger jevnt uten at nettleseren din henger.
+- 💾 BOKMERKE & PIN: Lagre viktige kommentarer og favorittråder for å få tilgang til dem umiddelbart senere.
+- 📊 AVANSERTE FILTRE: Sorter etter liker, svar, dato, eller til og med randomiser rekkefølgen for et nytt perspektiv.
+- 🕒 NØYAKTIGE TIDSSTEMPLER: Relative tider beregnes på nytt i sanntid, selv for dine lagrede bokmerker.
+- 📁 UNIVERSELL EKSPORT: Eksporter kommentarer, transkripsjoner (SRT), og live chat-logger for offline lesing eller analyse.
+- 🎨 NOSTALGISKE VIBBER: Et vakkert, tilpassbart brukergrensesnitt inspirert av den klassiske 90-tallsæraen, med full støtte for mørk modus.
+- 🔡 TYPOGRAFIKONTROLL: Tilpass skriftstørrelse og familie for den perfekte leseopplevelsen.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ NØKKELFUNKSJONER:
+- Smart "Last alt" for kommentarer, chat og transkripsjoner.
+- Dyplenkedeling for spesifikke kommentarer.
+- Sanntidsvarsler for nye svar.
+- Flerspråklig støtte for et globalt samfunn.
+- Personvern-først: Dine data forblir i nettleseren din.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 HVORDAN DU BRUKER:
+1. Åpne hvilken som helst YouTube-video.
+2. Klikk på 95-ikonet i verktøylinjen din.
+3. Begynn å søke, filtrere og nyte en bedre kommentarseksjon!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Bli med tusenvis av brukere som har forvandlet sin YouTube-surfing. Designet og vedlikeholdt av Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Spørsmål eller tilbakemeldinger? Ta kontakt på hello@batur.info

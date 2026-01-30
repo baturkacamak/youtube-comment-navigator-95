@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Îmbunătățește-ți experiența YouTube cu instrumentul suprem pentru comentarii și transcrieri!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 aduce căutare rapidă, filtrare puternică și o estetică nostalgică a anilor '90 videoclipurilor tale preferate. Fie că cauți un anumit moment, un răspuns amuzant, urmărești discuții sau cauți prin transcrierile video, noi te acoperim.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ DE CE ÎL VEI IUBI:
+- 🔍 CĂUTARE ÎN TIMP REAL: Găsește exact ce cauți pe măsură ce tastezi. Fără derulare nesfârșită.
+- 📜 TRANSCRIERI VIDEO: Caută instantaneu transcrierea completă a videoclipului și sari la momente specifice cu marcaje de timp pe care se poate face clic.
+- 💬 RELUARE LIVE CHAT: Preia și răsfoiește mesaje live chat din fluxurile anterioare, complet cu funcționalitate de căutare.
+- 🚀 PERFORMANȚĂ RIDICATĂ: Construit cu IndexedDB și List Virtualization. Gestionează fără probleme 10.000+ comentarii/mesaje fără ca browserul să se blocheze.
+- 💾 MARCAJE & PIN: Salvează comentarii importante și fire preferate pentru a le accesa instantaneu mai târziu.
+- 📊 FILTRE AVANSATE: Sortează după aprecieri, răspunsuri, dată, sau chiar randomizează ordinea pentru o perspectivă nouă.
+- 🕒 MARCAJE DE TIMP PRECISE: Timpii relativi sunt recalculați în timp real, chiar și pentru marcajele salvate.
+- 📁 EXPORT UNIVERSAL: Exportă comentarii, transcrieri (SRT) și jurnale live chat pentru citire sau analiză offline.
+- 🎨 VIBE-URI NOSTALGICE: O interfață frumoasă, personalizabilă, inspirată de era clasică a anilor '90, cu suport complet pentru Modul Întunecat.
+- 🔡 CONTROL TIPOGRAFIE: Personalizează dimensiunea și familia fontului pentru experiența perfectă de lectură.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ CARACTERISTICI CHEIE:
+- "Încarcă tot" inteligent pentru comentarii, chat și transcrieri.
+- Partajare link direct pentru comentarii specifice.
+- Notificări în timp real pentru răspunsuri noi.
+- Suport multilingv pentru o comunitate globală.
+- Confidențialitate pe primul loc: Datele tale rămân în browserul tău.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 CUM SĂ UTILIZEZI:
+1. Deschide orice videoclip YouTube.
+2. Fă clic pe pictograma 95 din bara de instrumente.
+3. Începe să cauți, să filtrezi și să te bucuri de o secțiune de comentarii mai bună!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Alătură-te miilor de utilizatori care și-au transformat navigarea pe YouTube. Proiectat și întreținut de Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Întrebări sau feedback? Contactează-ne la hello@batur.info

@@ -19,6 +19,7 @@ Der YouTube Comment Navigator 95 bringt blitzschnelle Suche, leistungsstarke Fil
 - Deep-Link-Sharing für spezifische Kommentare.
 - Echtzeit-Benachrichtigungen für neue Antworten.
 - Mehrsprachige Unterstützung für eine globale Community.
+- Interaktive Tooltips für bessere Benutzerfreundlichkeit.
 - Datenschutz zuerst: Deine Daten bleiben in deinem Browser.
 
 📖 ANLEITUNG:

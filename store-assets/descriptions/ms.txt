@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Tingkatkan pengalaman YouTube anda dengan alat kuasa komen & transkrip muktamad!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95 membawakan carian sepantas kilat, penapisan berkuasa, dan estetik 90-an yang nostalgia kepada video kegemaran anda. Sama ada anda mencari cap masa tertentu, balasan lucu, menjejak perbincangan, atau mencari melalui transkrip video, kami sedia membantu anda.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ MENGAPA ANDA AKAN MENYUKAINYA:
+- 🔍 CARIAN MASA NYATA: Cari apa yang anda cari semasa anda menaip. Tiada lagi penatalan tanpa henti.
+- 📜 TRANSKRIP VIDEO: Cari transkrip video penuh dengan serta-merta dan lompat ke detik tertentu dengan cap masa yang boleh diklik.
+- 💬 MAIN SEMULA SEMBANG LANGSUNG: Ambil dan semak imbas mesej sembang langsung dari strim lalu, lengkap dengan fungsi carian.
+- 🚀 PRESTASI TINGGI: Dibina dengan IndexedDB dan Virtualisasi Senarai. Kendalikan 10,000+ komen/mesej dengan lancar tanpa pelayar anda tersekat.
+- 💾 TANDA BUKU & PIN: Simpan komen penting dan utas kegemaran untuk mengaksesnya dengan serta-merta kemudian.
+- 📊 PENAPIS LANJUTAN: Isih mengikut suka, balasan, tarikh, atau pun rawakkan susunan untuk perspektif baru.
+- 🕒 CAP MASA TEPAT: Masa relatif dikira semula dalam masa nyata, walaupun untuk tanda buku yang anda simpan.
+- 📁 EKSPORT UNIVERSAL: Eksport komen, transkrip (SRT), dan log sembang langsung untuk pembacaan atau analisis luar talian.
+- 🎨 GETARAN NOSTALGIA: UI yang cantik dan boleh disesuaikan yang diilhamkan oleh era klasik 90-an, dengan sokongan Mod Gelap penuh.
+- 🔡 KAWALAN TIPOGRAFI: Sesuaikan saiz fon dan keluarga untuk pengalaman membaca yang sempurna.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ CIRI-CIRI UTAMA:
+- "Muat Semua" Pintar untuk komen, sembang, dan transkrip.
+- Perkongsian pautan mendalam untuk komen tertentu.
+- Pemberitahuan masa nyata untuk balasan baru.
+- Sokongan berbilang bahasa untuk komuniti global.
+- Privasi-diutamakan: Data anda kekal dalam pelayar anda.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 CARA PENGGUNAAN:
+1. Buka mana-mana video YouTube.
+2. Klik ikon 95 dalam bar alat anda.
+3. Mula mencari, menapis, dan menikmati bahagian komen yang lebih baik!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Sertai ribuan pengguna yang telah mengubah pelayaran YouTube mereka. Direka dan diselenggara oleh Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Soalan atau maklum balas? Hubungi di hello@batur.info

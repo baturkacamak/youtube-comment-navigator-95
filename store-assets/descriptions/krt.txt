@@ -1,31 +1,31 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 YouTube deneyimini eñ soñki yorum ve transkript quvet aleti ile köteriñiz!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Comment Navigator 95, sevimli videolarıñızğa yıldırım süratinde qıdıruv, küçlü süzgüçler ve nostaljik 90-lar estetikası ketire. Belli bir vaqıt tamğasını, külkünçli cevapnı, muzakerelerni taqip etüvni yaki video transkriptlerinde qıdıruvnı isteysoñız, biz sizge yardım etermiz.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ NE İÇÜN SEVECEKSİÑİZ:
+- 🔍 KERÇEK VAQITLI QIDIRUV: Yazğanıñızda tap ne istegeniñizni tapıñız. Soñsuz aylandıruvğa endi kerek yoq.
+- 📜 VİDEO TRANSKRİPTLERİ: Tam video transkriptini deral qıdırıñız ve basıla bilgen vaqıt tamğaları ile belli anlarğa sekiriñiz.
+- 💬 CANLI ÇAT TEKRARI: Keçken yayınlardan canlı çat mesajlarını ketiriñiz ve közzden keçiriñiz, qıdıruv funktsiyası ile.
+- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Virtualizasyonu ile qurulğan. Brauzeriñizniñ yavaşlamasından 10,000-den ziyade yorum/mesajnen silliq işleşiñiz.
+- 💾 SAQLAMA VE QADAMA: Müim yorumlarnı ve sevimli mevzularnı soñra deral irişmek içün saqlañız.
+- 📊 İLERİ SÜZGÜÇLER: Beğenüvler, cevaplar, tarih boyunca sıralañız yaki yañı bir baqış açısı içün tertipni qarıştıriñız.
+- 🕒 DOĞRU VAQIT TAMĞALARI: Nisbiy vaqıtlar kerçek vaqıtta kene esaplanır, saqlanğan saqlamalarıñız içün bile.
+- 📁 UMUMİY EKSPORT: Yorumlarnı, transkriptlerni (SRT) ve canlı çat jurnallarını oflayn oquv yaki analiz içün eksport etiñiz.
+- 🎨 NOSTALJİK VİBELAR: Klasik 90-lar devrinden ilham alınğan, tolu Qaranlıq Mod destegi ile dülber, özleştirile bilgen interfeys.
+- 🔡 TİPOGRAFİYA KONTROLİ: Mükemmel oquv deneyimi içün yazı ölçüsini ve ailesini özleştiriñiz.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Privacy-first: Your data stays in your browser.
+🛠️ ESAS HUSUSİYETLER:
+- Yorumlar, çat ve transkriptler içün aqıllı "Episini Yükle".
+- Belli yorumlar içün tereñ bağlantı paylaşımı.
+- Yañı cevaplar içün kerçek vaqıtlı bildirişler.
+- Global cemaat içün çoq til destegi.
+- Gizlilik-birinci: Melümatıñız brauzeriñizde qala.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 NASIL QULLANILIR:
+1. Er angi YouTube videosını açıñız.
+2. Aletler panelindeki 95 ikonasına basıñız.
+3. Qıdırmağa, süzgüçlemege ve daa yahşı bir yorum bölüminden zevq almağa başlañız!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+YouTube kezintilerini deñiştirgen biñlerce qullanıcılarğa qoşuluñız. Batur Kacamak tarafından diyzayn etilgen ve baqılğan.
 
-Questions or feedback? Reach out at hello@batur.info
+Suallar yaki keri bildirim? hello@batur.info adresine yazıñız
