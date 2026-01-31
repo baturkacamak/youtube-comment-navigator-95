@@ -178,7 +178,7 @@ const App: React.FC = () => {
     <div
       className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
     >
-      <Collapsible isOpen={isSettingsOpen} className="pointer-events-none">
+      <Collapsible isOpen={isSettingsOpen}>
         <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
       </Collapsible>
       <div

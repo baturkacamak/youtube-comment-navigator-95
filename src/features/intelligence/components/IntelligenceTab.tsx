@@ -52,14 +52,6 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
 
   return (
     <div className="flex flex-col gap-4 p-1">
-      {/* Header */}
-      <div className="flex flex-col gap-1">
-        <h2 className="text-xl font-bold dark:text-white">{t('Intelligence Dashboard')}</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {t('AI-powered insights for your community interactions.')}
-        </p>
-      </div>
-
       {/* AI Configuration Banner */}
       <AIConfigBanner onOpenSettings={onOpenSettings} />
 
