@@ -36,11 +36,20 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
   } = useAnalysisManager();
 
   const [topicCloudRefreshKey, setTopicCloudRefreshKey] = useState(0);
+  const [isRefreshingTopic, setIsRefreshingTopic] = useState(false);
 
   const wordFreqData = useMemo(
     () => calculateWordFrequency(comments),
     [comments, topicCloudRefreshKey]
   );
+
+  const handleRefreshTopic = () => {
+    setIsRefreshingTopic(true);
+    setTimeout(() => {
+      setTopicCloudRefreshKey((k) => k + 1);
+      setIsRefreshingTopic(false);
+    }, 800);
+  };
 
   const handleWordClick = useCallback(
     (word: string) => {
@@ -107,11 +116,14 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
             {t('Topic Cloud')}
           </h3>
           <button
-            onClick={() => setTopicCloudRefreshKey((k) => k + 1)}
-            className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            onClick={handleRefreshTopic}
+            disabled={isRefreshingTopic}
+            className={`p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 ${
+              isRefreshingTopic ? 'bg-gray-100 dark:bg-gray-700' : ''
+            }`}
             title={t('Refresh Topic Cloud')}
           >
-            <ArrowPathIcon className="w-4 h-4" />
+            <ArrowPathIcon className={`w-4 h-4 ${isRefreshingTopic ? 'animate-spin' : ''}`} />
           </button>
         </div>
         <WordCloud data={wordFreqData} onWordClick={handleWordClick} />
