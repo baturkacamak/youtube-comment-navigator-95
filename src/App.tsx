@@ -16,6 +16,7 @@ import {
   ChatBubbleOvalLeftIcon,
   DocumentTextIcon,
   InboxIcon,
+  LightBulbIcon,
 } from '@heroicons/react/24/outline';
 import Tabs from './features/shared/components/Tabs';
 import { useSelector } from 'react-redux';
@@ -23,6 +24,7 @@ import { RootState } from './types/rootState';
 import i18n from 'i18next';
 import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
+import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -131,6 +133,14 @@ const App: React.FC = () => {
             <BookmarkedComments comments={filteredAndSortedBookmarks} />
           </>
         ),
+      },
+      {
+        title: {
+          id: 'intelligence',
+          label: t('Intelligence'),
+          icon: LightBulbIcon,
+        },
+        content: <IntelligenceTab comments={comments} />,
       },
     ],
     [
