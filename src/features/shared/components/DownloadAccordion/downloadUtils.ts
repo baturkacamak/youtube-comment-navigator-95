@@ -3,6 +3,7 @@ import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdF
 import { DownloadFormat, DownloadScope, ContentType } from './types';
 import { convertToSrt } from '../../../transcripts/utils/convertToSrt';
 import { TranscriptEntry } from '../../../transcripts/utils/processTranscriptData';
+import { cleanCommentsForExport } from './cleanDataForExport';
 
 /**
  * Generate a filename for the download
@@ -79,7 +80,8 @@ export const downloadAsText = (
  * Download data as a JSON file
  */
 export const downloadAsJSON = (data: unknown, fileName: string): void => {
-  const content = JSON.stringify(data, null, 2);
+  const dataToProcess = Array.isArray(data) ? cleanCommentsForExport(data) : data;
+  const content = JSON.stringify(dataToProcess, null, 2);
   triggerDownload(content, fileName, 'application/json;charset=utf-8');
 };
 
@@ -91,9 +93,11 @@ export const downloadAsCSV = (data: unknown, fileName: string): void => {
     return;
   }
 
+  const cleanedData = cleanCommentsForExport(data);
+
   // Get all unique keys from all objects
   const allKeys = new Set<string>();
-  data.forEach((item) => {
+  cleanedData.forEach((item) => {
     if (typeof item === 'object' && item !== null) {
       Object.keys(item).forEach((key) => allKeys.add(key));
     }
@@ -102,7 +106,7 @@ export const downloadAsCSV = (data: unknown, fileName: string): void => {
   const headers = Array.from(allKeys);
   const headerRow = headers.join(',');
 
-  const rows = data.map((item) => {
+  const rows = cleanedData.map((item) => {
     if (typeof item === 'object' && item !== null) {
       const obj = item as Record<string, unknown>;
       return headers
