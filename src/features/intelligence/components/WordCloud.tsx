@@ -26,7 +26,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data }) => {
       {data.map((item) => (
         <span
           key={item.text}
-          className="cursor-default hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+          className="cursor-default text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
           style={{
             fontSize: `${getFontSize(item.value)}rem`,
             opacity: 0.7 + getFontSize(item.value) / 10,

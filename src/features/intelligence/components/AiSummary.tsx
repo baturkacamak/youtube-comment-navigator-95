@@ -41,7 +41,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
   return (
     <div className="flex flex-col gap-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
+        <h3 className="text-lg font-semibold flex items-center gap-2 dark:text-white">
           <SparklesIcon className="w-5 h-5 text-yellow-500" />
           AI Summary
         </h3>
@@ -60,7 +60,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
           </p>
           <button
             onClick={() => setShowApiInput(!showApiInput)}
-            className="text-teal-600 hover:underline flex items-center gap-1"
+            className="text-teal-600 hover:underline flex items-center gap-1 dark:text-teal-400"
           >
             <KeyIcon className="w-4 h-4" /> {showApiInput ? 'Hide API Key' : 'Enter API Key'}
           </button>
@@ -69,7 +69,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
             <input
               type="password"
               placeholder="Gemini API Key"
-              className="mt-2 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600"
+              className="mt-2 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
             />
@@ -78,7 +78,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
       )}
 
       {summary && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 prose dark:prose-invert text-sm max-w-none">
+        <div className="p-3 bg-gray-50 dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 prose dark:prose-invert text-sm max-w-none text-gray-800 dark:text-gray-200">
           {summary}
         </div>
       )}
