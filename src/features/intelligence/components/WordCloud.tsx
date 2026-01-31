@@ -16,10 +16,10 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
 
   // Simple font size scaler
   const getFontSize = (val: number) => {
-    if (maxVal === minVal) return 1;
-    // Scale between 0.8rem and 2.5rem
+    if (maxVal === minVal) return 1.5;
+    // Scale between 1.5rem and 3.5rem
     const normalized = (val - minVal) / (maxVal - minVal);
-    return 0.8 + normalized * 1.7;
+    return 1.5 + normalized * 2.0;
   };
 
   return (

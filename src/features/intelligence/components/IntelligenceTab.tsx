@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import WordCloud from './WordCloud';
 import AnalysisCard from './AnalysisCard';
 import AIConfigBanner from './AIConfigBanner';
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Comment } from '../../../types/commentTypes';
 import { useDispatch } from 'react-redux';
 import { setSearchKeyword } from '../../../store/store';
-import { TagIcon } from '@heroicons/react/24/solid';
+import { TagIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
 import { CARD_CONFIGS } from '../constants/cardConfigs';
 import { useAnalysisManager } from '../hooks/useAnalysisManager';
 import { getRendererByType } from '../utils/renderHelpers';
@@ -35,7 +35,12 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
     toggleCardExpanded,
   } = useAnalysisManager();
 
-  const wordFreqData = useMemo(() => calculateWordFrequency(comments), [comments]);
+  const [topicCloudRefreshKey, setTopicCloudRefreshKey] = useState(0);
+
+  const wordFreqData = useMemo(
+    () => calculateWordFrequency(comments),
+    [comments, topicCloudRefreshKey]
+  );
 
   const handleWordClick = useCallback(
     (word: string) => {
@@ -96,10 +101,19 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
 
       {/* Topic Cloud (Full Width) */}
       <div className="mt-2 bg-white dark:bg-gray-800 p-4 rounded-lg shadow border border-gray-100 dark:border-gray-700">
-        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 dark:text-white">
-          <TagIcon className="w-5 h-5 text-indigo-500" />
-          {t('Topic Cloud')}
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold flex items-center gap-2 dark:text-white">
+            <TagIcon className="w-5 h-5 text-indigo-500" />
+            {t('Topic Cloud')}
+          </h3>
+          <button
+            onClick={() => setTopicCloudRefreshKey((k) => k + 1)}
+            className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+            title={t('Refresh Topic Cloud')}
+          >
+            <ArrowPathIcon className="w-4 h-4" />
+          </button>
+        </div>
         <WordCloud data={wordFreqData} onWordClick={handleWordClick} />
       </div>
     </div>
