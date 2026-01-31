@@ -37,11 +37,15 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
 
   const [topicCloudRefreshKey, setTopicCloudRefreshKey] = useState(0);
   const [isRefreshingTopic, setIsRefreshingTopic] = useState(false);
+  const [isManualCloudEnabled, setIsManualCloudEnabled] = useState(false);
 
-  const wordFreqData = useMemo(
-    () => calculateWordFrequency(comments),
-    [comments, topicCloudRefreshKey]
-  );
+  const isSmallDataset = comments.length < 1000;
+  const shouldShowCloud = isSmallDataset || isManualCloudEnabled;
+
+  const wordFreqData = useMemo(() => {
+    if (!shouldShowCloud) return [];
+    return calculateWordFrequency(comments);
+  }, [comments, topicCloudRefreshKey, shouldShowCloud]);
 
   const handleRefreshTopic = () => {
     setIsRefreshingTopic(true);
@@ -115,18 +119,38 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
             <TagIcon className="w-5 h-5 text-indigo-500" />
             {t('Topic Cloud')}
           </h3>
-          <button
-            onClick={handleRefreshTopic}
-            disabled={isRefreshingTopic}
-            className={`p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 ${
-              isRefreshingTopic ? 'bg-gray-100 dark:bg-gray-700' : ''
-            }`}
-            title={t('Refresh Topic Cloud')}
-          >
-            <ArrowPathIcon className={`w-4 h-4 ${isRefreshingTopic ? 'animate-spin' : ''}`} />
-          </button>
+          {shouldShowCloud && (
+            <button
+              onClick={handleRefreshTopic}
+              disabled={isRefreshingTopic}
+              className={`p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                isRefreshingTopic ? 'bg-gray-100 dark:bg-gray-700' : ''
+              }`}
+              title={t('Refresh Topic Cloud')}
+            >
+              <ArrowPathIcon className={`w-4 h-4 ${isRefreshingTopic ? 'animate-spin' : ''}`} />
+            </button>
+          )}
         </div>
-        <WordCloud data={wordFreqData} onWordClick={handleWordClick} />
+
+        {shouldShowCloud ? (
+          <WordCloud data={wordFreqData} onWordClick={handleWordClick} />
+        ) : (
+          <div className="flex flex-col items-center justify-center py-8 text-center bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-dashed border-gray-200 dark:border-gray-700">
+            <TagIcon className="w-10 h-10 text-gray-300 dark:text-gray-600 mb-2" />
+            <p className="text-gray-500 dark:text-gray-400 mb-4 text-sm max-w-xs">
+              {t('Large dataset detected ({{count}} comments). Click to generate.', {
+                count: comments.length,
+              })}
+            </p>
+            <button
+              onClick={() => setIsManualCloudEnabled(true)}
+              className="flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm"
+            >
+              {t('Generate Topic Cloud')}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
