@@ -10,6 +10,8 @@ import { setBookmarkedComments } from '../../../../store/store';
 import { Comment } from '../../../../types/commentTypes';
 import { db } from '../../../shared/utils/database/database';
 
+import Tooltip from '../../../shared/components/Tooltip';
+
 interface BookmarkButtonProps {
   comment: Comment;
 }
@@ -80,21 +82,22 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = React.memo(({ comment }) =
 
   return (
     <div className="relative">
-      <button
-        ref={bookmarkButtonRef}
-        onClick={handleBookmark}
-        disabled={isProcessing}
-        className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'} ${isProcessing ? 'cursor-not-allowed opacity-50' : ''}`}
-        title={t('Bookmark')}
-        aria-label={t('Bookmark')}
-      >
-        {isBookmarked ? (
-          <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-        ) : (
-          <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-        )}
-        <span className="text-sm">{t('Bookmark')}</span>
-      </button>
+      <Tooltip text={t('Bookmark')}>
+        <button
+          ref={bookmarkButtonRef}
+          onClick={handleBookmark}
+          disabled={isProcessing}
+          className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'} ${isProcessing ? 'cursor-not-allowed opacity-50' : ''}`}
+          aria-label={t('Bookmark')}
+        >
+          {isBookmarked ? (
+            <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+          ) : (
+            <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+          )}
+          <span className="text-sm">{t('Bookmark')}</span>
+        </button>
+      </Tooltip>
       {isBookmarked && isNoteInputVisible && (
         <NoteInputModal
           note={note}

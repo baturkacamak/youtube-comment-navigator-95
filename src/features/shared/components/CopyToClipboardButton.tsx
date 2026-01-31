@@ -30,7 +30,6 @@ const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     <button
       onClick={handleCopyToClipboard}
       className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
-      title={t(title)}
       aria-label={t(title)}
     >
       {copySuccess ? (

@@ -15,6 +15,7 @@ export interface TooltipProps {
   className?: string;
   bgColor?: string;
   textColor?: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
 export interface SettingsDrawerProps {

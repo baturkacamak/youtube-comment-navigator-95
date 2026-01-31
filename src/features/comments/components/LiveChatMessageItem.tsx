@@ -16,6 +16,8 @@ import CommentReplies from './CommentReplies';
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { seekVideo } from '../../shared/utils/videoController';
 
+import Tooltip from '../../shared/components/Tooltip';
+
 interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
   index?: number;
 }
@@ -44,7 +46,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
           const loadedReplies = await loadLiveChatReplies(message.messageId);
           setReplies(loadedReplies);
           logger.success(`[LiveChatMessageItem] Loaded ${loadedReplies.length} replies`);
-        } catch (error: any) {
+        } catch (error) {
           logger.error('[LiveChatMessageItem] Failed to load replies:', error);
         } finally {
           setIsLoadingReplies(false);
@@ -56,10 +58,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   }, [showReplies, message.messageId, message.hasReplies, replies.length]);
 
   const handleTimestampClickInternal = (
-    event:
-      | React.MouseEvent<HTMLAnchorElement>
-      | React.KeyboardEvent<HTMLAnchorElement>
-      | React.MouseEvent<HTMLSpanElement>
+    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
   ) => {
     if (message.videoOffsetTimeSec !== undefined) {
       if (event.type === 'click' || (event as React.KeyboardEvent).key === 'Enter') {
@@ -95,16 +94,17 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     >
       <div className="flex items-center w-full">
         {/* Timestamp - Clickable */}
-        <span
-          className="bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 mr-2 cursor-pointer hover:bg-stone-300 dark:hover:bg-gray-400 transition-colors"
-          onClick={handleTimestampClickInternal}
-          onKeyDown={(e) => handleTimestampClickInternal(e as any)}
-          role="button"
-          tabIndex={0}
-          title={`Jump to ${timestampDisplay}`}
-        >
-          {timestampDisplay}
-        </span>
+        <Tooltip text={`Jump to ${timestampDisplay}`}>
+          <span
+            className="bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 mr-2 cursor-pointer hover:bg-stone-300 dark:hover:bg-gray-400 transition-colors"
+            onClick={handleTimestampClickInternal}
+            onKeyDown={handleTimestampClickInternal}
+            role="button"
+            tabIndex={0}
+          >
+            {timestampDisplay}
+          </span>
+        </Tooltip>
 
         {/* Message Content */}
         <div className="flex-1 pb-2 -mb-2 inline-flex items-center gap-2">
@@ -116,15 +116,15 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
             {message.badges &&
               message.badges.length > 0 &&
               message.badges.map((badge, idx) => (
-                <img
-                  key={idx}
-                  src={badge.iconUrl}
-                  alt={badge.label}
-                  title={badge.tooltipText || badge.label}
-                  className="w-4 h-4"
-                  loading="lazy"
-                  decoding="async"
-                />
+                <Tooltip key={idx} text={badge.tooltipText || badge.label}>
+                  <img
+                    src={badge.iconUrl}
+                    alt={badge.label}
+                    className="w-4 h-4"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </Tooltip>
               ))}
 
             {message.isModerator && (

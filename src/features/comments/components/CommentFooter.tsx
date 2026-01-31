@@ -149,7 +149,6 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           <button
             onClick={handleCopyToClipboard}
             className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
-            title={t('Copy to clipboard')}
             aria-label={t('Copy to clipboard')}
           >
             {copySuccess ? (
@@ -172,7 +171,6 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
-            title={t('Go to original comment')}
             aria-label={t('Go to original comment')}
           >
             <LinkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
@@ -183,7 +181,6 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               ref={viewRepliesButtonRef}
               onClick={onToggleReplies}
               className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300 disabled:opacity-50"
-              title={showReplies ? t('Hide replies') : t('Show replies')}
               aria-label={showReplies ? t('Hide replies') : t('Show replies')}
               disabled={isFetchingReplies}
             >
