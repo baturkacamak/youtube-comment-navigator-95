@@ -18,13 +18,31 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   const panelRef = useRef<HTMLDivElement>(null);
 
   const formatConfig = FORMAT_CONFIG[contentType];
-  const [selectedFormat, setSelectedFormat] = useState<DownloadFormat>(formatConfig.default);
-  const [selectedScope, setSelectedScope] = useState<DownloadScope>('visible');
+  const [selectedFormat, setSelectedFormat] = useState<DownloadFormat>(() => {
+    const saved = localStorage.getItem('download_format_preference');
+    return (saved as DownloadFormat) && formatConfig.available.includes(saved as DownloadFormat)
+      ? (saved as DownloadFormat)
+      : formatConfig.default;
+  });
+  const [selectedScope, setSelectedScope] = useState<DownloadScope>(() => {
+    return (localStorage.getItem('download_scope_preference') as DownloadScope) || 'visible';
+  });
 
-  // Reset format when content type changes
+  // Save preferences when they change
   useEffect(() => {
-    setSelectedFormat(FORMAT_CONFIG[contentType].default);
-  }, [contentType]);
+    localStorage.setItem('download_format_preference', selectedFormat);
+  }, [selectedFormat]);
+
+  useEffect(() => {
+    localStorage.setItem('download_scope_preference', selectedScope);
+  }, [selectedScope]);
+
+  // Reset format when content type changes if current format is not available
+  useEffect(() => {
+    if (!formatConfig.available.includes(selectedFormat)) {
+      setSelectedFormat(formatConfig.default);
+    }
+  }, [contentType, formatConfig, selectedFormat]);
 
   const handleToggle = () => {
     setIsExpanded((prev) => !prev);

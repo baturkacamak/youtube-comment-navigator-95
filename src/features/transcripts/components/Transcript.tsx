@@ -13,9 +13,15 @@ interface TranscriptProps {
 const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
   const dispatch = useDispatch();
   const textSize = useSelector((state: RootState) => state.settings.textSize);
-  const [includeTimestamps, setIncludeTimestamps] = useState(false);
+  const [includeTimestamps, setIncludeTimestamps] = useState(() => {
+    return localStorage.getItem('transcript_timestamps_preference') === 'true';
+  });
   const selectedLanguage = useSelector((state: RootState) => state.transcriptSelectedLanguage);
   const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('transcript_timestamps_preference', String(includeTimestamps));
+  }, [includeTimestamps]);
 
   useEffect(() => {
     const fetchAndSetTranscript = async () => {

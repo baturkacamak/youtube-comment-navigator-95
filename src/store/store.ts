@@ -5,6 +5,41 @@ import { LiveChatMessage } from '../types/liveChatTypes';
 import { FilterState } from '../types/filterTypes';
 import { saveSettings } from '../features/settings/utils/settingsUtils';
 
+// Helper function to safely load from localStorage
+const loadPreference = <T>(key: string, defaultValue: T): T => {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? { ...defaultValue, ...JSON.parse(saved) } : defaultValue;
+  } catch (e) {
+    console.warn(`Failed to load preference for ${key}`, e);
+    return defaultValue;
+  }
+};
+
+const defaultFilters: FilterState = {
+  keyword: '',
+  verified: false,
+  hasLinks: false,
+  sortBy: '',
+  sortOrder: '',
+  likesThreshold: {
+    min: 0,
+    max: Infinity,
+  },
+  repliesLimit: {
+    min: 0,
+    max: Infinity,
+  },
+  wordCount: {
+    min: 0,
+    max: Infinity,
+  },
+  dateTimeRange: {
+    start: '',
+    end: '',
+  },
+};
+
 /**
  * Redux Store - View Buffer Architecture
  *
@@ -30,29 +65,7 @@ const initialState: RootState = {
     showFiltersSorts: true,
     showContentOnSearch: false,
   },
-  filters: {
-    keyword: '',
-    verified: false,
-    hasLinks: false,
-    sortBy: '',
-    sortOrder: '',
-    likesThreshold: {
-      min: 0,
-      max: Infinity,
-    },
-    repliesLimit: {
-      min: 0,
-      max: Infinity,
-    },
-    wordCount: {
-      min: 0,
-      max: Infinity,
-    },
-    dateTimeRange: {
-      start: '',
-      end: '',
-    },
-  },
+  filters: loadPreference('filter_preferences', defaultFilters),
 
   // Comments View Buffer - holds currently displayed comments
   // Source of truth is IndexedDB, this is just for component rendering
@@ -81,7 +94,10 @@ const initialState: RootState = {
   // Other state properties
   showBookmarked: false,
 
-  transcriptSelectedLanguage: { value: '', label: 'Select Language' },
+  transcriptSelectedLanguage: loadPreference('transcript_language_preference', {
+    value: '',
+    label: 'Select Language',
+  }),
 
   // Search keyword
   searchKeyword: '',
@@ -146,6 +162,7 @@ const commentsSlice = createSlice({
     // Filter and settings actions
     setFilters: (state, action: PayloadAction<FilterState>) => {
       state.filters = action.payload;
+      localStorage.setItem('filter_preferences', JSON.stringify(action.payload));
     },
     setTextSize: (state, action: PayloadAction<string>) => {
       state.settings.textSize = action.payload;
@@ -172,6 +189,7 @@ const commentsSlice = createSlice({
       action: PayloadAction<{ value: string; label: string }>
     ) => {
       state.transcriptSelectedLanguage = action.payload;
+      localStorage.setItem('transcript_language_preference', JSON.stringify(action.payload));
     },
 
     // Reset action
