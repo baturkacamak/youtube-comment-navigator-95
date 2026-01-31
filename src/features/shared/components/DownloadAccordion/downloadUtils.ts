@@ -62,7 +62,7 @@ export const downloadAsText = (
         if (typeof item === 'object' && item !== null) {
           const obj = item as Record<string, unknown>;
           const author = obj.author || obj.authorDisplayName || 'Unknown';
-          const text = obj.text || obj.textOriginal || obj.message || '';
+          const text = obj.content || obj.text || obj.textOriginal || obj.message || '';
           const likes = obj.likeCount !== undefined ? ` [${obj.likeCount} likes]` : '';
           return `[${index + 1}] ${author}${likes}:\n${text}`;
         }
