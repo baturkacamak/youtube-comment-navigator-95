@@ -10,6 +10,7 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 
 ## ✨ Features
 
+- 🤖 **Local Intelligence**: Unlock deep insights with on-device AI. Generate executive summaries, analyze sentiment (Vibe Check), discover unanswered questions (Smart Q&A), and more—all running locally for privacy and speed.
 - 🔍 **Real-time Comment Search**: Quickly find comments by typing keywords. The search is dynamic and updates results as you type.
 - ⏬ **Load More Comments**: Effortlessly load more comments with a single click, ensuring you never miss out on any discussions.
 - 🔎 **Filter Comments**: Apply various filters to view only the comments that matter to you, such as filtering by likes, replies, or specific keywords.

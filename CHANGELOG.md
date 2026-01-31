@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Intelligence:** Introduced "Local Intelligence" tab powered by on-device AI (Chrome built-in).
+  - **Executive Summary:** Generate high-level overviews of comment sections.
+  - **Vibe Check:** Analyze sentiment and emotional tone.
+  - **Smart Q&A:** Detect unanswered questions.
+  - **Idea Miner:** Extract feature requests and ideas.
+  - **Controversy Radar:** Identify polarizing topics.
+  - **Audience Profiling:** Understand viewer demographics from language usage.
+
 ## [1.8.5] - 2026-01-29
 
 ### Fixed
