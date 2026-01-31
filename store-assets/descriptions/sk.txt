@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95 prináša bleskurýchle vyhľadávanie, výkonné filtrovanie a nostalgickú estetiku 90. rokov do vašich obľúbených videí. Či už hľadáte konkrétnu časovú značku, vtipnú odpoveď, sledujete diskusie alebo prehľadávate prepisy videí, máme vás pokrytých.
 
 ✨ PREČO SI HO ZAMILUJETE:
+- 🤖 LOKÁLNA INTELIGENCIA: Odomknite hlboké poznatky pomocou AI v zariadení. Generujte zhrnutia, analyzujte sentiment (Vibe Check), objavujte nezodpovedané otázky (Smart Q&A) a ďalšie – všetko beží lokálne pre súkromie a rýchlosť.
 - 🔍 VYHĽADÁVANIE V REÁLNOM ČASE: Nájdite presne to, čo hľadáte, hneď ako píšete. Už žiadne nekonečné posúvanie.
 - 📜 PREPISY VIDEA: Okamžite prehľadajte celý prepis videa a skočte na konkrétne momenty pomocou klikateľných časových značiek.
 - 💬 PREHRÁVANIE LIVE CHATU: Získajte a prehliadajte správy live chatu z minulých streamov, kompletné s funkciou vyhľadávania.

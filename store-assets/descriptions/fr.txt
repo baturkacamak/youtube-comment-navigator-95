@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95 apporte une recherche ultra-rapide, des filtres puissants et une esthétique nostalgique des années 90 à vos vidéos préférées. Que vous cherchiez un horodatage spécifique, une réponse amusante, que vous suiviez des discussions ou que vous cherchiez dans les transcriptions vidéo, nous avons ce qu'il vous faut.
 
 ✨ POURQUOI VOUS ALLEZ L'ADORER :
+- 🤖 INTELLIGENCE LOCALE : Débloquez des informations approfondies avec l'IA sur l'appareil. Générez des résumés, analysez les sentiments (Vibe Check), découvrez des questions sans réponse (Smart Q&A), et plus encore — le tout fonctionnant localement pour la confidentialité et la rapidité.
 - 🔍 RECHERCHE EN TEMPS RÉEL : Trouvez exactement ce que vous cherchez pendant que vous tapez. Plus besoin de défiler indéfiniment.
 - 📜 TRANSCRIPTIONS VIDÉO : Recherchez instantanément dans le texte intégral de la vidéo et accédez à des moments spécifiques avec des horodatages cliquables.
 - 💬 REPLAY DU CHAT EN DIRECT : Récupérez et parcourez les messages du chat en direct des diffusions passées, avec une fonctionnalité de recherche complète.

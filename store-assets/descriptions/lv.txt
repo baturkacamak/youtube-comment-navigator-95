@@ -3,6 +3,7 @@
 YouTube Komentāru Navigators 95 nodrošina zibenīgu meklēšanu, jaudīgu filtrēšanu un nostalģisku 90. gadu estētiku jūsu iecienītākajiem videoklipiem. Neatkarīgi no tā, vai meklējat konkrētu laika zīmogu, smieklīgu atbildi, sekojat diskusijām vai meklējat video transkriptos, mēs jums palīdzēsim.
 
 ✨ KĀPĒC JUMS TAS PATIKS:
+- 🤖 LOKĀLAIS INTELEKTS: Iegūstiet dziļas atziņas, izmantojot ierīces AI. Ģenerējiet kopsavilkumus, analizējiet noskaņojumu (Vibe Check), atklājiet neatbildētos jautājumus (Smart Q&A) un daudz ko citu — tas viss darbojas lokāli privātumam un ātrumam.
 - 🔍 REĀLLAIKA MEKLĒŠANA: Atrodiet tieši to, ko meklējat, rakstīšanas laikā. Vairs nekādas bezgalīgas ritināšanas.
 - 📜 VIDEO TRANSKRIPTI: Nekavējoties meklējiet pilnā video transkriptā un pārejiet uz konkrētiem mirkļiem, izmantojot noklikšķināmus laika zīmogus.
 - 💬 TIEŠRAIDES TĒRZĒŠANAS ATKĀRTOJUMS: Iegūstiet un pārlūkojiet tiešraides tērzēšanas ziņojumus no iepriekšējām straumēm, komplektā ar meklēšanas funkcionalitāti.

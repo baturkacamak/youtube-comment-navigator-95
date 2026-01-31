@@ -3,6 +3,7 @@
 YouTube Sharhlar Navigatori 95 sevimli videolaringizga chaqmoq tezligidagi qidiruv, kuchli filtrlash va nostalgik 90-yillar estetikasini olib keladi. Muayyan vaqt belgisini, kulgili javobni qidiryapsizmi, munozaralarni kuzatyapsizmi yoki video transkriptlarini qidiryapsizmi, biz sizga yordam beramiz.
 
 ✨ NEGA SIZGA YOQADI:
+- 🤖 MAHALLIY INTELLEKT: Qurilmadagi sun'iy intellekt yordamida chuqur tushunchalarni oching. Ijro xulosalarini yarating, his-tuyg'ularni tahlil qiling (Vibe Check), javobsiz savollarni toping (Smart Q&A) va boshqalar — barchasi maxfiylik va tezlik uchun mahalliy rejimda ishlaydi.
 - 🔍 HAQIQIY VAQTDA QIDIRUV: Yozayotganingizda aynan nima qidirayotganingizni toping. Cheksiz aylantirish yo'q.
 - 📜 VIDEO TRANSKRIPTLARI: Butun video transkriptini darhol qidiring va bosiladigan vaqt belgilari bilan aniq daqiqalarga o'ting.
 - 💬 JONLI CHATNI QAYTA KO'RISH: O'tmishdagi translyatsiyalardan jonli chat xabarlarini oling va ko'rib chiqing, qidiruv funksiyasi bilan to'ldirilgan.

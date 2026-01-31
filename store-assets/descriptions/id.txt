@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95 menghadirkan pencarian secepat kilat, pemfilteran canggih, dan estetika nostalgia tahun 90-an ke video favorit Anda. Baik Anda mencari stempel waktu tertentu, balasan lucu, melacak diskusi, atau mencari melalui transkrip video, kami siap membantu Anda.
 
 ✨ MENGAPA ANDA AKAN MENYUKAINYA:
+- 🤖 KECERDASAN LOKAL: Buka wawasan mendalam dengan AI di perangkat. Buat ringkasan eksekutif, analisis sentimen (Vibe Check), temukan pertanyaan yang belum terjawab (Smart Q&A), dan banyak lagi — semuanya berjalan secara lokal untuk privasi dan kecepatan.
 - 🔍 PENCARIAN REAL-TIME: Temukan apa yang Anda cari saat Anda mengetik. Tidak ada lagi gulir tanpa akhir.
 - 📜 TRANSKRIP VIDEO: Cari langsung transkrip video lengkap dan lompat ke momen tertentu dengan stempel waktu yang dapat diklik.
 - 💬 PEMUTARAN ULANG OBROLAN LANGSUNG: Ambil dan jelajahi pesan obrolan langsung dari streaming sebelumnya, lengkap dengan fungsi pencarian.

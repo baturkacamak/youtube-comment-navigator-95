@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95; şimşek hızında arama, güçlü filtreleme ve 90'ların nostaljik estetiğini favori videolarınıza getiriyor. İster belirli bir zaman damgasını, ister komik bir yanıtı arıyor olun; ister binlerce yorum arasında gezinin, ister video transkriptini tarayın, ihtiyacınız olan her şey burada.
 
 ✨ NEDEN SEVECEKSİNİZ?
+- 🤖 YEREL ZEKA: Cihaz içi yapay zeka ile derinlemesine içgörülerin kilidini açın. Yönetici özetleri oluşturun, duygu analizi yapın (Vibe Check), yanıtlanmamış soruları keşfedin (Smart Q&A) ve daha fazlası; gizlilik ve hız için tamamen yerel olarak çalışır.
 - 🔍 GERÇEK ZAMANLI ARAMA: Yazdığınız anda aradığınızı bulun. Sonsuz kaydırmaya son!
 - 📜 VİDEO TRANSKRİPTLERİ: Videonun tam metnini anında arayın ve tıklanabilir zaman damgalarıyla o ana gidin.
 - 💬 CANLI SOHBET TEKRARI: Geçmiş yayınların canlı sohbet mesajlarını getirin ve içinde arama yapın.

@@ -3,6 +3,7 @@
 YouTube Iruzkin Nabigatzailea 95-ek bilaketa azkarra, iragazketa indartsua eta 90. hamarkadako estetika nostalgikoa ekartzen dizkie zure bideo gogokoenei. Denbora-marka zehatz bat, erantzun dibertigarri bat, eztabaidak jarraitzen edo bideo-transkripzioetan bilatzen ari zaren ala ez, lagunduko dizugu.
 
 ✨ ZERGATIK MAITATUKO DUZUN:
+- 🤖 TOKIKO ADIMENA: Desblokeatu informazio sakona gailuko AIarekin. Sortu laburpen exekutiboak, aztertu sentimendua (Vibe Check), aurkitu erantzun gabeko galderak (Smart Q&A) eta gehiago — dena lokalean exekutatzen da pribatutasunerako eta abiadurarako.
 - 🔍 DENBORA ERREALAKO BILAKETA: Aurkitu zehazki zer bilatzen ari zaren idatzi ahala. Ez da gehiago korritze amaigaberik.
 - 📜 BIDEO TRANSKRIPZIOAK: Bilatu berehala bideoaren transkripzio osoa eta egin salto une zehatzetara klik egin daitezkeen denbora-markekin.
 - 💬 ZUZENEKO TXAT ERREPRODUKZIOA: Eskuratu eta arakatu iraganeko igorpenetako zuzeneko txat mezuak, bilaketa funtzionalitatearekin osatuta.

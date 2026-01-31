@@ -3,6 +3,7 @@
 YouTube Navigator Komentara 95 donosi munjevito brzo pretraživanje, snažno filtriranje i nostalgičnu estetiku 90-ih vašim omiljenim videozapisima. Bilo da tražite određenu vremensku oznaku, smiješan odgovor, pratite rasprave ili pretražujete video transkripte, mi ćemo vas pokriti.
 
 ✨ ZAŠTO ĆE VAM SE SVIDJETI:
+- 🤖 LOKALNA INTELIGENCIJA: Otključajte duboke uvide pomoću AI-ja na uređaju. Generirajte sažetke, analizirajte osjećaje (Vibe Check), otkrijte neodgovorena pitanja (Smart Q&A) i više – sve se izvodi lokalno radi privatnosti i brzine.
 - 🔍 PRETRAŽIVANJE U STVARNOM VREMENU: Pronađite točno ono što tražite dok tipkate. Nema više beskonačnog listanja.
 - 📜 VIDEO TRANSKRIPTI: Odmah pretražite cijeli transkript videa i skočite na određene trenutke s vremenskim oznakama na koje se može kliknuti.
 - 💬 REPRODUKCIJA CHATA UŽIVO: Dohvatite i pregledavajte poruke chata uživo iz prošlih streamova, zajedno s funkcijom pretraživanja.

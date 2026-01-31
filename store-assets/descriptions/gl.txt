@@ -3,6 +3,7 @@
 Navegador de Comentarios de YouTube 95 ofrece busca rápida, filtrado potente e unha estética nostálxica dos 90 aos teus vídeos favoritos. Tanto se buscas unha marca de tempo específica, unha resposta divertida, seguir debates ou buscar en transcricións de vídeo, temos o que necesitas.
 
 ✨ POR QUE CHE ENCANTARÁ:
+- 🤖 INTELIXENCIA LOCAL: Desbloquea coñecementos profundos coa IA no dispositivo. Xera resumos executivos, analiza o sentimento (Vibe Check), descubre preguntas sen resposta (Smart Q&A) e moito máis, todo executándose localmente para obter privacidade e velocidade.
 - 🔍 BUSCA EN TEMPO REAL: Atopa exactamente o que buscas mentres escribes. Acabouse o desprazamento interminable.
 - 📜 TRANSCRICIÓNS DE VÍDEO: Busca ao instante a transcrición completa do vídeo e salta a momentos concretos con marcas de tempo nas que se pode facer clic.
 - 💬 REPRODUCIÓN DE CHAT EN DIRECTO: Obtén e navega polas mensaxes de chat en directo de emisións pasadas, con funcionalidade de busca.

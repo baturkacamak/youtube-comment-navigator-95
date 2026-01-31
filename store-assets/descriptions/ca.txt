@@ -3,6 +3,7 @@
 Navegador de Comentaris de YouTube 95 ofereix cerca ràpida, filtratge potent i una estètica nostàlgica dels anys 90 als vostres vídeos preferits. Tant si busqueu una marca de temps específica, una resposta divertida, feu el seguiment de debats o cerqueu transcripcions de vídeo, us tenim cobert.
 
 ✨ PER QUÈ US ENCANTARÀ:
+- 🤖 INTEL·LIGÈNCIA LOCAL: Desbloquegeu coneixements profunds amb IA al dispositiu. Genereu resums executius, analitzeu el sentiment (Vibe Check), descobriu preguntes sense resposta (Smart Q&A) i molt més, tot executant-se localment per a privadesa i velocitat.
 - 🔍 CERCA EN TEMPS REAL: Trobeu exactament el que busqueu mentre escriviu. S'ha acabat el desplaçament sense fi.
 - 📜 TRANSCRIPCIONS DE VÍDEO: Cerqueu a l'instant la transcripció completa del vídeo i salteu a moments concrets amb marques de temps clicables.
 - 💬 REPRODUCCIÓ DE XAT EN DIRECTE: Obteniu i navegueu pels missatges de xat en directe de les retransmissions anteriors, amb funcionalitat de cerca.

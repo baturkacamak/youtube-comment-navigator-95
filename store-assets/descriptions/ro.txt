@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95 aduce căutare rapidă, filtrare puternică și o estetică nostalgică a anilor '90 videoclipurilor tale preferate. Fie că cauți un anumit moment, un răspuns amuzant, urmărești discuții sau cauți prin transcrierile video, noi te acoperim.
 
 ✨ DE CE ÎL VEI IUBI:
+- 🤖 INTELIGENȚĂ LOCALĂ: Deblocați informații profunde cu AI pe dispozitiv. Generați rezumate executive, analizați sentimentul (Vibe Check), descoperiți întrebări fără răspuns (Smart Q&A) și multe altele — toate rulând local pentru confidențialitate și viteză.
 - 🔍 CĂUTARE ÎN TIMP REAL: Găsește exact ce cauți pe măsură ce tastezi. Fără derulare nesfârșită.
 - 📜 TRANSCRIERI VIDEO: Caută instantaneu transcrierea completă a videoclipului și sari la momente specifice cu marcaje de timp pe care se poate face clic.
 - 💬 RELUARE LIVE CHAT: Preia și răsfoiește mesaje live chat din fluxurile anterioare, complet cu funcționalitate de căutare.

@@ -3,6 +3,7 @@
 „YouTube Komentarų Navigatorius 95“ suteikia žaibišką paiešką, galingą filtravimą ir nostalgišką 90-ųjų estetiką jūsų mėgstamiems vaizdo įrašams. Nesvarbu, ar ieškote konkrečios laiko žymos, juokingo atsakymo, sekate diskusijas ar ieškote vaizdo įrašų transkripcijose, mes jums padėsime.
 
 ✨ KODĖL JUMS TAI PATIKS:
+- 🤖 VIETINIS INTELEKTAS: Gaukite gilių įžvalgų naudodami įrenginio dirbtinį intelektą. Kurkite santraukas, analizuokite nuotaikas („Vibe Check“), raskite neatsakytus klausimus („Smart Q&A“) ir dar daugiau – viskas veikia vietoje, užtikrinant privatumą ir greitį.
 - 🔍 PAIEŠKA REALIUOJU LAIKU: Raskite tiksliai tai, ko ieškote, kol rašote. Daugiau jokio begalinio slinkimo.
 - 📜 VAIZDO ĮRAŠŲ TRANSKRIPCIJOS: Akimirksniu ieškokite visoje vaizdo įrašo transkripcijoje ir pereikite į konkrečias akimirkas naudodami spustelimas laiko žymes.
 - 💬 TIESIOGINIO POKALBIO PAKARTOJIMAS: Gaukite ir naršykite tiesioginio pokalbio žinutes iš praėjusių transliacijų su paieškos funkcija.

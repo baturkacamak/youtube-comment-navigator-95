@@ -3,6 +3,7 @@
 O YouTube Comment Navigator 95 traz busca ultrarrápida, filtros poderosos e uma estética nostálgica dos anos 90 para seus vídeos favoritos. Se você está procurando um carimbo de data/hora específico, uma resposta engraçada, acompanhando discussões ou pesquisando em transcrições de vídeo, nós temos a solução.
 
 ✨ POR QUE VOCÊ VAI ADORAR:
+- 🤖 INTELIGÊNCIA LOCAL: Desbloqueie insights profundos com IA no dispositivo. Gere resumos executivos, analise sentimentos (Vibe Check), descubra perguntas não respondidas (Smart Q&A) e muito mais — tudo rodando localmente para privacidade e velocidade.
 - 🔍 BUSCA EM TEMPO REAL: Encontre exatamente o que você procura enquanto digita. Chega de rolagem infinita.
 - 📜 TRANSCRIÇÕES DE VÍDEO: Pesquise instantaneamente a transcrição completa do vídeo e pule para momentos específicos com carimbos de data/hora clicáveis.
 - 💬 REPLAY DE CHAT AO VIVO: Busque e navegue por mensagens de chat ao vivo de transmissões passadas, com funcionalidade de busca completa.

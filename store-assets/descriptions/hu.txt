@@ -3,6 +3,7 @@
 A YouTube Comment Navigator 95 villámgyors keresést, erőteljes szűrést és nosztalgikus 90-es évekbeli esztétikát hoz a kedvenc videóidhoz. Akár egy konkrét időbélyeget, egy vicces választ keresel, beszélgetéseket követsz, vagy a videó átirataiban keresel, mi gondoskodunk róla.
 
 ✨ MIÉRT FOGOD IMÁDNI:
+- 🤖 HELYI INTELLIGENCIA: Mélyreható betekintések az eszközön lévő MI-vel. Vezetői összefoglalók készítése, hangulatelemzés (Vibe Check), megválaszolatlan kérdések felfedezése (Smart Q&A) és még sok más – mindez helyben fut a magánélet és a sebesség érdekében.
 - 🔍 VALÓS IDEJŰ KERESÉS: Találd meg pontosan azt, amit keresel, miközben gépelsz. Nincs több végtelen görgetés.
 - 📜 VIDEÓ ÁTIRATOK: Keresd azonnal a videó teljes szövegét, és ugorj konkrét pillanatokhoz a kattintható időbélyegekkel.
 - 💬 ÉLŐ CSEVEGÉS VISSZAJÁTSZÁSA: Hívd le és böngészd a korábbi közvetítések élő csevegési üzeneteit, teljes keresési funkcióval.

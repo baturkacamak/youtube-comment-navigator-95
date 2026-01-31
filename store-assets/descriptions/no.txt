@@ -3,6 +3,7 @@
 YouTube Comment Navigator 95 gir lynraskt søk, kraftig filtrering og en nostalgisk 90-tallsestetikk til favorittvideoene dine. Enten du leter etter et spesifikt tidsstempel, et morsomt svar, følger diskusjoner, eller søker gjennom videotranskripsjoner, har vi dekket deg.
 
 ✨ HVORFOR DU VIL ELSKE DET:
+- 🤖 LOKAL INTELLIGENS: Lås opp dyp innsikt med AI på enheten. Generer sammendrag, analyser sentiment (Vibe Check), oppdag ubesvarte spørsmål (Smart Q&A) og mer – alt kjører lokalt for personvern og hastighet.
 - 🔍 SØK I SANNTID: Finn nøyaktig det du leter etter mens du skriver. Ingen mer endeløs rulling.
 - 📜 VIDEOTRANSKRIPSJONER: Søk øyeblikkelig i hele videotranskripsjonen og hopp til spesifikke øyeblikk med klikkbare tidsstempler.
 - 💬 LIVE CHAT REPLAY: Hent og bla gjennom live chat-meldinger fra tidligere strømmer, komplett med søkefunksjonalitet.
