@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateWordFrequency } from '../services/wordFrequencyService';
+import { calculateWordFrequency } from './wordFrequencyService';
 import { Comment } from '../../../types/commentTypes';
 
 describe('wordFrequencyService', () => {
