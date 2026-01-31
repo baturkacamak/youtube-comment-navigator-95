@@ -141,6 +141,7 @@ export const calculateWordFrequency = (
   });
 
   return Object.entries(frequencyMap)
+    .filter(([, value]) => value >= 2)
     .map(([text, value]) => ({ text, value }))
     .sort((a, b) => b.value - a.value)
     .slice(0, limit);

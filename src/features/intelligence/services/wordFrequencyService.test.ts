@@ -27,7 +27,7 @@ describe('wordFrequencyService', () => {
 
   it('should filter out stop words and short words', () => {
     const mockComments = [
-      { content: 'The quick brown fox jumps over the lazy dog' }, // "quick", "brown", "jumps", "over", "lazy"
+      { content: 'The quick quick brown brown fox jumps over the lazy dog' }, // "quick", "brown" appear twice
     ] as Comment[];
 
     const result = calculateWordFrequency(mockComments);
@@ -64,5 +64,16 @@ describe('wordFrequencyService', () => {
 
     expect(banana?.value).toBe(3);
     expect(apple?.value).toBe(2);
+  });
+
+  it('should filter out words with fewer than 2 occurrences', () => {
+    const mockComments = [{ content: 'Rare common common' }] as Comment[];
+
+    const result = calculateWordFrequency(mockComments);
+    const rare = result.find((w) => w.text === 'rare');
+    const common = result.find((w) => w.text === 'common');
+
+    expect(rare).toBeUndefined();
+    expect(common?.value).toBe(2);
   });
 });
