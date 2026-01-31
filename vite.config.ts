@@ -10,6 +10,16 @@ const isProduction = process.env.NODE_ENV === 'production' && process.env.KEEP_T
 const remToEmPlugin = (): Plugin => {
   return {
     name: 'rem-to-em',
+    // Handle development (HMR) and build transformation
+    transform(code, id) {
+      if (/\.(css|scss|sass)($|\?)/.test(id)) {
+        return {
+          code: code.replace(/rem/g, 'em'),
+          map: null,
+        };
+      }
+    },
+    // Handle final build output (legacy support/backup)
     generateBundle(options: any, bundle: any) {
       for (const fileName in bundle) {
         if (fileName.endsWith('.css')) {
