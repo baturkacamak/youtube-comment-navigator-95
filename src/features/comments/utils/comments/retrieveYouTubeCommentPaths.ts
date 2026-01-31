@@ -78,6 +78,7 @@ export const addAdditionalInfoToComments = (comments: any[], allComments: any[])
     );
 
     const { ...restOfComment } = comment;
+    delete restOfComment.commentViewModel;
 
     return {
       ...restOfComment,
