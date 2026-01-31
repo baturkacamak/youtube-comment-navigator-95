@@ -15,7 +15,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   const { t } = useTranslation() as { t: (key: string) => string };
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const formatConfig = FORMAT_CONFIG[contentType];
   const [selectedFormat, setSelectedFormat] = useState<DownloadFormat>(() => {
@@ -43,6 +43,20 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       setSelectedFormat(formatConfig.default);
     }
   }, [contentType, formatConfig, selectedFormat]);
+
+  // Close on click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleToggle = () => {
     setIsExpanded((prev) => !prev);
@@ -84,7 +98,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   };
 
   return (
-    <div className="relative inline-block">
+    <div className="relative inline-block" ref={containerRef}>
       {/* Accordion Header Button */}
       <button
         onClick={handleToggle}
@@ -103,7 +117,6 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       {/* Accordion Panel */}
       <div
         id="download-panel"
-        ref={panelRef}
         className="absolute left-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 ease-in-out"
         style={{
           maxHeight: isExpanded ? '400px' : '0',
@@ -190,15 +203,6 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Backdrop to close on outside click */}
-      {isExpanded && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setIsExpanded(false)}
-          aria-hidden="true"
-        />
-      )}
     </div>
   );
 };
