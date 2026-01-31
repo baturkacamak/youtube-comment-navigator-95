@@ -11,6 +11,8 @@ const languageDirections: Record<string, 'ltr' | 'rtl'> = {
   he: 'rtl',
   fa: 'rtl',
   ur: 'rtl',
+  prs: 'rtl', // Dari
+  ps: 'rtl', // Pashto
   default: 'ltr',
 };
 
