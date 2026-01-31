@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { setFilters } from '../../../store/store';
 import { RootState } from '../../../types/rootState';
 import { FilterState } from '../../../types/filterTypes';
+import Input from '../../shared/components/Input';
 
 /** Debounce delay for filter updates (ms) */
 const FILTER_DEBOUNCE_MS = 300;
@@ -107,19 +108,19 @@ const AdvancedFilters: React.FC = () => {
             </div>
             <div className="flex space-x-2">
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
-                  min="0"
+                  min={0}
                   max={typeof likesThreshold.max === 'number' ? likesThreshold.max - 1 : undefined}
                   value={likesThreshold.min}
                   onChange={(e) => handleLikesThresholdChange('min', parseInt(e.target.value))}
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Min')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Min Likes')}</label>
               </div>
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
                   min={likesThreshold.min + 1 || 1}
                   value={likesThreshold.max === Infinity ? '' : likesThreshold.max}
@@ -129,7 +130,7 @@ const AdvancedFilters: React.FC = () => {
                       e.target.value === '' ? Infinity : parseInt(e.target.value)
                     )
                   }
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Max')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Max Likes')}</label>
@@ -144,19 +145,19 @@ const AdvancedFilters: React.FC = () => {
             </div>
             <div className="flex space-x-2">
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
-                  min="0"
+                  min={0}
                   max={typeof repliesLimit.max === 'number' ? repliesLimit.max - 1 : undefined}
                   value={repliesLimit.min}
                   onChange={(e) => handleRepliesLimitChange('min', parseInt(e.target.value))}
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Min')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Min Replies')}</label>
               </div>
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
                   min={repliesLimit.min + 1 || 1}
                   value={repliesLimit.max === Infinity ? '' : repliesLimit.max}
@@ -166,7 +167,7 @@ const AdvancedFilters: React.FC = () => {
                       e.target.value === '' ? Infinity : parseInt(e.target.value)
                     )
                   }
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Max')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Max Replies')}</label>
@@ -181,19 +182,19 @@ const AdvancedFilters: React.FC = () => {
             </div>
             <div className="flex space-x-2">
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
-                  min="0"
+                  min={0}
                   max={typeof wordCount.max === 'number' ? wordCount.max - 1 : undefined}
                   value={wordCount.min}
                   onChange={(e) => handleWordCountChange('min', parseInt(e.target.value))}
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Min')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Min Words')}</label>
               </div>
               <div className="flex flex-col">
-                <input
+                <Input
                   type="number"
                   min={wordCount.min + 1 || 1}
                   value={wordCount.max === Infinity ? '' : wordCount.max}
@@ -203,7 +204,7 @@ const AdvancedFilters: React.FC = () => {
                       e.target.value === '' ? Infinity : parseInt(e.target.value)
                     )
                   }
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded py-1 px-2 w-20 transition-all ease-in-out duration-300"
+                  className="py-1 px-2 w-20"
                   placeholder={t('Max')}
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Max Words')}</label>
@@ -218,22 +219,22 @@ const AdvancedFilters: React.FC = () => {
             </div>
             <div className="flex space-x-2">
               <div className="flex flex-col">
-                <input
+                <Input
                   type="datetime-local"
                   value={dateTimeRange.start}
                   onChange={(e) => handleDateTimeRangeChange('start', e.target.value)}
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full transition-all ease-in-out duration-300"
+                  className="p-1 w-full"
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('Start')}</label>
               </div>
               <div className="flex flex-col">
-                <input
+                <Input
                   type="datetime-local"
                   value={dateTimeRange.end}
                   min={dateTimeRange.start} // Ensure end cannot be before start
                   max={new Date().toISOString().slice(0, 16)} // Current date and time
                   onChange={(e) => handleDateTimeRangeChange('end', e.target.value)}
-                  className="bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded p-1 w-full transition-all ease-in-out duration-300"
+                  className="p-1 w-full"
                 />
                 <label className="text-gray-500 text-xs mt-1">{t('End')}</label>
               </div>

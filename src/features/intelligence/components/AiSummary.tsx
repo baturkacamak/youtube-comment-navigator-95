@@ -3,6 +3,7 @@ import { summarizeComments } from '../services/aiService';
 import { Comment } from '../../../types/commentTypes';
 import { useLocalIntelligence } from '../hooks/useLocalIntelligence';
 import { SparklesIcon, KeyIcon } from '@heroicons/react/24/solid';
+import Input from '../../shared/components/Input';
 
 interface AiSummaryProps {
   comments: Comment[];
@@ -66,12 +67,13 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
           </button>
 
           {showApiInput && (
-            <input
+            <Input
               type="password"
               placeholder="Gemini API Key"
-              className="mt-2 w-full p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="mt-2 w-full p-2 border dark:border-gray-600 dark:text-white"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
+              autoComplete="off"
             />
           )}
         </div>

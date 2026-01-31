@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { RootState } from '../../../types/rootState';
 import { setSearchKeyword, clearSearchKeyword } from '../../../store/store';
+import Input from '../../shared/components/Input';
 
 const SearchBar: React.FC = () => {
   const dispatch = useDispatch();
@@ -75,12 +76,12 @@ const SearchBar: React.FC = () => {
       className="flex items-center p-2 relative"
       aria-label={t('Search form')}
     >
-      <input
+      <Input
         type="text"
         placeholder={placeholder}
         value={searchKeyword}
         onChange={(e) => setSearchKeywordLocal(e.target.value)}
-        className="flex-grow p-2 bg-neutral-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-neutral-300 transition-all duration-300 ease-in-out"
+        className="flex-grow p-2"
         aria-label={placeholder}
       />
       <button
