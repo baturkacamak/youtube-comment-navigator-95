@@ -3,6 +3,7 @@ import { PencilIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useNoteHandler from '../hooks/useNoteHandler';
 import { Comment } from '../../../types/commentTypes';
+import Collapsible from '../../shared/components/Collapsible';
 
 interface CommentNoteProps {
   comment: Comment;
@@ -10,16 +11,13 @@ interface CommentNoteProps {
 
 const CommentNote: React.FC<CommentNoteProps> = React.memo(({ comment }) => {
   const { t } = useTranslation();
-  const { note, textareaRef, savingRef, isSaving, handleInputChange } = useNoteHandler(
-    comment,
-    () => {
-      adjustTextareaHeight();
-      setShowSavedMessage(true);
-      setTimeout(() => {
-        setShowSavedMessage(false);
-      }, 2000); // Show the saved message for 2 seconds when user stops typing
-    }
-  );
+  const { note, textareaRef, isSaving, handleInputChange } = useNoteHandler(comment, () => {
+    adjustTextareaHeight();
+    setShowSavedMessage(true);
+    setTimeout(() => {
+      setShowSavedMessage(false);
+    }, 2000); // Show the saved message for 2 seconds when user stops typing
+  });
 
   const [isEditingNote, setIsEditingNote] = useState(false);
   const [showSavedMessage, setShowSavedMessage] = useState(false);
@@ -76,16 +74,12 @@ const CommentNote: React.FC<CommentNoteProps> = React.memo(({ comment }) => {
           }`}
         />
       </div>
-      <div
-        ref={savingRef}
-        className={`flex items-center transition-all pl-8 duration-500 ease-in-out select-user ${
-          isSaving || showSavedMessage ? 'opacity-100 max-h-10 py-4' : 'opacity-0 max-h-0'
-        }`}
-        style={{ maxHeight: isSaving || showSavedMessage ? savingRef.current?.scrollHeight : 0 }}
-      >
-        <CheckCircleIcon className="w-4 h-4 mr-1" />
-        <p className="text-sm text-gray-500 m-0 p-0 dark:text-gray-400">{t('Saved')}</p>
-      </div>
+      <Collapsible isOpen={isSaving || showSavedMessage}>
+        <div className="flex items-center pl-8 py-4 select-user">
+          <CheckCircleIcon className="w-4 h-4 mr-1" />
+          <p className="text-sm text-gray-500 m-0 p-0 dark:text-gray-400">{t('Saved')}</p>
+        </div>
+      </Collapsible>
     </div>
   );
 });

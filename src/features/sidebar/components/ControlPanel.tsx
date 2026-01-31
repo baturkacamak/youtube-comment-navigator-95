@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import FilterList from './FilterList';
 import SortList from './SortList';
 import AdvancedFilters from './AdvancedFilters';
@@ -6,6 +6,7 @@ import { ControlPanelProps } from '../../../types/filterTypes';
 import { useTranslation } from 'react-i18next';
 import { ArrowsUpDownIcon, ChevronDownIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
+import Collapsible from '../../shared/components/Collapsible';
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   filters,
@@ -15,14 +16,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 }) => {
   const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [maxHeight, setMaxHeight] = useState('0px');
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      setMaxHeight(showAdvanced ? `200px` : '0px');
-    }
-  }, [showAdvanced]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -49,13 +42,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           </button>
         </div>
       </div>
-      <div
-        ref={containerRef}
-        style={{ maxHeight }}
-        className={`transition-all duration-500  ${showAdvanced ? 'opacity-1' : 'opacity-0 pointer-events-none'}`}
-      >
+      <Collapsible isOpen={showAdvanced}>
         <AdvancedFilters />
-      </div>
+      </Collapsible>
     </div>
   );
 };

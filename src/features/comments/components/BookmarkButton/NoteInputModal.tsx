@@ -4,6 +4,7 @@ import Draggable from 'react-draggable';
 import { Trans, useTranslation } from 'react-i18next';
 import { Comment } from '../../../../types/commentTypes';
 import useNoteHandler from '../../hooks/useNoteHandler';
+import Collapsible from '../../../shared/components/Collapsible';
 
 interface NoteInputModalProps {
   note: string | undefined;
@@ -41,7 +42,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     }
   };
 
-  const { note, textareaRef, savingRef, isSaving, handleInputChange, saveNote } = useNoteHandler(
+  const { note, textareaRef, isSaving, handleInputChange, saveNote } = useNoteHandler(
     comment,
     setIsNoteInputVisible,
     handleExtraLogic
@@ -76,7 +77,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
   }, [isNoteInputVisible, startHideTimeout, textareaRef]);
 
   useEffect(() => {
-    if (savingRef.current) {
+    if (isSaving) {
       clearTimeout(timeoutRef.current!);
       clearInterval(countdownRef.current!);
       return;
@@ -85,7 +86,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
     if (initialLoadRef.current && note?.trim() === '') {
       startCountdown();
     }
-  }, [note, startCountdown, savingRef]);
+  }, [note, startCountdown, isSaving]);
 
   return (
     <Draggable
@@ -130,25 +131,22 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
           className={`w-80 ${textareaHeight} p-2 border rounded resize-none overflow-hidden overflow-y-auto transition-all duration-300 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 custom-scrollbar`}
           rows={4}
         />
-        <div
-          ref={savingRef}
-          className={`flex items-center transition-all duration-500 ease-in-out select-user ${
-            isSaving ? 'opacity-100 max-h-10 py-4' : 'opacity-0 max-h-0'
-          }`}
-          style={{ maxHeight: isSaving ? savingRef.current?.scrollHeight : 0 }}
-        >
-          <CheckCircleIcon className="w-4 h-4 mr-1" />
-          <p className="text-sm text-gray-500 dark:text-gray-400">{t('Saved')}</p>
-        </div>
 
-        <div
-          className={`text-sm text-gray-500 dark:text-gray-400 transition-all duration-500 ease-in-out flex items-center select-user ${initialLoadRef.current && note?.trim() === '' && !isDragging ? 'opacity-100 max-h-10 mt-2' : 'opacity-0 max-h-0 mt-0'}`}
-        >
-          <ClockIcon className="w-4 h-4 mr-1" />
-          <Trans i18nKey="This modal will close in COUNTDOWN seconds" values={{ countdown }}>
-            This modal will close in {{ countdown }} seconds
-          </Trans>
-        </div>
+        <Collapsible isOpen={isSaving}>
+          <div className="flex items-center py-4 select-user">
+            <CheckCircleIcon className="w-4 h-4 mr-1" />
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('Saved')}</p>
+          </div>
+        </Collapsible>
+
+        <Collapsible isOpen={initialLoadRef.current && note?.trim() === '' && !isDragging}>
+          <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center select-user mt-2">
+            <ClockIcon className="w-4 h-4 mr-1" />
+            <Trans i18nKey="This modal will close in COUNTDOWN seconds" values={{ countdown }}>
+              This modal will close in {{ countdown }} seconds
+            </Trans>
+          </div>
+        </Collapsible>
       </div>
     </Draggable>
   );

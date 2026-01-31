@@ -2740,11 +2740,8 @@ describe('App Integration Tests - Complete Coverage', () => {
       });
 
       // Click the overlay/outside area
-      const drawer = screen.getByTestId('settings-drawer');
-      const overlay = drawer.nextElementSibling;
-      if (overlay) {
-        fireEvent.click(overlay);
-      }
+      const overlay = screen.getByLabelText('Close settings overlay');
+      fireEvent.click(overlay);
 
       await waitFor(() => {
         expect(screen.getByTestId('settings-drawer')).toHaveAttribute('data-open', 'false');

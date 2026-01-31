@@ -25,6 +25,7 @@ import i18n from 'i18next';
 import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
+import Collapsible from './features/shared/components/Collapsible';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -175,20 +176,9 @@ const App: React.FC = () => {
     <div
       className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
     >
-      <div
-        className={`transition-all ease-in-out duration-500 ${isSettingsOpen ? 'max-h-[1000px] opacity-1' : 'max-h-0 opacity-0'}`}
-      >
+      <Collapsible isOpen={isSettingsOpen} className="pointer-events-none">
         <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
-        {isSettingsOpen && (
-          <button
-            type="button"
-            className="fixed inset-0 bg-black bg-opacity-50 transition-all z-10 w-full h-full cursor-default"
-            onClick={closeSettings}
-            aria-label="Close settings overlay"
-            tabIndex={-1}
-          />
-        )}
-      </div>
+      </Collapsible>
       <div
         className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${drawerClass}`}
       >
@@ -207,6 +197,15 @@ const App: React.FC = () => {
           </Box>
         )}
       </div>
+      {isSettingsOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 bg-black bg-opacity-50 transition-all z-40 w-full h-full cursor-default"
+          onClick={closeSettings}
+          aria-label="Close settings overlay"
+          tabIndex={-1}
+        />
+      )}
     </div>
   );
 };

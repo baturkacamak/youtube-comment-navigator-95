@@ -4,6 +4,7 @@ import { Comment } from '../../../types/commentTypes';
 import { useLocalIntelligence } from '../hooks/useLocalIntelligence';
 import { SparklesIcon, KeyIcon } from '@heroicons/react/24/solid';
 import Input from '../../shared/components/Input';
+import Collapsible from '../../shared/components/Collapsible';
 
 interface AiSummaryProps {
   comments: Comment[];
@@ -66,7 +67,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
             <KeyIcon className="w-4 h-4" /> {showApiInput ? 'Hide API Key' : 'Enter API Key'}
           </button>
 
-          {showApiInput && (
+          <Collapsible isOpen={showApiInput}>
             <Input
               type="password"
               placeholder="Gemini API Key"
@@ -75,7 +76,7 @@ const AiSummary: React.FC<AiSummaryProps> = ({ comments }) => {
               onChange={(e) => setApiKey(e.target.value)}
               autoComplete="off"
             />
-          )}
+          </Collapsible>
         </div>
       )}
 

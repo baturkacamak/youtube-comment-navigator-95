@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react';
+import Collapsible from './Collapsible';
 
 interface DropdownMenuProps {
   buttonContent: ReactNode;
@@ -68,16 +69,15 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ buttonContent, children }) 
       >
         {buttonContent}
       </button>
-      <div
+      <Collapsible
         ref={menuRef}
-        className={`origin-top-left absolute mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 ring-1 ring-black ring-opacity-5 transform transition-all duration-300 ease-in-out ${
-          isOpen
-            ? 'opacity-100 translate-y-0 py-2 max-h-96'
-            : 'opacity-0 -translate-y-2 py-0 max-h-0 overflow-hidden pointer-events-none'
+        isOpen={isOpen}
+        className={`origin-top-left absolute mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 ring-1 ring-black ring-opacity-5 ${
+          !isOpen ? 'pointer-events-none' : ''
         }`}
       >
-        {children}
-      </div>
+        <div className="py-2">{children}</div>
+      </Collapsible>
     </div>
   );
 };

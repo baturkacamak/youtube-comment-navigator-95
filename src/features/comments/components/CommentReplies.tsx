@@ -1,30 +1,12 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import CommentItem from './CommentItem';
 import { CommentRepliesProps } from '../../../types/commentTypes';
 import { useTranslation } from 'react-i18next';
+import Collapsible from '../../shared/components/Collapsible';
 
 const CommentReplies: React.FC<CommentRepliesProps> = React.memo(
   ({ replies, showReplies, isLoading, parentCommentId: _parentCommentId }) => {
     const { t } = useTranslation();
-    const contentRef = useRef<HTMLDivElement>(null);
-    const [height, setHeight] = useState(0);
-
-    // Measure content height when replies change or visibility changes
-    useEffect(() => {
-      if (showReplies && contentRef.current) {
-        const resizeObserver = new ResizeObserver((entries) => {
-          for (const entry of entries) {
-            setHeight(entry.contentRect.height);
-          }
-        });
-
-        resizeObserver.observe(contentRef.current);
-        // Initial measurement
-        setHeight(contentRef.current.scrollHeight);
-
-        return () => resizeObserver.disconnect();
-      }
-    }, [showReplies, replies, isLoading]);
 
     const memoizedReplies = useMemo(() => {
       if (isLoading) {
@@ -80,18 +62,16 @@ const CommentReplies: React.FC<CommentRepliesProps> = React.memo(
     }, [replies, isLoading, t]);
 
     return (
-      <div
-        className="w-full overflow-hidden transition-all duration-300 ease-in-out"
+      <Collapsible
+        isOpen={showReplies}
+        className="w-full"
         style={{
-          maxHeight: showReplies ? `${height}px` : '0px',
-          opacity: showReplies ? 1 : 0,
           marginTop: showReplies ? '1rem' : '0',
         }}
-        aria-expanded={showReplies}
         aria-label={t('Replies')}
       >
-        <div ref={contentRef}>{memoizedReplies}</div>
-      </div>
+        {memoizedReplies}
+      </Collapsible>
     );
   }
 );

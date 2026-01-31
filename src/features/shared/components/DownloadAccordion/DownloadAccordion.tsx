@@ -4,6 +4,7 @@ import { DocumentArrowDownIcon, ChevronDownIcon } from '@heroicons/react/24/outl
 import { DownloadAccordionProps, DownloadFormat, DownloadScope, FORMAT_CONFIG } from './types';
 import { generateFileName, executeDownload } from './downloadUtils';
 import logger from '../../utils/logger';
+import Collapsible from '../Collapsible';
 
 const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   contentType,
@@ -115,12 +116,11 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       </button>
 
       {/* Accordion Panel */}
-      <div
+      <Collapsible
         id="download-panel"
-        className="absolute left-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-300 ease-in-out"
+        isOpen={isExpanded}
+        className="absolute left-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
         style={{
-          maxHeight: isExpanded ? '400px' : '0',
-          opacity: isExpanded ? 1 : 0,
           visibility: isExpanded ? 'visible' : 'hidden',
           minWidth: '220px',
         }}
@@ -202,7 +202,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
             </span>
           </button>
         </div>
-      </div>
+      </Collapsible>
     </div>
   );
 };

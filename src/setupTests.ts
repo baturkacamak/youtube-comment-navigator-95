@@ -6,7 +6,38 @@ import '@testing-library/jest-dom';
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
+  callback: ResizeObserverCallback;
+
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+
+  observe(target: Element) {
+    // Trigger callback immediately with a dummy size to simulate content presence
+    this.callback(
+      [
+        {
+          target,
+          contentRect: {
+            height: 500,
+            width: 500,
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            x: 0,
+            y: 0,
+            toJSON: () => {},
+          },
+          borderBoxSize: [],
+          contentBoxSize: [],
+          devicePixelContentBoxSize: [],
+        },
+      ],
+      this
+    );
+  }
+
   unobserve() {}
   disconnect() {}
 };
