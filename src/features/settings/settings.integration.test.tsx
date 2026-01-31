@@ -24,6 +24,7 @@ describe('Settings Integration Tests - Redux & localStorage', () => {
       fontFamily: 'Arial, sans-serif',
       showFiltersSorts: true,
       showContentOnSearch: false,
+      geminiApiKey: '',
     },
     filters: {
       keyword: '',

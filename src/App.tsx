@@ -141,7 +141,9 @@ const App: React.FC = () => {
           label: t('Intelligence'),
           icon: LightBulbIcon,
         },
-        content: <IntelligenceTab comments={filteredAndSortedComments} />,
+        content: (
+          <IntelligenceTab comments={filteredAndSortedComments} onOpenSettings={openSettings} />
+        ),
       },
     ],
     [

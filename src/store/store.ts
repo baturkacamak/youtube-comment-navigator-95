@@ -64,6 +64,7 @@ const initialState: RootState = {
     fontFamily: 'Arial, sans-serif',
     showFiltersSorts: true,
     showContentOnSearch: false,
+    geminiApiKey: '',
   },
   filters: loadPreference('filter_preferences', defaultFilters),
 
@@ -183,6 +184,10 @@ const commentsSlice = createSlice({
       state.settings.showContentOnSearch = action.payload;
       saveSettings({ showContentOnSearch: state.settings.showContentOnSearch });
     },
+    setGeminiApiKey: (state, action: PayloadAction<string>) => {
+      state.settings.geminiApiKey = action.payload;
+      saveSettings({ geminiApiKey: state.settings.geminiApiKey });
+    },
 
     setTranscriptSelectedLanguage: (
       state,
@@ -244,6 +249,7 @@ export const {
   setShowFiltersSorts,
   setFontFamily,
   setShowContentOnSearch,
+  setGeminiApiKey,
 
   setTranscriptSelectedLanguage,
   // Reset action

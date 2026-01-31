@@ -18,6 +18,7 @@ export interface RootState {
     showFiltersSorts: boolean;
     fontFamily: string;
     showContentOnSearch: boolean;
+    geminiApiKey: string;
   };
   filteredTranscripts: any[];
   bookmarkedLines: any[];

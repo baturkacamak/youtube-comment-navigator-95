@@ -11,6 +11,7 @@ import LoadingSection from '../../loading/components/LoadingSection';
 import FontSetting from '../FontSetting';
 import i18n from 'i18next';
 import ShowContentOnSearchToggle from './ShowContentOnSearchToggle';
+import AIApiKeySetting from './AIApiKeySetting';
 
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
@@ -82,6 +83,9 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex items-center justify-between mb-4 p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
                 <ShowContentOnSearchToggle />
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                <AIApiKeySetting />
               </div>
             </div>
           </div>

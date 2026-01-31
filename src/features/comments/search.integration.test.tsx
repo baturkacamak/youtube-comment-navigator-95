@@ -24,6 +24,7 @@ describe('Search Functionality Integration Tests', () => {
       fontFamily: 'Arial, sans-serif',
       showFiltersSorts: true,
       showContentOnSearch: false,
+      geminiApiKey: '',
     },
     filters: {
       keyword: '',

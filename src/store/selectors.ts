@@ -37,6 +37,11 @@ export const selectShowContentOnSearch = createSelector(
   (settings) => settings.showContentOnSearch
 );
 
+export const selectGeminiApiKey = createSelector(
+  [selectSettings],
+  (settings) => settings.geminiApiKey
+);
+
 // Filter-specific selectors
 export const selectSortBy = createSelector([selectFilters], (filters) => filters.sortBy);
 
