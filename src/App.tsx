@@ -140,7 +140,7 @@ const App: React.FC = () => {
           label: t('Intelligence'),
           icon: LightBulbIcon,
         },
-        content: <IntelligenceTab comments={comments} />,
+        content: <IntelligenceTab comments={filteredAndSortedComments} />,
       },
     ],
     [
