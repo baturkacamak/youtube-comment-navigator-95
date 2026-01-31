@@ -28,7 +28,7 @@ const WordCloud: React.FC<WordCloudProps> = ({ data, onWordClick }) => {
         <button
           key={item.text}
           type="button"
-          className="text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+          className="bg-transparent border-none p-0 text-gray-600 dark:text-gray-300 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
           style={{
             fontSize: `${getFontSize(item.value)}rem`,
             opacity: 0.7 + getFontSize(item.value) / 10,
