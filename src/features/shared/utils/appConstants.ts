@@ -73,7 +73,7 @@ export const languageOptions: LanguageOption[] = [
   { value: 'km', label: 'ភាសាខ្មែរ' }, // Khmer
   { value: 'kn', label: 'ಕನ್ನಡ' }, // Kannada
   { value: 'ko', label: '한국어' }, // Korean
-  { value: 'krt', label: 'Kırım Tatarca' }, // Crimean Tatar
+  { value: 'crh', label: 'Qırımtatar tili' }, // Crimean Tatar
   { value: 'ku', label: 'Kurdî' }, // Kurdish
   { value: 'lo', label: 'ລາວ' }, // Lao
   { value: 'lt', label: 'Lietuvių' }, // Lithuanian
