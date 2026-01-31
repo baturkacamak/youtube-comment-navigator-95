@@ -25,9 +25,6 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments }) => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h2 className="text-xl font-bold dark:text-white px-1">{t('Intelligence')}</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 px-1">
-          {t('Analyze trends and summarize discussions.')}
-        </p>
       </div>
 
       <AiSummary comments={comments} />
