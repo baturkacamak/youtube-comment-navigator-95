@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 YouTube tajribangizni eng yaxshi sharh va transkript vositasi bilan yangilang!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Sharhlar Navigatori 95 sevimli videolaringizga chaqmoq tezligidagi qidiruv, kuchli filtrlash va nostalgik 90-yillar estetikasini olib keladi. Muayyan vaqt belgisini, kulgili javobni qidiryapsizmi, munozaralarni kuzatyapsizmi yoki video transkriptlarini qidiryapsizmi, biz sizga yordam beramiz.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ NEGA SIZGA YOQADI:
+- 🔍 HAQIQIY VAQTDA QIDIRUV: Yozayotganingizda aynan nima qidirayotganingizni toping. Cheksiz aylantirish yo'q.
+- 📜 VIDEO TRANSKRIPTLARI: Butun video transkriptini darhol qidiring va bosiladigan vaqt belgilari bilan aniq daqiqalarga o'ting.
+- 💬 JONLI CHATNI QAYTA KO'RISH: O'tmishdagi translyatsiyalardan jonli chat xabarlarini oling va ko'rib chiqing, qidiruv funksiyasi bilan to'ldirilgan.
+- 🚀 YUQORI SAMARADORLIK: IndexedDB va Ro'yxat Virtualizatsiyasi bilan qurilgan. Brauzeringizni sekinlashtirmasdan 10,000+ sharh/xabarlarni silliq boshqaring.
+- 💾 XATCHO'P VA QADASH: Muhim sharhlar va sevimli mavzularni keyinroq darhol kirish uchun saqlang.
+- 📊 KENGAYTIRILGAN FILTRLAR: Yoqtirishlar, javoblar, sana bo'yicha saralang yoki yangi istiqbol uchun tartibni tasodifiy qiling.
+- 🕒 ANIQ VAQT BELGILARI: Nisbiy vaqtlar haqiqiy vaqtda qayta hisoblanadi, hatto saqlangan xatcho'plaringiz uchun ham.
+- 📁 UNIVERSAL EKSPORT: Sharhlar, transkriptlar (SRT) va jonli chat jurnallarini oflayn o'qish yoki tahlil qilish uchun eksport qiling.
+- 🎨 NOSTALGIK KAYFIYAT: To'liq qorong'u rejimni qo'llab-quvvatlaydigan, klassik 90-yillar davridan ilhomlangan chiroyli, sozlanishi mumkin bo'lgan interfeys.
+- 🔡 TIPOGRAFIYA NAZORATI: Mukammal o'qish tajribasi uchun shrift o'lchami va oilasini sozlang.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ ASOSIY XUSUSIYATLAR:
+- Sharhlar, chat va transkriptlar uchun aqlli "Hammasini Yuklash".
+- Muayyan sharhlar uchun chuqur havola ulashish.
+- Yangi javoblar uchun haqiqiy vaqtda bildirishnomalar.
+- Global hamjamiyat uchun ko'p tilli yordam.
+- Yaxshiroq foydalanish uchun interaktiv vosita maslahatlari.
+- Maxfiylik birinchi o'rinda: Sizning ma'lumotlaringiz brauzeringizda qoladi.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 QANDAY ISHLATILADI:
+1. Har qanday YouTube videosini oching.
+2. Asboblar panelidagi 95 belgisini bosing.
+3. Qidirishni, filtrlashni boshlang va yaxshiroq sharhlar bo'limidan zavqlaning!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+YouTube ko'rishni o'zgartirgan minglab foydalanuvchilarga qo'shiling. Batur Kacamak tomonidan ishlab chiqilgan va qo'llab-quvvatlanadi.
 
-Questions or feedback? Reach out at hello@batur.info
+Savollar yoki fikr-mulohazalar bormi? Biz bilan hello@batur.info manzilida bog'laning

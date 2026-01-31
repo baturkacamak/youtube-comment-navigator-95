@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 د وروستي تبصرې او لیږد وسیلې سره خپله د یوټیوب تجربه لوړه کړئ!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+د یوټیوب تبصرې نیویګیټر 95 ستاسو غوره ویډیوګانو ته د بریښنا ګړندي لټون ، قوي فلټرینګ ، او د 90 کلونو یادګاري جمالیات راوړي. که تاسو د ځانګړي وخت په لټه کې یاست ، یو خندونکی ځواب ، د بحثونو تعقیب ، یا د ویډیو لیږدونو له لارې لټون کوئ ، موږ تاسو پوښلي یو.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ ولې تاسو به یې خوښ کړئ:
+- 🔍 ریښتیني وخت لټون: دقیقا هغه څه ومومئ چې تاسو یې په لټه کې یاست لکه څنګه چې تاسو ټایپ کوئ. نور نه ختمیدونکی سکرول کول.
+- 📜 د ویډیو لیږدونه: سمدلاسه د ټولې ویډیو لیږد وپلټئ او د کلیک کولو وړ وختونو سره ځانګړي شیبو ته لاړشئ.
+- 💬 ژوندی چیټ بیا غږول: د تیرو جریانونو څخه د ژوندی چیټ پیغامونه ترلاسه او لټون کړئ ، د لټون فعالیت سره بشپړ.
+- 🚀 لوړ فعالیت: د IndexedDB او لیست مجازی کولو سره جوړ شوی. پرته له دې چې ستاسو براوزر ورو کړي 10,000+ تبصرې / پیغامونه په اسانۍ سره اداره کړئ.
+- 💾 نښه کول او پین کول: مهمې تبصرې او د خوښې تارونه خوندي کړئ ترڅو وروسته سمدلاسه ورته لاسرسی ومومئ.
+- 📊 پرمختللي فلټرونه: د خوښونو ، ځوابونو ، نیټې لخوا ترتیب کړئ ، یا حتی د نوي لید لپاره ترتیب تصادفي کړئ.
+- 🕒 دقیق وختونه: اړونده وختونه په ریښتیني وخت کې بیا محاسبه کیږي ، حتی ستاسو د خوندي شوي نښو لپاره.
+- 📁 نړیوال صادرات: د آفلاین لوستلو یا تحلیل لپاره تبصرې ، لیږدونه (SRT) ، او د ژوندی چیټ لاګونه صادر کړئ.
+- 🎨 یادګاري احساسات: یو ښکلی ، د تنظیم وړ UI د کلاسیک 90 کلونو دورې څخه الهام اخیستی ، د بشپړ تیاره حالت ملاتړ سره.
+- 🔡 د ټایپوګرافي کنټرول: د کامل لوستلو تجربې لپاره د فونټ اندازه او کورنۍ تنظیم کړئ.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ کلیدي ځانګړتیاوې:
+- د تبصرو ، چیټ ، او لیږدونو لپاره سمارټ "ټول بار کړئ".
+- د ځانګړي تبصرو لپاره د ژورې لینک شریکول.
+- د نوي ځوابونو لپاره د ریښتیني وخت خبرتیاوې.
+- د نړیوالې ټولنې لپاره څو ژبني ملاتړ.
+- د غوره کارونې لپاره متقابل وسیلې لارښوونې.
+- محرمیت لومړی: ستاسو ډاټا ستاسو په براوزر کې پاتې کیږي.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 څنګه وکاروئ:
+1. کوم یوټیوب ویډیو خلاص کړئ.
+2. په خپل اوزار پټه کې د 95 عکس باندې کلیک وکړئ.
+3. لټون پیل کړئ ، فلټر کول ، او د غوره تبصرې برخې څخه خوند واخلئ!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+د زرګونو کاروونکو سره یوځای شئ چې خپله د یوټیوب لټون یې بدل کړی. د Batur Kacamak لخوا ډیزاین او ساتل شوی.
 
-Questions or feedback? Reach out at hello@batur.info
+پوښتنې یا فیډبیک؟ موږ سره په hello@batur.info اړیکه ونیسئ

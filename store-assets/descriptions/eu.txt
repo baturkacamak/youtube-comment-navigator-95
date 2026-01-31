@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Hobetu zure YouTube esperientzia iruzkin eta transkripzio tresna nagusiarekin!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Iruzkin Nabigatzailea 95-ek bilaketa azkarra, iragazketa indartsua eta 90. hamarkadako estetika nostalgikoa ekartzen dizkie zure bideo gogokoenei. Denbora-marka zehatz bat, erantzun dibertigarri bat, eztabaidak jarraitzen edo bideo-transkripzioetan bilatzen ari zaren ala ez, lagunduko dizugu.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ ZERGATIK MAITATUKO DUZUN:
+- 🔍 DENBORA ERREALAKO BILAKETA: Aurkitu zehazki zer bilatzen ari zaren idatzi ahala. Ez da gehiago korritze amaigaberik.
+- 📜 BIDEO TRANSKRIPZIOAK: Bilatu berehala bideoaren transkripzio osoa eta egin salto une zehatzetara klik egin daitezkeen denbora-markekin.
+- 💬 ZUZENEKO TXAT ERREPRODUKZIOA: Eskuratu eta arakatu iraganeko igorpenetako zuzeneko txat mezuak, bilaketa funtzionalitatearekin osatuta.
+- 🚀 ERRENDIMENDU HANDIA: IndexedDB eta Zerrenda Birtualizazioarekin eraikia. Kudeatu 10.000+ iruzkin/mezu arazorik gabe zure nabigatzailea moteldu gabe.
+- 💾 LASTER-MARKAK ETA FINKATZEA: Gorde iruzkin garrantzitsuak eta hari gogokoenak geroago berehala sartzeko.
+- 📊 IRAGAZKI AURRERATUAK: Ordenatu 'Atsegin dut', erantzun, data edo baita ausaz ordenatu ere ikuspegi berri bat izateko.
+- 🕒 DENBORA-MARKA ZEHATZAK: Denbora erlatiboak denbora errealean birkalkulatzen dira, baita gordetako laster-marketarako ere.
+- 📁 ESPORTAZIO UNIBERTSALA: Esportatu iruzkinak, transkripzioak (SRT) eta zuzeneko txat erregistroak lineaz kanpo irakurtzeko edo aztertzeko.
+- 🎨 GIRO NOSTALGIKOAK: 90. hamarkadako garai klasikoan inspiratutako erabiltzaile-interfaze ederra eta pertsonalizagarria, modu iluneko laguntza osoarekin.
+- 🔡 TIPOGRAFIA KONTROLA: Pertsonalizatu letra-tamaina eta familia irakurketa esperientzia ezin hobea izateko.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ EZAUGARRI NAGUSIAK:
+- "Kargatu dena" adimentsua iruzkin, txat eta transkripzioetarako.
+- Lotura sakonen partekatzea iruzkin zehatzetarako.
+- Denbora errealeko jakinarazpenak erantzun berrietarako.
+- Hizkuntza anitzeko laguntza komunitate global baterako.
+- Tresna-aholku interaktiboak erabilgarritasun hobea izateko.
+- Pribatutasuna lehenik: Zure datuak zure nabigatzailean geratzen dira.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 NOLA ERABILI:
+1. Ireki edozein YouTube bideo.
+2. Egin klik 95 ikonoan zure tresna-barran.
+3. Hasi bilatzen, iragazten eta gozatu iruzkin atal hobe batez!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Batu YouTube nabigazioa eraldatu duten milaka erabiltzailerekin. Batur Kacamak-ek diseinatu eta mantentzen du.
 
-Questions or feedback? Reach out at hello@batur.info
+Galderak edo iradokizunak? Jarri gurekin harremanetan hello@batur.info helbidean

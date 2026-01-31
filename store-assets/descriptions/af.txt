@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Verhoog jou YouTube-ervaring met die uiteindelike kommentaar- en transkripsie-kraghulpmiddel!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Kommentaar Navigator 95 bring blitsvinnige soektogte, kragtige filteropsies en 'n nostalgiese 90's estetiese na jou gunsteling video's. Of jy nou op soek is na 'n spesifieke tydstempel, 'n snaakse antwoord, besprekings volg, of deur video-transkripsies soek, ons het jou gedek.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ WAAROM JY DIT SAL LIEFHE:
+- 🔍 INTYDSE SOEKTOG: Vind presies waarna jy soek soos jy tik. Geen eindelose blaaiery meer nie.
+- 📜 VIDEO TRANSKRIPSIES: Soek onmiddellik deur die volledige video-transkripsie en spring na spesifieke oomblikke met klikbare tydstempels.
+- 💬 REGSTREEKSE KLETS HERSPEEL: Haal en blaai deur regstreekse kletsboodskappe van vorige strome, kompleet met soekfunksionaliteit.
+- 🚀 HOË PRESTASIE: Gebou met IndexedDB en Lys Virtualisasie. Hanteer vlot 10,000+ kommentaar/boodskappe sonder dat jou blaaier vertraag.
+- 💾 BOEKMERK & VASSPELD: Stoor belangrike kommentaar en gunsteling drade om hulle later onmiddellik te vind.
+- 📊 GEVORDERDE FILTERS: Sorteer volgens hou van, antwoorde, datum, of selfs lukraak volgorde vir 'n vars perspektief.
+- 🕒 AKKURAATE TYDSTEMPELS: Relatiewe tye word intyds herbereken, selfs vir jou gestoorde boekmerke.
+- 📁 UNIVERSELE UITVOER: Voer kommentaar, transkripsies (SRT), en regstreekse kletslogboeke uit vir vanlyn lees of analise.
+- 🎨 NOSTALGIESE ATMOSFEER: 'n Pragtige, aanpasbare gebruikerskoppelvlak geïnspireer deur die klassieke 90's era, met volle Donker Modus ondersteuning.
+- 🔡 TIPIEGRAFIE BEHEER: Pas lettergrootte en -familie aan vir die perfekte leeservaring.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ SLEUTELKENMERKE:
+- Slim "Laai Alles" vir kommentaar, klets, en transkripsies.
+- Diep-skakel deling vir spesifieke kommentaar.
+- Intydse kennisgewings vir nuwe antwoorde.
+- Meertalige ondersteuning vir 'n globale gemeenskap.
+- Interaktiewe wenke vir beter bruikbaarheid.
+- Privaatheid-eerste: Jou data bly in jou blaaier.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 HOE OM TE GEBRUIK:
+1. Maak enige YouTube-video oop.
+2. Klik die 95-ikoon in jou nutsbalk.
+3. Begin soek, filter, en geniet 'n beter kommentaar-afdeling!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Sluit aan by duisende gebruikers wat hul YouTube-blaaiery getransformeer het. Ontwerp en onderhou deur Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Vrae of terugvoer? Kontak ons by hello@batur.info

@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Ṣe igbesoke iriri YouTube rẹ pẹlu asọye to gaju ati ọpa tiransikiripiti!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Atukọ Asọye 95 mu wiwa iyara monomono, sisẹ ti o lagbara, ati ẹwa 90s ti o dun si awọn fidio ayanfẹ rẹ. Boya o n wa ami akoko kan pato, idahun alarinrin, titọpa awọn ijiroro, tabi wiwa nipasẹ awọn tiransikiripiti fidio, a ti bo ọ.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ IDI TI O YOO FI FẸRAN RẸ:
+- 🔍 WIWA AKOKO GIDI: Wa deede ohun ti o n wa bi o ṣe n tẹ. Ko si yiyi ailopin mọ.
+- 📜 TIRANSIKIRIPITI FIDIO: Wa lẹsẹkẹsẹ tiransikiripiti fidio ni kikun ki o fo si awọn akoko kan pato pẹlu awọn ami akoko ti a le tẹ.
+- 💬 ATUNṢE WIREG BE LIVE: Gba ati lọ kiri awọn ifiranṣẹ wiregbe ifiwe lati awọn ṣiṣan ti o kọja, ni pipe pẹlu iṣẹ wiwa.
+- 🚀 IṢẸ GIGA: Ti a kọ pẹlu IndexedDB ati Iṣalaye Akojọ. Ṣe itọju awọn asọye/awọn ifiranṣẹ 10,000+ laisiyonu laisi fifalẹ aṣawakiri rẹ.
+- 💾 SAMISI & DIDI: Fipamọ awọn asọye pataki ati awọn okun ayanfẹ lati wọle si wọn lẹsẹkẹsẹ nigbamii.
+- 📊 AWỌN ÀLẸMỌ ONITẸSIWAJU: Lẹsẹsẹ nipasẹ awọn ayanfẹ, awọn idahun, ọjọ, tabi paapaa ṣe aṣẹ laileto fun irisi tuntun.
+- 🕒 AWỌN AMI AKOKO PATO: Awọn akoko ibatan jẹ iṣiro ni akoko gidi, paapaa fun awọn ami-iwe rẹ ti o fipamọ.
+- 📁 ISLO AGBAYE: Slo awọn asọye, awọn tiransikiripiti (SRT), ati awọn akọọlẹ wiregbe ifiwe fun kika aisinipo tabi itupalẹ.
+- 🎨 IMỌLARA 90S: UI ẹlẹwa, asefara ti o ni atilẹyin nipasẹ akoko Ayebaye 90s, pẹlu atilẹyin Ipo Dudu ni kikun.
+- 🔡 IṢAKOSO TITẸ: Ṣe akanṣe iwọn fonti ati ẹbi fun iriri kika pipe.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ AWỌN ẸYA KỌKỌRỌ:
+- Smart "Kojọpọ Gbogbo" fun awọn asọye, wiregbe, ati awọn tiransikiripiti.
+- Pinpin ọna asopọ jinlẹ fun awọn asọye kan pato.
+- Awọn iwifunni akoko gidi fun awọn idahun tuntun.
+- Atilẹyin ede pupọ fun agbegbe agbaye.
+- Awọn imọran irinṣẹ ibaraenisepo fun lilo to dara julọ.
+- Asiri lakọkọ: Data rẹ duro ninu aṣawakiri rẹ.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 BI O ṢE LE LO:
+1. Ṣii eyikeyi fidio YouTube.
+2. Tẹ aami 95 ninu ọpa irinṣẹ rẹ.
+3. Bẹrẹ wiwa, sisẹ, ati gbadun apakan asọye to dara julọ!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Darapọ mọ ẹgbẹẹgbẹrun awọn olumulo ti o ti yipada lilọ kiri YouTube wọn. Ti a ṣe apẹrẹ ati itọju nipasẹ Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Awọn ibeere tabi esi? Kan si wa ni hello@batur.info

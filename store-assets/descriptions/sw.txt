@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Boresha utumiaji wako wa YouTube ukitumia zana bora zaidi ya maoni na nakala!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Kiongoza Maoni 95 huleta utafutaji wa haraka sana, uchujaji thabiti, na uzuri wa 90s kwenye video zako uzipendazo. Iwe unatafuta mhuri maalum wa muda, jibu la kuchekesha, kufuatilia majadiliano, au kutafuta kupitia nakala za video, tumekushughulikia.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ KWA NINI UTAIPENDA:
+- 🔍 UTAFUTAJI WA MUDA HALISI: Pata kile unachotafuta unapoandika. Hakuna tena kusogeza bila mwisho.
+- 📜 NAKALA ZA VIDEO: Tafuta mara moja nakala kamili ya video na uruke hadi matukio maalum ukitumia mihuri ya muda inayoweza kubofya.
+- 💬 KUCHEZA TENA KWA GUMZO LA MOJA KWA MOJA: Pata na uvinjari ujumbe wa gumzo la moja kwa moja kutoka kwa mitiririko iliyopita, ikiwa na utendaji wa utafutaji.
+- 🚀 UTENDAJI WA JUU: Imejengwa na IndexedDB na Uboreshaji wa Orodha. Shughulikia maoni/ujumbe 10,000+ bila kivinjari chako kupungua kasi.
+- 💾 ALAMISHO & KUBANIKA: Hifadhi maoni muhimu na nyuzi unazopenda ili kuzifikia mara moja baadaye.
+- 📊 VICHUJIO VYA KINA: Panga kwa zilizopendwa, majibu, tarehe, au hata changanya mpangilio kwa mtazamo mpya.
+- 🕒 MIHURI YA MUDA SAHIHI: Muda unaohusiana unahesabiwa upya katika muda halisi, hata kwa alamisho zako zilizohifadhiwa.
+- 📁 UHAMISHAJI WA ULIMWENGU WOTE: Hamisha maoni, nakala (SRT), na kumbukumbu za gumzo la moja kwa moja kwa usomaji wa nje ya mtandao au uchambuzi.
+- 🎨 HISIA ZA 90S: UI nzuri, inayoweza kubinafsishwa iliyoongozwa na enzi ya kawaida ya 90s, na usaidizi kamili wa Hali ya Giza.
+- 🔡 UDHIBITI WA CHAPA: Badilisha ukubwa na familia ya fonti kukufaa kwa utumiaji bora wa kusoma.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ VIPENGELE MUHIMU:
+- "Pakia Zote" kwa maoni, gumzo, na nakala.
+- Kushiriki kiungo cha kina kwa maoni maalum.
+- Arifa za wakati halisi kwa majibu mapya.
+- Usaidizi wa lugha nyingi kwa jamii ya ulimwengu.
+- Vidokezo vya zana shirikishi kwa utumiaji bora.
+- Faragha kwanza: Data yako inabaki kwenye kivinjari chako.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 JINSI YA KUTUMIA:
+1. Fungua video yoyote ya YouTube.
+2. Bofya ikoni ya 95 kwenye upau wako wa zana.
+3. Anza kutafuta, kuchuja, na kufurahia sehemu bora ya maoni!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Jiunge na maelfu ya watumiaji ambao wamebadilisha uvinjari wao wa YouTube. Imeundwa na kudumishwa na Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Maswali au maoni? Wasiliana nasi kwa hello@batur.info

@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 အကောင်းဆုံး မှတ်ချက်နှင့် စာသားမှတ်တမ်း ကိရိယာဖြင့် သင့် YouTube အတွေ့အကြုံကို မြှင့်တင်ပါ!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube မှတ်ချက် လမ်းညွှန် 95 သည် သင့်အကြိုက်ဆုံး ဗီဒီယိုများသို့ လျှပ်စီးလက်သကဲ့သို့ မြန်ဆန်သော ရှာဖွေမှု၊ အားကောင်းသော စစ်ထုတ်မှုနှင့် လွမ်းဆွတ်ဖွယ် 90s အလှတရားများကို ယူဆောင်လာပေးသည်။ သင်သည် သီးခြား အချိန်တံဆိပ်၊ ရယ်စရာ အကြောင်းပြန်ချက်၊ ဆွေးနွေးမှုများကို ခြေရာခံခြင်း သို့မဟုတ် ဗီဒီယို စာသားမှတ်တမ်းများတွင် ရှာဖွေနေသည်ဖြစ်စေ၊ ကျွန်ုပ်တို့ ကူညီပေးနိုင်ပါသည်။
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ သင် ဘာကြောင့် နှစ်သက်မလဲ -
+- 🔍 အချိန်နှင့်တပြေးညီ ရှာဖွေမှု - သင် စာရိုက်နေစဉ် သင် ရှာဖွေနေသည့်အရာကို အတိအကျ ရှာဖွေပါ။ အဆုံးမဲ့ ရွှေ့နေစရာ မလိုတော့ပါ။
+- 📜 ဗီဒီယို စာသားမှတ်တမ်းများ - ဗီဒီယို စာသားမှတ်တမ်း တစ်ခုလုံးကို ချက်ချင်း ရှာဖွေပြီး နှိပ်နိုင်သော အချိန်တံဆိပ်များဖြင့် သီးခြား အခိုက်အတန့်များသို့ သွားပါ။
+- 💬 တိုက်ရိုက် စကားဝိုင်း ပြန်ဖွင့်ခြင်း - ရှာဖွေမှု လုပ်ဆောင်ချက်ပါဝင်သော ယခင် ထုတ်လွှင့်မှုများမှ တိုက်ရိုက် စကားဝိုင်း မက်ဆေ့ခ်ျများကို ရယူပြီး ကြည့်ရှုပါ။
+- 🚀 စွမ်းဆောင်ရည် မြင့်မားခြင်း - IndexedDB နှင့် List Virtualization ဖြင့် တည်ဆောက်ထားသည်။ သင့်ဘရောက်ဇာကို နှေးကွေးစေခြင်း မရှိဘဲ မှတ်ချက်/မက်ဆေ့ခ်ျ 10,000+ ကို ချောမွေ့စွာ ကိုင်တွယ်ပါ။
+- 💾 စာမှတ်ပြုလုပ်ခြင်းနှင့် ပင်ထိုးခြင်း - အရေးကြီးသော မှတ်ချက်များနှင့် အကြိုက်ဆုံး စာကြောင်းများကို နောက်ပိုင်းတွင် ချက်ချင်း ဝင်ရောက်ကြည့်ရှုရန် သိမ်းဆည်းပါ။
+- 📊 အဆင့်မြင့် စစ်ထုတ်မှုများ - ကြိုက်နှစ်သက်မှုများ၊ အကြောင်းပြန်ချက်များ၊ ရက်စွဲဖြင့် စီစဉ်ပါ သို့မဟုတ် ရှုထောင့်အသစ်အတွက် အစီအစဉ်ကို ကျပန်းလုပ်ပါ။
+- 🕒 တိကျသော အချိန်တံဆိပ်များ - သင့်သိမ်းဆည်းထားသော စာမှတ်များအတွက်ပင် ဆက်စပ်အချိန်များကို အချိန်နှင့်တပြေးညီ ပြန်လည်တွက်ချက်ပါသည်။
+- 📁 ယူနီဗာဆယ် ထုတ်ယူမှု - အော့ဖ်လိုင်း ဖတ်ရှုခြင်း သို့မဟုတ် ခွဲခြမ်းစိတ်ဖြာခြင်းအတွက် မှတ်ချက်များ၊ စာသားမှတ်တမ်းများ (SRT) နှင့် တိုက်ရိုက် စကားဝိုင်း မှတ်တမ်းများကို ထုတ်ယူပါ။
+- 🎨 လွမ်းဆွတ်ဖွယ် ခံစားချက်များ - ဂန္ထဝင် 90s ခေတ်ကို စိတ်ကူးပုံဖော်ထားသော၊ အပြည့်အဝ အမှောင်မုဒ် ပံ့ပိုးမှုပါရှိသော လှပပြီး စိတ်ကြိုက်ပြင်ဆင်နိုင်သော UI။
+- 🔡 စာလုံးပုံစံ ထိန်းချုပ်မှု - ပြီးပြည့်စုံသော ဖတ်ရှုမှု အတွေ့အကြုံအတွက် ဖောင့် အရွယ်အစားနှင့် အမျိုးအစားကို စိတ်ကြိုက်ပြင်ဆင်ပါ။
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ အဓိက အင်္ဂါရပ်များ -
+- မှတ်ချက်များ၊ စကားဝိုင်းနှင့် စာသားမှတ်တမ်းများအတွက် စမတ်ကျသော "အားလုံးကို ဖွင့်ပါ"။
+- သီးခြား မှတ်ချက်များအတွက် နက်နဲသော လင့်ခ် မျှဝေခြင်း။
+- အကြောင်းပြန်ချက်အသစ်များအတွက် အချိန်နှင့်တပြေးညီ အသိပေးချက်များ။
+- ကမ္ဘာလုံးဆိုင်ရာ အသိုင်းအဝိုင်းအတွက် ဘာသာစကားမျိုးစုံ ပံ့ပိုးမှု။
+- ပိုမိုကောင်းမွန်သော အသုံးပြုနိုင်စွမ်းအတွက် အပြန်အလှန်အကျိုးပြုသော ကိရိယာ အကြံပြုချက်များ။
+- လုံခြုံရေး ပထမ - သင့်ဒေတာသည် သင့်ဘရောက်ဇာတွင်သာ ရှိနေပါသည်။
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 အသုံးပြုပုံ -
+1. မည်သည့် YouTube ဗီဒီယိုကိုမဆို ဖွင့်ပါ။
+2. သင့်ကိရိယာဘားရှိ 95 အိုင်ကွန်ကို နှိပ်ပါ။
+3. ရှာဖွေခြင်း၊ စစ်ထုတ်ခြင်းကို စတင်ပြီး ပိုမိုကောင်းမွန်သော မှတ်ချက် ကဏ္ဍကို ခံစားလိုက်ပါ!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+၎င်းတို့၏ YouTube ကြည့်ရှုမှုကို ပြောင်းလဲခဲ့သော ထောင်ပေါင်းများစွာသော သုံးစွဲသူများနှင့် ပူးပေါင်းပါ။ Batur Kacamak မှ ဒီဇိုင်းထုတ်ပြီး ထိန်းသိမ်းထားသည်။
 
-Questions or feedback? Reach out at hello@batur.info
+မေးခွန်းများ သို့မဟုတ် တုံ့ပြန်ချက်များ ရှိပါသလား။ hello@batur.info တွင် ကျွန်ုပ်တို့ကို ဆက်သွယ်ပါ

@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Milloreu la vostra experiència a YouTube amb l'eina definitiva de comentaris i transcripcions!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+Navegador de Comentaris de YouTube 95 ofereix cerca ràpida, filtratge potent i una estètica nostàlgica dels anys 90 als vostres vídeos preferits. Tant si busqueu una marca de temps específica, una resposta divertida, feu el seguiment de debats o cerqueu transcripcions de vídeo, us tenim cobert.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ PER QUÈ US ENCANTARÀ:
+- 🔍 CERCA EN TEMPS REAL: Trobeu exactament el que busqueu mentre escriviu. S'ha acabat el desplaçament sense fi.
+- 📜 TRANSCRIPCIONS DE VÍDEO: Cerqueu a l'instant la transcripció completa del vídeo i salteu a moments concrets amb marques de temps clicables.
+- 💬 REPRODUCCIÓ DE XAT EN DIRECTE: Obteniu i navegueu pels missatges de xat en directe de les retransmissions anteriors, amb funcionalitat de cerca.
+- 🚀 RENDIMENT ELEVAT: Construït amb IndexedDB i virtualització de llistes. Gestioneu sense problemes més de 10.000 comentaris/missatges sense que el navegador es retardi.
+- 💾 MARCADORS I FIXACIÓ: Deseu comentaris importants i fils preferits per accedir-hi a l'instant més tard.
+- 📊 FILTRES AVANÇATS: Ordeneu per m'agrada, respostes, data o fins i tot aleatoritzeu l'ordre per obtenir una perspectiva nova.
+- 🕒 MARQUES DE TEMPS PRECISES: Els temps relatius es recalculen en temps real, fins i tot per als marcadors desats.
+- 📁 EXPORTACIÓ UNIVERSAL: Exporteu comentaris, transcripcions (SRT) i registres de xat en directe per llegir-los o analitzar-los fora de línia.
+- 🎨 AMBIENT NOSTÀLGIC: Una interfície d'usuari bonica i personalitzable inspirada en l'època clàssica dels 90, amb suport complet per al mode fosc.
+- 🔡 CONTROL DE TIPOGRAFIA: Personalitzeu la mida i la família del tipus de lletra per a una experiència de lectura perfecta.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ CARACTERÍSTIQUES CLAU:
+- "Carrega-ho tot" intel·ligent per a comentaris, xat i transcripcions.
+- Compartició d'enllaços profunds per a comentaris específics.
+- Notificacions en temps real per a respostes noves.
+- Suport multilingüe per a una comunitat global.
+- Consells d'eines interactius per a una millor usabilitat.
+- Privadesa primer: Les vostres dades es queden al navegador.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 COM UTILITZAR-LO:
+1. Obriu qualsevol vídeo de YouTube.
+2. Feu clic a la icona 95 de la barra d'eines.
+3. Comenceu a cercar, filtrar i gaudir d'una millor secció de comentaris!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Uniu-vos a milers d'usuaris que han transformat la seva navegació per YouTube. Dissenyat i mantingut per Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Preguntes o comentaris? Poseu-vos en contacte a hello@batur.info

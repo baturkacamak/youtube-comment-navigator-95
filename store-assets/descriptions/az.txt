@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 YouTube təcrübənizi ən mükəmməl şərh və transkript aləti ilə yüksəldin!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Şərh Naviqatoru 95 sevimli videolarınıza ildırım sürətində axtarış, güclü filtrləmə və nostalji 90-lar estetikası gətirir. İstər müəyyən bir zaman damğası, gülməli bir cavab axtarın, istər müzakirələri izləyin, istərsə də video transkriptlərində axtarış edin, biz sizə kömək edəcəyik.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ NİYƏ BUNU SEVƏCƏKSİNİZ:
+- 🔍 REAL ZAMANLI AXTARIŞ: Yazdıqca tam olaraq nə axtardığınızı tapın. Daha sonsuz sürüşdürmə yoxdur.
+- 📜 VİDEO TRANSKRİPTLƏRİ: Tam video transkriptini dərhal axtarın və kliklənə bilən zaman damğaları ilə xüsusi anlara keçin.
+- 💬 CANLI ÇAT TƏKRARI: Keçmiş yayımlardan canlı çat mesajlarını gətirin və axtarış funksiyası ilə nəzərdən keçirin.
+- 🚀 YÜKSƏK PERFORMANS: IndexedDB və Siyahı Virtuallaşdırması ilə qurulmuşdur. Brauzeriniz donmadan 10,000+ şərh/mesajı rəvan şəkildə idarə edin.
+- 💾 ƏLFƏCİN & BƏRKİTMƏ: Vacib şərhləri və sevimli mövzuları daha sonra dərhal daxil olmaq üçün yadda saxlayın.
+- 📊 QABAQCIL FİLTRLƏR: Bəyənmələrə, cavablara, tarixə görə sıralayın və ya təzə bir baxış üçün sıranı qarışdırın.
+- 🕒 DƏQİQ ZAMAN DAMĞALARI: Nisbi vaxtlar, hətta yadda saxlanılan əlfəcinləriniz üçün belə real vaxtda yenidən hesablanır.
+- 📁 UNİVERSAL İXRAC: Oflayn oxumaq və ya təhlil etmək üçün şərhləri, transkriptləri (SRT) və canlı çat qeydlərini ixrac edin.
+- 🎨 NOSTALJİ VİBES: Tam Qaranlıq Rejim dəstəyi ilə klassik 90-lar dövründən ilhamlanan gözəl, fərdiləşdirilə bilən istifadəçi interfeysi.
+- 🔡 TİPOQRAFİYA NƏZARƏTİ: Mükəmməl oxu təcrübəsi üçün şrift ölçüsünü və ailəsini fərdiləşdirin.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ ƏSAS XÜSUSİYYƏTLƏR:
+- Şərhlər, çat və transkriptlər üçün ağıllı "Hamısını Yüklə".
+- Xüsusi şərhlər üçün dərin link paylaşımı.
+- Yeni cavablar üçün real vaxt bildirişləri.
+- Qlobal icma üçün çoxdilli dəstək.
+- Daha yaxşı istifadə üçün interaktiv alət ipucları.
+- Məxfilik-ilk: Məlumatlarınız brauzerinizdə qalır.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 NECƏ İSTİFADƏ ETMƏLİ:
+1. Hər hansı bir YouTube videosunu açın.
+2. Alətlər panelinizdəki 95 işarəsinə klikləyin.
+3. Axtarışa, filtrləməyə başlayın və daha yaxşı şərh bölməsindən həzz alın!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+YouTube gəzintilərini dəyişdirən minlərlə istifadəçiyə qoşulun. Batur Kacamak tərəfindən dizayn edilmiş və saxlanılır.
 
-Questions or feedback? Reach out at hello@batur.info
+Suallar və ya rəylər? hello@batur.info ünvanında bizimlə əlaqə saxlayın

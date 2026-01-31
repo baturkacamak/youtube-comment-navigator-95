@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Kwalite ahụmịhe YouTube gị na ngwaọrụ nkwupụta na ederede kachasị mma!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Onye Nduzi Nkwupụta 95 na-eweta ọchụchọ ngwa ngwa, nzacha siri ike, na mma 90s na vidiyo ọkacha mmasị gị. Ma ị na-achọ oge akọwapụtara, azịza na-atọ ọchị, na-eso mkparịta ụka, ma ọ bụ na-achọ site na ederede vidiyo, anyị ekpuchila gị.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ IHE MERE Ị GA-EJI HỤ YA N'ANYA:
+- 🔍 ỌCHỤCHỌ OGE NIILE: Chọta kpọmkwem ihe ị na-achọ ka ị na-apịnye. Enweghịzi mpịakọta na-enweghị njedebe.
+- 📜 EDEREDE VIDIYO: Chọọ ederede vidiyo zuru ezu ozugbo ma wulie elu na oge akọwapụtara na oge a pịa pịa.
+- 💬 NKATA DỊ NDỤ: Weghachite ma chọgharịa ozi nkata dị ndụ site na iyi gara aga, nke nwere ọrụ ọchụchọ.
+- 🚀 ARỤMỌRỤ DỊ ELU: Ejiri IndexedDB na Ndepụta Virtualization wuo ya. Jikwaa nkwupụta/ozi 10,000+ n'enweghị nsogbu na-enweghị ihe nchọgharị gị na-eji nwayọ.
+- 💾 IBE EDOKỌBARA & ỊDỌBA: Chekwaa nkwupụta dị mkpa na eriri ọkacha mmasị ka ị nweta ha ozugbo ma emesịa.
+- 📊 NZACHA DỊ ELU: Hazi site na mmasị, azịza, ụbọchị, ma ọ bụ ọbụna hazie usoro ahụ na-enweghị usoro maka echiche ọhụrụ.
+- 🕒 OGE ZIRI EZI: A na-agbakọ oge metụtara ya na oge a, ọbụlagodi maka ibe edokọbara gị echekwara.
+- 📁 MBUPỤ ỤWA NILE: Bupụ nkwupụta, ederede (SRT), na ndekọ nkata dị ndụ maka ịgụ ma ọ bụ nyocha na-anọghị n'ịntanetị.
+- 🎨 MMETỤTA 90S: UI mara mma, enwere ike ịhazi ya nke sitere n'oge 90s, nwere nkwado zuru oke maka Ọnọdụ Ọchịchịrị.
+- 🔡 NJIKWA EDEREDE: Hazie ogo ederede na ezinụlọ maka ahụmịhe ịgụ ihe zuru oke.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ ISI ATỤMATỤ:
+- "Bungote Ha Niile" maka nkwupụta, nkata, na ederede.
+- Ịkekọrịta njikọ miri emi maka nkwupụta akọwapụtara.
+- Amamọkwa oge niile maka azịza ọhụrụ.
+- Nkwado ọtụtụ asụsụ maka obodo zuru ụwa ọnụ.
+- Ndụmọdụ ngwaọrụ mmekọrịta maka iji ya eme ihe ka mma.
+- Nzuzo mbụ: Data gị na-anọ na ihe nchọgharị gị.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 OTU ESI EJI:
+1. Mepee vidiyo YouTube ọ bụla.
+2. Pịa akara 95 na ogwe aka ọrụ gị.
+3. Malite ịchọ, nzacha, na ịnụ ụtọ ngalaba nkwupụta ka mma!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Sonyere puku kwuru puku ndị ọrụ gbanwere nchọgharị YouTube ha. Batur Kacamak mere ya ma na-elekọta ya.
 
-Questions or feedback? Reach out at hello@batur.info
+Ajụjụ ma ọ bụ nzaghachi? Kpọtụrụ anyị na hello@batur.info

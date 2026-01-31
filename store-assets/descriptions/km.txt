@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 ធ្វើឱ្យបទពិសោធន៍ YouTube របស់អ្នកកាន់តែប្រសើរឡើងជាមួយនឹងឧបករណ៍មតិយោបល់ និងប្រតិចារិកចុងក្រោយ!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube អ្នក​រុករក​មតិយោបល់ 95 នាំមកនូវការស្វែងរកលឿនដូចផ្លេកបន្ទោរ ការត្រងដ៏មានអានុភាព និងសោភ័ណភាពនឹកស្រណោះកាលពីទសវត្សរ៍ឆ្នាំ 90 ទៅកាន់វីដេអូដែលអ្នកចូលចិត្ត។ មិនថាអ្នកកំពុងស្វែងរកត្រាពេលវេលាជាក់លាក់ ការឆ្លើយតបដ៏គួរឱ្យអស់សំណើច ការតាមដានការពិភាក្សា ឬស្វែងរកតាមរយៈប្រតិចារិកវីដេអូទេ យើងមានរ៉ាប់រងជូនអ្នក។
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ មូលហេតុដែលអ្នកនឹងចូលចិត្តវា៖
+- 🔍 ការស្វែងរកតាមពេលវេលាជាក់ស្តែង៖ ស្វែងរកអ្វីដែលអ្នកកំពុងស្វែងរកពិតប្រាកដនៅពេលអ្នកវាយ។ មិនមានការរំកិលមិនចេះចប់ទៀតទេ។
+- 📜 ប្រតិចារិកវីដេអូ៖ ស្វែងរកប្រតិចារិកវីដេអូពេញលេញភ្លាមៗ ហើយលោតទៅគ្រាជាក់លាក់ជាមួយនឹងត្រាពេលវេលាដែលអាចចុចបាន។
+- 💬 ការចាក់ឡើងវិញនៃការជជែកផ្ទាល់៖ ទៅយក និងរកមើលសារជជែកផ្ទាល់ពីការផ្សាយពីមុន រួមទាំងមុខងារស្វែងរក។
+- 🚀 ប្រសិទ្ធភាពខ្ពស់៖ បង្កើតឡើងដោយ IndexedDB និង List Virtualization។ ដោះស្រាយមតិយោបល់/សារ 10,000+ ដោយរលូនដោយមិនធ្វើឱ្យកម្មវិធីរុករករបស់អ្នកយឺត។
+- 💾 ចំណាំ & ដាក់ខ្ទាស់៖ រក្សាទុកមតិយោបល់សំខាន់ៗ និងខ្សែស្រឡាយដែលចូលចិត្ត ដើម្បីចូលប្រើពួកវាភ្លាមៗនៅពេលក្រោយ។
+- 📊 តម្រងកម្រិតខ្ពស់៖ តម្រៀបតាមការចូលចិត្ត ការឆ្លើយតប កាលបរិច្ឆេទ ឬសូម្បីតែធ្វើឱ្យលំដាប់ចៃដន្យសម្រាប់ទស្សនៈថ្មី។
+- 🕒 ត្រាពេលវេលាត្រឹមត្រូវ៖ ពេលវេលាដែលទាក់ទងត្រូវបានគណនាឡើងវិញក្នុងពេលវេលាជាក់ស្តែង សូម្បីតែសម្រាប់ចំណាំដែលអ្នកបានរក្សាទុកក៏ដោយ។
+- 📁 ការនាំចេញជាសកល៖ នាំចេញមតិយោបល់ ប្រតិចារិក (SRT) និងកំណត់ហេតុជជែកផ្ទាល់សម្រាប់ការអាន ឬការវិភាគក្រៅបណ្តាញ។
+- 🎨 អារម្មណ៍នឹកស្រណោះ៖ UI ដ៏ស្រស់ស្អាត និងអាចប្ដូរតាមបំណងបានបំផុសគំនិតដោយសម័យបុរាណទសវត្សរ៍ឆ្នាំ 90 ជាមួយនឹងការគាំទ្ររបៀបងងឹតពេញលេញ។
+- 🔡 ការគ្រប់គ្រងមុទ្ទវិទ្យា៖ ប្ដូរទំហំពុម្ពអក្សរ និងគ្រួសារតាមបំណងសម្រាប់បទពិសោធន៍អានដ៏ល្អឥតខ្ចោះ។
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ លក្ខណៈសំខាន់ៗ៖
+- ឆ្លាតវៃ "ផ្ទុកទាំងអស់" សម្រាប់មតិយោបល់ ការជជែក និងប្រតិចារិក។
+- ការចែករំលែកតំណជ្រៅសម្រាប់មតិយោបល់ជាក់លាក់។
+- ការជូនដំណឹងតាមពេលវេលាជាក់ស្តែងសម្រាប់ការឆ្លើយតបថ្មី។
+- ការគាំទ្រពហុភាសាសម្រាប់សហគមន៍សកល។
+- គន្លឹះឧបករណ៍អន្តរកម្មសម្រាប់ការប្រើប្រាស់កាន់តែប្រសើរ។
+- ភាពឯកជនជាចម្បង៖ ទិន្នន័យរបស់អ្នកស្ថិតនៅក្នុងកម្មវិធីរុករករបស់អ្នក។
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 របៀបប្រើ៖
+1. បើកវីដេអូ YouTube ណាមួយ។
+2. ចុចរូបតំណាង 95 នៅក្នុងរបារឧបករណ៍របស់អ្នក។
+3. ចាប់ផ្តើមស្វែងរក ត្រង និងរីករាយជាមួយផ្នែកមតិយោបល់កាន់តែប្រសើរ!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+ចូលរួមជាមួយអ្នកប្រើប្រាស់រាប់ពាន់នាក់ដែលបានផ្លាស់ប្តូរការរុករក YouTube របស់ពួកគេ។ រចនា និងថែទាំដោយ Batur Kacamak។
 
-Questions or feedback? Reach out at hello@batur.info
+សំណួរ ឬមតិកែលម្អ? ទាក់ទងមកយើងតាម hello@batur.info

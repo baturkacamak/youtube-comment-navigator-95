@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Aġġorna l-esperjenza tiegħek fuq YouTube bl-aqwa għodda għall-kummenti u t-traskrizzjoni!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Navigatur tal-Kummenti 95 iġib tiftix veloċi sajjetta, filtrazzjoni qawwija, u estetika nostalġika tas-snin 90 għall-vidjows favoriti tiegħek. Kemm jekk qed tfittex timbru tal-ħin speċifiku, tweġiba umoristika, issegwi diskussjonijiet, jew tfittex fit-traskrizzjonijiet tal-vidjo, aħna ngħinuk.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ GĦALIEX SE TĦOBBU:
+- 🔍 TIFTIX F'ĦIN REALI: Sib eżattament dak li qed tfittex waqt li tkun qed tikteb. M'hemmx aktar scrolling bla tmiem.
+- 📜 TRASKRIZZJONIJIET TAL-VIDJO: Fittex istantanjament it-traskrizzjoni sħiħa tal-vidjo u aqbeż għal mumenti speċifiċi b'timbri tal-ħin li jistgħu jiġu kklikkjati.
+- 💬 REPLAY TAĊ-CHAT LIVE: Ikseb u bbrawżja messaġġi taċ-chat live minn streams tal-passat, kompluti bil-funzjonalità tat-tiftix.
+- 🚀 PRESTAZZJONI GĦOLJA: Mibnija b'IndexedDB u List Virtualization. Immaniġġja 10,000+ kumment/messaġġ bla xkiel mingħajr ma tnaqqas il-brawżer tiegħek.
+- 💾 BOOKMARKING & PINNING: Issejvja kummenti importanti u threads favoriti biex taċċessahom istantanjament aktar tard.
+- 📊 FILTRI AVVANZATI: Issortja skont jogħġobni, tweġibiet, data, jew saħansitra agħmel l-ordni każwali għal perspettiva ġdida.
+- 🕒 TIMBRI TAL-ĦIN PREĊIŻI: Il-ħinijiet relattivi huma kkalkulati mill-ġdid f'ħin reali, anke għall-bookmarks salvati tiegħek.
+- 📁 ESPORTAZZJONI UNIVERSALI: Esporta kummenti, traskrizzjonijiet (SRT), u zkuk taċ-chat live għal qari jew analiżi offline.
+- 🎨 VIBRAZZJONIJIET NOSTALĠIĊI: UI sabiħa u personalizzabbli ispirata mill-era klassika tas-snin 90, b'appoġġ sħiħ għall-Dark Mode.
+- 🔡 KONTROLL TAT-TIPOGRAFIJA: Ippersonalizza d-daqs u l-familja tal-font għall-esperjenza perfetta tal-qari.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ KARATTERISTIĊI EWLENIN:
+- "Għabbi Kollox" intelliġenti għal kummenti, chat, u traskrizzjonijiet.
+- Qsim ta' deep-links għal kummenti speċifiċi.
+- Notifiki f'ħin reali għal tweġibiet ġodda.
+- Appoġġ multilingwi għal komunità globali.
+- Għajnuniet interattivi għall-għodda għal użabilità aħjar.
+- Privatezza l-ewwel: Id-dejta tiegħek tibqa' fil-brawżer tiegħek.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 KIF TUŻA:
+1. Iftaħ kwalunkwe vidjo ta' YouTube.
+2. Ikklikkja l-ikona 95 fit-toolbar tiegħek.
+3. Ibda tfittex, tiffiltra, u gawdi sezzjoni tal-kummenti aħjar!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Ingħaqad ma' eluf ta' utenti li ttrasformaw l-ibbrawżjar tagħhom fuq YouTube. Iddisinjat u miżmum minn Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Mistoqsijiet jew feedback? Ikkuntattjana fuq hello@batur.info

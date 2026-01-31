@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Thuthukisa ulwazi lwakho lwe-YouTube ngethuluzi lokugcina lamazwana kanye nombhalo!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+I-YouTube Umhlahlandlela Wamazwana 95 iletha usesho olusheshayo, ukuhlunga okunamandla, nobuhle bama-90s kumavidiyo akho owathandayo. Noma ngabe ufuna isitembu sesikhathi esithile, impendulo ehlekisayo, ukulandelela izingxoxo, noma ukusesha emibhalweni yamavidiyo, sikusibekele.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ KUNGANI UZOKUTHANDA:
+- 🔍 USESHO LWESIKHATHI SANGEMPELA: Thola lokho kanye okufunayo njengoba uthayipha. Akusekho ukuskrola okungapheli.
+- 📜 IMIBHALO YAMAVIDIYO: Sesha ngokushesha umbhalo ogcwele wevidiyo bese weqela ezikhathini ezithile ngezitembu zesikhathi ezichofozekayo.
+- 💬 UKUDLALWA KABUSHA KWENGXOXO EBUKHOMA: Thola futhi upheqa imilayezo yengxoxo ebukhoma evela ekusakazweni kwangaphambilini, ephelele ngokusebenza kokusesha.
+- 🚀 UKUSEBENZA OKUPHEZULU: Yakhiwe nge-IndexedDB kanye ne-List Virtualization. Phatha ngokushelela amazwana/imilayezo engu-10,000+ ngaphandle kokubambezela isiphequluli sakho.
+- 💾 UKUBHUKUMAKA & UKUPINA: Gcina amazwana abalulekile nemicu eyintandokazi ukuze ufinyelele kuyo ngokushesha kamuva.
+- 📊 IZIHLUNGI EZITHUTHUKILE: Hlela ngokuthandwayo, izimpendulo, idethi, noma uhlele ngokungahleliwe ukuze uthole umbono omusha.
+- 🕒 IZITEMBU ZESIKHATHI EZINEMBILE: Izikhathi ezihlobene zibalwa kabusha ngesikhathi sangempela, ngisho nakumabhukumaka akho agciniwe.
+- 📁 UKUTHUMELA KWEMHLABA WONKE: Thumela amazwana, imibhalo (SRT), namalogi engxoxo ebukhoma ukuze kufundwe ungaxhunyiwe ku-inthanethi noma kuhlaziywe.
+- 🎨 IMZWA YAMA-90S: I-UI enhle, engenziwa ngendlela oyifisayo ephefumulelwe inkathi yakudala yama-90s, enokusekelwa okugcwele kweMoti Emnyama.
+- 🔡 UKULAWULA KWE-TYPOGRAPHY: Yenza ngokwezifiso usayizi wefonti nomndeni ukuze uthole ulwazi lokufunda oluphelele.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ IZICI EZIYINHLOKO:
+- I-"Layisha Konke" ehlakaniphile yamazwana, ingxoxo, nemibhalo.
+- Ukwabelana ngesixhumanisi esijulile samazwana athile.
+- Izaziso zesikhathi sangempela zezimpendulo ezintsha.
+- Ukusekelwa kwezilimi eziningi komphakathi wembulunga yonke.
+- Amathiphu wamathuluzi asebenzisanayo ukuze kusetshenziswe kangcono.
+- Ubumfihlo kuqala: Idatha yakho ihlala esipheqululini sakho.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 INDLELA YOKUSEBENZISA:
+1. Vula noma iyiphi ividiyo ye-YouTube.
+2. Chofoza isithonjana sika-95 kubha yamathuluzi akho.
+3. Qala ukusesha, ukuhlunga, futhi ujabulele isigaba samazwana esingcono!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Joyina izinkulungwane zabasebenzisi abashintshe ukuphequlula kwabo kwe-YouTube. Idizayinwe futhi yanakekelwa ngu-Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Imibuzo noma impendulo? Xhumana nathi ku-hello@batur.info

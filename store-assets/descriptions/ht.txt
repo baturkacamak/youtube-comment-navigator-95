@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Amelyore eksperyans YouTube ou ak zouti final kòmantè ak transkripsyon an!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+Navigatè Kòmantè YouTube 95 pote rechèch rapid zèklè, filtraj pwisan, ak yon estetik 90s nostaljik nan videyo pi renmen ou yo. Kit w ap chèche yon tenm tan espesifik, yon repons komik, swiv diskisyon, oswa chèche nan transkripsyon videyo, nou gen ou kouvri.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ POUKISA OU PRAL RENMEN LI:
+- 🔍 RECHÈCH TAN REYÈL: Jwenn egzakteman sa w ap chèche pandan w ap tape. Pa gen plis defile kontinuèl.
+- 📜 TRANSKRIPSYON VIDEO: Imedyatman chèche tout transkripsyon videyo a epi sote nan moman espesifik ak tenm tan ki ka klike.
+- 💬 RELEKTI CHAT AN DIRÈK: Jwenn epi navige mesaj chat an dirèk ki soti nan emisyon ki sot pase yo, ranpli ak fonksyonalite rechèch.
+- 🚀 GWO PÈFÒMANS: Bati ak IndexedDB ak List Virtualization. Jere 10,000+ kòmantè/mesaj san pwoblèm san navigatè ou a pa ralanti.
+- 💾 MARKÈ & PINGLING: Sove kòmantè enpòtan ak fil pi renmen yo pou jwenn aksè yo imedyatman pita.
+- 📊 FILTÈ AVANSE: Triye pa renmen, repons, dat, oswa menm mete lòd la aza pou yon pèspektiv fre.
+- 🕒 TENM TAN PRESI: Tan relatif yo rekalkile an tan reyèl, menm pou markè ou sove yo.
+- 📁 EKSPÒTASYON INIVÈSÈL: Ekspòte kòmantè, transkripsyon (SRT), ak mòso bwa chat an dirèk pou lekti offline oswa analiz.
+- 🎨 VIBES NOSTALJIK: Yon bèl UI customizable enspire pa epòk klasik 90s la, ak sipò mòd nwa konplè.
+- 🔡 KONTWÒL TIPOGRAFI: Customize gwosè polis ak fanmi pou eksperyans lekti pafè a.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ KARAKTERISTIK KLE:
+- Smart "Chaje Tout" pou kòmantè, chat, ak transkripsyon.
+- Pataje lyen pwofon pou kòmantè espesifik.
+- Notifikasyon tan reyèl pou nouvo repons.
+- Sipò plizyè lang pou yon kominote mondyal.
+- Konsèy zouti entèaktif pou pi bon itilizasyon.
+- Konfidansyalite an premye: Done ou yo rete nan navigatè ou a.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 KIJAN POU ITILIZE:
+1. Louvri nenpòt videyo YouTube.
+2. Klike sou icon 95 la nan ba zouti ou a.
+3. Kòmanse chèche, filtraj, ak jwi yon pi bon seksyon kòmantè!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Antre nan plizyè milye itilizatè ki te transfòme navigasyon YouTube yo. Ki fèt ak konsève pa Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Kesyon oswa fidbak? Kontakte nou nan hello@batur.info

@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 تجربه یوتیوب خود را با ابزار نهایی نظرات و متن ارتقا دهید!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+نویگیتور نظرات یوتیوب 95 جستجوی رعدآسا، فیلترینگ قدرتمند و زیبایی‌شناسی نوستالژیک دهه ۹۰ را به ویدیوهای مورد علاقه شما می‌آورد. چه به دنبال یک برچسب زمانی خاص، یک پاسخ خنده‌دار، پیگیری بحث‌ها، یا جستجو در متن ویدیوها باشید، ما شما را پوشش می‌دهیم.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ چرا آن را دوست خواهید داشت:
+- 🔍 جستجوی در زمان واقعی: دقیقاً همان چیزی را که به دنبالش هستید در حین تایپ کردن پیدا کنید. دیگر اسکرول بی‌پایان وجود ندارد.
+- 📜 متن ویدیو: فوراً کل متن ویدیو را جستجو کنید و با برچسب‌های زمانی قابل کلیک به لحظات خاص بپرید.
+- 💬 پخش مجدد چت زنده: پیام‌های چت زنده را از پخش‌های گذشته دریافت و مرور کنید، همراه با قابلیت جستجو.
+- 🚀 عملکرد بالا: ساخته شده با IndexedDB و مجازی‌سازی لیست. مدیریت روان ۱۰,۰۰۰+ نظر/پیام بدون کند شدن مرورگر شما.
+- 💾 نشانک‌گذاری و پین کردن: نظرات مهم و رشته‌های مورد علاقه را ذخیره کنید تا بعداً فوراً به آنها دسترسی داشته باشید.
+- 📊 فیلترهای پیشرفته: مرتب‌سازی بر اساس لایک، پاسخ، تاریخ، یا حتی تصادفی کردن ترتیب برای یک دیدگاه تازه.
+- 🕒 برچسب‌های زمانی دقیق: زمان‌های نسبی در زمان واقعی محاسبه می‌شوند، حتی برای نشانک‌های ذخیره شده شما.
+- 📁 صدور جهانی: نظرات، متن‌ها (SRT) و گزارش‌های چت زنده را برای خواندن یا تجزیه و تحلیل آفلاین صادر کنید.
+- 🎨 حال و هوای نوستالژیک: یک رابط کاربری زیبا و قابل تنظیم با الهام از دوران کلاسیک دهه ۹۰، با پشتیبانی کامل از حالت تاریک.
+- 🔡 کنترل تایپوگرافی: اندازه و خانواده فونت را برای تجربه خواندن عالی سفارشی کنید.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ ویژگی‌های کلیدی:
+- "بارگذاری همه" هوشمند برای نظرات، چت و متن‌ها.
+- اشتراک‌گذاری لینک عمیق برای نظرات خاص.
+- اعلان‌های در زمان واقعی برای پاسخ‌های جدید.
+- پشتیبانی چند زبانه برای یک جامعه جهانی.
+- نکات ابزار تعاملی برای قابلیت استفاده بهتر.
+- حریم خصوصی در اولویت: داده‌های شما در مرورگر شما باقی می‌ماند.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 نحوه استفاده:
+1. هر ویدیوی یوتیوب را باز کنید.
+2. روی نماد 95 در نوار ابزار خود کلیک کنید.
+3. شروع به جستجو، فیلتر کردن و لذت بردن از بخش نظرات بهتر کنید!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+به هزاران کاربری بپیوندید که مرور یوتیوب خود را تغییر داده‌اند. طراحی و نگهداری توسط Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+سوال یا بازخورد دارید؟ با ما در hello@batur.info تماس بگیرید

@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 使用終極留言和逐字稿工具升級你的 YouTube 體驗！
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube 留言導航器 95 為你喜愛的影片帶來閃電般的搜尋速度、強大的篩選功能以及懷舊的 90 年代美學。無論你是要尋找特定的時間戳記、搞笑的回覆、追蹤討論，還是在影片逐字稿中搜尋，我們都能滿足你的需求。
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ 為什麼你會愛上它：
+- 🔍 即時搜尋：在你輸入時準確找到你要找的內容。不再需要無休止的捲動。
+- 📜 影片逐字稿：立即搜尋完整的影片逐字稿，並透過可點擊的時間戳記跳轉到特定時刻。
+- 💬 直播聊天重播：擷取並瀏覽過去直播的即時聊天訊息，並具備搜尋功能。
+- 🚀 高效能：使用 IndexedDB 和清單虛擬化構建。流暢處理 10,000+ 則留言/訊息，而不會拖慢你的瀏覽器。
+- 💾 書籤和釘選：儲存重要的留言和喜愛的討論串，以便稍後立即存取。
+- 📊 進階篩選：依讚好、回覆、日期排序，甚至隨機排列順序以獲得新視角。
+- 🕒 精準時間戳記：相對時間會即時重新計算，即使是你儲存的書籤也是如此。
+- 📁 通用匯出：匯出留言、逐字稿 (SRT) 和直播聊天記錄，以便離線閱讀或分析。
+- 🎨 懷舊風格：受經典 90 年代啟發的美觀、可自訂 UI，並完全支援深色模式。
+- 🔡 排版控制：自訂字型大小和字體，以獲得完美的閱讀體驗。
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ 主要功能：
+- 留言、聊天和逐字稿的智慧「載入全部」。
+- 特定留言的深層連結分享。
+- 新回覆的即時通知。
+- 全球社群的多語言支援。
+- 互動式工具提示，提供更好的可用性。
+- 隱私優先：你的資料保留在你的瀏覽器中。
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 如何使用：
+1. 開啟任何 YouTube 影片。
+2. 點擊工具列中的 95 圖示。
+3. 開始搜尋、篩選，並享受更好的留言區！
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+加入成千上萬改變了 YouTube 瀏覽方式的使用者。由 Batur Kacamak 設計和維護。
 
-Questions or feedback? Reach out at hello@batur.info
+有問題或意見回饋？請透過 hello@batur.info 聯絡我們

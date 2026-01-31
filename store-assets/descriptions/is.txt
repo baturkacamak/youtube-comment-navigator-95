@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Uppfærðu YouTube upplifun þína með fullkomnu athugasemda- og uppskriftartóli!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Athugasemda Vafri 95 færir þér leifturhraða leit, öfluga síun og nostalgíska 90's fagurfræði í uppáhalds myndböndin þín. Hvort sem þú ert að leita að ákveðnum tímastimpli, fyndnu svari, fylgjast með umræðum eða leita í uppskriftum myndbanda, höfum við lausnina.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ AF HVERJU ÞÚ MUNT ELSKA ÞAÐ:
+- 🔍 LEIT Í RAUNTÍMA: Finndu nákvæmlega það sem þú leitar að um leið og þú skrifar. Ekki lengur endalaust flett.
+- 📜 MYNDBANDAUPPSKRIFTIR: Leitaðu samstundis í allri uppskrift myndbandsins og hoppaðu á ákveðin augnablik með smellanlegum tímastimplum.
+- 💬 ENDURSPILUN BEINS SPJALLS: Sæktu og skoðaðu skilaboð úr beinu spjalli frá fyrri útsendingum, ásamt leit.
+- 🚀 MIKIL AFKÖST: Byggt með IndexedDB og List Virtualization. Meðhöndlaðu 10.000+ athugasemdir/skilaboð snurðulaust án þess að hægja á vafranum þínum.
+- 💾 BÓKAMERKI & FESTING: Vistaðu mikilvægar athugasemdir og uppáhalds þræði til að nálgast þá samstundis síðar.
+- 📊 ÍTARLEGAR SÍUR: Raðaðu eftir líkar við, svörum, dagsetningu, eða jafnvel stokkaðu upp röðinni fyrir nýtt sjónarhorn.
+- 🕒 NÁKVÆMIR TÍMASTIMPLAR: Afstæður tími er endurreiknaður í rauntíma, jafnvel fyrir vistuð bókamerki þín.
+- 📁 ALHLIÐA ÚTFLUTNINGUR: Flyttu út athugasemdir, uppskriftir (SRT) og annála úr beinu spjalli til lestrar eða greiningar án nettengingar.
+- 🎨 NOSTALGÍSKUR FÍLINGUR: Fallegt, sérsniðið notendaviðmót innblásið af klassíska 90's tímanum, með fullum stuðningi við dökka stillingu.
+- 🔡 LETURSTÝRING: Sérsníddu stærð og gerð leturs fyrir fullkomna lestrarupplifun.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ LYKILEIGINLEIKAR:
+- Snjallt "Hlaða öllu" fyrir athugasemdir, spjall og uppskriftir.
+- Deiling djúptengla fyrir ákveðnar athugasemdir.
+- Tilkynningar í rauntíma fyrir ný svör.
+- Fjöltyngdur stuðningur fyrir alþjóðlegt samfélag.
+- Gagnvirkar verkfæraábendingar fyrir betri notkun.
+- Persónuvernd í fyrirrúmi: Gögnin þín verða eftir í vafranum þínum.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 HVERNIG SKAL NOTA:
+1. Opnaðu hvaða YouTube myndband sem er.
+2. Smelltu á 95 táknið á tækjastikunni þinni.
+3. Byrjaðu að leita, sía og njóttu betri athugasemdahluta!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Gakktu til liðs við þúsundir notenda sem hafa breytt YouTube vafranum sínum. Hannað og viðhaldið af Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Spurningar eða ábendingar? Hafðu samband á hello@batur.info

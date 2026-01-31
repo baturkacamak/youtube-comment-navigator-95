@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Ezmûna xwe ya YouTube-ê bi amûra şîrove û deşîfreyê ya dawîn nûve bikin!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Geroka Şîroveyan 95 lêgerîna bilez, parzûna bihêz, û estetîka nostalgîk a salên 90-an ji vîdyoyên weyên bijare re tîne. Ma hûn li demjimêrek taybetî, bersivek pêkenok digerin, nîqaşan dişopînin, an jî di deşîfreyên vîdyoyê de digerin, em li kêleka we ne.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ ÇIMA HÛN Ê JÊ HEZ BIKIN:
+- 🔍 LÊGERÎNA DEM-RASTÎ: Dema ku hûn dinivîsin tam tiştê ku hûn lê digerin bibînin. Êdî gerandina bêdawî tune.
+- 📜 DEŞÎFREYÊN VÎDYOYÊ: Tavilê li tevahiya deşîfreya vîdyoyê bigerin û bi demjimêrên tikandinê ve biçin kêliyên taybetî.
+- 💬 DUBARA CHATA ZINDÎ: Peyamên chata zindî ji weşanên berê bistînin û bigerin, bi fonksiyona lêgerînê re temam bikin.
+- 🚀 PERFORMANSA BILIND: Bi IndexedDB û Virtualîzasyona Lîsteyê ve hatî çêkirin. Bêyî ku geroka we hêdî bibe 10,000+ şîrove/peyaman bi hêsanî bi rê ve bibin.
+- 💾 NÎŞANKIRIN & PIN KIRIN: Şîroveyên girîng û mijarên bijare hilînin da ku paşê tavilê bigihîjin wan.
+- 📊 PARZÛNÊN PÊŞKETÎ: Li gorî ecibandin, bersiv, dîrok rêz bikin, an jî ji bo perspektîfek nû rêzê tevlihev bikin.
+- 🕒 DEMJIMÊRÊN RAST: Demên têkildar di wextê rast de têne hesibandin, tewra ji bo nîşanên weyên hilanî jî.
+- 📁 DERXISTINA GERDÛNÎ: Şîrove, deşîfre (SRT), û têketinên chata zindî ji bo xwendina offline an analîzê derxînin.
+- 🎨 VIBES NOSTALGÎK: Navgînek bikarhêner a xweşik, xwerû ya ku ji serdema klasîk a 90-an hatî îlham kirin, bi piştgirîya moda tarî ya tevahî.
+- 🔡 KONTROLA TÎPOGRAFIYÊ: Mezinahî û malbata fontê ji bo ezmûna xwendina bêkêmasî xweş bikin.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ TAYBETMENDIYÊN SEREKE:
+- "Hemî Bar Bike" ya jîr ji bo şîrove, chat û deşîfreyan.
+- Parvekirina lînka kûr ji bo şîroveyên taybetî.
+- Agahdariya dem-rastî ji bo bersivên nû.
+- Piştgiriya pirzimanî ji bo civakek cîhanî.
+- Serişteyên amûrê yên înteraktîf ji bo karanîna çêtir.
+- Pêşî nepenî: Daneyên we di geroka we de dimînin.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 ÇAWA TÊ BIKARANÎN:
+1. Her vîdyoyek YouTube vekin.
+2. Li ser îkona 95-ê ya di darikê amûrê xwe de bikirtînin.
+3. Dest bi lêgerîn, parzûnkirinê bikin û ji beşek şîroveyê ya çêtir kêfê bikin!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Tevlî bi hezaran bikarhênerên ku gera xwe ya YouTube-ê guherandine bibin. Ji hêla Batur Kacamak ve hatî sêwirandin û domandin.
 
-Questions or feedback? Reach out at hello@batur.info
+Pirs an bersiv? Li ser hello@batur.info bi me re têkilî daynin

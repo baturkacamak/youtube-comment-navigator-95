@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 YouTube experienciaykita allinchay aswan allin rimay hinaspa qillqasqa yanapakuqwan!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Rimaykuna Wamp'uq 95 illapahina utqay maskayta, atiyniyuq suysuyta, hinaspa 90s watakuna yuyayta apamun munasqayki videokunaman. Huk pacha toqllata, asichiq kutichiyta, rimanakuykunata qatipayta, utaq video qillqasqapi maskayta munanki chayqa, ñuqayku yanapasaykiku.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ IMARAYKUTAQ MUNANKI:
+- 🔍 KUNAN PACHA MASKAY: Qillqachkaptiyki maskasqaykita tarinki. Manaña tukukuq scrollchu.
+- 📜 VIDEO QILLQASQAKUNA: Llapan video qillqasqata maskay hinaspa pacha toqllakunata ñit'ispa chay ratokunaman phaway.
+- 💬 KAWSAQ CHAT KUTIPAY: Ñawpaq streamkunamanta kawsaq chat willakuykunata hurquy hinaspa qhaway, maskaywan kuska.
+- 🚀 HATUN RUWAY: IndexedDB hinaspa List Virtualizationwan ruwasqa. 10,000+ rimay/willakuykunata allinta apaykachay mana navegadoriyki pisiyaqtin.
+- 💾 MARKAY & TAKYACHIY: Hatun rimaykunata hinaspa munasqa q'aytukunata waqaychay qhipaman chaylla yaykunaykipaq.
+- 📊 ÑAWPAQMAN SUYSUKUNA: K'uyaykunawan, kutichiykunawan, p'unchawwan allichay, utaq musuq qhawaypaq chaqruy.
+- 🕒 CHIQAN PACHA TOQLLAKUNA: Kunan pachapi tupaq pachakunata yupay, waqaychasqa markanakunaykipaqpas.
+- 📁 TUKUY MUNDO EXPORT: Rimaykunata, qillqasqakunata (SRT), hinaspa kawsaq chat logkunata expor offline ñawinaykipaq utaq t'aqwinaykipaq.
+- 🎨 YUYAY VIBES: Munay, tikrana UI klasiku 90s watakunamanta yuyaychasqa, hunt'asqa tutayaq modowan.
+- 🔡 QILLQA CONTROL: Letra sayayta hinaspa aylluta tikray allin ñawinaykipaq.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ HATUN RUWAYKUNA:
+- Yachaysapa "Llapanta Cargay" rimaykunapaq, chatpaq, hinaspa qillqasqakunapaq.
+- Ukhu t'inki rakiy sapaq rimaykunapaq.
+- Kunan pacha willakuykuna musuq kutichiykunapaq.
+- Achka simi yanapakuy tiksimuyuntin ayllupaq.
+- Interactivo yanapakuqkuna aswan allin llamk'anapaq.
+- Privacidad ñawpaqta: Datoykikunaqa navegadoriykipi qhipakun.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 IMAYNA LLAMK'ACHIY:
+1. Ima YouTube videota kichay.
+2. 95 iconota ñit'iy toolbarpi.
+3. Maskayta, suysuyta qallariy hinaspa aswan allin rimay rakita kusikuy!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Waranqanpi ruwaqkunaman hukllawakuy pikunachus YouTube maskayninkuta tikrarqanku. Batur Kacamakpa ruwasqan hinaspa allinchasqan.
 
-Questions or feedback? Reach out at hello@batur.info
+Tapukuykuna utaq willakuy? Ñuqaykuwan tinkuy hello@batur.info

@@ -1,31 +1,32 @@
-🚀 YouTube deneyimini eñ soñki yorum ve transkript quvet aleti ile köteriñiz!
+🚀 YouTube tecrübeñizni eñ mükemmel tefsir ve transkript aleti ile yükseltiñiz!
 
-YouTube Comment Navigator 95, sevimli videolarıñızğa yıldırım süratinde qıdıruv, küçlü süzgüçler ve nostaljik 90-lar estetikası ketire. Belli bir vaqıt tamğasını, külkünçli cevapnı, muzakerelerni taqip etüvni yaki video transkriptlerinde qıdıruvnı isteysoñız, biz sizge yardım etermiz.
+YouTube Tefsir Navigatorı 95 sevimli videolarıñızğa yıldırım süratinde qıdıruv, küçlü süzgüçleme ve nostaljik 90-lar estetikası ketire. İsteseñiz belli bir zaman damğası, külünçli bir cevap qıdırıñız, isteseñiz muzakerelerni izleñiz, ya da video transkriptlerinde qıdırıñız, biz sizge yardım etermiz.
 
-✨ NE İÇÜN SEVECEKSİÑİZ:
-- 🔍 KERÇEK VAQITLI QIDIRUV: Yazğanıñızda tap ne istegeniñizni tapıñız. Soñsuz aylandıruvğa endi kerek yoq.
-- 📜 VİDEO TRANSKRİPTLERİ: Tam video transkriptini deral qıdırıñız ve basıla bilgen vaqıt tamğaları ile belli anlarğa sekiriñiz.
-- 💬 CANLI ÇAT TEKRARI: Keçken yayınlardan canlı çat mesajlarını ketiriñiz ve közzden keçiriñiz, qıdıruv funktsiyası ile.
-- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Virtualizasyonu ile qurulğan. Brauzeriñizniñ yavaşlamasından 10,000-den ziyade yorum/mesajnen silliq işleşiñiz.
-- 💾 SAQLAMA VE QADAMA: Müim yorumlarnı ve sevimli mevzularnı soñra deral irişmek içün saqlañız.
-- 📊 İLERİ SÜZGÜÇLER: Beğenüvler, cevaplar, tarih boyunca sıralañız yaki yañı bir baqış açısı içün tertipni qarıştıriñız.
-- 🕒 DOĞRU VAQIT TAMĞALARI: Nisbiy vaqıtlar kerçek vaqıtta kene esaplanır, saqlanğan saqlamalarıñız içün bile.
-- 📁 UMUMİY EKSPORT: Yorumlarnı, transkriptlerni (SRT) ve canlı çat jurnallarını oflayn oquv yaki analiz içün eksport etiñiz.
-- 🎨 NOSTALJİK VİBELAR: Klasik 90-lar devrinden ilham alınğan, tolu Qaranlıq Mod destegi ile dülber, özleştirile bilgen interfeys.
-- 🔡 TİPOGRAFİYA KONTROLİ: Mükemmel oquv deneyimi içün yazı ölçüsini ve ailesini özleştiriñiz.
+✨ NE İÇÜN BUNI SEVCEKSİÑİZ:
+- 🔍 KERÇEK ZAMANLI QIDIRUV: Yazğanıñız kibi tam olaraq ne qıdırğanıñıznı tapıñız. Artıq soñsuz süyrekleme yoq.
+- 📜 VİDEO TRANSKRİPTLERİ: Tam video transkriptini deral qıdırıñız ve basıla bilgen zaman damğaları ile belli anlarğa barıñız.
+- 💬 CANLI ÇAT TEKRARI: Keçmiş yayımlardan canlı çat mesajlarını ketiriñiz ve qıdıruv funktsiyası ile közden keçiriñiz.
+- 🚀 YÜKSEK PERFORMANS: IndexedDB ve Liste Virtualizatsiyası ile qurulğan. Brauzeriñiz donmadan 10,000+ tefsir/mesajnı yımşaq şekilde idare etiñiz.
+- 💾 SAQLAMA & QADAMA: Müim tefsirlerni ve sevimli mevzularnı soñra deral irişmek içün saqlañız.
+- 📊 İLERİLEGEN SÜZGÜÇLER: Begenmelerge, cevaplarğa, tarihqa köre sıralañız ya da yañı bir baqış içün sıranı qarışqan etiñiz.
+- 🕒 DİQQATLİ ZAMAN DAMĞALARI: Nisbiy vaqıtlar, atta saqlanğan saqlamalarıñız içün bile kerçek zamanda kene hesaplana.
+- 📁 UNİVERSAL DIŞARI AKTARUV: Oflayn oqumaq ya da analiz etmek içün tefsirlerni, transkriptlerni (SRT) ve canlı çat qayıtlarını dışarı aktarıñız.
+- 🎨 NOSTALJİK VİBES: Tam Qaranlıq Rejim destegi ile klassik 90-lar devrinden ilhamlanğan güzel, şahsiyleştirile bilgen qullanıcı interfeysi.
+- 🔡 TİPOGRAFİYA KONTROLİ: Mükemmel oquv tecrübesi içün şrift ölçüsi ve ailesini şahsiyleştiriñiz.
 
 🛠️ ESAS HUSUSİYETLER:
-- Yorumlar, çat ve transkriptler içün aqıllı "Episini Yükle".
-- Belli yorumlar içün tereñ bağlantı paylaşımı.
-- Yañı cevaplar içün kerçek vaqıtlı bildirişler.
-- Global cemaat içün çoq til destegi.
-- Gizlilik-birinci: Melümatıñız brauzeriñizde qala.
+- Tefsirler, çat ve transkriptler içün aqıllı "Epsini Yükle".
+- Belli tefsirler içün teren link paylaşuvı.
+- Yañı cevaplar içün kerçek zamanlı bildirişler.
+- Global cemaat içün çoq tilli destek.
+- Daa yahşı qullanışlılıq içün interaktiv alet ipucları.
+- Mahremiyet-birinci: Melümatlarıñız brauzeriñizde qala.
 
 📖 NASIL QULLANILIR:
-1. Er angi YouTube videosını açıñız.
-2. Aletler panelindeki 95 ikonasına basıñız.
-3. Qıdırmağa, süzgüçlemege ve daa yahşı bir yorum bölüminden zevq almağa başlañız!
+1. Er angi bir YouTube videosını açıñız.
+2. Aletler paneliñizdeki 95 belgesine basıñız.
+3. Qıdırmağa, süzmege başlañız ve daa yahşı tefsir bölüminden zevq alıñız!
 
-YouTube kezintilerini deñiştirgen biñlerce qullanıcılarğa qoşuluñız. Batur Kacamak tarafından diyzayn etilgen ve baqılğan.
+YouTube kezintilerini deñiştirgen biñlerce qullanıcığa qoşuluñız. Batur Kacamak tarafından dizayn etilgen ve baqılğan.
 
-Suallar yaki keri bildirim? hello@batur.info adresine yazıñız
+Sualler yaki fikirler? hello@batur.info adresinde bizmen alâqa qurıñız

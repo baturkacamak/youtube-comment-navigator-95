@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Fa'aleleia lou poto masani i YouTube ma le mea faigaluega fa'amatalaga ma transcript sili ona lelei!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Fa'amatalaga Tautai 95 e aumaia ai su'esu'ega vave, faamamaina malosi, ma le matagofie o le 90s i au vitio e te fiafia i ai. Pe o e su'eina se taimi fa'ailoga patino, se tali malie, siaki talanoaga, po'o le su'esu'eina o transcript o vitio, ua matou saunia mo oe.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ AISEA E TE FIAFIA AI:
+- 🔍 SU'ESU'EGA TAIMI MONI: Su'e tonu le mea o lo'o e su'eina a'o e taina. Le toe i ai se ta'avale e le gata.
+- 📜 VITIO TRANSCRIPTS: Su'e vave le transcript atoa o le vitio ma oso i taimi patino ma taimi fa'ailoga e mafai ona kiliki.
+- 💬 TALANOAGA OLA TOE TATA: Aumai ma su'esu'e fe'au talanoaga ola mai fa'asalalauga ua mavae, fa'atasi ma le galuega su'esu'e.
+- 🚀 FA'atinoga MAUALUGA: Fausia ma le IndexedDB ma le List Virtualization. Taulimaina lelei 10,000+ fa'amatalaga/fe'au e aunoa ma le fa'agesegeseina o lau su'esu'ega.
+- 💾 FA'AILOGA TUSI & FA'AMAUINA: Fa'asaoina fa'amatalaga taua ma filo e sili ona e fiafia i ai e maua vave ai mulimuli ane.
+- 📊 FAAMAMA MAUALULUGA: Fa'avasega i fiafia, tali, aso, pe fa'asoloatoa le fa'asologa mo se vaaiga fou.
+- 🕒 TAIMI FA'AILOGA SA'O: O taimi fa'atusatusa e toe fa'atatauina i le taimi moni, e o'o lava i au fa'ailoga tusi fa'asaoina.
+- 📁 FA'AULU ATU I LE LALOLAGI: Fa'aulu atu fa'amatalaga, transcripts (SRT), ma fa'amaumauga o talanoaga ola mo le faitau po'o le auiliiliga e aunoa ma le initaneti.
+- 🎨 LAGONA NOSTALGI: Se UI matagofie ma fa'apitoa e fa'avae i luga o le vaitau o le 90s, ma le lagolago atoatoa o le Dark Mode.
+- 🔡 PULEA O TUSITUSIGA: Fa'apitoa le tele ma le aiga o le vai mo le poto masani faitau atoatoa.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ VALA MAUTU:
+- Atamai "Uta Uma" mo fa'amatalaga, talanoaga, ma transcripts.
+- Fetufa'aiga o so'otaga loloto mo fa'amatalaga patino.
+- Fa'aaliga taimi moni mo tali fou.
+- Lagolago tele gagana mo se fa'alapotopotoga fa'avaomalo.
+- Fautuaga meafaigaluega fegalegaleai mo le fa'aaogaina lelei.
+- Tulaga faalilolilo muamua: O au fa'amatalaga e tumau i lau su'esu'ega.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 AUALA E FA'AAOGA AI:
+1. Tatala so'o se vitio YouTube.
+2. Kiliki le fa'ailoga 95 i lau pa meafaigaluega.
+3. Amata su'esu'e, faamama, ma fiafia i se vaega fa'amatalaga sili atu!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Auai i le faitau afe o tagata fa'aoga ua suia la latou su'esu'ega YouTube. Fuafuaina ma tausia e Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Fesili po'o ni manatu? Fa'afeso'ota'i matou i le hello@batur.info

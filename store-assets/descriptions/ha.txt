@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Inganta kwarewarku ta YouTube tare da babban kayan aikin sharhi da rubutu!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Sharhi Mai Neman 95 yana kawo bincike mai sauri, tacewa mai ƙarfi, da kyawun 90s zuwa bidiyon da kuka fi so. Ko kuna neman takamaiman lokaci, martani mai ban dariya, bin diddigin tattaunawa, ko bincike ta hanyar rubutun bidiyo, mun tanadar muku.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ DALILIN DA ZAI SA KA SO SHI:
+- 🔍 BINCIKE NA LOKACI: Nemo ainihin abin da kuke nema yayin da kuke rubutu. Babu sauran gungurawa mara iyaka.
+- 📜 RUBUTUN BIDIYO: Bincika cikakken rubutun bidiyo nan take da tsalle zuwa takamaiman lokuta tare da tambarin lokaci masu dannawa.
+- 💬 SAKE TATTAUNAWA KAI TSAYE: Samo da bincika saƙonnin tattaunawa kai tsaye daga rafukan da suka gabata, tare da aikin bincike.
+- 🚀 BABBAN AIKI: An gina shi tare da IndexedDB da List Virtualization. Sarrafa sharhi/saƙonni 10,000+ ba tare da mai bincikenku ya yi jinkiri ba.
+- 💾 ALAMAR SHAFI & MANNAWA: Adana mahimman sharhi da zaren da aka fi so don samun damar su nan take daga baya.
+- 📊 BABBAN TACEWA: Jera ta abubuwan so, martani, kwanan wata, ko ma sake tsarin don sabon hangen nesa.
+- 🕒 TAMBARIN LOKACI MAI KYAU: Ana sake lissafin lokuta a ainihin lokaci, koda don alamun shafi da kuka adana.
+- 📁 FITARWA TA DUNIYA: Fitar da sharhi, rubutu (SRT), da rajistan tattaunawa kai tsaye don karatu ko bincike a layi.
+- 🎨 YANAYIN 90S: Kyakkyawan UI mai iya canzawa wanda aka yi wahayi daga zamanin 90s na gargajiya, tare da cikakken tallafin Yanayin Duhu.
+- 🔡 KULA DA RUBUTU: Daidaita girman rubutu da dangi don cikakkiyar kwarewar karatu.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ MUHIMMAN SIFFOFIN:
+- Mai wayo "Loda Duka" don sharhi, tattaunawa, da rubutu.
+- Raba hanyar haɗi mai zurfi don takamaiman sharhi.
+- Sanarwa na ainihin lokaci don sabbin martani.
+- Tallafin harsuna da yawa don al'ummar duniya.
+- Hanyoyin aiki masu hulɗa don ingantaccen amfani.
+- Sirri da farko: Bayananku suna cikin mai bincikenku.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 YADDA AKE AMFANI:
+1. Buɗe kowane bidiyon YouTube.
+2. Danna alamar 95 a cikin kayan aikin ku.
+3. Fara bincike, tacewa, da jin daɗin ingantaccen sashin sharhi!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Haɗa dubban masu amfani waɗanda suka canza binciken YouTube ɗin su. Batur Kacamak ne ya tsara da kuma kula da shi.
 
-Questions or feedback? Reach out at hello@batur.info
+Tambayoyi ko ra'ayoyi? Tuntuɓe mu a hello@batur.info

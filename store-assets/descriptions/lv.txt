@@ -1,32 +1,32 @@
-🚀 Elevate your YouTube experience with the ultimate comment & transcript power-tool!
+🚀 Uzlabojiet savu YouTube pieredzi ar izcilāko komentāru un transkriptu rīku!
 
-YouTube Comment Navigator 95 brings lightning-fast search, powerful filtering, and a nostalgic 90s aesthetic to your favorite videos. Whether you're looking for a specific timestamp, a funny reply, tracking discussions, or searching through video transcripts, we've got you covered.
+YouTube Komentāru Navigators 95 nodrošina zibenīgu meklēšanu, jaudīgu filtrēšanu un nostalģisku 90. gadu estētiku jūsu iecienītākajiem videoklipiem. Neatkarīgi no tā, vai meklējat konkrētu laika zīmogu, smieklīgu atbildi, sekojat diskusijām vai meklējat video transkriptos, mēs jums palīdzēsim.
 
-✨ WHY YOU'LL LOVE IT:
-- 🔍 REAL-TIME SEARCH: Find exactly what you're looking for as you type. No more endless scrolling.
-- 📜 VIDEO TRANSCRIPTS: Instantly search the full video transcript and jump to specific moments with clickable timestamps.
-- 💬 LIVE CHAT REPLAY: Fetch and browse live chat messages from past streams, complete with search functionality.
-- 🚀 HIGH PERFORMANCE: Built with IndexedDB and List Virtualization. Smoothly handle 10,000+ comments/messages without your browser lagging.
-- 💾 BOOKMARK & PIN: Save important comments and favorite threads to access them instantly later.
-- 📊 ADVANCED FILTERS: Sort by likes, replies, date, or even randomize the order for a fresh perspective.
-- 🕒 ACCURATE TIMESTAMPS: Relative times are recalculated in real-time, even for your saved bookmarks.
-- 📁 UNIVERSAL EXPORT: Export comments, transcripts (SRT), and live chat logs for offline reading or analysis.
-- 🎨 NOSTALGIC VIBES: A beautiful, customizable UI inspired by the classic 90s era, with full Dark Mode support.
-- 🔡 TYPOGRAPHY CONTROL: Customize font size and family for the perfect reading experience.
+✨ KĀPĒC JUMS TAS PATIKS:
+- 🔍 REĀLLAIKA MEKLĒŠANA: Atrodiet tieši to, ko meklējat, rakstīšanas laikā. Vairs nekādas bezgalīgas ritināšanas.
+- 📜 VIDEO TRANSKRIPTI: Nekavējoties meklējiet pilnā video transkriptā un pārejiet uz konkrētiem mirkļiem, izmantojot noklikšķināmus laika zīmogus.
+- 💬 TIEŠRAIDES TĒRZĒŠANAS ATKĀRTOJUMS: Iegūstiet un pārlūkojiet tiešraides tērzēšanas ziņojumus no iepriekšējām straumēm, komplektā ar meklēšanas funkcionalitāti.
+- 🚀 AUGSTA VEIKTSPĒJA: Veidots ar IndexedDB un sarakstu virtualizāciju. Vienmērīgi apstrādājiet 10 000+ komentārus/ziņojumus, nepalēninot pārlūkprogrammu.
+- 💾 GRĀMATZĪMES UN PIESPRAUŠANA: Saglabājiet svarīgus komentārus un iecienītākās pavedienus, lai vēlāk tiem nekavējoties piekļūtu.
+- 📊 PAPILDU FILTRI: Kārtojiet pēc atzīmēm 'Patīk', atbildēm, datuma vai pat sajauciet secību, lai iegūtu jaunu skatījumu.
+- 🕒 PRECĪZI LAIKA ZĪMOGI: Relatīvie laiki tiek pārrēķināti reāllaikā, pat jūsu saglabātajām grāmatzīmēm.
+- 📁 UNIVERSĀLS EKSPORTS: Eksportējiet komentārus, transkriptus (SRT) un tiešraides tērzēšanas žurnālus bezsaistes lasīšanai vai analīzei.
+- 🎨 NOSTALĢISKAS NOSKAŅAS: Skaista, pielāgojama lietotāja saskarne, ko iedvesmojis klasiskais 90. gadu laikmets, ar pilnu tumšā režīma atbalstu.
+- 🔡 TIPOGRĀFIJAS KONTROLE: Pielāgojiet fonta lielumu un saimi perfektai lasīšanas pieredzei.
 
-🛠️ KEY FEATURES:
-- Smart "Load All" for comments, chat, and transcripts.
-- Deep-link sharing for specific comments.
-- Real-time notifications for new replies.
-- Multilingual support for a global community.
-- Interactive tooltips for better usability.
-- Privacy-first: Your data stays in your browser.
+🛠️ GALVENĀS IEZĪMES:
+- Gudrā "Ielādēt visu" komentāriem, tērzēšanai un transkriptiem.
+- Dziļo saišu kopīgošana konkrētiem komentāriem.
+- Reāllaika paziņojumi par jaunām atbildēm.
+- Daudzvalodu atbalsts globālai kopienai.
+- Interaktīvi rīku padomi labākai lietojamībai.
+- Privātums pirmajā vietā: Jūsu dati paliek jūsu pārlūkprogrammā.
 
-📖 HOW TO USE:
-1. Open any YouTube video.
-2. Click the 95 icon in your toolbar.
-3. Start searching, filtering, and enjoying a better comment section!
+📖 KĀ LIETOT:
+1. Atveriet jebkuru YouTube videoklipu.
+2. Rīkjoslā noklikšķiniet uz 95 ikonas.
+3. Sāciet meklēt, filtrēt un izbaudiet labāku komentāru sadaļu!
 
-Join thousands of users who have transformed their YouTube browsing. Designed and maintained by Batur Kacamak.
+Pievienojieties tūkstošiem lietotāju, kuri ir pārveidojuši savu YouTube pārlūkošanu. Izstrādājis un uztur Batur Kacamak.
 
-Questions or feedback? Reach out at hello@batur.info
+Jautājumi vai atsauksmes? Sazinieties ar mums hello@batur.info
