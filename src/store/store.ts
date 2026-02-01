@@ -165,6 +165,10 @@ const commentsSlice = createSlice({
       state.filters = action.payload;
       localStorage.setItem('filter_preferences', JSON.stringify(action.payload));
     },
+    resetFilters: (state) => {
+      state.filters = defaultFilters;
+      localStorage.setItem('filter_preferences', JSON.stringify(defaultFilters));
+    },
     setTextSize: (state, action: PayloadAction<string>) => {
       state.settings.textSize = action.payload;
       saveSettings({ textSize: state.settings.textSize });
@@ -244,6 +248,7 @@ export const {
 
   // Filter and settings actions
   setFilters,
+  resetFilters,
   setTextSize,
   setShowBookmarked,
   setShowFiltersSorts,

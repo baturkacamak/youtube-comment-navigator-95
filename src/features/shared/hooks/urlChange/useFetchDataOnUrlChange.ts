@@ -90,7 +90,11 @@ const fetchAndSetBookmarks = async (dispatch: any) => {
 
 const fetchAndSetTranscripts = async (
   dispatch: any,
-  showToast: (toast: { type: string; message: string; duration?: number }) => void
+  showToast: (toast: {
+    type: 'success' | 'error' | 'info' | 'warning';
+    message: string;
+    duration?: number;
+  }) => void
 ) => {
   try {
     const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
@@ -117,7 +121,11 @@ const fetchAndSetTranscripts = async (
 
 const fetchAndSetLiveChat = async (
   dispatch: any,
-  showToast: (toast: { type: string; message: string; duration?: number }) => void
+  showToast: (toast: {
+    type: 'success' | 'error' | 'info' | 'warning';
+    message: string;
+    duration?: number;
+  }) => void
 ) => {
   const videoId = extractVideoId();
   if (!videoId) {
