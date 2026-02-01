@@ -10,6 +10,8 @@ import i18n from './i18n';
 import store from './store/store'; // Import i18n to access the current language
 import reportWebVitals from './reportWebVitals';
 import logger from './features/shared/utils/logger';
+import { ToastProvider } from './features/shared/contexts/ToastContext';
+import ToastContainer from './features/shared/components/ToastContainer';
 
 if ((window as any)?.trustedTypes) {
   if (!(window as any)?.trustedTypes?.defaultPolicy) {
@@ -61,7 +63,10 @@ if (rootElement) {
 
     return (
       <Provider store={store}>
-        <App />
+        <ToastProvider>
+          <App />
+          <ToastContainer />
+        </ToastProvider>
       </Provider>
     );
   };
