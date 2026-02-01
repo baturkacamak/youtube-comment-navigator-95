@@ -3,7 +3,6 @@ import {
   getContinuationTokenFromData,
 } from './fetchContinuationTokenFromRemote';
 import { youtubeApi } from '../../../shared/services/youtubeApi';
-import logger from '../../../shared/utils/logger';
 
 /**
  * Gets the continuation token either from the provided token, the window object, or by fetching from remote
@@ -34,17 +33,12 @@ export const fetchCommentJsonDataFromRemote = async (
   windowObj: any,
   signal?: AbortSignal
 ) => {
-  try {
-    const continuation = await getContinuationToken(continueToken, windowObj, signal !== undefined);
+  const continuation = await getContinuationToken(continueToken, windowObj, signal !== undefined);
 
-    // Use the new YouTube API service
-    return await youtubeApi.fetchNext({
-      continuationToken: continuation,
-      isFetchingReply: signal !== undefined,
-      signal,
-    });
-  } catch (error) {
-    logger.error('Error fetching comments:', error);
-    return [];
-  }
+  // Use the new YouTube API service - let errors propagate
+  return await youtubeApi.fetchNext({
+    continuationToken: continuation,
+    isFetchingReply: signal !== undefined,
+    signal,
+  });
 };
