@@ -28,6 +28,10 @@ import {
   getTranscriptFetchErrorMessage,
   shouldShowTranscriptErrorToast,
 } from '../../../transcripts/services/transcriptErrorHandler';
+import {
+  getLiveChatFetchErrorMessage,
+  shouldShowLiveChatErrorToast,
+} from '../../../comments/services/liveChat/liveChatErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
 
 const useFetchDataOnUrlChange = () => {
@@ -52,7 +56,7 @@ const useFetchDataOnUrlChange = () => {
 
     await fetchAndSetBookmarks(dispatch);
     await fetchAndSetTranscripts(dispatch, showToast);
-    await fetchAndSetLiveChat(dispatch); // Load live chat immediately
+    await fetchAndSetLiveChat(dispatch, showToast); // Load live chat immediately
     dispatch(setIsLoading(false));
 
     try {
@@ -111,7 +115,10 @@ const fetchAndSetTranscripts = async (
   }
 };
 
-const fetchAndSetLiveChat = async (dispatch: any) => {
+const fetchAndSetLiveChat = async (
+  dispatch: any,
+  showToast: (toast: { type: string; message: string; duration?: number }) => void
+) => {
   const videoId = extractVideoId();
   if (!videoId) {
     logger.debug('[useFetchDataOnUrlChange] No videoId found for live chat');
@@ -140,6 +147,17 @@ const fetchAndSetLiveChat = async (dispatch: any) => {
       .catch((error: any) => {
         if (error.name !== 'AbortError') {
           logger.error('[useFetchDataOnUrlChange] Failed to load live chat:', error);
+
+          if (shouldShowLiveChatErrorToast(error)) {
+            const message = getLiveChatFetchErrorMessage(error);
+            if (message) {
+              showToast({
+                type: 'error',
+                message,
+                duration: 5000,
+              });
+            }
+          }
         }
       })
       .finally(() => {
