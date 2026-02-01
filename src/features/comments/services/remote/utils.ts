@@ -4,6 +4,7 @@ import { CACHE_KEYS } from '../../../shared/utils/appConstants';
 import { db } from '../../../shared/utils/database/database';
 import { Comment } from '../../../../types/commentTypes';
 import logger from '../../../shared/utils/logger';
+import { dbEvents } from '../../../shared/utils/database/dbEvents';
 
 export const extractVideoId = (): string => {
   try {
@@ -52,10 +53,14 @@ export const getCachedComments = async (videoId: string): Promise<Comment[] | nu
   }
 };
 
-export const deleteCommentsFromDb = async (videoId: string): Promise<void> => {
+export const deleteCommentsFromDb = async (videoId: string): Promise<number> => {
   try {
-    await db.comments.where('videoId').equals(videoId).delete();
+    const deleted = await db.comments.where('videoId').equals(videoId).delete();
+    // Emit event to notify hook that comments were deleted
+    dbEvents.emitCommentsDeleted(videoId, deleted);
+    return deleted;
   } catch (error) {
-    logger.error('Failed to delete existing comments:', error);
+    logger.error('[Utils] Failed to delete existing comments:', error);
+    return 0;
   }
 };

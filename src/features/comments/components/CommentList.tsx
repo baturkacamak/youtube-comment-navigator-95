@@ -13,13 +13,22 @@ import { RootState } from '../../../types/rootState';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { setTotalCommentsCount, resetFilters, setSearchKeyword } from '../../../store/store';
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
-
-import logger from '../../shared/utils/logger';
+import { selectIsLoading } from '../../../store/selectors';
 
 // Pre-compute alternating colors once (they only depend on even/odd index)
 const CACHED_COLORS = {
-  even: getCommentBackgroundColor({} as Comment, 0),
-  odd: getCommentBackgroundColor({} as Comment, 1),
+  even: getCommentBackgroundColor(
+    {
+      /* no-op */
+    } as Comment,
+    0
+  ),
+  odd: getCommentBackgroundColor(
+    {
+      /* no-op */
+    } as Comment,
+    1
+  ),
 };
 
 // Estimate row height based on content length
@@ -45,18 +54,41 @@ const CommentList: React.FC<CommentListProps> = () => {
   // Get filters and search from Redux (UI state)
   const filters = useSelector((state: RootState) => state.filters);
   const searchKeyword = useSelector((state: RootState) => state.searchKeyword);
+  const globalLoading = useSelector(selectIsLoading);
 
   const videoId = extractYouTubeVideoIdFromUrl();
 
   // Use the new reactive hook - IndexedDB is the source of truth
-  const { comments, totalCount, isLoading, hasMore, loadMore, error, clearError, refresh } =
-    useCommentsFromDB({
-      videoId,
-      filters,
-      searchKeyword,
-      topLevelOnly: true,
-      excludeLiveChat: true,
-    });
+  const {
+    comments,
+    totalCount,
+    isLoading: dbLoading,
+    hasMore,
+    loadMore,
+    error,
+    clearError,
+    refresh,
+    clearComments,
+  } = useCommentsFromDB({
+    videoId,
+    filters,
+    searchKeyword,
+    topLevelOnly: true,
+    excludeLiveChat: true,
+    debug: true,
+  });
+
+  const isLoading = dbLoading || globalLoading;
+
+  // Clear comments immediately when global loading starts (don't wait for DB event)
+  const prevGlobalLoadingRef = useRef(globalLoading);
+  useEffect(() => {
+    // Detect when globalLoading transitions from false to true
+    if (!prevGlobalLoadingRef.current && globalLoading && comments.length > 0) {
+      clearComments();
+    }
+    prevGlobalLoadingRef.current = globalLoading;
+  }, [globalLoading, comments.length, clearComments]);
 
   // Sync totalCount to Redux for components that still need it
   useEffect(() => {
@@ -73,6 +105,7 @@ const CommentList: React.FC<CommentListProps> = () => {
         const rect = containerRef.current.getBoundingClientRect();
         // Calculate available height: Viewport - Top Position - Buffer (20px)
         const availableHeight = window.innerHeight - rect.top - 20;
+
         // Ensure minimum height of 400px
         setListHeight(Math.max(400, availableHeight));
       }
@@ -81,13 +114,28 @@ const CommentList: React.FC<CommentListProps> = () => {
     // Initial calculation
     updateDimensions();
 
+    // Throttle resize handler to prevent excessive re-renders
+    let timeoutId: NodeJS.Timeout | null = null;
+    const throttledResize = () => {
+      if (timeoutId) return;
+      timeoutId = setTimeout(() => {
+        updateDimensions();
+        timeoutId = null;
+      }, 100);
+    };
+
     // Recalculate on resize
-    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('resize', throttledResize);
 
     // Also recalculate when comments/filters change as layout might shift
     // (Optional but helpful if header size changes)
 
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => {
+      window.removeEventListener('resize', throttledResize);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [comments.length, filters, searchKeyword]);
 
   // Reset cached heights when comments change significantly
@@ -167,6 +215,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     [comments.length, hasMore, isLoading, loadMore]
   );
 
+  // Show loading state when there are no comments yet
   if (isLoading && comments.length === 0) {
     return (
       <div
@@ -255,9 +304,24 @@ const CommentList: React.FC<CommentListProps> = () => {
   return (
     <div
       ref={containerRef}
-      className="w-full flex flex-col"
+      className="w-full flex flex-col relative"
       style={{ height: listHeight, minHeight: '400px' }}
     >
+      {/* Loading overlay when reloading comments - only show when hook is actively loading */}
+      {dbLoading && comments.length > 0 && (
+        <div
+          className="absolute inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-lg"
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex flex-col items-center">
+            <ArrowPathIcon className="w-12 h-12 text-teal-600 dark:text-teal-400 mb-3 animate-spin" />
+            <p className="text-lg font-medium text-gray-800 dark:text-gray-200">
+              {t('Loading comments...')}
+            </p>
+          </div>
+        </div>
+      )}
       {error && (
         <div
           className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 shadow-sm"
@@ -297,7 +361,7 @@ const CommentList: React.FC<CommentListProps> = () => {
           </div>
         </div>
       )}
-      <div className="flex-1 w-full min-h-0">
+      <div style={{ flex: '1 1 auto', width: '100%', height: '100%', minHeight: 0 }}>
         <AutoSizer
           renderProp={({
             height,
@@ -306,11 +370,23 @@ const CommentList: React.FC<CommentListProps> = () => {
             height: number | undefined;
             width: number | undefined;
           }) => {
+            // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
-              logger.warn('[CommentList] AutoSizer returned 0 dimensions:', { width, height });
               return (
-                <div className="p-4 text-red-500">
-                  Error: List container has no size. ({width}x{height})
+                <div style={{ height: 400, width: '100%', overflow: 'hidden' }}>
+                  <List
+                    ref={listRef}
+                    height={400}
+                    width={width || window.innerWidth || 500}
+                    itemCount={itemCount}
+                    itemSize={getRowHeight}
+                    overscanCount={10}
+                    style={{ overflow: 'visible auto' }}
+                    className="custom-scrollbar"
+                    onItemsRendered={handleItemsRendered}
+                  >
+                    {Row}
+                  </List>
                 </div>
               );
             }
@@ -321,16 +397,12 @@ const CommentList: React.FC<CommentListProps> = () => {
 
             // Sanity check for infinite growth loop
             if (height > 50000) {
-              logger.error('[CommentList] Layout loop detected! Height is absurdly large:', height);
               return (
                 <div className="p-4 text-red-500">
                   Error: Layout loop detected. Height: {height}px
                 </div>
               );
             }
-
-            // Only log periodically or on significant changes to avoid spam, but for now debug everything
-            logger.debug('[CommentList] Rendering list:', { itemCount, width, height });
 
             return (
               <List
@@ -339,7 +411,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 width={width}
                 itemCount={itemCount}
                 itemSize={getRowHeight}
-                overscanCount={5}
+                overscanCount={10}
                 style={{ overflow: 'visible auto' }}
                 className="custom-scrollbar"
                 onItemsRendered={handleItemsRendered}
