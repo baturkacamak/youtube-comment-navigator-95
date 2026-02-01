@@ -7,6 +7,8 @@ import './styles/index.css';
 import './i18n';
 import i18n, { getLanguageDirection } from './i18n';
 import { isLocalEnvironment, languageOptions } from './features/shared/utils/appConstants';
+import { ToastProvider } from './features/shared/contexts/ToastContext';
+import ToastContainer from './features/shared/components/ToastContainer';
 
 // --- Helper Classes ---
 
@@ -203,7 +205,10 @@ class YouTubeCommentNavigator {
 
       return (
         <Provider store={store}>
-          <App />
+          <ToastProvider>
+            <App />
+            <ToastContainer />
+          </ToastProvider>
         </Provider>
       );
     };
