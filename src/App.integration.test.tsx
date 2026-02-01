@@ -1126,6 +1126,7 @@ vi.mock('./features/navigation-header/components/NavigationHeader', () => ({
 }));
 
 import App from './App';
+import { ToastProvider } from './features/shared/contexts/ToastContext';
 
 // ============================================================================
 // Store Factory
@@ -1211,7 +1212,9 @@ const renderApp = (storeOverrides = {}) => {
   return {
     ...render(
       <Provider store={store}>
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </Provider>
     ),
     store,
