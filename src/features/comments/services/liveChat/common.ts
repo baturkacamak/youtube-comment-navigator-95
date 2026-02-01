@@ -53,7 +53,7 @@ export function deepFindObjKey(obj: object, key: string): Array<any> {
       };
 
       if (Object.prototype.hasOwnProperty.call(object, key)) {
-        match = {};
+        match = { /* no-op */ };
 
         match[newPath(key) as string] = object[key];
 

@@ -28,7 +28,7 @@ vi.mock('../../shared/utils/logger', () => ({
 vi.mock('../services/liveChat/liveChatDatabase');
 vi.mock('../../shared/utils/database/database', () => ({
   db: {
-    comments: {},
+    comments: { /* no-op */ },
   },
 }));
 
@@ -81,7 +81,7 @@ const mockReducer = (state = initialState, action: any) => {
   }
 };
 
-const createMockStore = (preloadedState = {}) => {
+const createMockStore = (preloadedState = { /* no-op */ }) => {
   return configureStore({
     reducer: mockReducer,
     preloadedState: { ...initialState, ...preloadedState },

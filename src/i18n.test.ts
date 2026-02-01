@@ -87,7 +87,7 @@ describe('i18n', () => {
     });
 
     it('should allow adding multiple languages', () => {
-      window.__YCN_TRANSLATIONS__ = {};
+      window.__YCN_TRANSLATIONS__ = { /* no-op */ };
 
       window.__YCN_TRANSLATIONS__.en = { greeting: 'Hello' };
       window.__YCN_TRANSLATIONS__.de = { greeting: 'Hallo' };
@@ -343,7 +343,7 @@ describe('LANGUAGE_LOADED event handling', () => {
     if (messageHandler) {
       // Event without language
       const event1 = new MessageEvent('message', {
-        data: { type: 'LANGUAGE_LOADED', payload: {} },
+        data: { type: 'LANGUAGE_LOADED', payload: { /* no-op */ } },
         source: window,
       });
       messageHandler(event1);
@@ -390,7 +390,7 @@ describe('LANGUAGE_LOADED event handling', () => {
     vi.resetModules();
 
     // No translations set
-    window.__YCN_TRANSLATIONS__ = {};
+    window.__YCN_TRANSLATIONS__ = { /* no-op */ };
 
     const i18n = (await import('./i18n')).default;
 

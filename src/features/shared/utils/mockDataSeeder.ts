@@ -17,8 +17,7 @@ import { loadPagedComments, countComments } from '../../comments/services/pagina
 const MOCK_VIDEO_ID = 'mock-video-id';
 
 export const seedMockData = async (dispatch: any) => {
-  logger.info('[MockDataSeeder] Starting mock data seeding...');
-  dispatch(setIsLoading(true));
+    dispatch(setIsLoading(true));
 
   try {
     // Check if data already exists to avoid re-seeding every time
@@ -26,13 +25,8 @@ export const seedMockData = async (dispatch: any) => {
     const jsonCount = mockCommentsData.length;
 
     if (existingCount === 0 || existingCount !== jsonCount) {
-      if (existingCount === 0) {
-        logger.info('[MockDataSeeder] No existing mock data found. Seeding from JSON...');
-      } else {
-        logger.info(
-          `[MockDataSeeder] Data mismatch (DB: ${existingCount}, JSON: ${jsonCount}). Re-seeding...`
-        );
-        await db.comments.where('videoId').equals(MOCK_VIDEO_ID).delete();
+      if (existingCount === 0) { /* no-op */ } else {
+                await db.comments.where('videoId').equals(MOCK_VIDEO_ID).delete();
       }
 
       // Process raw JSON into Comment objects
@@ -70,11 +64,7 @@ export const seedMockData = async (dispatch: any) => {
       logger.success(
         `[MockDataSeeder] Successfully seeded ${commentsToInsert.length} mock comments.`
       );
-    } else {
-      logger.info(
-        `[MockDataSeeder] Mock data is up to date (${existingCount} comments). Skipping seed.`
-      );
-    }
+    } else { /* no-op */ }
 
     // Now load the initial page of comments from the DB, just like the real app does
     const initialComments = await loadPagedComments(
@@ -84,12 +74,12 @@ export const seedMockData = async (dispatch: any) => {
       PAGINATION.DEFAULT_PAGE_SIZE,
       'date',
       'desc',
-      {},
+      { /* no-op */ },
       '',
       { excludeLiveChat: true }
     );
 
-    const totalCount = await countComments(db.comments, MOCK_VIDEO_ID, {}, '', {
+    const totalCount = await countComments(db.comments, MOCK_VIDEO_ID, { /* no-op */ }, '', {
       excludeLiveChat: true,
     });
 

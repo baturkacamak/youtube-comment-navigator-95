@@ -58,8 +58,7 @@ export async function saveLiveChatMessages(
       );
     }
 
-    logger.info(`[LiveChatDB] Saving ${messages.length} livechat messages for video ${videoId}`);
-
+    
     // Validate messages before saving
     const validMessages = messages.filter((msg) => {
       if (!msg.messageId) {
@@ -102,17 +101,10 @@ export async function saveLiveChatMessages(
     const newMessages = validMessages.filter((msg) => !existingIds.has(msg.messageId));
 
     if (newMessages.length === 0) {
-      logger.info(
-        `[LiveChatDB] All ${validMessages.length} messages already exist in DB, skipping save`
-      );
-      return 0;
+            return 0;
     }
 
-    if (newMessages.length < validMessages.length) {
-      logger.info(
-        `[LiveChatDB] ${validMessages.length - newMessages.length} messages already exist, saving ${newMessages.length} new messages`
-      );
-    }
+    if (newMessages.length < validMessages.length) { /* no-op */ }
 
     // Use bulkAdd for new messages only
     await db.liveChatMessages.bulkAdd(newMessages);
@@ -204,12 +196,7 @@ export async function loadLiveChatMessages(
       );
     }
 
-    logger.info(`[LiveChatDB] Loading livechat messages for video ${videoId}`, {
-      offset,
-      limit,
-      filter,
-    });
-
+    
     // OPTIMIZATION: Use compound index [videoId+timestampMs] for sorted access
     // This avoids loading ALL messages into memory just to sort and slice
 
@@ -282,8 +269,7 @@ export async function getLiveChatMessageCount(videoId: string): Promise<number> 
 
     const count = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
-    logger.info(`[LiveChatDB] Message count for video ${videoId}: ${count}`);
-    return count;
+        return count;
   } catch (error: any) {
     logger.error('[LiveChatDB] Failed to count livechat messages:', error);
 
@@ -322,8 +308,7 @@ export async function saveLiveChatReply(reply: Comment, parentMessageId: string)
       );
     }
 
-    logger.info(`[LiveChatDB] Saving reply to livechat message ${parentMessageId}`);
-
+    
     // Ensure reply has correct flags
     const replyWithFlags: Comment = {
       ...reply,
@@ -370,8 +355,7 @@ export async function loadLiveChatReplies(parentMessageId: string): Promise<Comm
       );
     }
 
-    logger.info(`[LiveChatDB] Loading replies for message ${parentMessageId}`);
-
+    
     const replies = await db.comments
       .where('commentParentId')
       .equals(parentMessageId)
@@ -412,10 +396,7 @@ async function incrementMessageReplyCount(messageId: string): Promise<void> {
         .equals(messageId)
         .modify({ replyCount: currentCount + 1, hasReplies: true });
 
-      logger.info(
-        `[LiveChatDB] Incremented reply count for message ${messageId} to ${currentCount + 1}`
-      );
-    } else {
+          } else {
       logger.warn(`[LiveChatDB] Message ${messageId} not found for reply count update`);
     }
   } catch (error: any) {
@@ -439,8 +420,7 @@ export async function deleteLiveChatMessages(videoId: string): Promise<number> {
       );
     }
 
-    logger.info(`[LiveChatDB] Deleting livechat messages for video ${videoId}`);
-
+    
     const count = await db.liveChatMessages.where('videoId').equals(videoId).delete();
 
     logger.success(`[LiveChatDB] Deleted ${count} messages`);
@@ -476,8 +456,7 @@ export async function deleteLiveChatReplies(videoId: string): Promise<number> {
       );
     }
 
-    logger.info(`[LiveChatDB] Deleting livechat replies for video ${videoId}`);
-
+    
     // Delete all comments that are marked as livechat (isLiveChat = true)
     const count = await db.comments
       .where('videoId')
@@ -516,8 +495,7 @@ export async function hasLiveChatMessages(videoId: string): Promise<boolean> {
 
     const count = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
-    logger.info(`[LiveChatDB] Video ${videoId} has ${count} livechat messages`);
-    return count > 0;
+        return count > 0;
   } catch (error: any) {
     logger.error('[LiveChatDB] Failed to check for existing livechat messages:', error);
     return false;
@@ -539,8 +517,7 @@ export async function bookmarkLiveChatMessage(messageId: string, note?: string):
       );
     }
 
-    logger.info(`[LiveChatDB] Bookmarking message ${messageId}`);
-
+    
     const updated = await db.liveChatMessages
       .where('messageId')
       .equals(messageId)
@@ -590,8 +567,7 @@ export async function unbookmarkLiveChatMessage(messageId: string): Promise<void
       );
     }
 
-    logger.info(`[LiveChatDB] Removing bookmark from message ${messageId}`);
-
+    
     const updated = await db.liveChatMessages.where('messageId').equals(messageId).modify({
       isBookmarked: false,
       bookmarkAddedDate: undefined,
@@ -639,8 +615,7 @@ export async function getBookmarkedLiveChatMessages(videoId: string): Promise<Li
       );
     }
 
-    logger.info(`[LiveChatDB] Loading bookmarked messages for video ${videoId}`);
-
+    
     const messages = await db.liveChatMessages
       .where('[videoId+isBookmarked]')
       .equals([videoId, 1])

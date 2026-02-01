@@ -20,7 +20,7 @@ export const mergeCommentsWithViewModels = (
 ) => {
   return transformedComments.map((transformedComment, index) => ({
     ...transformedComment,
-    commentViewModel: commentViewModels[index] || {},
+    commentViewModel: commentViewModels[index] || { /* no-op */ },
   }));
 };
 
@@ -96,16 +96,14 @@ export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
     const allCommentKeys = rawData.flatMap(getCommentKeysFromData);
 
     const commentViewModels = allCommentKeys.map(
-      (key: any) => key.commentThreadRenderer?.commentViewModel?.commentViewModel || {}
+      (key: any) => key.commentThreadRenderer?.commentViewModel?.commentViewModel || { /* no-op */ }
     );
 
     const transformedComments = allComments
       .filter((comment: any) => {
         const payload = comment.payload?.commentEntityPayload;
         const isPinned = payload?.pinnedState === 'COMMENT_PINNED_STATE_PINNED';
-        if (isPinned) {
-          logger.info(`Skipping pinned comment with id: ${payload?.id}`);
-        }
+        if (isPinned) { /* no-op */ }
         return payload && !isPinned;
       })
       .map((comment: any) => transformCommentsData(comment, videoId));
@@ -113,8 +111,7 @@ export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
     const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
     const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
 
-    logger.debug(`Processed ${commentsWithAdditionalInfo.length} comments for video ${videoId}`);
-
+    
     return { items: commentsWithAdditionalInfo };
   } catch (error) {
     logger.error('Error processing raw JSON comments data:', error);

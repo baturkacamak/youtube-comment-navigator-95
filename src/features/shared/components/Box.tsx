@@ -15,14 +15,14 @@ const Box: React.FC<BoxProps> = ({
     if (/^#|rgb/.test(color)) {
       return { background: color };
     }
-    return {};
+    return { /* no-op */ };
   };
 
   const borderStyles = (color: string) => {
     if (/^#|rgb/.test(color)) {
       return { borderColor: color };
     }
-    return {};
+    return { /* no-op */ };
   };
 
   return (

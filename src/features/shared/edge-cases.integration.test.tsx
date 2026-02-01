@@ -71,8 +71,8 @@ describe('Edge Cases Integration Tests', () => {
       reducer: commentsReducer,
       preloadedState: defaultState,
     });
-    vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => { /* no-op */ });
+    vi.spyOn(console, 'warn').mockImplementation(() => { /* no-op */ });
   });
 
   afterEach(() => {
@@ -266,7 +266,7 @@ describe('Edge Cases Integration Tests', () => {
     });
 
     it('handles regex special characters in search', () => {
-      const specialChars = ['()', '[]', '{}', '\\', '^', '$', '.', '|', '?', '*', '+'];
+      const specialChars = ['()', '[]', '{ /* no-op */ }', '\\', '^', '$', '.', '|', '?', '*', '+'];
 
       for (const char of specialChars) {
         expect(() => {

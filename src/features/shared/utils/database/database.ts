@@ -12,8 +12,7 @@ class Database extends Dexie {
     super('youtube-comment-navigator-95');
 
     try {
-      logger.info('[Dexie] Initializing IndexedDB...');
-
+      
       this.version(3).stores({
         comments:
           '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId',
@@ -63,8 +62,7 @@ class Database extends Dexie {
         })
         .upgrade(async (tx) => {
           const count = await tx.table('comments').count();
-          logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
-        });
+                  });
 
       this.version(5).stores({
         kvStore: 'key',
@@ -141,8 +139,7 @@ class Database extends Dexie {
         })
         .upgrade(async (tx) => {
           try {
-            logger.info('[Dexie] Upgrading to version 7: Adding liveChatMessages table');
-
+            
             // Migrate existing livechat from comments to liveChatMessages table
             const liveChatComments = await tx
               .table('comments')
@@ -151,10 +148,7 @@ class Database extends Dexie {
               .toArray();
 
             if (liveChatComments.length > 0) {
-              logger.info(
-                `[Dexie] Migrating ${liveChatComments.length} livechat messages to new table`
-              );
-
+              
               const liveChatMessages: LiveChatMessage[] = liveChatComments.map((comment) => ({
                 messageId: comment.commentId,
                 videoId: comment.videoId || '',

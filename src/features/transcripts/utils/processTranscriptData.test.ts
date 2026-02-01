@@ -4,9 +4,9 @@ describe('processTranscriptData', () => {
   it('should correctly parse the new YouTube transcript JSON format', () => {
     const mockData = {
       wireMagic: 'pb3',
-      pens: [{}],
-      wsWinStyles: [{}, { mhModeHint: 2, juJustifCode: 0, sdScrollDir: 3 }],
-      wpWinPositions: [{}, { apPoint: 6, ahHorPos: 20, avVerPos: 100, rcRows: 2, ccCols: 40 }],
+      pens: [{ /* no-op */ }],
+      wsWinStyles: [{ /* no-op */ }, { mhModeHint: 2, juJustifCode: 0, sdScrollDir: 3 }],
+      wpWinPositions: [{ /* no-op */ }, { apPoint: 6, ahHorPos: 20, avVerPos: 100, rcRows: 2, ccCols: 40 }],
       events: [
         {
           tStartMs: 0,
@@ -84,7 +84,7 @@ describe('processTranscriptData', () => {
   });
 
   it('should throw error for invalid format', () => {
-    expect(() => processTranscriptData({})).toThrow('Invalid transcript data format');
+    expect(() => processTranscriptData({ /* no-op */ })).toThrow('Invalid transcript data format');
     expect(() => processTranscriptData(null)).toThrow('Invalid transcript data format');
   });
 });

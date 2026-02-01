@@ -162,9 +162,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       metricsRef.current.totalFetches++;
 
       try {
-        if (debug) {
-          logger.debug(`${logPrefix} fetchPage calling loadPagedComments`, { pageNum, pageSize });
-        }
+        if (debug) { /* no-op */ }
         const data = await loadPagedComments(
           db.comments,
           videoId,
@@ -177,9 +175,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
           paginationOptions
         );
 
-        if (debug) {
-          logger.debug(`${logPrefix} fetchPage received data`, { count: data.length });
-        }
+        if (debug) { /* no-op */ }
 
         const duration = performance.now() - startTime;
         metricsRef.current.lastFetchDuration = duration;
@@ -349,15 +345,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
     const interval = setInterval(() => {
       const metrics = metricsRef.current;
-      if (metrics.totalFetches > 0) {
-        logger.debug(`${logPrefix} Performance metrics`, {
-          lastFetchDuration: `${metrics.lastFetchDuration.toFixed(2)}ms`,
-          lastCountDuration: `${metrics.lastCountDuration.toFixed(2)}ms`,
-          totalFetches: metrics.totalFetches,
-          failedFetches: metrics.failedFetches,
-          successRate: `${((1 - metrics.failedFetches / metrics.totalFetches) * 100).toFixed(1)}%`,
-        });
-      }
+      if (metrics.totalFetches > 0) { /* no-op */ }
     }, 30000); // Every 30 seconds
 
     return () => clearInterval(interval);
@@ -410,9 +398,9 @@ export const useLiveCommentCount = (
           return await countComments(
             db.comments,
             videoId,
-            filters || {},
+            filters || { /* no-op */ },
             searchKeyword || '',
-            options || {}
+            options || { /* no-op */ }
           );
         } catch (err) {
           logger.error('[useLiveCommentCount] Count query failed:', err);

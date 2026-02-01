@@ -6,8 +6,8 @@ beforeAll(() => {
   i18n.init({
     lng: 'en',
     resources: {
-      en: { translation: {} },
-      tr: { translation: {} },
+      en: { translation: { /* no-op */ } },
+      tr: { translation: { /* no-op */ } },
     },
   });
 

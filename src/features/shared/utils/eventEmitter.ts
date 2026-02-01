@@ -2,7 +2,7 @@
 type EventCallback<T = any> = (data: T) => void;
 
 export const eventEmitter = {
-  events: {} as Record<string, EventCallback<any>[]>,
+  events: { /* no-op */ } as Record<string, EventCallback<any>[]>,
 
   on<T>(event: string, callback: EventCallback<T>) {
     if (!this.events[event]) {

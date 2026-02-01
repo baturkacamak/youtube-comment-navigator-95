@@ -37,28 +37,19 @@ class HttpService {
     method: string,
     url: string,
     data: string | null = null,
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<string> {
     const browserHeaders = this.getRandomizedBrowserHeaders(headers);
     let lastError: any = null;
     const requestId = Math.random().toString(36).substr(2, 9);
 
-    logger.debug('Starting HTTP request', {
-      requestId,
-      method,
-      url: url.length > 100 ? url.substring(0, 100) + '...' : url,
-      hasData: !!data,
-      headerCount: Object.keys(headers).length,
-    });
-
+    
     // 1. Try using the modern Fetch API first
     if (typeof fetch === 'function') {
       try {
-        logger.debug('Using Fetch API for request', { method, url, requestId });
-        const result = await this.makeFetchRequest(method, url, data, browserHeaders, credentials);
-        logger.debug('Request completed successfully via fetch', { requestId });
-        return result;
+                const result = await this.makeFetchRequest(method, url, data, browserHeaders, credentials);
+                return result;
       } catch (error) {
         lastError = error;
         if (this.isDefinitiveHttpError(error)) {
@@ -90,10 +81,8 @@ class HttpService {
     // 2. Fall back to XMLHttpRequest
     if (typeof XMLHttpRequest === 'function') {
       try {
-        logger.debug('Using XMLHttpRequest for request', { method, url, requestId });
-        const result = await this.makeXHRRequest(method, url, data, browserHeaders, credentials);
-        logger.debug('Request completed successfully via XMLHttpRequest', { requestId });
-        return result;
+                const result = await this.makeXHRRequest(method, url, data, browserHeaders, credentials);
+                return result;
       } catch (error) {
         lastError = error;
         logger.error('XMLHttpRequest failed, no more fallbacks.', {
@@ -126,7 +115,7 @@ class HttpService {
     throw new HttpError('No suitable request method available', 0);
   }
 
-  private getRandomizedBrowserHeaders(customHeaders: RequestHeaders = {}): RequestHeaders {
+  private getRandomizedBrowserHeaders(customHeaders: RequestHeaders = { /* no-op */ }): RequestHeaders {
     const userAgents = [
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -159,7 +148,7 @@ class HttpService {
     method: string,
     url: string,
     data: string | null = null,
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<string> {
     let response: Response;
@@ -238,7 +227,7 @@ class HttpService {
     method: string,
     url: string,
     data: string | null = null,
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -298,7 +287,7 @@ class HttpService {
 
   async get(
     url: string,
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<string> {
     return this.makeRequest('GET', url, null, headers, credentials);
@@ -307,7 +296,7 @@ class HttpService {
   async post(
     url: string,
     data: string = '',
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<string> {
     return this.makeRequest('POST', url, data, headers, credentials);
@@ -316,7 +305,7 @@ class HttpService {
   async getStream(
     url: string,
     onChunk: (chunk: string) => boolean, // Callback returns true to abort
-    headers: RequestHeaders = {},
+    headers: RequestHeaders = { /* no-op */ },
     credentials: RequestCredentials = 'same-origin'
   ): Promise<void> {
     if (
@@ -332,8 +321,7 @@ class HttpService {
 
     const browserHeaders = this.getRandomizedBrowserHeaders(headers);
     const requestId = Math.random().toString(36).substr(2, 9);
-    logger.debug('Starting HTTP stream request', { requestId, url });
-
+    
     try {
       const controller = new AbortController();
       const signal = controller.signal;
@@ -364,23 +352,20 @@ class HttpService {
           if (buffer.length > 0) {
             onChunk(buffer);
           }
-          logger.debug('Stream finished', { requestId });
-          break;
+                    break;
         }
 
         buffer += decoder.decode(value, { stream: true });
         if (onChunk(buffer)) {
           // If callback returns true, abort the stream
-          logger.debug('Aborting stream as requested by callback', { requestId });
-          if (reader) await reader.cancel();
+                    if (reader) await reader.cancel();
           if (controller) controller.abort();
           break;
         }
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        logger.debug('Fetch aborted by stream consumer.', { requestId });
-        return;
+                return;
       }
       logger.error('Stream request failed', {
         requestId,

@@ -6,7 +6,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { LiveChatTranscriptProps } from '../../../types/liveChatTypes';
 import LiveChatMessageItem from './LiveChatMessageItem';
-import logger from '../../shared/utils/logger';
 import { useTranslation } from 'react-i18next';
 import {
   ChatBubbleLeftRightIcon,
@@ -57,8 +56,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
 
     // Check if scrolled to bottom - load more
     if (scrollHeight - scrollTop - clientHeight < 100) {
-      logger.info('[LiveChatTranscript] Near bottom, loading more messages');
-      onLoadMore();
+            onLoadMore();
     }
   };
 

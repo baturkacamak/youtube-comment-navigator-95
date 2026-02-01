@@ -254,7 +254,7 @@ describe('Pagination Services', () => {
         10,
         'date',
         'desc',
-        {},
+        { /* no-op */ },
         searchKeyword
       );
       vi.runAllTimers();
@@ -344,7 +344,7 @@ describe('Pagination Services', () => {
         10,
         'date',
         'desc',
-        {},
+        { /* no-op */ },
         searchKeyword
       );
       vi.runAllTimers();
@@ -417,7 +417,7 @@ describe('Pagination Services', () => {
       const expectedCount = 3;
       mockCount.mockResolvedValue(expectedCount);
 
-      const result = await countComments(mockTable, 'v1', {}, '', { topLevelOnly: true });
+      const result = await countComments(mockTable, 'v1', { /* no-op */ }, '', { topLevelOnly: true });
 
       expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
       expect(mockBetween).toHaveBeenCalledWith(['v1', 0], ['v1', 0], true, true);

@@ -41,7 +41,7 @@ const createInitialStates = (): Record<CardId, CardState> => {
       acc[config.id] = createInitialCardState();
       return acc;
     },
-    {} as Record<CardId, CardState>
+    { /* no-op */ } as Record<CardId, CardState>
   );
 };
 

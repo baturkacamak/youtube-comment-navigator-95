@@ -77,8 +77,8 @@ export function ensureTextMessageRenderer(comment: any): void {
       () => action?.addChatItemAction?.item?.liveChatPaidMessageRenderer
     );
     if (paidRenderer) {
-      action.addChatItemAction = action.addChatItemAction || { item: {} };
-      action.addChatItemAction.item = action.addChatItemAction.item || {};
+      action.addChatItemAction = action.addChatItemAction || { item: { /* no-op */ } };
+      action.addChatItemAction.item = action.addChatItemAction.item || { /* no-op */ };
       action.addChatItemAction.item.liveChatTextMessageRenderer = paidRenderer;
       return;
     }
@@ -122,7 +122,7 @@ export function ensureTextMessageRenderer(comment: any): void {
 
 export function formatChatRuns(
   runs: any[],
-  options: FormatChatRunsOptions = {}
+  options: FormatChatRunsOptions = { /* no-op */ }
 ): FormatChatRunsResult {
   const result: FormatChatRunsResult = {
     fullText: '',

@@ -65,8 +65,7 @@ export class YouTubeApiService {
       if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
         const token = event.data.token;
         this.capturedPotToken = token;
-        logger.debug('YouTubeApiService received POT token via message:', token);
-        if (this.potTokenResolver) {
+                if (this.potTokenResolver) {
           this.potTokenResolver(token);
         }
       }
@@ -90,8 +89,7 @@ export class YouTubeApiService {
       return this.capturedPotToken;
     }
 
-    logger.debug('Waiting for POT token... sending request to main world.');
-    window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
+        window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
 
     let timeoutHandle: NodeJS.Timeout;
     const timeoutPromise = new Promise<undefined>((resolve) => {
@@ -320,7 +318,7 @@ export class YouTubeApiService {
       logger.warn('SAPISID auth header not available. Some Innertube requests may fail.');
     }
 
-    const normalizedHeaders: Record<string, string> = {};
+    const normalizedHeaders: Record<string, string> = { /* no-op */ };
     Object.entries(headers).forEach(([key, value]) => {
       if (value) {
         normalizedHeaders[key] = value;
@@ -332,8 +330,8 @@ export class YouTubeApiService {
 
   public async fetchFromApi<T>({
     endpoint,
-    queryParams = {},
-    body = {},
+    queryParams = { /* no-op */ },
+    body = { /* no-op */ },
     method = 'POST',
     signal,
   }: YouTubeApiOptions): Promise<T> {
@@ -546,8 +544,7 @@ export class YouTubeApiService {
           channelTitle: snippet.channelTitle,
           publishedAt: snippet.publishedAt,
         };
-        logger.info('Fetched video details:', details);
-        return details;
+                return details;
       }
       logger.warn('No video details found for videoId:', videoId);
       return null;

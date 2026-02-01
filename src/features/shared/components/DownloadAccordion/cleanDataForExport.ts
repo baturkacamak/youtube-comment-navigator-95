@@ -5,7 +5,7 @@ import { Comment } from '../../../../types/commentTypes';
  * Removes internal UI state, redundant fields, and sensitive/opaque tokens
  */
 export const cleanCommentForExport = (comment: any): Partial<Comment> => {
-  if (!comment) return {};
+  if (!comment) return { /* no-op */ };
 
   const commentCopy = { ...comment };
 

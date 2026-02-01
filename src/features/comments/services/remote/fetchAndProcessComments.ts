@@ -198,8 +198,7 @@ export const fetchAndProcessComments = async (
   try {
     // Check if operation is already aborted before starting
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted before starting.');
-      throw new DOMException('Fetch aborted', 'AbortError');
+            throw new DOMException('Fetch aborted', 'AbortError');
     }
 
     // Retrieve existing comment count and determine if this is a fresh video
@@ -209,18 +208,14 @@ export const fetchAndProcessComments = async (
     if (isFreshVideo) {
       markVideoAsFresh(videoId);
     }
-    logger.debug(
-      `Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`
-    );
-
+    
     performanceMonitor.start('Network Fetch (Main)');
     const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
     performanceMonitor.end('Network Fetch (Main)');
 
     // Check if operation was aborted during fetch
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted during data retrieval.');
-      throw new DOMException('Fetch aborted', 'AbortError');
+            throw new DOMException('Fetch aborted', 'AbortError');
     }
 
     const continuationToken = extractContinuationToken(
@@ -237,8 +232,7 @@ export const fetchAndProcessComments = async (
 
     // Check if operation was aborted before database transaction
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted before database transaction.');
-      throw new DOMException('Fetch aborted', 'AbortError');
+            throw new DOMException('Fetch aborted', 'AbortError');
     }
 
     // Insert comments into IndexedDB
@@ -260,10 +254,7 @@ export const fetchAndProcessComments = async (
 
       // Log buffering status
       const buffered = getBufferSize(videoId);
-      logger.debug(
-        `Buffered ${insertedCount} comments (total buffered: ${buffered}, flushed: ${flushed})`
-      );
-    } else {
+          } else {
       // Direct mode: Write immediately to IndexedDB
       await db.transaction('rw', db.comments, async () => {
         await upsertComments(mainProcessedData.items, skipLookup);
@@ -311,8 +302,7 @@ export const fetchAndProcessComments = async (
     };
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      logger.info('Fetch operation was aborted.');
-      throw err; // Re-throw AbortError to be caught by the caller
+            throw err; // Re-throw AbortError to be caught by the caller
     }
     logger.error('Failed to fetch and process comments:', err);
     logger.end('fetchAndProcessComments');
@@ -358,8 +348,7 @@ async function fetchRepliesAndProcess(
   try {
     // Check if already aborted
     if (signal.aborted) {
-      logger.info('Reply processing was aborted before starting.');
-      throw new DOMException('Reply processing aborted', 'AbortError');
+            throw new DOMException('Reply processing aborted', 'AbortError');
     }
 
     performanceMonitor.start('Network Fetch (Replies)');
@@ -367,14 +356,12 @@ async function fetchRepliesAndProcess(
     performanceMonitor.end('Network Fetch (Replies)');
 
     if (signal.aborted) {
-      logger.info('Reply processing was aborted after fetching replies.');
-      throw new DOMException('Reply processing aborted', 'AbortError');
+            throw new DOMException('Reply processing aborted', 'AbortError');
     }
 
     if (replies && replies.length > 0) {
       const BATCH_SIZE = BATCH_CONFIG.REPLY_BATCH_SIZE;
-      logger.debug(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
-
+      
       performanceMonitor.start(`Process & Save Replies (${replies.length})`);
 
       // Process all batches in a single transaction
@@ -411,18 +398,12 @@ async function fetchRepliesAndProcess(
         dispatch(setTotalCommentsCount(localCommentCount));
       }
 
-      logger.debug(
-        `Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`
-      );
-
+      
       performanceMonitor.end(`Process & Save Replies (${replies.length})`);
-    } else {
-      logger.debug('No replies to process.');
-    }
+    } else { /* no-op */ }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      logger.info('Reply processing was aborted.');
-      throw error; // Rethrow to be caught by caller
+            throw error; // Rethrow to be caught by caller
     } else {
       logger.error('Error processing replies:', error);
     }

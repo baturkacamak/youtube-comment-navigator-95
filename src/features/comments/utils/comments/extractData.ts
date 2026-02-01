@@ -5,7 +5,7 @@ type ExtractPaths = string[][];
 export const extractData = (
   data: any,
   paths: ExtractPaths,
-  options: ExtractOptions = {}
+  options: ExtractOptions = { /* no-op */ }
 ): any[] => {
   const { defaultValue } = options;
   const results: any[] = [];
@@ -26,7 +26,7 @@ export const extractData = (
   return results;
 };
 
-export const deepExtractData = (data: any, path: string, options: ExtractOptions = {}): any => {
+export const deepExtractData = (data: any, path: string, options: ExtractOptions = { /* no-op */ }): any => {
   const { defaultValue } = options;
 
   const traverse = (obj: any, keys: string[]): any => {

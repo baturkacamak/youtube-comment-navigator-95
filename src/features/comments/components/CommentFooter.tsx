@@ -62,10 +62,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
                   videoId,
                   comment.commentId
                 );
-                logger.debug(
-                  `[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`
-                );
-                return replies;
+                                return replies;
               } catch (_error) {
                 logger.error(
                   `[RepliesHover] Error fetching replies for comment: ${comment.commentId}`,
@@ -80,22 +77,13 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             onResult: (result) => {
               try {
                 if (!result || result.length === 0) {
-                  logger.debug(
-                    `[RepliesHover] No result returned for comment: ${comment.commentId}`
-                  );
-                  return;
+                                    return;
                 }
                 // Cache the fetched replies instead of dispatching
-                logger.debug(
-                  `[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`
-                );
-                cacheFetchedReplies(result);
+                                cacheFetchedReplies(result);
                 // Emit event that replies are loaded
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
-                logger.debug(
-                  `[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`
-                );
-              } catch (error) {
+                              } catch (error) {
                 logger.error(
                   `[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`,
                   error

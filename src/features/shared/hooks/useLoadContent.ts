@@ -95,21 +95,16 @@ const useLoadContent = (bypassCache = false) => {
       if (!bypassCache) {
         const exists = await hasLiveChatMessages(videoId);
         if (exists) {
-          logger.info('[useLoadContent] Live chat already exists in DB, skipping fetch');
-          dispatch(setLiveChatLoading(false));
+                    dispatch(setLiveChatLoading(false));
           return;
         }
       }
 
       // If bypassing cache, clean existing data
       if (bypassCache) {
-        logger.info('[useLoadContent] Bypassing cache - cleaning existing live chat data');
-        const deletedMessages = await deleteLiveChatMessages(videoId);
+                const deletedMessages = await deleteLiveChatMessages(videoId);
         const deletedReplies = await deleteLiveChatReplies(videoId);
-        logger.info(
-          `[useLoadContent] Cleaned ${deletedMessages} messages and ${deletedReplies} replies`
-        );
-      }
+              }
 
       // Fetch live chat
       const controller = new AbortController();
@@ -136,8 +131,7 @@ const useLoadContent = (bypassCache = false) => {
 
   const loadAll = async () => {
     dispatch(setIsLoading(true));
-    logger.info('[useLoadContent] Loading all content (comments, transcript, live chat)');
-
+    
     // Load all content in parallel
     await Promise.allSettled([loadComments(bypassCache), loadTranscript(), loadLiveChat()]);
 

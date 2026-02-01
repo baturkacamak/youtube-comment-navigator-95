@@ -36,9 +36,9 @@ vi.mock('../../shared/utils/logger', () => ({
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+  observe() { /* no-op */ }
+  unobserve() { /* no-op */ }
+  disconnect() { /* no-op */ }
 } as any;
 
 // Helper to update AutoSizer mock dimensions
@@ -77,7 +77,7 @@ vi.mock('react-window', () => ({
     return (
       <div data-testid="virtual-list">
         {Array.from({ length: itemCount }).map((_, index) => (
-          <div key={index}>{children({ index, style: {} })}</div>
+          <div key={index}>{children({ index, style: { /* no-op */ } })}</div>
         ))}
       </div>
     );
@@ -89,15 +89,15 @@ vi.mock('./CommentItem', () => ({
   default: ({ comment }: any) => <div data-testid="comment-item">{comment.content}</div>,
 }));
 
-const createMockStore = (preloadedState = {}) => {
+const createMockStore = (preloadedState = { /* no-op */ }) => {
   return configureStore({
     reducer: {
-      filters: (state = {}) => state,
+      filters: (state = { /* no-op */ }) => state,
       searchKeyword: (state = '') => state,
       // Add other reducers if needed by useSelector
     },
     preloadedState: {
-      filters: {},
+      filters: { /* no-op */ },
       searchKeyword: '',
       ...preloadedState,
     },

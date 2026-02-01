@@ -10,6 +10,5 @@ export const seekVideo = (seconds: number) => {
     return;
   }
 
-  logger.info(`Sending seek command for ${seconds}s`);
-  window.postMessage({ type: 'YCN_SEEK_TO', seconds }, '*');
+    window.postMessage({ type: 'YCN_SEEK_TO', seconds }, '*');
 };

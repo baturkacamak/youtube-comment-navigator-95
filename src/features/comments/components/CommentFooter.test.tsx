@@ -34,7 +34,7 @@ vi.mock('../../shared/components/Tooltip', () => ({
 
 vi.mock('../../shared/utils/hoverAction', () => ({
   default: class {
-    destroy() {}
+    destroy() { /* no-op */ }
   },
 }));
 
@@ -53,7 +53,7 @@ vi.mock('../../shared/utils/logger', () => ({
 
 vi.mock('../../shared/utils/database/database', () => ({
   db: {
-    comments: {},
+    comments: { /* no-op */ },
   },
 }));
 

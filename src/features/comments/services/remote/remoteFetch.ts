@@ -36,8 +36,7 @@ function abortAllOngoingOperations() {
   try {
     currentAbortController.abort();
     currentAbortController = new AbortController();
-    logger.info('All ongoing operations aborted.');
-  } catch (error) {
+      } catch (error) {
     logger.error('Failed to abort ongoing operations:', error);
   }
 }
@@ -51,8 +50,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     isLocalEnvironment() &&
     (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ) {
-    logger.info('[RemoteFetch] Local environment detected. Redirecting to Mock Data Seeder.');
-    await seedMockData(dispatch);
+        await seedMockData(dispatch);
     return;
   }
 
@@ -65,15 +63,12 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
     const windowObj = window as any;
 
-    if (videoId) {
-      logger.debug(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
-    }
+    if (videoId) { /* no-op */ }
 
     // Clean up previous video's accumulator if switching videos
     if (currentVideoId && currentVideoId !== videoId) {
       await cleanupVideoAccumulator(currentVideoId, true);
-      logger.info(`Cleaned up accumulator for previous video: ${currentVideoId}`);
-    }
+          }
     currentVideoId = videoId;
 
     // Reset local comment count for new video or when bypassing cache
@@ -84,8 +79,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
       await clearContinuationToken(videoId);
       // Delete all existing comments for this video to start fresh
       await deleteCommentsFromDb(videoId);
-      logger.info(`Bypassing cache and starting fresh download for ${videoId}`);
-    }
+          }
 
     // Note: Live chat is now fetched independently by the LiveChatList component
     // This avoids duplicate fetches and allows better control over when to load live chat
@@ -119,8 +113,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
     // Handle signal abort at the top level
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted before completion.');
-      dispatch(setIsLoading(false));
+            dispatch(setIsLoading(false));
       return;
     }
 
@@ -132,15 +125,12 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         await waitForReplyProcessing();
         // Check if aborted again after waiting for replies
         if (signal.aborted) {
-          logger.info('Operation aborted after waiting for reply processing.');
-          dispatch(setIsLoading(false));
+                    dispatch(setIsLoading(false));
           return;
         }
         await loadInitialComments(videoId, dispatch);
       } catch (e) {
-        if ((e as Error)?.name === 'AbortError') {
-          logger.info('Reply wait operation was aborted.');
-        } else {
+        if ((e as Error)?.name === 'AbortError') { /* no-op */ } else {
           logger.error('Error waiting for reply processing:', e);
         }
       }
@@ -151,8 +141,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     dispatch(setIsLoading(false));
 
     if ((error as Error)?.name === 'AbortError') {
-      logger.info('Fetch operation was aborted.');
-      throw error; // Re-throw AbortError to signal cancellation
+            throw error; // Re-throw AbortError to signal cancellation
     } else {
       const err = error as Error;
       logger.error('Error fetching comments from remote:', {
@@ -180,8 +169,7 @@ async function waitForReplyProcessing(): Promise<void> {
 
     // Check for abort signal
     if (currentAbortController.signal.aborted) {
-      logger.info('Reply wait operation aborted.');
-      throw new DOMException('Reply wait aborted', 'AbortError');
+            throw new DOMException('Reply wait aborted', 'AbortError');
     }
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -200,11 +188,11 @@ async function loadInitialComments(videoId: string, dispatch: any): Promise<void
       PAGINATION.DEFAULT_PAGE_SIZE,
       'date',
       'desc',
-      {},
+      { /* no-op */ },
       '',
       { excludeLiveChat: true }
     );
-    const totalCount = await countComments(db.comments, videoId, {}, '', { excludeLiveChat: true });
+    const totalCount = await countComments(db.comments, videoId, { /* no-op */ }, '', { excludeLiveChat: true });
     dispatch(setTotalCommentsCount(totalCount));
     logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
     dispatch(setComments(initialComments));
@@ -249,8 +237,7 @@ async function iterateFetchComments(
       try {
         // Check if operation has been aborted
         if (signal.aborted) {
-          logger.info('Fetch comments iteration aborted.');
-          throw new DOMException('Fetch aborted', 'AbortError');
+                    throw new DOMException('Fetch aborted', 'AbortError');
         }
 
         const result: FetchAndProcessResult = await fetchAndProcessComments(
@@ -269,8 +256,7 @@ async function iterateFetchComments(
         }
       } catch (e) {
         if ((e as any)?.name === 'AbortError') {
-          logger.info('Fetch operation aborted during iteration.');
-          throw e;
+                    throw e;
         }
         const err = e as Error;
         logger.error('Error during comment fetch iteration:', {
@@ -286,9 +272,7 @@ async function iterateFetchComments(
     // Always flush any buffered comments when iteration ends (success, error, or abort)
     try {
       const flushed = await flushBufferedComments(videoId);
-      if (flushed > 0) {
-        logger.info(`Flushed ${flushed} remaining buffered comments after fetch iteration`);
-      }
+      if (flushed > 0) { /* no-op */ }
     } catch (flushError) {
       logger.error('Error flushing buffered comments:', flushError);
     }
@@ -305,8 +289,7 @@ async function deleteCommentsIfFreshFetch(
   if (!localToken) {
     try {
       await deleteCommentsFromDb(videoId);
-      logger.info(`Deleted existing comments for ${videoId}`);
-    } catch (e) {
+          } catch (e) {
       logger.error('Failed to delete existing comments before fetch:', e);
     }
   }

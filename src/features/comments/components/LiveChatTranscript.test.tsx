@@ -42,7 +42,7 @@ describe('LiveChatTranscript', () => {
   const mockMessages = [
     { messageId: '1', author: 'User1', message: 'Hello', videoOffsetTimeSec: 10 },
     { messageId: '2', author: 'User2', message: 'World', videoOffsetTimeSec: 20 },
-  ];
+  ] as any[];
 
   it('renders loading state when empty and loading', () => {
     render(<LiveChatTranscript messages={[]} isLoading={true} />);

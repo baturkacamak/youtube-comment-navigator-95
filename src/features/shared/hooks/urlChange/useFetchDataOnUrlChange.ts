@@ -39,18 +39,13 @@ const useFetchDataOnUrlChange = () => {
   const { showToast } = useToast();
 
   useDetectUrlChange(async () => {
-    logger.info('[useFetchDataOnUrlChange] URL Change Detected');
-    dispatch(resetState());
+        dispatch(resetState());
 
     const isLocal = isLocalEnvironment();
     const hostname = window.location.hostname;
-    logger.info(
-      `[useFetchDataOnUrlChange] Environment check: isLocal=${isLocal}, hostname=${hostname}`
-    );
-
+    
     if (isLocal && (hostname === 'localhost' || hostname === '127.0.0.1')) {
-      logger.info('[useFetchDataOnUrlChange] Triggering Mock Data Seeder');
-      await seedMockData(dispatch);
+            await seedMockData(dispatch);
       return;
     }
 
@@ -129,8 +124,7 @@ const fetchAndSetLiveChat = async (
 ) => {
   const videoId = extractVideoId();
   if (!videoId) {
-    logger.debug('[useFetchDataOnUrlChange] No videoId found for live chat');
-    return;
+        return;
   }
 
   try {
@@ -138,10 +132,7 @@ const fetchAndSetLiveChat = async (
     const existingMessages = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
     if (existingMessages > 0) {
-      logger.info(
-        `[useFetchDataOnUrlChange] Live chat already exists (${existingMessages} messages), skipping fetch`
-      );
-      return;
+            return;
     }
 
     // Fetch live chat in background (don't block other loads)

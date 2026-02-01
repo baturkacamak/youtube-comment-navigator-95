@@ -123,20 +123,17 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
     if (!videoId) {
       videoId = extractYouTubeVideoIdFromUrl();
     }
-    logger.info(`[fetchContinuationTokenFromRemote] Starting for video: ${videoId}`);
-
+    
     // --- Step 1: Fetch Video Details (Initial Page Data) ---
     const videoDetailsResponse = await youtubeApi.fetchNext({
       videoId: videoId,
     });
 
-    logger.debug('[fetchContinuationTokenFromRemote] Step 1 response received.');
-
+    
     // Attempt to find the "Comments Token" directly (rare, but possible on some layouts)
     let finalToken = extractCommentsToken(videoDetailsResponse, 1);
     if (finalToken) {
-      logger.info('[fetchContinuationTokenFromRemote] Found comments token directly in Step 1.');
-      return finalToken;
+            return finalToken;
     }
 
     // --- Step 2: Find the "Section Token" to load the comment panel ---
@@ -149,18 +146,14 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
       return '';
     }
 
-    logger.info(
-      `[fetchContinuationTokenFromRemote] Found Section Token: ${sectionToken.substring(0, 20)}...`
-    );
-
+    
     // --- Step 3: Fetch the Comment Section ---
     const commentSectionResponse = await youtubeApi.fetchNext({
       continuationToken: sectionToken,
       videoId: videoId, // Pass videoId for context
     });
 
-    logger.debug('[fetchContinuationTokenFromRemote] Step 3 response received.');
-
+    
     // --- Step 4: Extract the actual "Comments Token" (continuation) ---
     // By default, we look for the "Top Comments" (index 0) or "Newest" (index 1) based on user pref.
     // For initialization, usually index 0 is fine.
@@ -173,10 +166,7 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
       return '';
     }
 
-    logger.info(
-      `[fetchContinuationTokenFromRemote] Successfully retrieved Final Token: ${finalToken.substring(0, 20)}...`
-    );
-    return finalToken;
+        return finalToken;
   } catch (error) {
     logger.error('[fetchContinuationTokenFromRemote] Critical failure:', error);
     return '';

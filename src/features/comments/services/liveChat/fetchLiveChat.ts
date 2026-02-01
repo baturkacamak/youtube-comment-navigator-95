@@ -21,11 +21,9 @@ export const fetchAndProcessLiveChat = async (
     const ytInitialData = windowObj.ytInitialData;
     const continuationResult = extractLiveChatContinuation(ytInitialData);
 
-    logger.info(`[LiveChat] Continuation extraction result:`, continuationResult);
-
+    
     if (!continuationResult.continuationData) {
-      logger.info('No live chat continuation found. This might not be a live stream or replay.');
-      throw new Error('Live chat replay not available for this video');
+            throw new Error('Live chat replay not available for this video');
     }
 
     const continuationData = continuationResult.continuationData;
@@ -40,10 +38,7 @@ export const fetchAndProcessLiveChat = async (
       continuationResult.continuationType === 'replay' ||
       continuationResult.continuationType === 'playerSeek';
 
-    logger.info(
-      `Starting live chat fetch with continuation: ${continuation.substring(0, 20)}..., isReplay: ${isReplayMode}, type: ${continuationResult.continuationType}`
-    );
-
+    
     // Initial fetch to determine mode
     let initialResponse: any;
     try {
@@ -90,16 +85,14 @@ export const fetchAndProcessLiveChat = async (
       initialResponse?.continuationContents?.liveChatContinuation?.continuations;
     const actions = initialResponse?.continuationContents?.liveChatContinuation?.actions;
 
-    logger.debug(`[LiveChat] Initial response continuations:`, continuations);
-    if (!initialResponse?.continuationContents?.liveChatContinuation) {
+        if (!initialResponse?.continuationContents?.liveChatContinuation) {
       logger.warn(
         '[LiveChat] Initial response missing liveChatContinuation payload:',
         initialResponse
       );
     }
     if (actions) {
-      logger.info(`[LiveChat] Initial batch has ${actions.length} actions.`);
-      await saveActions(actions, videoId);
+            await saveActions(actions, videoId);
     }
 
     // Try to find playerSeekContinuationData (new replay API)
@@ -116,12 +109,10 @@ export const fetchAndProcessLiveChat = async (
     // but usually the response gives us the NEXT token.
 
     if (playerSeekData) {
-      logger.info('[LiveChat] Mode: PlayerSeek (New API)');
-      const nextContinuation = { continuation: playerSeekData.continuation };
+            const nextContinuation = { continuation: playerSeekData.continuation };
       await processPlayerSeekLoop(nextContinuation, videoId, signal);
     } else if (liveChatReplayData) {
-      logger.info('[LiveChat] Mode: Fallback (Old API)');
-      const nextContinuation = { continuation: liveChatReplayData.continuation };
+            const nextContinuation = { continuation: liveChatReplayData.continuation };
       await processFallbackLoop(nextContinuation, videoId, signal);
     } else if (
       continuationResult.continuationType === 'playerSeek' &&
@@ -143,18 +134,12 @@ export const fetchAndProcessLiveChat = async (
         (c: any) => c.timedContinuationData
       )?.timedContinuationData;
 
-      if (invalidationContinuation || timedContinuation) {
-        logger.info(
-          '[LiveChat] Detected Live Stream (not replay). Fetching live... (Not fully implemented yet)'
-        );
-      } else {
+      if (invalidationContinuation || timedContinuation) { /* no-op */ } else {
         logger.warn('[LiveChat] No known continuation type found. Stopping.', continuations);
       }
     }
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'AbortError') {
-      logger.info('Live chat fetch aborted.');
-    } else {
+    if (e instanceof DOMException && e.name === 'AbortError') { /* no-op */ } else {
       logger.error('Error fetching live chat:', e);
     }
   } finally {
@@ -168,13 +153,11 @@ export const fetchAndProcessLiveChat = async (
  */
 async function saveActions(actions: any[], videoId: string) {
   if (!actions || actions.length === 0) {
-    logger.debug('[LiveChat] No actions to save.');
-    return;
+        return;
   }
 
   try {
-    logger.debug(`[LiveChat] Processing ${actions.length} raw actions...`);
-    const processedData = processLiveChatActions(actions, { currentVideoId: videoId });
+        const processedData = processLiveChatActions(actions, { currentVideoId: videoId });
 
     // Log any parsing errors
     if (processedData.errors.length > 0) {
@@ -254,8 +237,7 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
       break;
     }
     // Log every 5 loops to avoid spam, or strictly debug
-    if (loopCount % 5 === 0)
-      logger.debug(`[LiveChat] Loop ${loopCount}, Offset: ${currentOffsetTimeMsec}ms`);
+    
 
     const params = {
       continuation: token.continuation,
@@ -287,22 +269,15 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
 
         if (lastOffsetTime !== undefined) {
           if (currentOffsetTimeMsec === lastOffsetTime) {
-            logger.info(
-              `[LiveChat] Loop ${loopCount}: Offset unchanged (${lastOffsetTime}). Stopping.`
-            );
-            break;
+                        break;
           }
           currentOffsetTimeMsec = lastOffsetTime;
         }
         emptyActionLoops = 0;
       } else {
-        logger.debug(`[LiveChat] Loop ${loopCount}: No actions in response.`);
-        emptyActionLoops += 1;
+                emptyActionLoops += 1;
         if (emptyActionLoops >= maxEmptyActionLoops) {
-          logger.info(
-            `[LiveChat] Loop ${loopCount}: No actions for ${maxEmptyActionLoops} loops. Stopping.`
-          );
-          break;
+                    break;
         }
       }
 
@@ -314,8 +289,7 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
       if (playerSeekData) {
         token = { continuation: playerSeekData.continuation };
       } else {
-        logger.info(`[LiveChat] Loop ${loopCount}: No playerSeekContinuationData found. Stopping.`);
-        break;
+                break;
       }
     } catch (loopError) {
       logger.error(`[LiveChat] Loop error at offset ${currentOffsetTimeMsec}:`, loopError);
@@ -340,7 +314,7 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
       logger.warn(`[LiveChat] Fallback loop reached max iterations (${maxLoopCount}). Stopping.`);
       break;
     }
-    if (loopCount % 5 === 0) logger.debug(`[LiveChat] Fallback Loop ${loopCount}`);
+    
 
     try {
       const response = await youtubeApi.fetchLiveChat({
@@ -356,10 +330,7 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
       } else {
         emptyActionLoops += 1;
         if (emptyActionLoops >= maxEmptyActionLoops) {
-          logger.info(
-            `[LiveChat] Fallback loop ${loopCount}: No actions for ${maxEmptyActionLoops} loops. Stopping.`
-          );
-          break;
+                    break;
         }
       }
 
@@ -371,10 +342,7 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
       if (nextContinuation) {
         token = { continuation: nextContinuation.continuation };
       } else {
-        logger.info(
-          `[LiveChat] Fallback Loop ${loopCount}: No liveChatReplayContinuationData found. Stopping.`
-        );
-        break;
+                break;
       }
     } catch (loopError) {
       logger.error(`[LiveChat] Fallback loop error:`, loopError);

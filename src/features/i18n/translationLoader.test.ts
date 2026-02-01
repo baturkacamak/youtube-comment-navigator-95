@@ -128,7 +128,7 @@ describe('Translation Loading - Context Isolation', () => {
     });
 
     it('should handle empty translation objects', () => {
-      window.__YCN_TRANSLATIONS__ = { en: {} };
+      window.__YCN_TRANSLATIONS__ = { en: { /* no-op */ } };
 
       expect(window.__YCN_TRANSLATIONS__?.en).toBeDefined();
       expect(Object.keys(window.__YCN_TRANSLATIONS__!.en)).toHaveLength(0);
@@ -157,7 +157,7 @@ describe('Translation Loading - Error Handling', () => {
   });
 
   it('should handle missing translations gracefully', () => {
-    window.__YCN_TRANSLATIONS__ = {};
+    window.__YCN_TRANSLATIONS__ = { /* no-op */ };
 
     // Accessing non-existent language should not throw
     const translations = window.__YCN_TRANSLATIONS__?.nonexistent;
@@ -196,7 +196,7 @@ describe('Translation Loading - Full Flow Simulation', () => {
     const loadAndInjectLanguage = (language: string, translations: Record<string, string>) => {
       // Step 1: Store translations in content script context
       if (!window.__YCN_TRANSLATIONS__) {
-        window.__YCN_TRANSLATIONS__ = {};
+        window.__YCN_TRANSLATIONS__ = { /* no-op */ };
       }
       window.__YCN_TRANSLATIONS__[language] = translations;
 
@@ -225,7 +225,7 @@ describe('Translation Loading - Full Flow Simulation', () => {
 
     const loadLanguage = (lang: string, translations: Record<string, string>) => {
       if (!window.__YCN_TRANSLATIONS__) {
-        window.__YCN_TRANSLATIONS__ = {};
+        window.__YCN_TRANSLATIONS__ = { /* no-op */ };
       }
       window.__YCN_TRANSLATIONS__[lang] = translations;
       languageHistory.push(lang);
@@ -328,7 +328,7 @@ describe('Translation Loading - Message Event Structure', () => {
 
     expect(isValidLanguagePayload({ language: 'en' })).toBe(true);
     expect(isValidLanguagePayload({ language: '' })).toBe(true);
-    expect(isValidLanguagePayload({})).toBe(false);
+    expect(isValidLanguagePayload({ /* no-op */ })).toBe(false);
     expect(isValidLanguagePayload(null)).toBe(false);
     expect(isValidLanguagePayload({ lang: 'en' })).toBe(false);
   });

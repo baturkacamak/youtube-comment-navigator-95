@@ -22,7 +22,7 @@ export const debounce = <T extends (...args: any[]) => void>(func: T, wait: numb
 export const throttle = <T extends (...args: any[]) => void>(
   func: T,
   wait: number,
-  options: { leading?: boolean; trailing?: boolean } = {}
+  options: { leading?: boolean; trailing?: boolean } = { /* no-op */ }
 ): ((...args: Parameters<T>) => void) & { cancel: () => void } => {
   let timeout: ReturnType<typeof setTimeout> | null = null;
   let lastArgs: Parameters<T> | null = null;

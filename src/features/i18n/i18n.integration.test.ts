@@ -66,7 +66,7 @@ describe('i18n Integration', () => {
 
         // Simulate loading translations
         if (!window.__YCN_TRANSLATIONS__) {
-          window.__YCN_TRANSLATIONS__ = {};
+          window.__YCN_TRANSLATIONS__ = { /* no-op */ };
         }
         window.__YCN_TRANSLATIONS__[language] =
           mockTranslations[language as keyof typeof mockTranslations];
@@ -111,7 +111,7 @@ describe('i18n Integration', () => {
         if (!supportedLanguages.includes(language)) return false;
 
         if (!window.__YCN_TRANSLATIONS__) {
-          window.__YCN_TRANSLATIONS__ = {};
+          window.__YCN_TRANSLATIONS__ = { /* no-op */ };
         }
         window.__YCN_TRANSLATIONS__[language] =
           mockTranslations[language as keyof typeof mockTranslations];
@@ -181,7 +181,7 @@ describe('i18n Integration', () => {
 
       const storeTranslations = (lang: string, translations: Record<string, string>) => {
         if (!window.__YCN_TRANSLATIONS__) {
-          window.__YCN_TRANSLATIONS__ = {};
+          window.__YCN_TRANSLATIONS__ = { /* no-op */ };
         }
         window.__YCN_TRANSLATIONS__[lang] = translations;
       };
@@ -202,7 +202,7 @@ describe('i18n Integration', () => {
     });
 
     it('should not lose translations on subsequent operations', () => {
-      window.__YCN_TRANSLATIONS__ = {};
+      window.__YCN_TRANSLATIONS__ = { /* no-op */ };
 
       // Add first language
       window.__YCN_TRANSLATIONS__.en = mockTranslations.en;
@@ -237,7 +237,7 @@ describe('i18n Integration', () => {
       expect(isValidLanguageLoaded({ type: 'LANGUAGE_LOADED', payload: { language: '' } })).toBe(
         false
       );
-      expect(isValidLanguageLoaded({ type: 'LANGUAGE_LOADED', payload: {} })).toBe(false);
+      expect(isValidLanguageLoaded({ type: 'LANGUAGE_LOADED', payload: { /* no-op */ } })).toBe(false);
       expect(isValidLanguageLoaded({ type: 'OTHER_TYPE', payload: { language: 'en' } })).toBe(
         false
       );
@@ -257,7 +257,7 @@ describe('i18n Integration', () => {
       expect(isValidChangeLanguage({ type: 'CHANGE_LANGUAGE', payload: { language: 'de' } })).toBe(
         true
       );
-      expect(isValidChangeLanguage({ type: 'CHANGE_LANGUAGE', payload: {} })).toBe(false);
+      expect(isValidChangeLanguage({ type: 'CHANGE_LANGUAGE', payload: { /* no-op */ } })).toBe(false);
       expect(isValidChangeLanguage({ type: 'LANGUAGE_LOADED', payload: { language: 'de' } })).toBe(
         false
       );
@@ -271,7 +271,7 @@ describe('i18n Integration', () => {
 
       // Simulate page context (where inject-translations.js used to run)
       const pageContextWindow = {
-        __YCN_TRANSLATIONS__: {} as Record<string, Record<string, string>>,
+        __YCN_TRANSLATIONS__: { /* no-op */ } as Record<string, Record<string, string>>,
       };
 
       // Simulate content script context (where i18n.ts runs)
@@ -298,7 +298,7 @@ describe('i18n Integration', () => {
 
       // Content script stores (simulated by content.tsx)
       if (!window.__YCN_TRANSLATIONS__) {
-        window.__YCN_TRANSLATIONS__ = {};
+        window.__YCN_TRANSLATIONS__ = { /* no-op */ };
       }
       window.__YCN_TRANSLATIONS__.en = mockTranslations.en;
 
@@ -325,7 +325,7 @@ describe('i18n Integration', () => {
         }
 
         if (!window.__YCN_TRANSLATIONS__) {
-          window.__YCN_TRANSLATIONS__ = {};
+          window.__YCN_TRANSLATIONS__ = { /* no-op */ };
         }
         window.__YCN_TRANSLATIONS__[language] =
           mockTranslations[language as keyof typeof mockTranslations];
@@ -355,7 +355,7 @@ describe('i18n Integration', () => {
 
       expect(processMessage({ type: 'LANGUAGE_LOADED', payload: { language: 'en' } })).toBe('en');
       expect(processMessage({ type: 'LANGUAGE_LOADED' })).toBeNull();
-      expect(processMessage({ type: 'LANGUAGE_LOADED', payload: {} })).toBeNull();
+      expect(processMessage({ type: 'LANGUAGE_LOADED', payload: { /* no-op */ } })).toBeNull();
       expect(processMessage(null)).toBeNull();
     });
   });

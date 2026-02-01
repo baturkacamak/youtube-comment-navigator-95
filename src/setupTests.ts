@@ -27,7 +27,7 @@ global.ResizeObserver = class ResizeObserver {
             right: 0,
             x: 0,
             y: 0,
-            toJSON: () => {},
+            toJSON: () => { /* no-op */ },
           },
           borderBoxSize: [],
           contentBoxSize: [],
@@ -38,6 +38,6 @@ global.ResizeObserver = class ResizeObserver {
     );
   }
 
-  unobserve() {}
-  disconnect() {}
+  unobserve() { /* no-op */ }
+  disconnect() { /* no-op */ }
 };

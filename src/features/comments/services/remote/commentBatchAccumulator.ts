@@ -40,8 +40,7 @@ function getAccumulator(videoId: string, isFresh: boolean = false): AccumulatorS
       totalFlushed: 0,
     };
     accumulators.set(videoId, acc);
-    logger.debug(`[BatchAccumulator] Created accumulator for video ${videoId} (fresh: ${isFresh})`);
-  }
+      }
   return acc;
 }
 
@@ -110,7 +109,7 @@ export async function accumulateComments(
   options: {
     batchSize?: number;
     isFresh?: boolean;
-  } = {}
+  } = { /* no-op */ }
 ): Promise<number> {
   const { batchSize = DEFAULT_BATCH_SIZE, isFresh = false } = options;
 
@@ -119,15 +118,11 @@ export async function accumulateComments(
   const acc = getAccumulator(videoId, isFresh);
   acc.buffer.push(...comments);
 
-  logger.debug(
-    `[BatchAccumulator] Added ${comments.length} comments to buffer. Total buffered: ${acc.buffer.length}`
-  );
-
+  
   // IMMEDIATE FLUSH: Show first batch immediately so users don't stare at empty screen
   // This ensures good UX while still batching subsequent fetches for performance
   if (acc.totalFlushed === 0) {
-    logger.debug(`[BatchAccumulator] First batch - flushing immediately for instant display`);
-    return await flushAccumulator(videoId);
+        return await flushAccumulator(videoId);
   }
 
   // Auto-flush if buffer reaches threshold
@@ -158,8 +153,7 @@ export async function flushAccumulator(
   const count = commentsToFlush.length;
   acc.buffer = [];
 
-  logger.debug(`[BatchAccumulator] Flushing ${count} comments to IndexedDB for video ${videoId}`);
-
+  
   try {
     await db.transaction('rw', db.comments, async () => {
       // Use skipLookup for the first flush of a fresh video
@@ -226,8 +220,7 @@ export async function clearAccumulator(videoId: string, flush: boolean = true): 
     await flushAccumulator(videoId);
   }
   accumulators.delete(videoId);
-  logger.debug(`[BatchAccumulator] Cleared accumulator for video ${videoId}`);
-}
+  }
 
 /**
  * Clear all accumulators.
@@ -244,5 +237,4 @@ export async function clearAllAccumulators(flush: boolean = true): Promise<void>
     await Promise.all(flushPromises);
   }
   accumulators.clear();
-  logger.debug('[BatchAccumulator] Cleared all accumulators');
-}
+  }

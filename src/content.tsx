@@ -51,7 +51,7 @@ class PubSub {
   events: Record<string, EventCallback[]>;
 
   constructor() {
-    this.events = {};
+    this.events = { /* no-op */ };
   }
 
   subscribe(event: string, callback: EventCallback) {
@@ -166,7 +166,7 @@ class YouTubeCommentNavigator {
     const applyInitialTheme = () => {
       try {
         const savedSettings = localStorage.getItem('settings');
-        const settings = savedSettings ? JSON.parse(savedSettings) : {};
+        const settings = savedSettings ? JSON.parse(savedSettings) : { /* no-op */ };
         const theme = settings.theme || localStorage.getItem('theme') || 'light';
         const isDark = theme === 'dark';
         document.documentElement.classList.toggle('dark', isDark);
@@ -284,7 +284,7 @@ class YouTubeCommentNavigator {
     const translations = await response.json();
 
     if (!window.__YCN_TRANSLATIONS__) {
-      window.__YCN_TRANSLATIONS__ = {};
+      window.__YCN_TRANSLATIONS__ = { /* no-op */ };
     }
     window.__YCN_TRANSLATIONS__[language] = translations;
 
@@ -336,7 +336,7 @@ window.addEventListener('message', (event: MessageEvent) => {
   const { type, payload } = event.data;
 
   if (type === 'CHANGE_LANGUAGE') {
-    const { language } = payload || {};
+    const { language } = payload || { /* no-op */ };
     if (!language) return;
 
     navigator.loadAndInjectLanguage(language).catch(() => {

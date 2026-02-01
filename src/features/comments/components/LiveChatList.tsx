@@ -80,8 +80,7 @@ const LiveChatList: React.FC = () => {
 
     try {
       dispatch(setLiveChatLoading(true));
-      logger.debug(`[LiveChatList] Fetching messages from database (page ${page})`);
-
+      
       const offset = page * pageSize;
       const messages = await loadLiveChatMessages(videoId, offset, pageSize);
       const totalCount = await getLiveChatMessageCount(videoId);
@@ -116,8 +115,7 @@ const LiveChatList: React.FC = () => {
       const player = document.querySelector('#movie_player') as any;
       if (player && typeof player.seekTo === 'function') {
         player.seekTo(timestampSeconds, true);
-        logger.info(`[LiveChatList] Seeked to ${timestampSeconds}s`);
-      } else {
+              } else {
         logger.warn('[LiveChatList] YouTube player not available');
       }
     } catch (error: any) {
@@ -131,8 +129,7 @@ const LiveChatList: React.FC = () => {
   const handleLoadMore = () => {
     if (!hasMore || liveChatState.isLoading) return;
 
-    logger.info('[LiveChatList] Loading more messages');
-    setPage((prevPage) => prevPage + 1);
+        setPage((prevPage) => prevPage + 1);
   };
 
   // Note: Live chat is now fetched automatically on URL change via useFetchDataOnUrlChange
@@ -147,10 +144,7 @@ const LiveChatList: React.FC = () => {
 
   // Handle component mount logging
   useEffect(() => {
-    logger.info('[LiveChatList] Component mounted');
-    return () => {
-      logger.info('[LiveChatList] Component unmounted');
-    };
+        return () => { /* no-op */ };
   }, []);
 
   return (

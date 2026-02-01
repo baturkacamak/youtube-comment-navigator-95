@@ -2,7 +2,7 @@ export const getSettings = (): Record<string, unknown> => {
   try {
     const savedSettings = localStorage.getItem('settings');
     if (!savedSettings) {
-      return {};
+      return { /* no-op */ };
     }
 
     const parsed = JSON.parse(savedSettings) as unknown;
@@ -13,7 +13,7 @@ export const getSettings = (): Record<string, unknown> => {
     }
 
     console.warn('Invalid settings format in localStorage, returning empty object');
-    return {};
+    return { /* no-op */ };
   } catch (error) {
     console.error('Error reading settings from localStorage:', error);
     // Clear corrupted settings
@@ -22,7 +22,7 @@ export const getSettings = (): Record<string, unknown> => {
     } catch {
       // Ignore errors when trying to clear corrupted data
     }
-    return {};
+    return { /* no-op */ };
   }
 };
 

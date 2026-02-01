@@ -9,7 +9,7 @@ const applyFiltersAndSearch = (
   comment: Comment,
   filters: any,
   searchKeyword: string,
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
 ): boolean => {
   // Ensure top-level only if specified, this check must be first
   if (options.topLevelOnly && comment.replyLevel !== 0) return false;
@@ -41,9 +41,9 @@ export const loadPagedComments = async (
   pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
   sortBy: string = 'date',
   sortOrder: string = 'desc',
-  filters: any = {},
+  filters: any = { /* no-op */ },
   searchKeyword: string = '',
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
 ): Promise<Comment[]> => {
   const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
   const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
@@ -70,10 +70,7 @@ export const loadPagedComments = async (
   }
 
   try {
-    logger.debug(
-      `Loading page ${page} (size ${pageSize}) for video ${videoId}, sort: ${sortBy} ${sortOrder}, filters: ${JSON.stringify(filters)}, search: "${searchKeyword}"`
-    );
-
+    
     const offset = page * pageSize;
     const baseIndex = 'videoId+replyLevel';
     const buildIndexKey = (field: string) => `[${baseIndex}+${field}]`;
@@ -203,10 +200,7 @@ export const loadPagedComments = async (
       return result;
     }
 
-    logger.debug(
-      `${logPrefix} Successfully loaded ${pagedComments.length} top-level comments for page ${page}`
-    );
-    return pagedComments;
+        return pagedComments;
   } catch (error) {
     logger.error(`${logPrefix} Error loading paged comments:`, error);
     return [];
@@ -221,9 +215,9 @@ export const loadPagedComments = async (
 export const countComments = async (
   commentsTable: Dexie.Table<Comment, number>,
   videoId: string,
-  filters: any = {},
+  filters: any = { /* no-op */ },
   searchKeyword: string = '',
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
 ): Promise<number> => {
   const timerId = `countComments-${videoId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
   const logPrefix = `[countComments] video ${videoId}`;
@@ -260,8 +254,7 @@ export const countComments = async (
     }
 
     const count = await baseCollection.count();
-    logger.debug(`${logPrefix} Counted ${count} comments matching criteria.`);
-    return count;
+        return count;
   } catch (error) {
     logger.error(`${logPrefix} Error counting comments:`, error);
     return 0;
@@ -291,8 +284,7 @@ export const fetchRepliesForComment = async (
   }
 
   try {
-    logger.debug(`${logPrefix} Starting to fetch replies.`);
-    const replies = await commentsTable
+        const replies = await commentsTable
       .where('videoId')
       .equals(videoId)
       .and((item) => {
@@ -302,11 +294,8 @@ export const fetchRepliesForComment = async (
       })
       .toArray();
 
-    logger.debug(`${logPrefix} Found ${replies.length} replies.`);
-
-    if (replies.length > 0) {
-      logger.debug(`${logPrefix} Successfully retrieved ${replies.length} replies.`);
-    } else {
+    
+    if (replies.length > 0) { /* no-op */ } else {
       const parentComment = await commentsTable.where('commentId').equals(parentId).first();
       const expectedReplies = parentComment?.replyCount || 0;
 
@@ -314,11 +303,7 @@ export const fetchRepliesForComment = async (
         logger.warn(
           `${logPrefix} No replies found in DB, but parent comment (replyCount: ${expectedReplies}) indicates replies should exist.`
         );
-      } else {
-        logger.info(
-          `${logPrefix} No replies found, and parent comment does not indicate any replies (or parent not found).`
-        );
-      }
+      } else { /* no-op */ }
     }
     return replies;
   } catch (err) {

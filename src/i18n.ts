@@ -96,7 +96,7 @@ i18n.use(LanguageDetector).use(initReactI18next).init(i18nConfig);
 window.addEventListener('message', (event: MessageEvent) => {
   if (event.source !== window) return;
 
-  const { type, payload } = event.data || {};
+  const { type, payload } = event.data || { /* no-op */ };
 
   if (type === 'LANGUAGE_LOADED') {
     if (!payload || !payload.language) {

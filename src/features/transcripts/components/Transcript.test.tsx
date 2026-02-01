@@ -40,14 +40,14 @@ vi.mock('../../../store/store', async () => {
   };
 });
 
-const createMockStore = (preloadedState = {}) => {
+const createMockStore = (preloadedState = { /* no-op */ }) => {
   return configureStore({
     reducer: {
       transcriptSelectedLanguage: (state = { value: 'en', label: 'English' }) => state,
       isLoading: (state = false) => state,
       transcripts: (state = []) => state,
       // Add other necessary reducers
-      filters: (state = {}) => state,
+      filters: (state = { /* no-op */ }) => state,
       searchKeyword: (state = '') => state,
     },
     preloadedState,

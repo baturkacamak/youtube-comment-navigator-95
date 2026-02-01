@@ -40,8 +40,7 @@ export function processLiveChatActions(
     return { messages, replies, errors };
   }
 
-  logger.info(`[LiveChatProcessor] Processing ${actions.length} livechat actions`);
-
+  
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
 
@@ -62,8 +61,7 @@ export function processLiveChatActions(
       } catch {
         // Not a text message (could be paid message, membership, etc.)
         // Log and continue
-        logger.debug(`[LiveChatProcessor] Action ${i} is not a text message, skipping`);
-        continue;
+                continue;
       }
 
       // Extract timestamp
@@ -87,13 +85,9 @@ export function processLiveChatActions(
           // Use current time + video offset as timestamp
           const now = Date.now();
           timestampMs = now;
-          logger.debug(
-            `[LiveChatProcessor] Action ${i} using current time as timestamp (no timestampUsec)`
-          );
-        } else {
+                  } else {
           // No timestamp available - skip this message
-          logger.debug(`[LiveChatProcessor] Action ${i} has no timestamp, skipping`);
-          continue; // Silently skip - not an error, just a system message
+                    continue; // Silently skip - not an error, just a system message
         }
       } else {
         const timestampMicroseconds = Number.parseInt(String(timestampUsec), 10);
@@ -127,7 +121,7 @@ export function processLiveChatActions(
       }
 
       // Format message content
-      renderer.message = renderer.message || {};
+      renderer.message = renderer.message || { /* no-op */ };
       const runs = (wrapTryCatch(() => renderer.message.runs) as any[]) || [];
       const formatted = formatChatRuns(runs, { currentVideoId: context.currentVideoId });
 
@@ -141,8 +135,7 @@ export function processLiveChatActions(
       const hasAuthor = wrapTryCatch(() => renderer.authorName);
       // Some system messages don't have author, we might want to skip them or handle them
       if (!hasAuthor && !renderer.message.fullText) {
-        logger.debug(`[LiveChatProcessor] Action ${i} has no author or message, skipping`);
-        continue;
+                continue;
       }
 
       // Extract author information
@@ -201,13 +194,7 @@ export function processLiveChatActions(
         : undefined;
 
       // Debug log for first few messages to verify timestamp extraction
-      if (i < 3) {
-        logger.debug(`[LiveChatProcessor] Message ${i} timestamp:`, {
-          videoOffsetTimeMsec,
-          videoOffsetTimeSeconds,
-          authorName,
-        });
-      }
+      if (i < 3) { /* no-op */ }
 
       // Check for donation/super chat
       // Note: Super chat messages have a different renderer (liveChatPaidMessageRenderer)

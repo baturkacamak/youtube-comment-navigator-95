@@ -7,7 +7,7 @@ describe('Settings Utilities', () => {
 
   test('getSettings should return empty object if no settings are saved', () => {
     const settings = getSettings();
-    expect(settings).toEqual({});
+    expect(settings).toEqual({ /* no-op */ });
   });
 
   test('getSettings should return saved settings object', () => {

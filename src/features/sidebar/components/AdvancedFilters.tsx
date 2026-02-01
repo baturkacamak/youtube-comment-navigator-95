@@ -37,7 +37,7 @@ const AdvancedFilters: React.FC = () => {
   });
 
   // Refs for debounce timers
-  const debounceTimers = useRef<{ [key: string]: NodeJS.Timeout }>({});
+  const debounceTimers = useRef<{ [key: string]: NodeJS.Timeout }>({ /* no-op */ });
 
   // Cleanup timers on unmount
   useEffect(() => {

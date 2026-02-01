@@ -634,7 +634,7 @@ vi.mock('./features/shared/utils/database/dbEvents', () => ({
 }));
 
 vi.mock('./features/shared/hooks/urlChange/useFetchDataOnUrlChange', () => ({
-  default: () => {},
+  default: () => { /* no-op */ },
 }));
 
 vi.mock('./features/comments/hooks/useCommentsIncrementalLoader', () => ({
@@ -780,7 +780,7 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
   }) {
     const [theme, setTheme] = React.useState(() => {
       try {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         return settings.theme || 'light';
       } catch {
         return 'light';
@@ -789,7 +789,7 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
 
     const [textSize, setTextSize] = React.useState(() => {
       try {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         return settings.textSize || 'text-base';
       } catch {
         return 'text-base';
@@ -798,7 +798,7 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
 
     const [language, setLanguage] = React.useState(() => {
       try {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         return settings.language || 'en';
       } catch {
         return 'en';
@@ -807,7 +807,7 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
 
     const [showContentOnSearch, setShowContentOnSearch] = React.useState(() => {
       try {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         return settings.showContentOnSearch || false;
       } catch {
         return false;
@@ -816,7 +816,7 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
 
     const saveToLocalStorage = (key: string, value: string | boolean) => {
       try {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         settings[key] = value;
         localStorage.setItem('settings', JSON.stringify(settings));
       } catch {
@@ -1132,7 +1132,7 @@ import { ToastProvider } from './features/shared/contexts/ToastContext';
 // Store Factory
 // ============================================================================
 
-const createTestStore = (preloadedState = {}) => {
+const createTestStore = (preloadedState = { /* no-op */ }) => {
   const initialState = {
     settings: {
       textSize: 'text-base',
@@ -1207,7 +1207,7 @@ const createTestStore = (preloadedState = {}) => {
   });
 };
 
-const renderApp = (storeOverrides = {}) => {
+const renderApp = (storeOverrides = { /* no-op */ }) => {
   const store = createTestStore(storeOverrides);
   return {
     ...render(
@@ -1541,7 +1541,7 @@ describe('App Integration Tests - Complete Coverage', () => {
         const input = screen.getByPlaceholderText('Search everything...');
         fireEvent.change(input, { target: { value: 'test' } });
         fireEvent.click(screen.getByLabelText('Submit search'));
-        await waitFor(() => {});
+        await waitFor(() => { /* no-op */ });
         fireEvent.click(screen.getByLabelText('Clear search'));
         expect(input).toHaveValue('');
       });
@@ -2411,7 +2411,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('theme-dark'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
       });
     });
@@ -2427,7 +2427,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('theme-light'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('light');
       });
     });
@@ -2438,7 +2438,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('theme-dark'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
       });
     });
@@ -2477,7 +2477,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('text-small'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.textSize).toBe('text-sm');
       });
     });
@@ -2488,7 +2488,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('text-medium'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.textSize).toBe('text-base');
       });
     });
@@ -2499,7 +2499,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('text-large'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.textSize).toBe('text-lg');
       });
     });
@@ -2523,7 +2523,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       renderApp();
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.textSize).toBe('text-xl');
       });
     });
@@ -2547,7 +2547,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.change(languageSelect, { target: { value: 'es' } });
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.language).toBe('es');
       });
     });
@@ -2560,7 +2560,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.change(languageSelect, { target: { value: 'fr' } });
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.language).toBe('fr');
       });
     });
@@ -2623,7 +2623,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(checkbox);
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.showContentOnSearch).toBeDefined();
       });
     });
@@ -2644,7 +2644,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.change(languageSelect, { target: { value: 'es' } });
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
         expect(settings.textSize).toBe('text-lg');
         expect(settings.language).toBe('es');
@@ -2664,7 +2664,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('settings-button'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
         expect(settings.textSize).toBe('text-xl');
         expect(settings.language).toBe('fr');
@@ -2680,7 +2680,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('text-large'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark'); // Existing setting preserved
         expect(settings.textSize).toBe('text-lg'); // New setting added
       });
@@ -2711,7 +2711,7 @@ describe('App Integration Tests - Complete Coverage', () => {
     });
 
     it('handles empty settings object', async () => {
-      localStorage.setItem('settings', JSON.stringify({}));
+      localStorage.setItem('settings', JSON.stringify({ /* no-op */ }));
 
       renderApp();
       fireEvent.click(screen.getByTestId('settings-button'));
@@ -2776,7 +2776,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('theme-dark'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
       });
     });
@@ -2790,7 +2790,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('text-small'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('dark');
         expect(settings.textSize).toBe('text-sm');
       });
@@ -2813,7 +2813,7 @@ describe('App Integration Tests - Complete Coverage', () => {
       fireEvent.click(screen.getByTestId('theme-light'));
 
       await waitFor(() => {
-        const settings = JSON.parse(localStorage.getItem('settings') || '{}');
+        const settings = JSON.parse(localStorage.getItem('settings') || '{ /* no-op */ }');
         expect(settings.theme).toBe('light');
         expect(settings.textSize).toBe('text-lg'); // Preserved
         expect(settings.language).toBe('es'); // Preserved

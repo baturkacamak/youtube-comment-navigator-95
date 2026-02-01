@@ -1,8 +1,8 @@
 export const isFontAvailable = (fontName: string): boolean => {
   const baseFonts: string[] = ['monospace', 'sans-serif', 'serif'];
   const testString: string = 'mmmmmmmmmmlli';
-  const defaultWidth: { [key: string]: number } = {};
-  const defaultHeight: { [key: string]: number } = {};
+  const defaultWidth: { [key: string]: number } = { /* no-op */ };
+  const defaultHeight: { [key: string]: number } = { /* no-op */ };
 
   // Create a span element
   const testElement = document.createElement('span');
