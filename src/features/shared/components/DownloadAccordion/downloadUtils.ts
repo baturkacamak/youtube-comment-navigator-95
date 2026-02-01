@@ -87,10 +87,15 @@ export const downloadAsJSON = (data: unknown, fileName: string): void => {
 
 /**
  * Download data as a CSV file
+ * @throws Error if data is not a valid array or is empty
  */
 export const downloadAsCSV = (data: unknown, fileName: string): void => {
-  if (!Array.isArray(data) || data.length === 0) {
-    return;
+  if (!Array.isArray(data)) {
+    throw new Error('CSV download requires an array of data');
+  }
+
+  if (data.length === 0) {
+    throw new Error('No data to export');
   }
 
   const cleanedData = cleanCommentsForExport(data);
