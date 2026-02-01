@@ -18,12 +18,8 @@ const CommentBody: React.FC<CommentContentProps> = React.memo(
 
     return (
       <p
-        className={`${textSize} mb-2 transition-all duration-300 ease-in-out`}
-        style={{
-          fontFamily,
-          wordBreak: 'break-word',
-          overflowWrap: 'break-word',
-        }}
+        className={`${textSize} mb-2 break-words transition-all duration-300 ease-in-out`}
+        style={{ fontFamily }}
         aria-live="polite"
       >
         {highlightedText}
