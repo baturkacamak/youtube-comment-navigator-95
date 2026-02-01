@@ -81,13 +81,28 @@ const CommentList: React.FC<CommentListProps> = () => {
     // Initial calculation
     updateDimensions();
 
+    // Throttle resize handler to prevent excessive re-renders
+    let timeoutId: NodeJS.Timeout | null = null;
+    const throttledResize = () => {
+      if (timeoutId) return;
+      timeoutId = setTimeout(() => {
+        updateDimensions();
+        timeoutId = null;
+      }, 100);
+    };
+
     // Recalculate on resize
-    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('resize', throttledResize);
 
     // Also recalculate when comments/filters change as layout might shift
     // (Optional but helpful if header size changes)
 
-    return () => window.removeEventListener('resize', updateDimensions);
+    return () => {
+      window.removeEventListener('resize', throttledResize);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [comments.length, filters, searchKeyword]);
 
   // Reset cached heights when comments change significantly
