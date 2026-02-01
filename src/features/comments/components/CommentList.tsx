@@ -49,7 +49,7 @@ const CommentList: React.FC<CommentListProps> = () => {
   const videoId = extractYouTubeVideoIdFromUrl();
 
   // Use the new reactive hook - IndexedDB is the source of truth
-  const { comments, totalCount, isLoading, hasMore, loadMore, error, clearError } =
+  const { comments, totalCount, isLoading, hasMore, loadMore, error, clearError, refresh } =
     useCommentsFromDB({
       videoId,
       filters,
@@ -236,28 +236,41 @@ const CommentList: React.FC<CommentListProps> = () => {
     >
       {error && (
         <div
-          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 flex items-center justify-between shadow-sm"
+          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 shadow-sm"
           role="alert"
         >
-          <div className="flex items-center">
-            <XCircleIcon className="w-5 h-5 mr-2" />
-            <span className="block sm:inline">{error.message}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center flex-1">
+              <XCircleIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span className="block sm:inline">{error.message}</span>
+            </div>
+            <div className="flex items-center gap-2 ml-4">
+              <button
+                onClick={() => {
+                  clearError();
+                  refresh();
+                }}
+                className="px-3 py-1 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white rounded transition-colors text-sm font-medium"
+              >
+                {t('Retry')}
+              </button>
+              <button
+                onClick={clearError}
+                className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold"
+              >
+                <span className="sr-only">Close</span>
+                <svg
+                  className="fill-current h-6 w-6"
+                  role="button"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Close</title>
+                  <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button
-            onClick={clearError}
-            className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold ml-2"
-          >
-            <span className="sr-only">Close</span>
-            <svg
-              className="fill-current h-6 w-6"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </button>
         </div>
       )}
       <div className="flex-1 w-full min-h-0">
