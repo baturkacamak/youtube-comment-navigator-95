@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml/badge.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.9.1-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
+[![Version](https://img.shields.io/badge/version-1.9.2-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
 
 ## Overview
 
@@ -168,7 +168,7 @@ We use `just` to simplify release tasks:
 
   ```bash
   just bump        # Interactive menu
-  just bump 1.9.1  # Direct update
+  just bump 1.9.2  # Direct update
   ```
 
   Updates `package.json` and `manifest.json`, creates a git commit and tag.
@@ -177,7 +177,7 @@ We use `just` to simplify release tasks:
   ```bash
   just package
   ```
-  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.9.1.zip`).
+  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.9.2.zip`).
 
 ## 🛠️ Tech Stack
 
