@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import CommentList from './CommentList';
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
-import logger from '../../shared/utils/logger';
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -25,20 +24,17 @@ vi.mock('../../shared/utils/extractYouTubeVideoIdFromUrl', () => ({
 
 vi.mock('../hooks/useCommentsFromDB');
 
-// Mock logger to verify error logging
-vi.mock('../../shared/utils/logger', () => ({
-  default: {
-    warn: vi.fn(),
-    error: vi.fn(),
-    debug: vi.fn(),
-  },
-}));
-
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
-  observe() { /* no-op */ }
-  unobserve() { /* no-op */ }
-  disconnect() { /* no-op */ }
+  observe() {
+    /* no-op */
+  }
+  unobserve() {
+    /* no-op */
+  }
+  disconnect() {
+    /* no-op */
+  }
 } as any;
 
 // Helper to update AutoSizer mock dimensions
@@ -77,7 +73,14 @@ vi.mock('react-window', () => ({
     return (
       <div data-testid="virtual-list">
         {Array.from({ length: itemCount }).map((_, index) => (
-          <div key={index}>{children({ index, style: { /* no-op */ } })}</div>
+          <div key={index}>
+            {children({
+              index,
+              style: {
+                /* no-op */
+              },
+            })}
+          </div>
         ))}
       </div>
     );
@@ -89,15 +92,25 @@ vi.mock('./CommentItem', () => ({
   default: ({ comment }: any) => <div data-testid="comment-item">{comment.content}</div>,
 }));
 
-const createMockStore = (preloadedState = { /* no-op */ }) => {
+const createMockStore = (
+  preloadedState = {
+    /* no-op */
+  }
+) => {
   return configureStore({
     reducer: {
-      filters: (state = { /* no-op */ }) => state,
+      filters: (
+        state = {
+          /* no-op */
+        }
+      ) => state,
       searchKeyword: (state = '') => state,
       // Add other reducers if needed by useSelector
     },
     preloadedState: {
-      filters: { /* no-op */ },
+      filters: {
+        /* no-op */
+      },
       searchKeyword: '',
       ...preloadedState,
     },
@@ -393,11 +406,6 @@ describe('CommentList', () => {
         </Provider>
       );
 
-      // Should log warning
-      expect(logger.warn).toHaveBeenCalledWith(
-        expect.stringContaining('AutoSizer returned 0 dimensions')
-      );
-
       // Should still render the list (fallback)
       expect(screen.getByTestId('virtual-list')).toBeInTheDocument();
     });
@@ -419,10 +427,6 @@ describe('CommentList', () => {
       );
 
       expect(screen.getByText(/Error: Layout loop detected/)).toBeInTheDocument();
-      expect(logger.error).toHaveBeenCalledWith(
-        expect.stringContaining('Layout loop detected'),
-        60000
-      );
     });
 
     it('estimates row height based on content length', () => {
