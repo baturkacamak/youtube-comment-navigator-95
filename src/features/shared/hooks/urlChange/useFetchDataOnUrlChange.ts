@@ -20,9 +20,15 @@ import { db } from '../../utils/database/database';
 import logger from '../../utils/logger';
 import { seedMockData } from '../../utils/mockDataSeeder';
 import { isLocalEnvironment } from '../../utils/appConstants';
+import {
+  getCommentFetchErrorMessage,
+  shouldShowErrorToast,
+} from '../../../comments/services/remote/commentErrorHandler';
+import { useToast } from '../../contexts/ToastContext';
 
 const useFetchDataOnUrlChange = () => {
   const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   useDetectUrlChange(async () => {
     logger.info('[useFetchDataOnUrlChange] URL Change Detected');
@@ -44,7 +50,21 @@ const useFetchDataOnUrlChange = () => {
     await fetchAndSetTranscripts(dispatch);
     await fetchAndSetLiveChat(dispatch); // Load live chat immediately
     dispatch(setIsLoading(false));
-    await fetchCommentsFromRemote(dispatch, false);
+
+    try {
+      await fetchCommentsFromRemote(dispatch, false);
+    } catch (error: any) {
+      if (shouldShowErrorToast(error)) {
+        const message = getCommentFetchErrorMessage(error);
+        if (message) {
+          showToast({
+            type: 'error',
+            message,
+            duration: 5000,
+          });
+        }
+      }
+    }
   });
 };
 

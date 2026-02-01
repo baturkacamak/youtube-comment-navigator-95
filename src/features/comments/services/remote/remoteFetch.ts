@@ -146,8 +146,11 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
 
     await clearContinuationToken(videoId);
   } catch (error: unknown) {
+    dispatch(setIsLoading(false));
+
     if ((error as Error)?.name === 'AbortError') {
       logger.info('Fetch operation was aborted.');
+      throw error; // Re-throw AbortError to signal cancellation
     } else {
       const err = error as Error;
       logger.error('Error fetching comments from remote:', {
@@ -156,8 +159,8 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
         stack: err?.stack,
         raw: error,
       });
+      throw error; // Re-throw error so hooks can handle it and show toasts
     }
-    dispatch(setIsLoading(false));
   }
 };
 

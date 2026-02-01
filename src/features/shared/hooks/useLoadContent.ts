@@ -16,13 +16,32 @@ import {
 } from '../../comments/services/liveChat/liveChatDatabase';
 import { extractVideoId } from '../../comments/services/remote/utils';
 import logger from '../utils/logger';
+import {
+  getCommentFetchErrorMessage,
+  shouldShowErrorToast,
+} from '../../comments/services/remote/commentErrorHandler';
+import { useToast } from '../contexts/ToastContext';
 
 const useLoadContent = (bypassCache = false) => {
   const dispatch = useDispatch();
+  const { showToast } = useToast();
 
   const loadComments = async (bypassCache = false) => {
     dispatch(setIsLoading(true));
-    await fetchCommentsFromRemote(dispatch, bypassCache);
+    try {
+      await fetchCommentsFromRemote(dispatch, bypassCache);
+    } catch (error: any) {
+      if (shouldShowErrorToast(error)) {
+        const message = getCommentFetchErrorMessage(error);
+        if (message) {
+          showToast({
+            type: 'error',
+            message,
+            duration: 5000,
+          });
+        }
+      }
+    }
   };
 
   const loadTranscript = async () => {
