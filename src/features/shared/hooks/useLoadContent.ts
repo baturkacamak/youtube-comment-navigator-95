@@ -24,6 +24,10 @@ import {
   getTranscriptFetchErrorMessage,
   shouldShowTranscriptErrorToast,
 } from '../../transcripts/services/transcriptErrorHandler';
+import {
+  getLiveChatFetchErrorMessage,
+  shouldShowLiveChatErrorToast,
+} from '../../comments/services/liveChat/liveChatErrorHandler';
 import { useToast } from '../contexts/ToastContext';
 
 const useLoadContent = (bypassCache = false) => {
@@ -114,6 +118,17 @@ const useLoadContent = (bypassCache = false) => {
     } catch (error: any) {
       logger.error('[useLoadContent] Failed to load live chat:', error);
       dispatch(setLiveChatError(error.message || 'Failed to load live chat'));
+
+      if (shouldShowLiveChatErrorToast(error)) {
+        const message = getLiveChatFetchErrorMessage(error);
+        if (message) {
+          showToast({
+            type: 'error',
+            message,
+            duration: 5000,
+          });
+        }
+      }
     } finally {
       dispatch(setLiveChatLoading(false));
     }

@@ -15,7 +15,7 @@ export const fetchAndProcessLiveChat = async (
   try {
     if (!windowObj || !windowObj.ytInitialData) {
       logger.warn('[LiveChat] ytInitialData not found in window object. Aborting live chat fetch.');
-      return;
+      throw new Error("This video doesn't have live chat");
     }
 
     const ytInitialData = windowObj.ytInitialData;
@@ -25,14 +25,14 @@ export const fetchAndProcessLiveChat = async (
 
     if (!continuationResult.continuationData) {
       logger.info('No live chat continuation found. This might not be a live stream or replay.');
-      return;
+      throw new Error('Live chat replay not available for this video');
     }
 
     const continuationData = continuationResult.continuationData;
     const continuation = continuationData.continuation;
     if (!continuation) {
       logger.error('[LiveChat] Continuation data missing continuation token:', continuationData);
-      return;
+      throw new Error("This video doesn't have live chat");
     }
     const clickTrackingParams = continuationData.clickTrackingParams;
     // If we found a replay/seek token, we MUST use isReplay=true for the API call
@@ -74,16 +74,16 @@ export const fetchAndProcessLiveChat = async (
           });
         } catch (retryError) {
           logger.error('[LiveChat] Replay retry failed after reload error:', retryError);
-          return;
+          throw new Error('Failed to load chat messages');
         }
       } else {
-        return;
+        throw error; // Re-throw the original error
       }
     }
 
     if (!initialResponse) {
       logger.error('Failed to fetch initial live chat.');
-      return;
+      throw new Error('Failed to load chat messages');
     }
 
     const continuations =
