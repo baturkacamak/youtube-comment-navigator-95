@@ -43,7 +43,7 @@ const useAppState = () => {
 
   // Use reactive hook to get the count of comments matching current filters/search
   const liveFilteredCommentCount = useLiveCommentCount(videoId, filters, searchKeyword, {
-    topLevelOnly: true,
+    topLevelOnly: false,
     excludeLiveChat: true,
   });
 
