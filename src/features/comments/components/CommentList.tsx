@@ -287,7 +287,7 @@ const CommentList: React.FC<CommentListProps> = () => {
                 width={width}
                 itemCount={itemCount}
                 itemSize={getRowHeight}
-                overscanCount={5}
+                overscanCount={10}
                 style={{ overflow: 'visible auto' }}
                 className="custom-scrollbar"
                 onItemsRendered={handleItemsRendered}
