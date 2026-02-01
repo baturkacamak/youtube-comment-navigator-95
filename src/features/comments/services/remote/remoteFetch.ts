@@ -65,7 +65,9 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     const CONTINUATION_TOKEN_KEY = CACHE_KEYS.CONTINUATION_TOKEN(videoId);
     const windowObj = window as any;
 
-    logger.info(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
+    if (videoId) {
+      logger.debug(`[RemoteFetch] Starting fetch for video ID: ${videoId}`);
+    }
 
     // Clean up previous video's accumulator if switching videos
     if (currentVideoId && currentVideoId !== videoId) {

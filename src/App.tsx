@@ -26,6 +26,7 @@ import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFr
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 import Collapsible from './features/shared/components/Collapsible';
+import logger from './features/shared/utils/logger';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -74,6 +75,14 @@ const App: React.FC = () => {
   // Show either filtered count (from DB) or total count (from DB)
   // Both are now fully reactive via useLiveQuery, bypassing Redux conflicts
   const displayCount = hasActiveFilters ? liveFilteredCommentCount : liveTotalUnfilteredCount;
+
+  logger.debug('[App] Render:', {
+    activeTab,
+    showContentOnSearch,
+    searchKeyword,
+    hasLiveFilteredCount: liveFilteredCommentCount,
+    displayCount,
+  });
 
   const tabs = React.useMemo(
     () => [

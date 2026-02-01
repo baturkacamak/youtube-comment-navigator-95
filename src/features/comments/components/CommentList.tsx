@@ -56,7 +56,17 @@ const CommentList: React.FC<CommentListProps> = () => {
       searchKeyword,
       topLevelOnly: true,
       excludeLiveChat: true,
+      debug: true,
     });
+
+  useEffect(() => {
+    logger.debug('[CommentList] Render state:', {
+      isLoading,
+      commentsLength: comments.length,
+      hasError: !!error,
+      videoId,
+    });
+  }, [isLoading, comments.length, error, videoId]);
 
   // Sync totalCount to Redux for components that still need it
   useEffect(() => {
@@ -73,8 +83,20 @@ const CommentList: React.FC<CommentListProps> = () => {
         const rect = containerRef.current.getBoundingClientRect();
         // Calculate available height: Viewport - Top Position - Buffer (20px)
         const availableHeight = window.innerHeight - rect.top - 20;
+
+        logger.debug('[CommentList] updateDimensions:', {
+          windowHeight: window.innerHeight,
+          rectTop: rect.top,
+          rectHeight: rect.height,
+          rectWidth: rect.width,
+          availableHeight,
+          calculatedListHeight: Math.max(400, availableHeight),
+        });
+
         // Ensure minimum height of 400px
         setListHeight(Math.max(400, availableHeight));
+      } else {
+        logger.warn('[CommentList] updateDimensions: containerRef is null');
       }
     };
 
@@ -183,6 +205,7 @@ const CommentList: React.FC<CommentListProps> = () => {
   );
 
   if (isLoading && comments.length === 0) {
+    logger.debug('[CommentList] Rendering initial loading state');
     return (
       <div
         className="flex flex-col items-center justify-center p-4 mt-4 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md"
@@ -197,6 +220,7 @@ const CommentList: React.FC<CommentListProps> = () => {
 
   if (!comments.length) {
     if (error) {
+      logger.error('[CommentList] Rendering error state:', error);
       return (
         <div
           className="flex flex-col items-center justify-center p-8 mt-4 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 rounded-lg bg-red-50 dark:bg-red-900/20"
@@ -254,6 +278,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     }
 
     // Truly empty - no comments on video
+    logger.debug('[CommentList] Rendering empty state (no comments)');
     return (
       <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
         <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
@@ -312,7 +337,7 @@ const CommentList: React.FC<CommentListProps> = () => {
           </div>
         </div>
       )}
-      <div className="flex-1 w-full min-h-0">
+      <div style={{ flex: '1 1 auto', width: '100%', height: '100%', minHeight: 0 }}>
         <AutoSizer
           renderProp={({
             height,
@@ -321,11 +346,27 @@ const CommentList: React.FC<CommentListProps> = () => {
             height: number | undefined;
             width: number | undefined;
           }) => {
+            // Log calculated height for debugging
+            logger.debug(`[CommentList] listHeight: ${listHeight}, AutoSizer: ${width}x${height}`);
+
+            // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
-              logger.warn('[CommentList] AutoSizer returned 0 dimensions:', { width, height });
+              logger.warn('[CommentList] AutoSizer returned 0 dimensions. Using fallback 400px.');
               return (
-                <div className="p-4 text-red-500">
-                  Error: List container has no size. ({width}x{height})
+                <div style={{ height: 400, width: '100%', overflow: 'hidden' }}>
+                  <List
+                    ref={listRef}
+                    height={400}
+                    width={width || window.innerWidth || 500}
+                    itemCount={itemCount}
+                    itemSize={getRowHeight}
+                    overscanCount={10}
+                    style={{ overflow: 'visible auto' }}
+                    className="custom-scrollbar"
+                    onItemsRendered={handleItemsRendered}
+                  >
+                    {Row}
+                  </List>
                 </div>
               );
             }

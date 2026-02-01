@@ -1,5 +1,5 @@
 import React from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface TabTitle {
   id: string;
@@ -51,23 +51,16 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
         ))}
       </div>
       <hr className="h-px -mt-2 bg-gray-300 dark:bg-gray-600" />
-      <AnimatePresence mode="wait">
+      <div className="tab-content-container">
         {tabs.map(
           (tab) =>
             activeTab === tab.title.id && (
-              <motion.div
-                key={tab.title.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="pt-4"
-              >
+              <div key={tab.title.id} className="pt-4 animate-fade-in">
                 {tab.content}
-              </motion.div>
+              </div>
             )
         )}
-      </AnimatePresence>
+      </div>
     </>
   );
 };

@@ -162,6 +162,9 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       metricsRef.current.totalFetches++;
 
       try {
+        if (debug) {
+          logger.debug(`${logPrefix} fetchPage calling loadPagedComments`, { pageNum, pageSize });
+        }
         const data = await loadPagedComments(
           db.comments,
           videoId,
@@ -173,6 +176,10 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
           searchKeyword,
           paginationOptions
         );
+
+        if (debug) {
+          logger.debug(`${logPrefix} fetchPage received data`, { count: data.length });
+        }
 
         const duration = performance.now() - startTime;
         metricsRef.current.lastFetchDuration = duration;
@@ -193,7 +200,17 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         return [];
       }
     },
-    [videoId, pageSize, sortBy, sortOrder, filters, searchKeyword, paginationOptions, logPrefix]
+    [
+      videoId,
+      pageSize,
+      sortBy,
+      sortOrder,
+      filters,
+      searchKeyword,
+      paginationOptions,
+      logPrefix,
+      debug,
+    ]
   );
 
   // Initial load and refresh when dependencies change
