@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import { setTotalCommentsCount } from '../../../store/store';
+import { setTotalCommentsCount, resetFilters, setSearchKeyword } from '../../../store/store';
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
 
 import logger from '../../shared/utils/logger';
@@ -49,14 +49,24 @@ const CommentList: React.FC<CommentListProps> = () => {
   const videoId = extractYouTubeVideoIdFromUrl();
 
   // Use the new reactive hook - IndexedDB is the source of truth
-  const { comments, totalCount, isLoading, hasMore, loadMore, error, clearError } =
+  const { comments, totalCount, isLoading, hasMore, loadMore, error, clearError, refresh } =
     useCommentsFromDB({
       videoId,
       filters,
       searchKeyword,
       topLevelOnly: true,
       excludeLiveChat: true,
+      debug: true,
     });
+
+  useEffect(() => {
+    logger.debug('[CommentList] Render state:', {
+      isLoading,
+      commentsLength: comments.length,
+      hasError: !!error,
+      videoId,
+    });
+  }, [isLoading, comments.length, error, videoId]);
 
   // Sync totalCount to Redux for components that still need it
   useEffect(() => {
@@ -73,8 +83,20 @@ const CommentList: React.FC<CommentListProps> = () => {
         const rect = containerRef.current.getBoundingClientRect();
         // Calculate available height: Viewport - Top Position - Buffer (20px)
         const availableHeight = window.innerHeight - rect.top - 20;
+
+        logger.debug('[CommentList] updateDimensions:', {
+          windowHeight: window.innerHeight,
+          rectTop: rect.top,
+          rectHeight: rect.height,
+          rectWidth: rect.width,
+          availableHeight,
+          calculatedListHeight: Math.max(400, availableHeight),
+        });
+
         // Ensure minimum height of 400px
         setListHeight(Math.max(400, availableHeight));
+      } else {
+        logger.warn('[CommentList] updateDimensions: containerRef is null');
       }
     };
 
@@ -183,6 +205,7 @@ const CommentList: React.FC<CommentListProps> = () => {
   );
 
   if (isLoading && comments.length === 0) {
+    logger.debug('[CommentList] Rendering initial loading state');
     return (
       <div
         className="flex flex-col items-center justify-center p-4 mt-4 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md"
@@ -197,29 +220,70 @@ const CommentList: React.FC<CommentListProps> = () => {
 
   if (!comments.length) {
     if (error) {
+      logger.error('[CommentList] Rendering error state:', error);
       return (
         <div
           className="flex flex-col items-center justify-center p-8 mt-4 text-red-600 dark:text-red-400 border-2 border-red-200 dark:border-red-800 rounded-lg bg-red-50 dark:bg-red-900/20"
           role="alert"
         >
           <XCircleIcon className="w-16 h-16 mb-4" />
-          <h3 className="text-lg font-bold mb-2">{t('Error loading comments')}</h3>
+          <h3 className="text-lg font-bold mb-2">{t('Failed to load comments')}</h3>
           <p className="text-center mb-4">{error.message}</p>
           <button
-            onClick={clearError}
-            className="px-6 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors font-medium"
+            onClick={() => {
+              clearError();
+              refresh();
+            }}
+            className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors font-medium"
           >
-            {t('Dismiss')}
+            {t('Retry')}
           </button>
         </div>
       );
     }
 
+    // Check if filters or search are active
+    const hasActiveFilters =
+      !!searchKeyword ||
+      filters?.verified ||
+      filters?.hasLinks ||
+      (filters?.likesThreshold?.min || 0) > 0 ||
+      (filters?.likesThreshold?.max || Infinity) < Infinity ||
+      (filters?.repliesLimit?.min || 0) > 0 ||
+      (filters?.repliesLimit?.max || Infinity) < Infinity ||
+      (filters?.wordCount?.min || 0) > 0 ||
+      (filters?.wordCount?.max || Infinity) < Infinity ||
+      !!filters?.dateTimeRange?.start ||
+      !!filters?.dateTimeRange?.end;
+
+    if (hasActiveFilters) {
+      // Filtered empty state
+      return (
+        <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
+          <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
+          <p className="text-lg text-gray-800 dark:text-gray-200 mb-4">
+            {t('No comments match your filters')}
+          </p>
+          <button
+            onClick={() => {
+              dispatch(resetFilters());
+              dispatch(setSearchKeyword(''));
+            }}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors font-medium"
+          >
+            {t('Clear filters')}
+          </button>
+        </Box>
+      );
+    }
+
+    // Truly empty - no comments on video
+    logger.debug('[CommentList] Rendering empty state (no comments)');
     return (
       <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
         <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
         <p className="text-lg text-gray-800 dark:text-gray-200">
-          {t('No comments found. Try a different search or filter.')}
+          {t('This video has no comments')}
         </p>
       </Box>
     );
@@ -236,31 +300,44 @@ const CommentList: React.FC<CommentListProps> = () => {
     >
       {error && (
         <div
-          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 flex items-center justify-between shadow-sm"
+          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-2 shadow-sm"
           role="alert"
         >
-          <div className="flex items-center">
-            <XCircleIcon className="w-5 h-5 mr-2" />
-            <span className="block sm:inline">{error.message}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center flex-1">
+              <XCircleIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+              <span className="block sm:inline">{error.message}</span>
+            </div>
+            <div className="flex items-center gap-2 ml-4">
+              <button
+                onClick={() => {
+                  clearError();
+                  refresh();
+                }}
+                className="px-3 py-1 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white rounded transition-colors text-sm font-medium"
+              >
+                {t('Retry')}
+              </button>
+              <button
+                onClick={clearError}
+                className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold"
+              >
+                <span className="sr-only">Close</span>
+                <svg
+                  className="fill-current h-6 w-6"
+                  role="button"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Close</title>
+                  <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button
-            onClick={clearError}
-            className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold ml-2"
-          >
-            <span className="sr-only">Close</span>
-            <svg
-              className="fill-current h-6 w-6"
-              role="button"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <title>Close</title>
-              <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z" />
-            </svg>
-          </button>
         </div>
       )}
-      <div className="flex-1 w-full min-h-0">
+      <div style={{ flex: '1 1 auto', width: '100%', height: '100%', minHeight: 0 }}>
         <AutoSizer
           renderProp={({
             height,
@@ -269,11 +346,27 @@ const CommentList: React.FC<CommentListProps> = () => {
             height: number | undefined;
             width: number | undefined;
           }) => {
+            // Log calculated height for debugging
+            logger.debug(`[CommentList] listHeight: ${listHeight}, AutoSizer: ${width}x${height}`);
+
+            // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
-              logger.warn('[CommentList] AutoSizer returned 0 dimensions:', { width, height });
+              logger.warn('[CommentList] AutoSizer returned 0 dimensions. Using fallback 400px.');
               return (
-                <div className="p-4 text-red-500">
-                  Error: List container has no size. ({width}x{height})
+                <div style={{ height: 400, width: '100%', overflow: 'hidden' }}>
+                  <List
+                    ref={listRef}
+                    height={400}
+                    width={width || window.innerWidth || 500}
+                    itemCount={itemCount}
+                    itemSize={getRowHeight}
+                    overscanCount={10}
+                    style={{ overflow: 'visible auto' }}
+                    className="custom-scrollbar"
+                    onItemsRendered={handleItemsRendered}
+                  >
+                    {Row}
+                  </List>
                 </div>
               );
             }
