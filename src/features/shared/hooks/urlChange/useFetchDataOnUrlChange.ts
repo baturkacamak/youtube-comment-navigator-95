@@ -24,6 +24,10 @@ import {
   getCommentFetchErrorMessage,
   shouldShowErrorToast,
 } from '../../../comments/services/remote/commentErrorHandler';
+import {
+  getTranscriptFetchErrorMessage,
+  shouldShowTranscriptErrorToast,
+} from '../../../transcripts/services/transcriptErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
 
 const useFetchDataOnUrlChange = () => {
@@ -47,7 +51,7 @@ const useFetchDataOnUrlChange = () => {
     }
 
     await fetchAndSetBookmarks(dispatch);
-    await fetchAndSetTranscripts(dispatch);
+    await fetchAndSetTranscripts(dispatch, showToast);
     await fetchAndSetLiveChat(dispatch); // Load live chat immediately
     dispatch(setIsLoading(false));
 
@@ -80,13 +84,29 @@ const fetchAndSetBookmarks = async (dispatch: any) => {
   }
 };
 
-const fetchAndSetTranscripts = async (dispatch: any) => {
-  const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
-  if (captionTrackBaseUrl) {
-    const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
-    if (transcriptData) {
-      dispatch(setTranscripts(transcriptData.items));
-      dispatch(setFilteredTranscripts(transcriptData.items));
+const fetchAndSetTranscripts = async (
+  dispatch: any,
+  showToast: (toast: { type: string; message: string; duration?: number }) => void
+) => {
+  try {
+    const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
+    if (captionTrackBaseUrl) {
+      const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
+      if (transcriptData) {
+        dispatch(setTranscripts(transcriptData.items));
+        dispatch(setFilteredTranscripts(transcriptData.items));
+      }
+    }
+  } catch (error: any) {
+    if (shouldShowTranscriptErrorToast(error)) {
+      const message = getTranscriptFetchErrorMessage(error);
+      if (message) {
+        showToast({
+          type: 'error',
+          message,
+          duration: 5000,
+        });
+      }
     }
   }
 };

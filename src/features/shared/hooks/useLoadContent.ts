@@ -20,6 +20,10 @@ import {
   getCommentFetchErrorMessage,
   shouldShowErrorToast,
 } from '../../comments/services/remote/commentErrorHandler';
+import {
+  getTranscriptFetchErrorMessage,
+  shouldShowTranscriptErrorToast,
+} from '../../transcripts/services/transcriptErrorHandler';
 import { useToast } from '../contexts/ToastContext';
 
 const useLoadContent = (bypassCache = false) => {
@@ -46,14 +50,29 @@ const useLoadContent = (bypassCache = false) => {
 
   const loadTranscript = async () => {
     dispatch(setIsLoading(true));
-    const data = await fetchTranscript();
-    if (data && data.items) {
-      dispatch(setTranscripts(data.items));
-      dispatch(setFilteredTranscripts(data.items));
-    } else {
+    try {
+      const data = await fetchTranscript();
+      if (data && data.items) {
+        dispatch(setTranscripts(data.items));
+        dispatch(setFilteredTranscripts(data.items));
+      } else {
+        dispatch(setTranscripts([]));
+      }
+    } catch (error: any) {
       dispatch(setTranscripts([]));
+      if (shouldShowTranscriptErrorToast(error)) {
+        const message = getTranscriptFetchErrorMessage(error);
+        if (message) {
+          showToast({
+            type: 'error',
+            message,
+            duration: 5000,
+          });
+        }
+      }
+    } finally {
+      dispatch(setIsLoading(false));
     }
-    dispatch(setIsLoading(false));
   };
 
   const loadLiveChat = async (bypassCache = false) => {
