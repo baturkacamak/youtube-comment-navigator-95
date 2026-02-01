@@ -5,6 +5,7 @@ import { DownloadAccordionProps, DownloadFormat, DownloadScope, FORMAT_CONFIG } 
 import { generateFileName, executeDownload } from './downloadUtils';
 import logger from '../../utils/logger';
 import Collapsible from '../Collapsible';
+import { useToast } from '../../contexts/ToastContext';
 
 const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   contentType,
@@ -14,6 +15,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   formatTextContent,
 }) => {
   const { t } = useTranslation() as { t: (key: string) => string };
+  const { showToast } = useToast();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -79,13 +81,60 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
         dataToDownload = visibleData;
       }
 
+      // Check if data is empty
+      if (!dataToDownload) {
+        showToast({
+          type: 'error',
+          message: 'No data to export',
+          duration: 4000,
+        });
+        return;
+      }
+
+      if (Array.isArray(dataToDownload) && dataToDownload.length === 0) {
+        showToast({
+          type: 'error',
+          message: 'No data to export',
+          duration: 4000,
+        });
+        return;
+      }
+
       const fileName = generateFileName(contentType, selectedFormat, selectedScope, fileNamePrefix);
       executeDownload(dataToDownload, selectedFormat, fileName, formatTextContent);
+
+      // Show success message
+      const itemCount = Array.isArray(dataToDownload) ? dataToDownload.length : 0;
+      const formatLabel = selectedFormat.toUpperCase();
+
+      let successMessage = '';
+      if (contentType === 'transcript') {
+        successMessage = 'Transcript downloaded';
+      } else if (itemCount > 0) {
+        successMessage = `Exported ${itemCount} ${contentType} to ${formatLabel}`;
+      } else {
+        successMessage = `Exported to ${formatLabel}`;
+      }
+
+      showToast({
+        type: 'success',
+        message: successMessage,
+        duration: 3000,
+      });
 
       // Auto-close panel after download
       setIsExpanded(false);
     } catch (error) {
       logger.error('Download failed:', error);
+
+      const errorMessage =
+        error instanceof Error && error.message ? error.message : 'Export failed. Try again.';
+
+      showToast({
+        type: 'error',
+        message: errorMessage,
+        duration: 5000,
+      });
     } finally {
       setIsDownloading(false);
     }
