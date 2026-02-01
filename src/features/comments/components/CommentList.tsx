@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import { setTotalCommentsCount } from '../../../store/store';
+import { setTotalCommentsCount, resetFilters, setSearchKeyword } from '../../../store/store';
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
 
 import logger from '../../shared/utils/logger';
@@ -203,23 +203,62 @@ const CommentList: React.FC<CommentListProps> = () => {
           role="alert"
         >
           <XCircleIcon className="w-16 h-16 mb-4" />
-          <h3 className="text-lg font-bold mb-2">{t('Error loading comments')}</h3>
+          <h3 className="text-lg font-bold mb-2">{t('Failed to load comments')}</h3>
           <p className="text-center mb-4">{error.message}</p>
           <button
-            onClick={clearError}
-            className="px-6 py-2 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded hover:bg-red-200 dark:hover:bg-red-800 transition-colors font-medium"
+            onClick={() => {
+              clearError();
+              refresh();
+            }}
+            className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded transition-colors font-medium"
           >
-            {t('Dismiss')}
+            {t('Retry')}
           </button>
         </div>
       );
     }
 
+    // Check if filters or search are active
+    const hasActiveFilters =
+      !!searchKeyword ||
+      filters?.verified ||
+      filters?.hasLinks ||
+      (filters?.likesThreshold?.min || 0) > 0 ||
+      (filters?.likesThreshold?.max || Infinity) < Infinity ||
+      (filters?.repliesLimit?.min || 0) > 0 ||
+      (filters?.repliesLimit?.max || Infinity) < Infinity ||
+      (filters?.wordCount?.min || 0) > 0 ||
+      (filters?.wordCount?.max || Infinity) < Infinity ||
+      !!filters?.dateTimeRange?.start ||
+      !!filters?.dateTimeRange?.end;
+
+    if (hasActiveFilters) {
+      // Filtered empty state
+      return (
+        <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
+          <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
+          <p className="text-lg text-gray-800 dark:text-gray-200 mb-4">
+            {t('No comments match your filters')}
+          </p>
+          <button
+            onClick={() => {
+              dispatch(resetFilters());
+              dispatch(setSearchKeyword(''));
+            }}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors font-medium"
+          >
+            {t('Clear filters')}
+          </button>
+        </Box>
+      );
+    }
+
+    // Truly empty - no comments on video
     return (
       <Box className="flex flex-col items-center justify-center p-4 mt-4" aria-live="polite">
         <ExclamationCircleIcon className="w-16 h-16 text-gray-500 dark:text-gray-400 mb-4" />
         <p className="text-lg text-gray-800 dark:text-gray-200">
-          {t('No comments found. Try a different search or filter.')}
+          {t('This video has no comments')}
         </p>
       </Box>
     );

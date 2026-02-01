@@ -103,9 +103,7 @@ describe('CommentList', () => {
       </Provider>
     );
 
-    expect(
-      screen.getByText('No comments found. Try a different search or filter.')
-    ).toBeInTheDocument();
+    expect(screen.getByText('This video has no comments')).toBeInTheDocument();
   });
 
   it('renders list of comments', () => {

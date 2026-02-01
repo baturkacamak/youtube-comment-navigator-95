@@ -5,19 +5,22 @@ import ActionButtons from './ActionButtons';
 import TranscriptEntry from './TranscriptEntry';
 import { setTranscripts } from '../../../store/store';
 import { fetchTranscript } from '../services/fetchTranscript';
+import { DocumentTextIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 interface TranscriptProps {
   transcripts: any[];
 }
 
 const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
-  const textSize = useSelector((state: RootState) => state.settings.textSize);
   const [includeTimestamps, setIncludeTimestamps] = useState(() => {
     return localStorage.getItem('transcript_timestamps_preference') === 'true';
   });
   const selectedLanguage = useSelector((state: RootState) => state.transcriptSelectedLanguage);
   const [hoveredLineIndex, setHoveredLineIndex] = useState<number | null>(null);
+  const isLoading = useSelector((state: RootState) => state.isLoading);
 
   useEffect(() => {
     localStorage.setItem('transcript_timestamps_preference', String(includeTimestamps));
@@ -46,13 +49,17 @@ const Transcript: React.FC<TranscriptProps> = ({ transcripts }) => {
         />
       </div>
       {transcripts.length === 0 ? (
-        <p
-          className={`text-gray-600 dark:text-gray-400 ${textSize}`}
-          aria-live="assertive"
-          aria-label="No transcript available"
-        >
-          No transcript available.
-        </p>
+        <div className="flex flex-col items-center justify-center p-8 mt-4" aria-live="polite">
+          <DocumentTextIcon className="w-16 h-16 text-gray-400 dark:text-gray-600 mb-4" />
+          <p className="text-lg text-gray-700 dark:text-gray-300 font-medium mb-2">
+            {isLoading ? t('Loading transcript...') : t('Transcript not available')}
+          </p>
+          {!isLoading && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+              {t('This video does not have a transcript, or it could not be loaded.')}
+            </p>
+          )}
+        </div>
       ) : (
         <ul aria-live="polite">
           {transcripts.map((entry, index) => (
