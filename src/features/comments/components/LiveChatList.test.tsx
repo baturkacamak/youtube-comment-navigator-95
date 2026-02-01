@@ -91,6 +91,6 @@ describe('LiveChatList', () => {
       </Provider>
     );
 
-    expect(await screen.findByText('No live chat messages')).toBeInTheDocument();
+    expect(await screen.findByText('This video has no live chat')).toBeInTheDocument();
   });
 });
