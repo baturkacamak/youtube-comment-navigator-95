@@ -61,10 +61,7 @@ export const seedMockData = async (dispatch: any) => {
 
       // Bulk add to IndexedDB for performance
       await db.comments.bulkAdd(commentsToInsert);
-      logger.success(
-        `[MockDataSeeder] Successfully seeded ${commentsToInsert.length} mock comments.`
-      );
-    } else { /* no-op */ }
+          } else { /* no-op */ }
 
     // Now load the initial page of comments from the DB, just like the real app does
     const initialComments = await loadPagedComments(
@@ -121,8 +118,7 @@ export const seedMockData = async (dispatch: any) => {
     dispatch(setLiveChat(mockLiveChat));
     dispatch(setLiveChatMessageCount(20));
 
-    logger.success('[MockDataSeeder] Mock data loaded to state and DB.');
-  } catch (error) {
+      } catch (error) {
     logger.error('[MockDataSeeder] Failed to seed mock data:', error);
   } finally {
     dispatch(setIsLoading(false));

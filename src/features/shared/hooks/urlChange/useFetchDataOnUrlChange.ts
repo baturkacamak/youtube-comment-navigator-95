@@ -140,9 +140,7 @@ const fetchAndSetLiveChat = async (
     const controller = new AbortController();
 
     fetchAndProcessLiveChat(videoId, window, controller.signal)
-      .then(() => {
-        logger.success('[useFetchDataOnUrlChange] Live chat loaded successfully');
-      })
+      .then(() => { /* no-op */ })
       .catch((error: any) => {
         if (error.name !== 'AbortError') {
           logger.error('[useFetchDataOnUrlChange] Failed to load live chat:', error);

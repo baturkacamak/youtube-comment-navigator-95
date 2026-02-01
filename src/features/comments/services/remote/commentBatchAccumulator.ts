@@ -164,10 +164,7 @@ export async function flushAccumulator(
     // After first flush, no longer fresh
     acc.isFresh = false;
 
-    logger.success(
-      `[BatchAccumulator] Flushed ${count} comments. Total flushed: ${acc.totalFlushed}`
-    );
-
+    
     // Emit events for UI updates
     if (emitEvents) {
       dbEvents.emitBulkCommentsAdded(videoId, count);

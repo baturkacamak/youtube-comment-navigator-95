@@ -241,9 +241,6 @@ export function processLiveChatActions(
     }
   }
 
-  logger.success(
-    `[LiveChatProcessor] Processed ${messages.length} messages, ${replies.length} replies, ${errors.length} errors`
-  );
-
+  
   return { messages, replies, errors };
 }

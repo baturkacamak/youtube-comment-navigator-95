@@ -109,8 +109,7 @@ const useLoadContent = (bypassCache = false) => {
       // Fetch live chat
       const controller = new AbortController();
       await fetchAndProcessLiveChat(videoId, window, controller.signal);
-      logger.success('[useLoadContent] Live chat loaded successfully');
-    } catch (error: any) {
+          } catch (error: any) {
       logger.error('[useLoadContent] Failed to load live chat:', error);
       dispatch(setLiveChatError(error.message || 'Failed to load live chat'));
 
@@ -136,8 +135,7 @@ const useLoadContent = (bypassCache = false) => {
     await Promise.allSettled([loadComments(bypassCache), loadTranscript(), loadLiveChat()]);
 
     dispatch(setIsLoading(false));
-    logger.success('[useLoadContent] All content loaded');
-  };
+      };
 
   return {
     loadComments,

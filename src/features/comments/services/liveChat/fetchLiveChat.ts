@@ -177,8 +177,7 @@ async function saveActions(actions: any[], videoId: string) {
     if (processedData.messages.length > 0) {
       try {
         const savedCount = await saveLiveChatMessages(processedData.messages, videoId);
-        logger.success(`[LiveChat] Saved ${savedCount} livechat messages to database`);
-      } catch (saveError: any) {
+              } catch (saveError: any) {
         logger.error(`[LiveChat] Failed to save livechat messages:`, saveError);
         throw saveError;
       }
@@ -206,10 +205,7 @@ async function saveActions(actions: any[], videoId: string) {
 
           await db.comments.bulkPut(repliesToSave);
         });
-        logger.success(
-          `[LiveChat] Saved ${processedData.replies.length} livechat replies to comments table`
-        );
-      } catch (replyError: any) {
+              } catch (replyError: any) {
         logger.error(`[LiveChat] Failed to save livechat replies:`, replyError);
         // Don't throw - messages were saved successfully
       }

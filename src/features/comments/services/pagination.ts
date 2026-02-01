@@ -194,10 +194,7 @@ export const loadPagedComments = async (
 
       logger.end(scanTimer);
       const result = allTopLevel.slice(offset, offset + pageSize);
-      logger.success(
-        `${logPrefix} Shuffled ${allTopLevel.length} comments, returning page of ${result.length}.`
-      );
-      return result;
+            return result;
     }
 
         return pagedComments;

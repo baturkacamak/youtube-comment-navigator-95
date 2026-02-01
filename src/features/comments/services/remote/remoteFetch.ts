@@ -194,8 +194,7 @@ async function loadInitialComments(videoId: string, dispatch: any): Promise<void
     );
     const totalCount = await countComments(db.comments, videoId, { /* no-op */ }, '', { excludeLiveChat: true });
     dispatch(setTotalCommentsCount(totalCount));
-    logger.success(`Loaded ${initialComments.length} comments from IndexedDB`);
-    dispatch(setComments(initialComments));
+        dispatch(setComments(initialComments));
   } catch (err) {
     logger.error('Failed to load initial comments from IndexedDB:', err);
   } finally {
@@ -209,8 +208,7 @@ async function loadCachedCommentsIfAny(videoId: string, dispatch: any): Promise<
   try {
     const cachedData = await getCachedComments(videoId);
     if (cachedData && cachedData.length > 0) {
-      logger.success(`Loaded ${cachedData.length} cached comments`);
-      const initialCachedComments = cachedData.slice(0, PAGINATION.DEFAULT_PAGE_SIZE);
+            const initialCachedComments = cachedData.slice(0, PAGINATION.DEFAULT_PAGE_SIZE);
       dispatch(setComments(initialCachedComments));
       dispatch(setIsLoading(false));
       return true;

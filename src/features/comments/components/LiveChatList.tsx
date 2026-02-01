@@ -98,8 +98,7 @@ const LiveChatList: React.FC = () => {
       const currentTotal = page * pageSize + messages.length;
       setHasMore(currentTotal < totalCount && messages.length === pageSize);
 
-      logger.success(`[LiveChatList] Loaded ${messages.length} messages (total: ${totalCount})`);
-    } catch (error: any) {
+          } catch (error: any) {
       logger.error('[LiveChatList] Failed to load messages from database:', error);
       dispatch(setLiveChatError(error.message || 'Failed to load live chat messages'));
     } finally {

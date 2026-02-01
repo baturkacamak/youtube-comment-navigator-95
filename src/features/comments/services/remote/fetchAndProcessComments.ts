@@ -63,8 +63,7 @@ export const flushBufferedComments = async (videoId: string): Promise<number> =>
   const flushed = await flushAccumulator(videoId);
   if (flushed > 0) {
     localCommentCount = await getExistingCommentCount(videoId);
-    logger.success(`Flushed ${flushed} buffered comments. Total count: ${localCommentCount}`);
-  }
+      }
   return flushed;
 };
 
@@ -266,10 +265,7 @@ export const fetchAndProcessComments = async (
         clearFreshVideoMarker(videoId);
       }
 
-      logger.success(
-        `Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`
-      );
-
+      
       // Emit database event for reactive UI updates
       if (insertedCount > 0) {
         const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);

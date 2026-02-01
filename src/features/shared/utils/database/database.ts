@@ -171,8 +171,7 @@ class Database extends Dexie {
               }));
 
               await tx.table('liveChatMessages').bulkAdd(liveChatMessages);
-              logger.success('[Dexie] Successfully migrated livechat messages');
-
+              
               // Optionally delete migrated livechat from comments table
               // Keeping them for now in case of rollback needs
               // await tx.table('comments').where('isLiveChat').equals(1).delete();
@@ -186,10 +185,7 @@ class Database extends Dexie {
       this.comments = this.table('comments');
       this.liveChatMessages = this.table('liveChatMessages');
       this.kvStore = this.table('kvStore');
-      logger.success(
-        '[Dexie] IndexedDB initialized. Tables ready: comments, liveChatMessages, kvStore'
-      );
-    } catch (err: any) {
+          } catch (err: any) {
       logger.error('[Dexie] Failed to initialize IndexedDB:', err);
     }
   }

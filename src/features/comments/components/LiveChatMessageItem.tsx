@@ -44,8 +44,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
         try {
                     const loadedReplies = await loadLiveChatReplies(message.messageId);
           setReplies(loadedReplies);
-          logger.success(`[LiveChatMessageItem] Loaded ${loadedReplies.length} replies`);
-        } catch (error) {
+                  } catch (error) {
           logger.error('[LiveChatMessageItem] Failed to load replies:', error);
         } finally {
           setIsLoadingReplies(false);
