@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import LiveChatList from './LiveChatList';

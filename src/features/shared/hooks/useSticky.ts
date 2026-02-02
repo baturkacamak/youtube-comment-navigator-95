@@ -1,6 +1,6 @@
 import { useState, useEffect, RefObject } from 'react';
 
-const useSticky = (ref: RefObject<HTMLDivElement>, trigger: boolean) => {
+const useSticky = (ref: RefObject<HTMLDivElement | null>, trigger: boolean) => {
   const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {

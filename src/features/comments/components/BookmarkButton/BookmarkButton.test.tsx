@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen } from '@testing-library/dom';
 import BookmarkButton from './BookmarkButton';
 import { vi } from 'vitest';
 import { Comment } from '../../../../types/commentTypes';

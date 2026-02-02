@@ -7,7 +7,7 @@ import Input from '../Input';
 interface SearchInputProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  searchRef: RefObject<HTMLInputElement>;
+  searchRef: RefObject<HTMLInputElement | null>;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, setSearchTerm, searchRef }) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen, fireEvent, waitFor, within } from '@testing-library/dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
