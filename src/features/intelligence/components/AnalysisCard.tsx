@@ -61,12 +61,12 @@ const AnalysisCard: React.FC<AnalysisCardProps> = ({
       {/* Header - Always visible */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="flex-shrink-0">{icon}</div>
+          <div className="shrink-0">{icon}</div>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-2">
               <h3 className="text-sm font-semibold dark:text-white truncate">{t(title)}</h3>
               {isNanoReady && (
-                <span className="flex-shrink-0 text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                <span className="shrink-0 text-[10px] bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                   Nano
                 </span>
               )}
@@ -79,7 +79,7 @@ const AnalysisCard: React.FC<AnalysisCardProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Info tooltip */}
           <Tooltip text={t(description)} position="left">
             <button className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors">

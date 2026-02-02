@@ -2,7 +2,7 @@ const prefixSelector = require('postcss-prefix-selector');
 
 module.exports = {
   plugins: [
-    require('tailwindcss'),
+    require('@tailwindcss/postcss'),
     prefixSelector({
       prefix: '#youtube-comment-navigator-app',
       transform: function (prefix, selector, prefixedSelector, filePath, rule) {

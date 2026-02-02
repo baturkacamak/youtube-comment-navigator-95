@@ -85,7 +85,7 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
     <div className="flex flex-col gap-3 px-4 py-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <ExclamationTriangleIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+          <ExclamationTriangleIcon className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <div className="flex flex-col">
             <span className="text-sm font-medium text-amber-800 dark:text-amber-300">
               {t('AI Not Configured')}
@@ -98,7 +98,7 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
         {onOpenSettings && (
           <button
             onClick={onOpenSettings}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 dark:text-amber-300 dark:bg-amber-800 dark:hover:bg-amber-700 rounded-md transition-colors flex-shrink-0"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 dark:text-amber-300 dark:bg-amber-800 dark:hover:bg-amber-700 rounded-md transition-colors shrink-0"
           >
             <Cog6ToothIcon className="w-3.5 h-3.5" />
             {t('Configure')}

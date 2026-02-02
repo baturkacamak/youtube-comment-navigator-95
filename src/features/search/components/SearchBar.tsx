@@ -53,6 +53,7 @@ const SearchBar: React.FC = () => {
   }, [selectedOption, t]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     updatePlaceholder();
   }, [selectedOption, updatePlaceholder]);
 
@@ -81,7 +82,7 @@ const SearchBar: React.FC = () => {
         placeholder={placeholder}
         value={searchKeyword}
         onChange={(e) => setSearchKeywordLocal(e.target.value)}
-        className="flex-grow p-2"
+        className="grow p-2"
         aria-label={placeholder}
       />
       <button

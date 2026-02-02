@@ -74,7 +74,7 @@ const AnalysisActionBar: React.FC<AnalysisActionBarProps> = ({
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <span className="text-sm font-medium text-gray-600 dark:text-gray-300 min-w-[4rem] text-right">
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-300 min-w-16 text-right">
             {completedCount}/{totalCount}
           </span>
         </div>

@@ -1,6 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --animate-highlight-bar: highlight-bar-expand 0.5s ease-in-out;
+
+  @keyframes highlight-bar-expand {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 100%;
+    }
+  }
+}
+
+@config "../../tailwind.config.cjs";
 
 /* YouTube Comment Navigator container sizing */
 #youtube-comment-navigator-app {

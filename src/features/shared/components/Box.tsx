@@ -6,8 +6,8 @@ import { BoxProps } from '../../../types/layoutTypes';
 const Box: React.FC<BoxProps> = ({
   children,
   className,
-  bgColor = 'bg-gradient-to-r from-slate to-slate-100',
-  darkBgColor = 'dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-800',
+  bgColor = 'bg-linear-to-r from-slate to-slate-100',
+  darkBgColor = 'dark:bg-linear-to-r dark:from-gray-700 dark:to-gray-800',
   borderColor = 'border-2 border-gray-400',
   darkBorderColor = 'dark:border-gray-600',
 }) => {

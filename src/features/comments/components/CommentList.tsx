@@ -170,7 +170,7 @@ const CommentList: React.FC<CommentListProps> = () => {
   if (isLoading && comments.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center p-4 mt-4 bg-gradient-to-r from-teal-100 to-teal-300 dark:bg-gradient-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md"
+        className="flex flex-col items-center justify-center p-4 mt-4 bg-linear-to-r from-teal-100 to-teal-300 dark:bg-linear-to-r dark:from-gray-700 dark:to-gray-900 border-2 border-gray-400 dark:border-gray-600 rounded-lg shadow-md"
         role="status"
         aria-live="polite"
       >

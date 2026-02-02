@@ -13,11 +13,11 @@ interface BookmarkedCommentsProps {
 // Pre-computed alternating colors for bookmarked comments
 const BOOKMARK_COLORS = {
   even: {
-    bgColor: 'bg-gradient-to-r from-zinc-50 to-zinc-100',
+    bgColor: 'bg-linear-to-r from-zinc-50 to-zinc-100',
     darkBgColor: 'dark:from-gray-800 dark:to-gray-900',
   },
   odd: {
-    bgColor: 'bg-gradient-to-r from-stone-50 to-stone-100',
+    bgColor: 'bg-linear-to-r from-stone-50 to-stone-100',
     darkBgColor: 'dark:from-gray-700 dark:to-gray-800',
   },
 };
