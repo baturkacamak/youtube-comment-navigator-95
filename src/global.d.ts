@@ -1,28 +1,21 @@
-import React from 'react';
+import type * as React from 'react';
 
 declare global {
   namespace JSX {
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface Element extends React.JSX.Element {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface ElementClass extends React.JSX.ElementClass {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface ElementAttributesProperty extends React.JSX.ElementAttributesProperty {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface ElementChildrenAttribute extends React.JSX.ElementChildrenAttribute {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface IntrinsicAttributes extends React.JSX.IntrinsicAttributes {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface IntrinsicClassAttributes<T> extends React.JSX.IntrinsicClassAttributes<T> {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    interface IntrinsicElements extends React.JSX.IntrinsicElements {}
+    type Element = React.JSX.Element;
+    type ElementClass = React.JSX.ElementClass;
+    type ElementAttributesProperty = React.JSX.ElementAttributesProperty;
+    type ElementChildrenAttribute = React.JSX.ElementChildrenAttribute;
+    type IntrinsicAttributes = React.JSX.IntrinsicAttributes;
+    type IntrinsicClassAttributes<T> = React.JSX.IntrinsicClassAttributes<T>;
+    type IntrinsicElements = React.JSX.IntrinsicElements;
   }
-}
 
-interface Window {
-  YT: {
-    Player: new (id: string) => {
-      seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+  interface Window {
+    YT: {
+      Player: new (id: string) => {
+        seekTo: (seconds: number, allowSeekAhead: boolean) => void;
+      };
     };
-  };
+  }
 }

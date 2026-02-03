@@ -62,12 +62,6 @@ const LanguageSetting: React.FC = () => {
     applyLanguage(selectedLanguage.value);
   }, [selectedLanguage]);
 
-  useEffect(() => {
-    const settings = getSettings();
-    applyLanguage((settings.language as string) || selectedLanguage.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <>
       <label className="text-sm font-medium text-gray-800 dark:text-gray-200 mr-2 select-none">

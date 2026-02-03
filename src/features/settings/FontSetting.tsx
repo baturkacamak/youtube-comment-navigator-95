@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SelectBox from '../shared/components/SelectBox/SelectBox';
 import { Option } from '../../types/utilityTypes';
 import { useTranslation } from 'react-i18next';
@@ -74,7 +74,7 @@ const FontSetting: React.FC = () => {
 
   const [selectedFont, setSelectedFont] = useState<Option>(getInitialFont);
 
-  const applyFont = (fontFamily: string) => {
+  const applyFont = useCallback((fontFamily: string) => {
     try {
       if (!fontFamily || typeof fontFamily !== 'string') {
         console.warn('Invalid font family value provided to applyFont');
@@ -88,18 +88,11 @@ const FontSetting: React.FC = () => {
     } catch (error) {
       console.error('Error applying font:', error);
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     applyFont(selectedFont.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFont]);
-
-  useEffect(() => {
-    const settings = getSettings();
-    applyFont((settings.fontFamily as string) || selectedFont.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [selectedFont, applyFont]);
 
   const handleFontChange = (option: Option) => {
     setSelectedFont(option);

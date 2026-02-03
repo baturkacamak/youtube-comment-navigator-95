@@ -26,14 +26,14 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
-  const initialLoadRef = useRef(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const initialTextareaHeight = 'h-11';
   const [textareaHeight, setTextareaHeight] = useState(initialTextareaHeight);
   const initialCountDown = 15;
   const [countdown, setCountdown] = useState(initialCountDown);
 
   const handleExtraLogic = (newNote: string) => {
-    initialLoadRef.current = false;
+    setIsInitialLoad(false);
     setTextareaHeight('h-32');
     clearInterval(countdownRef.current!);
 
@@ -83,10 +83,10 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
       return;
     }
 
-    if (initialLoadRef.current && note?.trim() === '') {
+    if (isInitialLoad && note?.trim() === '') {
       startCountdown();
     }
-  }, [note, startCountdown, isSaving]);
+  }, [note, startCountdown, isSaving, isInitialLoad]);
 
   return (
     <Draggable
@@ -139,7 +139,7 @@ const NoteInputModal: React.FC<NoteInputModalProps> = ({
           </div>
         </Collapsible>
 
-        <Collapsible isOpen={initialLoadRef.current && note?.trim() === '' && !isDragging}>
+        <Collapsible isOpen={isInitialLoad && note?.trim() === '' && !isDragging}>
           <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center select-user mt-2">
             <ClockIcon className="w-4 h-4 mr-1" />
             <Trans i18nKey="This modal will close in COUNTDOWN seconds" values={{ countdown }}>

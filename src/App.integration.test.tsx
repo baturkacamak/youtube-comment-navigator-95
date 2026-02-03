@@ -5,6 +5,7 @@ import { screen, fireEvent, waitFor, within } from '@testing-library/dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { Filters } from './types/filterTypes';
 
 // Define Mock Types globally for usage in mocks
 interface MockComment {
@@ -447,6 +448,9 @@ const {
     filters: {
       sortBy: '',
       sortOrder: 'desc',
+      verified: false,
+      hasLinks: false,
+      keyword: '',
       timestamps: false,
       heart: false,
       links: false,
@@ -457,7 +461,7 @@ const {
       repliesLimit: { min: 0, max: Infinity },
       wordCount: { min: 0, max: Infinity },
       dateTimeRange: { start: '', end: '' },
-    },
+    } as Filters,
     bookmarkedCommentIds: new Set<string>(),
     activeTab: 'comments',
     isSettingsOpen: false,
@@ -932,14 +936,13 @@ vi.mock('./features/settings/components/SettingsDrawer', () => ({
 
 // Mock ControlPanel with full functionality
 vi.mock('./features/sidebar/components/ControlPanel', () => ({
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  default: ({ filters, setFilters }: { filters: any; setFilters: (f: any) => void }) => {
-    const handleFilterChange = (name: string) => {
+  default: ({ filters, setFilters }: { filters: Filters; setFilters: (f: Filters) => void }) => {
+    const handleFilterChange = (name: keyof Filters) => {
       const newFilters = { ...filters, [name]: !filters[name] };
       setFilters(newFilters);
       mockState.filters = {
         ...mockState.filters,
-        [name]: !mockState.filters[name as keyof typeof mockState.filters],
+        [name]: !mockState.filters[name],
       };
     };
 
@@ -955,11 +958,14 @@ vi.mock('./features/sidebar/components/ControlPanel', () => ({
       mockState.filters.sortOrder = newOrder;
     };
 
-    const handleRangeChange = (field: string, key: 'min' | 'max', value: number) => {
+    const handleRangeChange = (
+      field: keyof Pick<Filters, 'likesThreshold' | 'repliesLimit' | 'wordCount'>,
+      key: 'min' | 'max',
+      value: number
+    ) => {
       const newValue = { ...(filters[field] || { min: 0, max: Infinity }), [key]: value };
       setFilters({ ...filters, [field]: newValue });
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (mockState.filters as any)[field] = newValue;
+      mockState.filters[field] = newValue;
     };
 
     const handleClearFilters = () => {
@@ -1014,7 +1020,9 @@ vi.mock('./features/sidebar/components/ControlPanel', () => ({
           </button>
         </div>
         <div data-testid="filter-options" role="group" aria-label="Filter options">
-          {['timestamps', 'heart', 'links', 'members', 'donated', 'creator'].map((filter) => (
+          {(
+            ['timestamps', 'heart', 'links', 'members', 'donated', 'creator'] as const
+          ).map((filter) => (
             <label key={filter}>
               <input
                 type="checkbox"
@@ -1184,21 +1192,20 @@ const createTestStore = (preloadedState = {}) => {
   };
 
   return configureStore({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    reducer: (state = initialState, action: { type: string; payload?: any }) => {
+    reducer: (state = initialState, action: { type: string; payload?: unknown }) => {
       switch (action.type) {
         case 'comments/setSearchKeyword':
-          mockState.searchKeyword = action.payload;
-          return { ...state, searchKeyword: action.payload };
+          mockState.searchKeyword = action.payload as string;
+          return { ...state, searchKeyword: action.payload as string };
         case 'comments/clearSearchKeyword':
           mockState.searchKeyword = '';
           return { ...state, searchKeyword: '' };
         case 'comments/setFilters':
-          return { ...state, filters: action.payload };
+          return { ...state, filters: action.payload as Filters };
         case 'comments/setShowBookmarked':
-          return { ...state, showBookmarked: action.payload };
+          return { ...state, showBookmarked: action.payload as boolean };
         case 'comments/setBookmarkedComments':
-          return { ...state, bookmarkedComments: action.payload };
+          return { ...state, bookmarkedComments: action.payload as MockComment[] };
         default:
           return state;
       }
@@ -1224,6 +1231,9 @@ const resetMockState = () => {
   mockState.filters = {
     sortBy: '',
     sortOrder: 'desc',
+    verified: false,
+    hasLinks: false,
+    keyword: '',
     timestamps: false,
     heart: false,
     links: false,

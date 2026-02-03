@@ -30,10 +30,6 @@ if (rootElement) {
     const [languageDirection, setLanguageDirection] = useState(getLanguageDirection(i18n.language));
 
     useEffect(() => {
-      // Set initial language direction
-      const initialDirection = getLanguageDirection(i18n.language);
-      setLanguageDirection(initialDirection);
-
       // Update language direction on language change
       const handleLanguageChange = (lng: string) => {
         const direction = getLanguageDirection(lng);

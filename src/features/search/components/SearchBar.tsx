@@ -1,4 +1,4 @@
-import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { FormEvent, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ChatBubbleOvalLeftIcon,
@@ -30,32 +30,21 @@ const SearchBar: React.FC = () => {
   const searchKeywordFromState = useSelector((state: RootState) => state.searchKeyword);
   const [searchKeyword, setSearchKeywordLocal] = useState(searchKeywordFromState);
   const [selectedOption] = useState<Option>(options[0]);
-  const [placeholder, setPlaceholder] = useState(t('Search comments...'));
 
-  const updatePlaceholder = useCallback(() => {
+  const placeholder = useMemo(() => {
     switch (selectedOption.value) {
       case 'all':
-        setPlaceholder(t('Search everything...'));
-        break;
+        return t('Search everything...');
       case 'comments':
-        setPlaceholder(t('Search comments...'));
-        break;
+        return t('Search comments...');
       case 'chat':
-        setPlaceholder(t('Search live chat...'));
-        break;
+        return t('Search live chat...');
       case 'transcript':
-        setPlaceholder(t('Search transcript...'));
-        break;
+        return t('Search transcript...');
       default:
-        setPlaceholder(t('Search...'));
-        break;
+        return t('Search...');
     }
-  }, [selectedOption, t]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    updatePlaceholder();
-  }, [selectedOption, updatePlaceholder]);
+  }, [selectedOption.value, t]);
 
   const handleSearch = () => {
     dispatch(setSearchKeyword(searchKeyword));

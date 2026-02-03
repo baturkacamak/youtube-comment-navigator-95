@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { PencilIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
 import useNoteHandler from '../hooks/useNoteHandler';
@@ -11,29 +11,29 @@ interface CommentNoteProps {
 
 const CommentNote: React.FC<CommentNoteProps> = React.memo(({ comment }) => {
   const { t } = useTranslation();
+  const [isEditingNote, setIsEditingNote] = useState(false);
+  const [showSavedMessage, setShowSavedMessage] = useState(false);
+  const savedMessageShownRef = useRef(false);
+
   const { note, textareaRef, isSaving, handleInputChange } = useNoteHandler(comment, () => {
-    adjustTextareaHeight();
     setShowSavedMessage(true);
     setTimeout(() => {
       setShowSavedMessage(false);
     }, 2000); // Show the saved message for 2 seconds when user stops typing
   });
 
-  const [isEditingNote, setIsEditingNote] = useState(false);
-  const [showSavedMessage, setShowSavedMessage] = useState(false);
-  const initialNoteRef = useRef(note);
-  const savedMessageShownRef = useRef(false);
-
-  const adjustTextareaHeight = () => {
+  const adjustTextareaHeight = useCallback(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
-  };
+  }, [textareaRef]);
+
+  const initialNoteRef = useRef(note);
 
   useEffect(() => {
     adjustTextareaHeight();
-  }, [note]);
+  }, [note, adjustTextareaHeight]);
 
   const handleBlur = () => {
     setIsEditingNote(false);
