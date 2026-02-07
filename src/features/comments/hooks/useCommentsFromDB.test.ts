@@ -29,7 +29,11 @@ const defaultFilters: FilterState = {
 };
 
 // Helper to create mock comments
-const createMockComment = (id: string, videoId: string, overrides: Partial<Comment> = {}): Comment => ({
+const createMockComment = (
+  id: string,
+  videoId: string,
+  overrides: Partial<Comment> = {}
+): Comment => ({
   commentId: id,
   videoId,
   author: `User ${id}`,
@@ -61,7 +65,7 @@ const createMockComment = (id: string, videoId: string, overrides: Partial<Comme
   weightedZScore: 0,
   bayesianAverage: 0,
   isBookmarked: false,
-  bookmarkAddedDate: 0,
+  bookmarkAddedDate: '',
   published: new Date(Date.now() - parseInt(id) * 1000).toISOString(),
   ...overrides,
 });
@@ -94,9 +98,7 @@ describe('useCommentsFromDB', () => {
   describe('State Transitions (Loader Bug) - CRITICAL', () => {
     it('✅ BUG FIX: clears comments immediately when globalLoading transitions false → true', async () => {
       // Seed database with comments
-      const comments = Array.from({ length: 10 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 10 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       // Render hook with globalLoading = false
@@ -109,10 +111,13 @@ describe('useCommentsFromDB', () => {
       );
 
       // Wait for initial load
-      await waitFor(() => {
-        expect(result.current.comments.length).toBeGreaterThan(0);
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBeGreaterThan(0);
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       const loadedCommentsCount = result.current.comments.length;
       expect(loadedCommentsCount).toBeGreaterThan(0);
@@ -122,9 +127,12 @@ describe('useCommentsFromDB', () => {
       rerender();
 
       // ASSERT: Comments cleared immediately (THIS WOULD HAVE FAILED BEFORE THE FIX)
-      await waitFor(() => {
-        expect(result.current.comments).toHaveLength(0);
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments).toHaveLength(0);
+        },
+        { timeout: 1000 }
+      );
     });
 
     it('does NOT clear comments when globalLoading is already true', async () => {
@@ -168,9 +176,7 @@ describe('useCommentsFromDB', () => {
   describe('Database Events', () => {
     it('clears comments and resets page when comments:deleted event fires', async () => {
       // Seed database
-      const comments = Array.from({ length: 5 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 5 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -182,9 +188,12 @@ describe('useCommentsFromDB', () => {
       );
 
       // Wait for comments to load
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(5);
+        },
+        { timeout: 3000 }
+      );
 
       // ACT: Fire comments:deleted event
       act(() => {
@@ -220,9 +229,7 @@ describe('useCommentsFromDB', () => {
     });
 
     it('ignores events for different videoId', async () => {
-      const comments = Array.from({ length: 5 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 5 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -233,9 +240,12 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(5);
+        },
+        { timeout: 3000 }
+      );
 
       const initialLength = result.current.comments.length;
 
@@ -251,9 +261,7 @@ describe('useCommentsFromDB', () => {
 
   describe('Pagination', () => {
     it('loads initial page from database on mount', async () => {
-      const comments = Array.from({ length: 30 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 30 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -265,17 +273,18 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(20);
-        expect(result.current.isLoading).toBe(false);
-        expect(result.current.page).toBe(0);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(20);
+          expect(result.current.isLoading).toBe(false);
+          expect(result.current.page).toBe(0);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('loads next page when loadMore() called', async () => {
-      const comments = Array.from({ length: 50 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 50 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -288,10 +297,13 @@ describe('useCommentsFromDB', () => {
       );
 
       // Wait for initial page
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(20);
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(20);
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       // Load more
       await act(async () => {
@@ -299,16 +311,17 @@ describe('useCommentsFromDB', () => {
       });
 
       // Should have 40 comments now
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(40);
-        expect(result.current.page).toBe(1);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(40);
+          expect(result.current.page).toBe(1);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('hasMore becomes false when all comments loaded', async () => {
-      const comments = Array.from({ length: 25 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 25 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -320,20 +333,26 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(20);
-        expect(result.current.hasMore).toBe(true);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(20);
+          expect(result.current.hasMore).toBe(true);
+        },
+        { timeout: 3000 }
+      );
 
       // Load more (should get remaining 5)
       await act(async () => {
         await result.current.loadMore();
       });
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(25);
-        expect(result.current.hasMore).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(25);
+          expect(result.current.hasMore).toBe(false);
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -348,7 +367,7 @@ describe('useCommentsFromDB', () => {
       );
 
       // Wait a moment for subscription
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should have handlers
       const hadHandlers = dbEvents.hasHandlers();
@@ -367,9 +386,7 @@ describe('useCommentsFromDB', () => {
     });
 
     it('refresh() reloads from page 0', async () => {
-      const comments = Array.from({ length: 50 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 50 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -381,19 +398,25 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(20);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(20);
+        },
+        { timeout: 3000 }
+      );
 
       // Load page 2
       await act(async () => {
         await result.current.loadMore();
       });
 
-      await waitFor(() => {
-        expect(result.current.page).toBe(1);
-        expect(result.current.comments.length).toBe(40);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.page).toBe(1);
+          expect(result.current.comments.length).toBe(40);
+        },
+        { timeout: 3000 }
+      );
 
       // Refresh
       await act(async () => {
@@ -401,10 +424,13 @@ describe('useCommentsFromDB', () => {
       });
 
       // Should reset to page 0 with 20 comments
-      await waitFor(() => {
-        expect(result.current.page).toBe(0);
-        expect(result.current.comments.length).toBe(20);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.page).toBe(0);
+          expect(result.current.comments.length).toBe(20);
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -423,9 +449,12 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.totalCount).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.totalCount).toBe(5);
+        },
+        { timeout: 3000 }
+      );
 
       // Add more comments
       const newComments = Array.from({ length: 3 }, (_, i) =>
@@ -434,15 +463,16 @@ describe('useCommentsFromDB', () => {
       await db.comments.bulkAdd(newComments);
 
       // totalCount should update automatically (useLiveQuery)
-      await waitFor(() => {
-        expect(result.current.totalCount).toBe(8);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.totalCount).toBe(8);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('updates totalCount when comments are deleted from database', async () => {
-      const comments = Array.from({ length: 10 }, (_, i) =>
-        createMockComment(`${i + 1}`, videoId)
-      );
+      const comments = Array.from({ length: 10 }, (_, i) => createMockComment(`${i + 1}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -453,17 +483,23 @@ describe('useCommentsFromDB', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.totalCount).toBe(10);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.totalCount).toBe(10);
+        },
+        { timeout: 3000 }
+      );
 
       // Delete some comments
       await db.comments.where('commentId').anyOf(['1', '2', '3']).delete();
 
       // totalCount should update automatically
-      await waitFor(() => {
-        expect(result.current.totalCount).toBe(7);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.totalCount).toBe(7);
+        },
+        { timeout: 3000 }
+      );
     });
   });
 });

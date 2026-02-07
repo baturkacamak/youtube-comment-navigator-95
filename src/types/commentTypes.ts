@@ -27,6 +27,10 @@ export interface Comment {
   videoId?: string;
   isBookmarked?: boolean;
   bookmarkAddedDate?: string;
+  isPinned?: boolean;
+  authorUrl?: string;
+  authorThumb?: string;
+  isOwner?: boolean;
   showRepliesDefault?: boolean;
   note?: string;
   // Additional fields for database

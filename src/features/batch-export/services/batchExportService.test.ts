@@ -169,4 +169,91 @@ describe('batchExportService', () => {
       description: 'txt',
     });
   });
+
+  it('marks a video as partial when transcript fetch fails', async () => {
+    const selectedVideos: PlaylistVideoItem[] = [
+      { videoId: 'video_1', title: 'Video One', index: 1 },
+    ];
+
+    mockFetchPlayer.mockResolvedValue({
+      videoDetails: {
+        title: 'Video One',
+        shortDescription: 'Description text',
+        author: 'Channel One',
+      },
+    });
+
+    const params: BatchExportParams = {
+      playlistId: 'PL001',
+      selectedVideos,
+      selectedContent: {
+        comments: true,
+        transcript: true,
+        description: false,
+      },
+      selectedFormats: {
+        comments: 'json',
+        transcript: 'txt',
+        description: 'txt',
+      },
+    };
+
+    const outcome = await exportPlaylistBatchAsZip(params);
+
+    expect(outcome.manifest.results).toHaveLength(1);
+    expect(outcome.manifest.results[0].status).toBe('partial');
+    expect(outcome.manifest.results[0].warnings).toContain('Transcript unavailable');
+    expect(outcome.manifest.results[0].includedFiles).toEqual(['comments']);
+
+    const entries = mockCreateZipArchive.mock.calls[0][0] as Array<{
+      path: string;
+      data: Uint8Array;
+    }>;
+    expect(entries.some((entry) => entry.path.endsWith('/comments.json'))).toBe(true);
+    expect(entries.some((entry) => entry.path.endsWith('/transcript.txt'))).toBe(false);
+  });
+
+  it('throws when no content type is selected', async () => {
+    const params: BatchExportParams = {
+      playlistId: 'PL001',
+      selectedVideos: [{ videoId: 'video_1', title: 'Video One', index: 1 }],
+      selectedContent: {
+        comments: false,
+        transcript: false,
+        description: false,
+      },
+      selectedFormats: {
+        comments: 'json',
+        transcript: 'txt',
+        description: 'txt',
+      },
+    };
+
+    await expect(exportPlaylistBatchAsZip(params)).rejects.toThrow(
+      'Select at least one content type'
+    );
+  });
+
+  it('aborts before work starts when signal is already aborted', async () => {
+    const controller = new AbortController();
+    controller.abort();
+
+    const params: BatchExportParams = {
+      playlistId: 'PL001',
+      selectedVideos: [{ videoId: 'video_1', title: 'Video One', index: 1 }],
+      selectedContent: {
+        comments: true,
+        transcript: false,
+        description: false,
+      },
+      selectedFormats: {
+        comments: 'json',
+        transcript: 'txt',
+        description: 'txt',
+      },
+      signal: controller.signal,
+    };
+
+    await expect(exportPlaylistBatchAsZip(params)).rejects.toThrow('Batch export aborted');
+  });
 });

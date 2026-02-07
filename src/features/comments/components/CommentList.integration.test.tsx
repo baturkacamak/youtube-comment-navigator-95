@@ -122,7 +122,7 @@ const createComment = (id: string, videoId: string, overrides: Partial<Comment> 
     weightedZScore: 0,
     bayesianAverage: 0,
     isBookmarked: false,
-    bookmarkAddedDate: 0,
+    bookmarkAddedDate: '',
     published: new Date(Date.now() - timeOffset).toISOString(),
     ...overrides,
   };
@@ -203,9 +203,12 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Wait for video A comments to load
-      await waitFor(() => {
-        expect(screen.getAllByTestId('comment-item').length).toBeGreaterThan(0);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getAllByTestId('comment-item').length).toBeGreaterThan(0);
+        },
+        { timeout: 3000 }
+      );
 
       const commentsBeforeNav = screen.getAllByTestId('comment-item');
       expect(commentsBeforeNav.length).toBeGreaterThan(0);
@@ -218,10 +221,13 @@ describe('CommentList Integration Tests', () => {
 
       // ASSERT: Old comments should disappear IMMEDIATELY
       // THIS TEST WOULD HAVE FAILED BEFORE THE FIX
-      await waitFor(() => {
-        const items = screen.queryAllByTestId('comment-item');
-        expect(items.length).toBe(0);
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const items = screen.queryAllByTestId('comment-item');
+          expect(items.length).toBe(0);
+        },
+        { timeout: 1000 }
+      );
 
       // Should show loading state
       expect(screen.getByText('Loading comments...')).toBeInTheDocument();
@@ -240,9 +246,12 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Wait for comments to load
-      await waitFor(() => {
-        expect(screen.getAllByTestId('comment-item')).toHaveLength(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getAllByTestId('comment-item')).toHaveLength(5);
+        },
+        { timeout: 3000 }
+      );
 
       // Trigger loading state
       act(() => {
@@ -272,11 +281,14 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Should load and display comments
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBeGreaterThan(0);
-        expect(items.length).toBeLessThanOrEqual(10);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBeGreaterThan(0);
+          expect(items.length).toBeLessThanOrEqual(10);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('shows empty state when no comments in database', async () => {
@@ -288,9 +300,12 @@ describe('CommentList Integration Tests', () => {
         </Provider>
       );
 
-      await waitFor(() => {
-        expect(screen.getByText('This video has no comments')).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('This video has no comments')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('shows filter message when search returns no results', async () => {
@@ -309,9 +324,12 @@ describe('CommentList Integration Tests', () => {
         </Provider>
       );
 
-      await waitFor(() => {
-        expect(screen.getByText('No comments match your filters')).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('No comments match your filters')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -346,10 +364,13 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Should only show verified comments (2 out of 4)
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBe(2);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBe(2);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('filters comments with links correctly', async () => {
@@ -381,10 +402,138 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Should only show comments with links (2 out of 3)
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBe(2);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBe(2);
+        },
+        { timeout: 3000 }
+      );
+    });
+
+    it('filters comments by likes and replies thresholds', async () => {
+      const comments = [
+        createComment('1', 'test-video-id', { content: 'Low likes', likes: 10, replyCount: 1 }),
+        createComment('2', 'test-video-id', {
+          content: 'Match candidate',
+          likes: 20,
+          replyCount: 2,
+        }),
+        createComment('3', 'test-video-id', {
+          content: 'Too many likes',
+          likes: 40,
+          replyCount: 2,
+        }),
+      ];
+      await db.comments.bulkAdd(comments);
+
+      const store = createTestStore({
+        filters: {
+          keyword: '',
+          verified: false,
+          hasLinks: false,
+          sortBy: '',
+          sortOrder: '',
+          likesThreshold: { min: 15, max: 30 },
+          repliesLimit: { min: 2, max: 2 },
+          wordCount: { min: 0, max: Infinity },
+          dateTimeRange: { start: '', end: '' },
+        },
+      });
+
+      render(
+        <Provider store={store}>
+          <CommentList />
+        </Provider>
+      );
+
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items).toHaveLength(1);
+          expect(screen.getByText('Match candidate')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
+    });
+
+    it('filters comments by word count and date range', async () => {
+      const comments = [
+        createComment('1', 'test-video-id', {
+          content: 'Old short',
+          wordCount: 2,
+          publishedDate: Date.parse('2026-01-01T10:00:00Z'),
+        }),
+        createComment('2', 'test-video-id', {
+          content: 'In range but too long',
+          wordCount: 7,
+          publishedDate: Date.parse('2026-01-02T10:00:00Z'),
+        }),
+        createComment('3', 'test-video-id', {
+          content: 'Exactly right',
+          wordCount: 4,
+          publishedDate: Date.parse('2026-01-03T10:00:00Z'),
+        }),
+      ];
+      await db.comments.bulkAdd(comments);
+
+      const store = createTestStore({
+        filters: {
+          keyword: '',
+          verified: false,
+          hasLinks: false,
+          sortBy: '',
+          sortOrder: '',
+          likesThreshold: { min: 0, max: Infinity },
+          repliesLimit: { min: 0, max: Infinity },
+          wordCount: { min: 3, max: 5 },
+          dateTimeRange: {
+            start: '2026-01-02T00:00:00Z',
+            end: '2026-01-03T23:59:59Z',
+          },
+        },
+      });
+
+      render(
+        <Provider store={store}>
+          <CommentList />
+        </Provider>
+      );
+
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items).toHaveLength(1);
+          expect(screen.getByText('Exactly right')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
+    });
+
+    it('excludes live chat items from comment list by default', async () => {
+      const comments = [
+        createComment('1', 'test-video-id', { content: 'Regular comment', isLiveChat: false }),
+        createComment('2', 'test-video-id', { content: 'Live chat line', isLiveChat: true }),
+      ];
+      await db.comments.bulkAdd(comments);
+
+      const store = createTestStore();
+
+      render(
+        <Provider store={store}>
+          <CommentList />
+        </Provider>
+      );
+
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items).toHaveLength(1);
+          expect(screen.getByText('Regular comment')).toBeInTheDocument();
+          expect(screen.queryByText('Live chat line')).not.toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -409,12 +558,15 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Should only show comments containing "great" (2 out of 4)
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBe(2);
-        expect(screen.getByText(/great video/i)).toBeInTheDocument();
-        expect(screen.getByText(/Great explanation/i)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBe(2);
+          expect(screen.getByText(/great video/i)).toBeInTheDocument();
+          expect(screen.getByText(/Great explanation/i)).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -432,9 +584,7 @@ describe('CommentList Integration Tests', () => {
     });
 
     it('transitions from loading to showing comments', async () => {
-      const comments = Array.from({ length: 5 }, (_, i) =>
-        createComment(`${i}`, 'test-video-id')
-      );
+      const comments = Array.from({ length: 5 }, (_, i) => createComment(`${i}`, 'test-video-id'));
       await db.comments.bulkAdd(comments);
 
       const store = createTestStore({ isLoading: false });
@@ -446,9 +596,12 @@ describe('CommentList Integration Tests', () => {
       );
 
       // Initially might show loading, then comments
-      await waitFor(() => {
-        expect(screen.getAllByTestId('comment-item').length).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getAllByTestId('comment-item').length).toBe(5);
+        },
+        { timeout: 3000 }
+      );
     });
   });
 });
