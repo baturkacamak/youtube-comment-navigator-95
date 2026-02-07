@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Kontroverze",
   "Detect debates, disagreements, and polarizing topics.": "Detekujte debaty, neshody a polarizující témata.",
   "Audience Profiling": "Profilování Publika",
-  "Understand who your viewers are based on their language and interests.": "Pochopte, kdo jsou vaši diváci na základě jejich jazyka a zájmů."
+  "Understand who your viewers are based on their language and interests.": "Pochopte, kdo jsou vaši diváci na základě jejich jazyka a zájmů.",
+  "Batch Export": "Dávkový export",
+  "Select at least one video": "Vyberte alespoň jedno video",
+  "Select at least one content type": "Vyberte alespoň jeden typ obsahu",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Exportováno ZIP ({{success}} úspěšné, {{partial}} částečné, {{failed}} se nezdařilo)",
+  "Batch export canceled": "Dávkový export byl zrušen",
+  "Batch export failed": "Dávkový export se nezdařil",
+  "Playlist videos ({{count}})": "Videa v seznamu videí ({{count}})",
+  "Unselect all": "Zrušte výběr všech",
+  "Select all": "Vyberte vše",
+  "Loading playlist videos...": "Načítání videí seznamu videí...",
+  "No playlist videos found on this page.": "Na této stránce nebyla nalezena žádná videa ze seznamu videí.",
+  "Content & formats": "Obsah a formáty",
+  "Description": "Popis",
+  "Progress: {{completed}}/{{total}}": "Průběh: {{completed}}/{{total}}",
+  "Exporting...": "Exportování...",
+  "Export {{count}} Videos": "Exportujte {{count}} videa"
 }

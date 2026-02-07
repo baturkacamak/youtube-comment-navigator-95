@@ -193,5 +193,21 @@
   "Controversy Radar": "Ραντάρ Αντιπαράθεσης",
   "Detect debates, disagreements, and polarizing topics.": "Εντοπίστε συζητήσεις, διαφωνίες και πολωτικά θέματα.",
   "Audience Profiling": "Προφίλ Κοινού",
-  "Understand who your viewers are based on their language and interests.": "Κατανοήστε ποιοι είναι οι θεατές σας με βάση τη γλώσσα και τα ενδιαφέροντά τους."
+  "Understand who your viewers are based on their language and interests.": "Κατανοήστε ποιοι είναι οι θεατές σας με βάση τη γλώσσα και τα ενδιαφέροντά τους.",
+  "Batch Export": "Εξαγωγή παρτίδων",
+  "Select at least one video": "Επιλέξτε τουλάχιστον ένα βίντεο",
+  "Select at least one content type": "Επιλέξτε τουλάχιστον έναν τύπο περιεχομένου",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Εξαγωγή ZIP ({{success}} επιτυχία, {{partial}} μερική, {{failed}} απέτυχε)",
+  "Batch export canceled": "Η μαζική εξαγωγή ακυρώθηκε",
+  "Batch export failed": "Η μαζική εξαγωγή απέτυχε",
+  "Playlist videos ({{count}})": "Βίντεο λίστας αναπαραγωγής ({{count}})",
+  "Unselect all": "Καταργήστε την επιλογή όλων",
+  "Select all": "Επιλέξτε όλα",
+  "Loading playlist videos...": "Φόρτωση βίντεο λίστας αναπαραγωγής...",
+  "No playlist videos found on this page.": "Δεν βρέθηκαν βίντεο playlist σε αυτήν τη σελίδα.",
+  "Content & formats": "Περιεχόμενο και μορφές",
+  "Description": "Περιγραφή",
+  "Progress: {{completed}}/{{total}}": "Πρόοδος: {{completed}}/{{total}}",
+  "Exporting...": "Εξαγωγή...",
+  "Export {{count}} Videos": "Εξαγωγή βίντεο {{count}}"
 }

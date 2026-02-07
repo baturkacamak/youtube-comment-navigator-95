@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Kontroverzi",
   "Detect debates, disagreements, and polarizing topics.": "Otkrijte debate, neslaganja i polarizirajuće teme.",
   "Audience Profiling": "Profiliranje Publike",
-  "Understand who your viewers are based on their language and interests.": "Razumijte tko su vaši gledatelji na temelju njihovog jezika i interesa."
+  "Understand who your viewers are based on their language and interests.": "Razumijte tko su vaši gledatelji na temelju njihovog jezika i interesa.",
+  "Batch Export": "Skupni izvoz",
+  "Select at least one video": "Odaberite barem jedan video",
+  "Select at least one content type": "Odaberite barem jednu vrstu sadržaja",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Izvezen ZIP ({{success}} uspješno, {{partial}} djelomično, {{failed}} neuspješno)",
+  "Batch export canceled": "Skupni izvoz otkazan",
+  "Batch export failed": "Skupni izvoz nije uspio",
+  "Playlist videos ({{count}})": "Videozapisi popisa za reprodukciju ({{count}})",
+  "Unselect all": "Poništi odabir svih",
+  "Select all": "Odaberite sve",
+  "Loading playlist videos...": "Učitavanje videozapisa popisa za reprodukciju...",
+  "No playlist videos found on this page.": "Na ovoj stranici nisu pronađeni videozapisi popisa za reprodukciju.",
+  "Content & formats": "Sadržaj i formati",
+  "Description": "Opis",
+  "Progress: {{completed}}/{{total}}": "Napredak: {{completed}}/{{total}}",
+  "Exporting...": "Izvoz...",
+  "Export {{count}} Videos": "Izvezi {{count}} videozapisa"
 }

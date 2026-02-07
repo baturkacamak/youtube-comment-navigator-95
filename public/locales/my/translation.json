@@ -193,5 +193,21 @@
   "Controversy Radar": "အငြင်းပွားမှု ရေဒါ",
   "Detect debates, disagreements, and polarizing topics.": "အငြင်းအခုံများ၊ သဘောထားကွဲလွဲမှုများနှင့် ကွဲပြားစေသော ခေါင်းစဉ်များကို ရှာဖွေပါ။",
   "Audience Profiling": "ပရိသတ် ပရိုဖိုင်",
-  "Understand who your viewers are based on their language and interests.": "သင့်ကြည့်ရှုသူများ၏ ဘာသာစကားနှင့် စိတ်ဝင်စားမှုများအပေါ် အခြေခံ၍ သူတို့သည် မည်သူများဖြစ်ကြောင်း နားလည်ပါ။"
+  "Understand who your viewers are based on their language and interests.": "သင့်ကြည့်ရှုသူများ၏ ဘာသာစကားနှင့် စိတ်ဝင်စားမှုများအပေါ် အခြေခံ၍ သူတို့သည် မည်သူများဖြစ်ကြောင်း နားလည်ပါ။",
+  "Batch Export": "အစုလိုက် ထုတ်ယူခြင်း",
+  "Select at least one video": "အနည်းဆုံး ဗီဒီယိုတစ်ခုကို ရွေးပါ။",
+  "Select at least one content type": "အနည်းဆုံး အကြောင်းအရာအမျိုးအစားတစ်ခုကို ရွေးပါ။",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ပို့ပြီး ZIP ({{success}} အောင်မြင်သည်၊ {{partial}} တစ်စိတ်တစ်ပိုင်း၊ {{failed}} မအောင်မြင်ပါ)",
+  "Batch export canceled": "အသုတ်တင်ပို့မှုကို ဖျက်သိမ်းလိုက်ပါပြီ။",
+  "Batch export failed": "အသုတ်တင်ပို့မှု မအောင်မြင်ပါ။",
+  "Playlist videos ({{count}})": "အစီအစဉ်ဗီဒီယိုများ ({{count}})",
+  "Unselect all": "အားလုံးကို ရွေးဖြုတ်ပါ။",
+  "Select all": "အားလုံးကို ရွေးပါ။",
+  "Loading playlist videos...": "အစီအစဉ်ဗီဒီယိုများကို ဖွင့်နေသည်...",
+  "No playlist videos found on this page.": "ဤစာမျက်နှာပေါ်တွင် ပြသစာရင်းဗီဒီယိုများ မတွေ့ပါ။",
+  "Content & formats": "အကြောင်းအရာနှင့် ဖော်မတ်များ",
+  "Description": "ဖော်ပြချက်",
+  "Progress: {{completed}}/{{total}}": "တိုးတက်မှု- {{completed}}/{{total}}",
+  "Exporting...": "တင်ပို့နေသည်...",
+  "Export {{count}} Videos": "{{count}} ဗီဒီယိုများကို ထုတ်ယူပါ။"
 }

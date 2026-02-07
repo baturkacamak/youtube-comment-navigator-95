@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "Gbigbejade ni ipele",
+  "Select at least one video": "Yan o kere ju fidio kan",
+  "Select at least one content type": "Yan o kere ju iru akoonu kan",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP ti okeere (Aseyori {{success}}, {{partial}} apa kan, {{failed}} kuna)",
+  "Batch export canceled": "Ti fagilee okeere ipele",
+  "Batch export failed": "Batch okeere kuna",
+  "Playlist videos ({{count}})": "Awọn fidio akojọ orin ({{count}})",
+  "Unselect all": "Yọ gbogbo rẹ kuro",
+  "Select all": "Yan gbogbo rẹ",
+  "Loading playlist videos...": "Nkojọpọ awọn fidio akojọ orin...",
+  "No playlist videos found on this page.": "Ko si awọn fidio akojọ orin ti a rii lori oju-iwe yii.",
+  "Content & formats": "Akoonu & awọn ọna kika",
+  "Description": "Apejuwe",
+  "Progress: {{completed}}/{{total}}": "Ilọsiwaju: {{completed}}/{{total}}",
+  "Exporting...": "Gbigbe okeere...",
+  "Export {{count}} Videos": "Fidio {{count}} okeere"
 }

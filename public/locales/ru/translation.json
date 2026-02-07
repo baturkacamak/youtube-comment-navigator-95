@@ -193,5 +193,21 @@
   "Controversy Radar": "Радар споров",
   "Detect debates, disagreements, and polarizing topics.": "Обнаруживайте споры, разногласия и поляризующие темы.",
   "Audience Profiling": "Профилирование аудитории",
-  "Understand who your viewers are based on their language and interests.": "Поймите, кто ваши зрители, на основе их языка и интересов."
+  "Understand who your viewers are based on their language and interests.": "Поймите, кто ваши зрители, на основе их языка и интересов.",
+  "Batch Export": "Пакетный экспорт",
+  "Select at least one video": "Выберите хотя бы одно видео",
+  "Select at least one content type": "Выберите хотя бы один тип контента",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Экспортированный ZIP-файл ({{success}} выполнен успешно, {{partial}} частичный, {{failed}} не выполнен)",
+  "Batch export canceled": "Пакетный экспорт отменен.",
+  "Batch export failed": "Пакетный экспорт не удался",
+  "Playlist videos ({{count}})": "Видео в плейлисте ({{count}})",
+  "Unselect all": "Отменить выбор всех",
+  "Select all": "Выбрать все",
+  "Loading playlist videos...": "Загрузка видео из плейлиста...",
+  "No playlist videos found on this page.": "На этой странице не найдено видео плейлиста.",
+  "Content & formats": "Контент и форматы",
+  "Description": "Описание",
+  "Progress: {{completed}}/{{total}}": "Прогресс: {{completed}}/{{total}}",
+  "Exporting...": "Экспорт...",
+  "Export {{count}} Videos": "Экспортировать {{count}} видео"
 }

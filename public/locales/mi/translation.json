@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Tautohetohe",
   "Detect debates, disagreements, and polarizing topics.": "Kimihia ngā tautohetohe, ngā whakahē, me ngā kaupapa wehewehe.",
   "Audience Profiling": "Whakaahua Kaimātakitaki",
-  "Understand who your viewers are based on their language and interests.": "Mārama ko wai ō kaimātakitaki i runga i tō rātou reo me ō rātou hiahia."
+  "Understand who your viewers are based on their language and interests.": "Mārama ko wai ō kaimātakitaki i runga i tō rātou reo me ō rātou hiahia.",
+  "Batch Export": "Puranga Kaweake",
+  "Select at least one video": "Tīpakohia kia kotahi te ataata",
+  "Select at least one content type": "Tīpakohia kia kotahi te momo ihirangi",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "I kaweake ZIP ({{success}} angitu, {{partial}} wāhanga, {{failed}} i rahua)",
+  "Batch export canceled": "Kua whakakorehia te kaweake puranga",
+  "Batch export failed": "I rahua te kaweake puranga",
+  "Playlist videos ({{count}})": "Rarangipāho ataata ({{count}})",
+  "Unselect all": "Wetekina te katoa",
+  "Select all": "Tīpakohia te katoa",
+  "Loading playlist videos...": "Uta ana i nga riipene whakaataataata...",
+  "No playlist videos found on this page.": "Karekau he riipene whakaata i kitea i tenei wharangi.",
+  "Content & formats": "Ihirangi me nga whakatakotoranga",
+  "Description": "Whakaahuatanga",
+  "Progress: {{completed}}/{{total}}": "Te ahunga whakamua: {{completed}}/{{total}}",
+  "Exporting...": "Kaweake ana...",
+  "Export {{count}} Videos": "Kaweake {{count}} Ataata"
 }

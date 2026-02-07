@@ -193,5 +193,21 @@
   "Controversy Radar": "Deiluradar",
   "Detect debates, disagreements, and polarizing topics.": "Uppgötvaðu umræður, ágreining og pólitísk efni.",
   "Audience Profiling": "Áhorfendagreining",
-  "Understand who your viewers are based on their language and interests.": "Skildu hverjir áhorfendur þínir eru út frá tungumáli þeirra og áhugamálum."
+  "Understand who your viewers are based on their language and interests.": "Skildu hverjir áhorfendur þínir eru út frá tungumáli þeirra og áhugamálum.",
+  "Batch Export": "Hópútflutningur",
+  "Select at least one video": "Veldu að minnsta kosti eitt myndband",
+  "Select at least one content type": "Veldu að minnsta kosti eina efnistegund",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Útflutt ZIP ({{success}} tókst, {{partial}} að hluta, {{failed}} mistókst)",
+  "Batch export canceled": "Hætt við hópútflutning",
+  "Batch export failed": "Hópútflutningur mistókst",
+  "Playlist videos ({{count}})": "Spilunarlista myndskeið ({{count}})",
+  "Unselect all": "Afvelja allt",
+  "Select all": "Veldu allt",
+  "Loading playlist videos...": "Hleður myndskeiðum á spilunarlista...",
+  "No playlist videos found on this page.": "Engin spilunarlista myndbönd fundust á þessari síðu.",
+  "Content & formats": "Efni og snið",
+  "Description": "Lýsing",
+  "Progress: {{completed}}/{{total}}": "Framfarir: {{completed}}/{{total}}",
+  "Exporting...": "Flytur út...",
+  "Export {{count}} Videos": "Flytja út {{count}} myndbönd"
 }

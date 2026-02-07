@@ -193,5 +193,21 @@
   "Controversy Radar": "د جنجال رادار",
   "Detect debates, disagreements, and polarizing topics.": "بحثونه، اختلافونه، او قطبي موضوعات کشف کړئ.",
   "Audience Profiling": "د لیدونکو پروفایل کول",
-  "Understand who your viewers are based on their language and interests.": "پوه شئ چې ستاسو لیدونکي د دوی د ژبې او ګټو پراساس څوک دي."
+  "Understand who your viewers are based on their language and interests.": "پوه شئ چې ستاسو لیدونکي د دوی د ژبې او ګټو پراساس څوک دي.",
+  "Batch Export": "د بسته صادرات",
+  "Select at least one video": "لږترلږه یوه ویډیو غوره کړئ",
+  "Select at least one content type": "لږترلږه د مینځپانګې ډول غوره کړئ",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "صادر شوی ZIP ({{success}} بریالیتوب، {{partial}} جزوی، {{failed}} ناکام شوی)",
+  "Batch export canceled": "د بست صادرات لغوه شول",
+  "Batch export failed": "د بست صادرات ناکام شول",
+  "Playlist videos ({{count}})": "پلی لیست ویډیوګانې ({{count}})",
+  "Unselect all": "ټول غیر انتخاب کړئ",
+  "Select all": "ټول وټاکئ",
+  "Loading playlist videos...": "د پلی لیست ویډیوګانې پورته کول...",
+  "No playlist videos found on this page.": "په دې پاڼه کې د پلی لیست ویډیوګانې ندي موندل شوي.",
+  "Content & formats": "منځپانګې او بڼې",
+  "Description": "تفصیل",
+  "Progress: {{completed}}/{{total}}": "پرمختګ: {{completed}}/{{total}}",
+  "Exporting...": "صادرول...",
+  "Export {{count}} Videos": "صادرات {{count}} ویډیوګانې"
 }

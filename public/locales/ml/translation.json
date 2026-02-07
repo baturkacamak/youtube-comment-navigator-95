@@ -193,5 +193,21 @@
   "Controversy Radar": "വിവാദ റഡാർ",
   "Detect debates, disagreements, and polarizing topics.": "സംവാദങ്ങൾ, വിയോജിപ്പുകൾ, ധ്രുവീകരിക്കുന്ന വിഷയങ്ങൾ എന്നിവ കണ്ടെത്തുക.",
   "Audience Profiling": "പ്രേക്ഷക പ്രൊഫൈലിംഗ്",
-  "Understand who your viewers are based on their language and interests.": "നിങ്ങളുടെ വൂക്ഷകർ അവരുടെ ഭാഷയും താൽപ്പര്യങ്ങളും അടിസ്ഥാനമാക്കി ആരാണെന്ന് മനസ്സിലാക്കുക."
+  "Understand who your viewers are based on their language and interests.": "നിങ്ങളുടെ വൂക്ഷകർ അവരുടെ ഭാഷയും താൽപ്പര്യങ്ങളും അടിസ്ഥാനമാക്കി ആരാണെന്ന് മനസ്സിലാക്കുക.",
+  "Batch Export": "ബാച്ച് കയറ്റുമതി",
+  "Select at least one video": "കുറഞ്ഞത് ഒരു വീഡിയോയെങ്കിലും തിരഞ്ഞെടുക്കുക",
+  "Select at least one content type": "കുറഞ്ഞത് ഒരു ഉള്ളടക്ക തരമെങ്കിലും തിരഞ്ഞെടുക്കുക",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "കയറ്റുമതി ചെയ്ത ZIP ({{success}} വിജയം, {{partial}} ഭാഗികം, {{failed}} പരാജയപ്പെട്ടു)",
+  "Batch export canceled": "ബാച്ച് കയറ്റുമതി റദ്ദാക്കി",
+  "Batch export failed": "ബാച്ച് കയറ്റുമതി പരാജയപ്പെട്ടു",
+  "Playlist videos ({{count}})": "പ്ലേലിസ്റ്റ് വീഡിയോകൾ ({{count}})",
+  "Unselect all": "എല്ലാം തിരഞ്ഞെടുത്തത് മാറ്റുക",
+  "Select all": "എല്ലാം തിരഞ്ഞെടുക്കുക",
+  "Loading playlist videos...": "പ്ലേലിസ്റ്റ് വീഡിയോകൾ ലോഡുചെയ്യുന്നു...",
+  "No playlist videos found on this page.": "ഈ പേജിൽ പ്ലേലിസ്റ്റ് വീഡിയോകളൊന്നും കണ്ടെത്തിയില്ല.",
+  "Content & formats": "ഉള്ളടക്കവും ഫോർമാറ്റുകളും",
+  "Description": "വിവരണം",
+  "Progress: {{completed}}/{{total}}": "പുരോഗതി: {{completed}}/{{total}}",
+  "Exporting...": "കയറ്റുമതി ചെയ്യുന്നു...",
+  "Export {{count}} Videos": "{{count}} വീഡിയോകൾ കയറ്റുമതി ചെയ്യുക"
 }

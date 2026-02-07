@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "Tu'aiga Fa'atau Atu",
+  "Select at least one video": "Filifili a itiiti ifo ma le tasi le vitio",
+  "Select at least one content type": "Filifili a itiiti ifo ma le tasi le ituaiga mataupu",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Lafo i fafo le ZIP ({{success}} manuia, {{partial}} vaega, {{failed}} le manuia)",
+  "Batch export canceled": "Ua faaleaogaina le auina atu i fafo",
+  "Batch export failed": "Ua le manuia le auina atu i fafo",
+  "Playlist videos ({{count}})": "Lisi ata vitio ({{count}})",
+  "Unselect all": "Tatala uma",
+  "Select all": "Filifili uma",
+  "Loading playlist videos...": "O lo'o fa'atūina ata o le lisi o lisi...",
+  "No playlist videos found on this page.": "Leai se lisi o vitio na maua i lenei itulau.",
+  "Content & formats": "Anotusi & faatulagaga",
+  "Description": "Fa'amatalaga",
+  "Progress: {{completed}}/{{total}}": "Alualu i luma: {{completed}}/{{total}}",
+  "Exporting...": "La'u atu i fafo...",
+  "Export {{count}} Videos": "Lafo i fafo {{count}} Vitio"
 }

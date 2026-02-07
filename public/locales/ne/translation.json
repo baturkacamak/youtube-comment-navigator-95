@@ -193,5 +193,21 @@
   "Controversy Radar": "विवाद रडार",
   "Detect debates, disagreements, and polarizing topics.": "बहस, असहमति, र ध्रुवीकरण विषयहरू पत्ता लगाउनुहोस्।",
   "Audience Profiling": "दर्शक प्रोफाइलिङ",
-  "Understand who your viewers are based on their language and interests.": "आफ्ना दर्शकहरू तिनीहरूको भाषा र रुचिहरूको आधारमा को हुन् भनी बुझ्नुहोस्।"
+  "Understand who your viewers are based on their language and interests.": "आफ्ना दर्शकहरू तिनीहरूको भाषा र रुचिहरूको आधारमा को हुन् भनी बुझ्नुहोस्।",
+  "Batch Export": "ब्याच निर्यात",
+  "Select at least one video": "कम्तिमा एउटा भिडियो चयन गर्नुहोस्",
+  "Select at least one content type": "कम्तिमा एउटा सामग्री प्रकार चयन गर्नुहोस्",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "निर्यात गरिएको ZIP ({{success}} सफलता, {{partial}} आंशिक, {{failed}} असफल)",
+  "Batch export canceled": "ब्याच निर्यात रद्द गरियो",
+  "Batch export failed": "ब्याच निर्यात असफल भयो",
+  "Playlist videos ({{count}})": "प्लेलिस्ट भिडियोहरू ({{count}})",
+  "Unselect all": "सबै अचयन गर्नुहोस्",
+  "Select all": "सबै चयन गर्नुहोस्",
+  "Loading playlist videos...": "प्लेलिस्ट भिडियोहरू लोड गर्दै...",
+  "No playlist videos found on this page.": "यस पृष्ठमा कुनै प्लेलिस्ट भिडियोहरू फेला परेनन्।",
+  "Content & formats": "सामग्री र ढाँचाहरू",
+  "Description": "विवरण",
+  "Progress: {{completed}}/{{total}}": "प्रगति: {{completed}}/{{total}}",
+  "Exporting...": "निर्यात गर्दै...",
+  "Export {{count}} Videos": "{{count}} भिडियोहरू निर्यात गर्नुहोस्"
 }

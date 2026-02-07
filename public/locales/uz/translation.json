@@ -193,5 +193,21 @@
   "Controversy Radar": "Bahs Radari",
   "Detect debates, disagreements, and polarizing topics.": "Bahslar, kelishmovchiliklar va qutblovchi mavzularni aniqlang.",
   "Audience Profiling": "Auditoriyani Profillash",
-  "Understand who your viewers are based on their language and interests.": "Tili va qiziqishlariga asoslanib tomoshabinlaringiz kimligini tushuning."
+  "Understand who your viewers are based on their language and interests.": "Tili va qiziqishlariga asoslanib tomoshabinlaringiz kimligini tushuning.",
+  "Batch Export": "To'plamni eksport qilish",
+  "Select at least one video": "Kamida bitta videoni tanlang",
+  "Select at least one content type": "Kamida bitta kontent turini tanlang",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksport qilingan ZIP ({{success}} muvaffaqiyatli, {{partial}} qisman, {{failed}} bajarilmadi)",
+  "Batch export canceled": "To‘plam eksporti bekor qilindi",
+  "Batch export failed": "To‘plam eksport qilinmadi",
+  "Playlist videos ({{count}})": "Pleylist videolari ({{count}})",
+  "Unselect all": "Barchasini bekor qiling",
+  "Select all": "Hammasini tanlang",
+  "Loading playlist videos...": "Pleylist videolari yuklanmoqda...",
+  "No playlist videos found on this page.": "Bu sahifada pleylist videolari topilmadi.",
+  "Content & formats": "Tarkib va ​​formatlar",
+  "Description": "Tavsif",
+  "Progress: {{completed}}/{{total}}": "Jarayon: {{completed}}/{{total}}",
+  "Exporting...": "Eksport qilinmoqda...",
+  "Export {{count}} Videos": "{{count}} videoni eksport qiling"
 }
