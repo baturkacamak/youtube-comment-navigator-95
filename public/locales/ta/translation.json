@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "தொகுப்பு ஏற்றுமதி",
+  "Select at least one video": "குறைந்தது ஒரு வீடியோவையாவது தேர்ந்தெடுக்கவும்",
+  "Select at least one content type": "குறைந்தபட்சம் ஒரு உள்ளடக்க வகையைத் தேர்ந்தெடுக்கவும்",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ஏற்றுமதி செய்யப்பட்ட ZIP ({{success}} வெற்றி, {{partial}} பகுதி, {{failed}} தோல்வி)",
+  "Batch export canceled": "தொகுப்பு ஏற்றுமதி ரத்து செய்யப்பட்டது",
+  "Batch export failed": "தொகுப்பு ஏற்றுமதி தோல்வியடைந்தது",
+  "Playlist videos ({{count}})": "பிளேலிஸ்ட் வீடியோக்கள் ({{count}})",
+  "Unselect all": "அனைத்தையும் தேர்வுநீக்கு",
+  "Select all": "அனைத்தையும் தேர்ந்தெடுக்கவும்",
+  "Loading playlist videos...": "பிளேலிஸ்ட் வீடியோக்களை ஏற்றுகிறது...",
+  "No playlist videos found on this page.": "இந்தப் பக்கத்தில் பிளேலிஸ்ட் வீடியோக்கள் எதுவும் இல்லை.",
+  "Content & formats": "உள்ளடக்கம் மற்றும் வடிவங்கள்",
+  "Description": "விளக்கம்",
+  "Progress: {{completed}}/{{total}}": "முன்னேற்றம்: {{completed}}/{{total}}",
+  "Exporting...": "ஏற்றுமதி செய்கிறது...",
+  "Export {{count}} Videos": "{{count}} வீடியோக்களை ஏற்றுமதி செய்யவும்"
 }

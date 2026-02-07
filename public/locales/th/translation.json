@@ -193,5 +193,21 @@
   "Controversy Radar": "เรดาร์ความขัดแย้ง",
   "Detect debates, disagreements, and polarizing topics.": "ตรวจจับการดีเบต ความขัดแย้ง และหัวข้อที่แบ่งฝักแบ่งฝ่าย",
   "Audience Profiling": "การทำโปรไฟล์ผู้ชม",
-  "Understand who your viewers are based on their language and interests.": "เข้าใจว่าผู้ชมของคุณคือใครโดยพิจารณาจากภาษาและความสนใจของพวกเขา"
+  "Understand who your viewers are based on their language and interests.": "เข้าใจว่าผู้ชมของคุณคือใครโดยพิจารณาจากภาษาและความสนใจของพวกเขา",
+  "Batch Export": "ส่งออกเป็นกลุ่ม",
+  "Select at least one video": "เลือกวิดีโออย่างน้อยหนึ่งรายการ",
+  "Select at least one content type": "เลือกประเภทเนื้อหาอย่างน้อยหนึ่งประเภท",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ส่งออก ZIP แล้ว ({{success}} สำเร็จ, {{partial}} บางส่วน, {{failed}} ล้มเหลว)",
+  "Batch export canceled": "ยกเลิกการส่งออกเป็นกลุ่มแล้ว",
+  "Batch export failed": "การส่งออกเป็นกลุ่มล้มเหลว",
+  "Playlist videos ({{count}})": "เพลย์ลิสต์วิดีโอ ({{count}})",
+  "Unselect all": "ยกเลิกการเลือกทั้งหมด",
+  "Select all": "เลือกทั้งหมด",
+  "Loading playlist videos...": "กำลังโหลดวิดีโอเพลย์ลิสต์...",
+  "No playlist videos found on this page.": "ไม่พบวิดีโอเพลย์ลิสต์ในหน้านี้",
+  "Content & formats": "เนื้อหาและรูปแบบ",
+  "Description": "คำอธิบาย",
+  "Progress: {{completed}}/{{total}}": "ความคืบหน้า: {{completed}}/{{total}}",
+  "Exporting...": "กำลังส่งออก...",
+  "Export {{count}} Videos": "ส่งออกวิดีโอ {{count}}"
 }

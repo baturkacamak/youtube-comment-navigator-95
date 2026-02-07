@@ -1,6 +1,7 @@
 // src/features/comments/hooks/useCommentsFromDB.ts
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useSelector } from 'react-redux';
 import { db } from '../../shared/utils/database/database';
 import { Comment } from '../../../types/commentTypes';
 import { FilterState } from '../../../types/filterTypes';
@@ -9,6 +10,7 @@ import { PAGINATION } from '../../shared/utils/appConstants';
 import logger from '../../shared/utils/logger';
 import { dbEvents } from '../../shared/utils/database/dbEvents';
 import { throttle } from '../../shared/utils/debounce';
+import { selectIsLoading } from '../../../store/selectors';
 
 /** Throttle interval for UI updates during heavy fetching (ms) */
 const UI_UPDATE_THROTTLE_MS = 1000;
@@ -88,6 +90,8 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   const isLoadingRef = useRef(isLoading);
   const loadingMoreRef = useRef(loadingMore);
 
+  const globalLoading = useSelector(selectIsLoading);
+
   useEffect(() => {
     isLoadingRef.current = isLoading;
   }, [isLoading]);
@@ -113,6 +117,17 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     setComments([]);
     setPage(0);
   }, []);
+
+  // Clear comments immediately when global loading starts (don't wait for DB event)
+  // This prevents stale comments from showing during navigation
+  const prevGlobalLoadingRef = useRef(globalLoading);
+  useEffect(() => {
+    // Detect when globalLoading transitions from false to true
+    if (!prevGlobalLoadingRef.current && globalLoading && comments.length > 0) {
+      clearComments();
+    }
+    prevGlobalLoadingRef.current = globalLoading;
+  }, [globalLoading, comments.length, clearComments]);
 
   // Memoize sort values from filters
   const sortBy = useMemo(() => filters.sortBy || 'date', [filters.sortBy]);

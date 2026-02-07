@@ -383,7 +383,7 @@ export class YouTubeApiService {
 
   // Specific API endpoints
 
-  public async fetchPlayer(videoId?: string): Promise<any> {
+  public async fetchPlayer(videoId?: string, signal?: AbortSignal): Promise<any> {
     if (!videoId) {
       videoId = extractYouTubeVideoIdFromUrl();
     }
@@ -407,6 +407,7 @@ export class YouTubeApiService {
           },
         },
       },
+      signal,
     });
   }
 

@@ -193,5 +193,21 @@
   "Controversy Radar": "Vaidluste Radar",
   "Detect debates, disagreements, and polarizing topics.": "Tuvasta vaidlused, erimeelsused ja polariseerivad teemad.",
   "Audience Profiling": "Publiku Profileerimine",
-  "Understand who your viewers are based on their language and interests.": "Mõista, kes on sinu vaatajad nende keele ja huvide põhjal."
+  "Understand who your viewers are based on their language and interests.": "Mõista, kes on sinu vaatajad nende keele ja huvide põhjal.",
+  "Batch Export": "Partii eksport",
+  "Select at least one video": "Valige vähemalt üks video",
+  "Select at least one content type": "Valige vähemalt üks sisutüüp",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksporditud ZIP ({{success}} õnnestus, {{partial}} osaline, {{failed}} ebaõnnestus)",
+  "Batch export canceled": "Partii eksport tühistati",
+  "Batch export failed": "Partii eksportimine ebaõnnestus",
+  "Playlist videos ({{count}})": "Esitusloendi videod ({{count}})",
+  "Unselect all": "Tühista kõik valikud",
+  "Select all": "Valige kõik",
+  "Loading playlist videos...": "Esitusloendi videote laadimine...",
+  "No playlist videos found on this page.": "Sellelt lehelt esitusloendi videoid ei leitud.",
+  "Content & formats": "Sisu ja vormingud",
+  "Description": "Kirjeldus",
+  "Progress: {{completed}}/{{total}}": "Edenemine: {{completed}}/{{total}}",
+  "Exporting...": "Eksportimine...",
+  "Export {{count}} Videos": "Ekspordi {{count}} videot"
 }

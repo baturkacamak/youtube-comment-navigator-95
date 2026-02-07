@@ -193,5 +193,21 @@
   "Controversy Radar": "논쟁 레이더",
   "Detect debates, disagreements, and polarizing topics.": "토론, 의견 불일치 및 양극화 주제를 감지합니다.",
   "Audience Profiling": "시청자 프로파일링",
-  "Understand who your viewers are based on their language and interests.": "언어와 관심사를 기반으로 시청자가 누구인지 이해하세요."
+  "Understand who your viewers are based on their language and interests.": "언어와 관심사를 기반으로 시청자가 누구인지 이해하세요.",
+  "Batch Export": "일괄 내보내기",
+  "Select at least one video": "동영상을 하나 이상 선택하세요.",
+  "Select at least one content type": "콘텐츠 유형을 하나 이상 선택하세요.",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP 내보내기({{success}} 성공, {{partial}} 부분, {{failed}} 실패)",
+  "Batch export canceled": "일괄 내보내기가 취소되었습니다.",
+  "Batch export failed": "일괄 내보내기 실패",
+  "Playlist videos ({{count}})": "재생목록 동영상({{count}})",
+  "Unselect all": "모두 선택 해제",
+  "Select all": "모두 선택",
+  "Loading playlist videos...": "재생목록 동영상 로드 중...",
+  "No playlist videos found on this page.": "이 페이지에는 재생목록 동영상이 없습니다.",
+  "Content & formats": "콘텐츠 및 형식",
+  "Description": "설명",
+  "Progress: {{completed}}/{{total}}": "진행률: {{completed}}/{{total}}",
+  "Exporting...": "내보내는 중...",
+  "Export {{count}} Videos": "{{count}}개의 동영상 내보내기"
 }

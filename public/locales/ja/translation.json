@@ -193,5 +193,21 @@
   "Controversy Radar": "論争レーダー",
   "Detect debates, disagreements, and polarizing topics.": "議論、不一致、意見が分かれるトピックを検出します。",
   "Audience Profiling": "視聴者プロファイリング",
-  "Understand who your viewers are based on their language and interests.": "言語や興味に基づいて、視聴者が誰であるかを理解します。"
+  "Understand who your viewers are based on their language and interests.": "言語や興味に基づいて、視聴者が誰であるかを理解します。",
+  "Batch Export": "バッチエクスポート",
+  "Select at least one video": "少なくとも 1 つのビデオを選択してください",
+  "Select at least one content type": "少なくとも 1 つのコンテンツ タイプを選択してください",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "エクスポートされた ZIP ({{success}} 成功、{{partial}} 部分、{{failed}} 失敗)",
+  "Batch export canceled": "バッチエクスポートがキャンセルされました",
+  "Batch export failed": "バッチエクスポートに失敗しました",
+  "Playlist videos ({{count}})": "プレイリスト動画 ({{count}})",
+  "Unselect all": "すべての選択を解除します",
+  "Select all": "すべて選択",
+  "Loading playlist videos...": "プレイリストビデオを読み込み中...",
+  "No playlist videos found on this page.": "このページにはプレイリストビデオが見つかりません。",
+  "Content & formats": "コンテンツと形式",
+  "Description": "説明",
+  "Progress: {{completed}}/{{total}}": "進捗状況: {{completed}}/{{total}}",
+  "Exporting...": "エクスポート中...",
+  "Export {{count}} Videos": "{{count}} 件の動画をエクスポート"
 }

@@ -193,5 +193,21 @@
   "Controversy Radar": "Pretrunu Radars",
   "Detect debates, disagreements, and polarizing topics.": "Nosakiet debates, domstarpības un polarizējošas tēmas.",
   "Audience Profiling": "Auditorijas Profilēšana",
-  "Understand who your viewers are based on their language and interests.": "Saprotiet, kas ir jūsu skatītāji, pamatojoties uz viņu valodu un interesēm."
+  "Understand who your viewers are based on their language and interests.": "Saprotiet, kas ir jūsu skatītāji, pamatojoties uz viņu valodu un interesēm.",
+  "Batch Export": "Partijas eksports",
+  "Select at least one video": "Atlasiet vismaz vienu videoklipu",
+  "Select at least one content type": "Atlasiet vismaz vienu satura veidu",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksportēts ZIP fails ({{success}} veiksmīgi, {{partial}} daļēji, {{failed}} neizdevās)",
+  "Batch export canceled": "Partijas eksportēšana ir atcelta",
+  "Batch export failed": "Partijas eksportēšana neizdevās",
+  "Playlist videos ({{count}})": "Atskaņošanas sarakstu videoklipi ({{count}})",
+  "Unselect all": "Noņemiet visu atlasi",
+  "Select all": "Atlasiet visu",
+  "Loading playlist videos...": "Notiek atskaņošanas saraksta videoklipu ielāde...",
+  "No playlist videos found on this page.": "Šajā lapā nav atrasts neviens atskaņošanas saraksta videoklips.",
+  "Content & formats": "Saturs un formāti",
+  "Description": "Apraksts",
+  "Progress: {{completed}}/{{total}}": "Gaita: {{completed}}/{{total}}",
+  "Exporting...": "Notiek eksportēšana...",
+  "Export {{count}} Videos": "Eksportējiet {{count}} videoklipus"
 }

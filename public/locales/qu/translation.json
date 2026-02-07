@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "Exportación por lotes",
+  "Select at least one video": "Selecciona al menos un vídeo",
+  "Select at least one content type": "Seleccione al menos un tipo de contenido",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP exportado ({{success}} exitoso, {{partial}} parcial, {{failed}} fallido)",
+  "Batch export canceled": "Exportación por lotes cancelada",
+  "Batch export failed": "La exportación por lotes falló",
+  "Playlist videos ({{count}})": "Vídeos de la lista de reproducción ({{count}})",
+  "Unselect all": "Deseleccionar todo",
+  "Select all": "Seleccionar todo",
+  "Loading playlist videos...": "Cargando vídeos de la lista de reproducción...",
+  "No playlist videos found on this page.": "No se encontraron videos de lista de reproducción en esta página.",
+  "Content & formats": "Contenido y formatos",
+  "Description": "Descripción",
+  "Progress: {{completed}}/{{total}}": "Progreso: {{completed}}/{{total}}",
+  "Exporting...": "Exportador...",
+  "Export {{count}} Videos": "Exportar {{count}} vídeos"
 }

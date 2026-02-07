@@ -193,5 +193,21 @@
   "Controversy Radar": "རྩོད་གླེང་ར radar།",
   "Detect debates, disagreements, and polarizing topics.": "རྩོད་པ་དང་། མི་མཐུན་པ། ཕྱོགས་ལྷུང་གི་བརྗོད་གཞི་རྣམས་ཤེས་རྟོགས་བྱེད་པ།",
   "Audience Profiling": "ལྟ་མཁན་གྱི་གནས་ཚུལ་དཔྱད་པ།",
-  "Understand who your viewers are based on their language and interests.": "ཁོང་ཚོའི་སྐད་ཡིག་དང་དགའ་ཕྱོགས་ལ་གཞིགས་ནས་ཁྱེད་ཀྱི་ལྟ་མཁན་སུ་ཡིན་ཧ་གོ་བ།"
+  "Understand who your viewers are based on their language and interests.": "ཁོང་ཚོའི་སྐད་ཡིག་དང་དགའ་ཕྱོགས་ལ་གཞིགས་ནས་ཁྱེད་ཀྱི་ལྟ་མཁན་སུ་ཡིན་ཧ་གོ་བ།",
+  "Batch Export": "ཚོང་ཟོག་ཕྱིར་གཏོང་།",
+  "Select at least one video": "ཉུང་མཐར་ཡང་བརྙན་འཕྲིན་གཅིག་འདེམས།",
+  "Select at least one content type": "ཉུང་མཐར་ཡང་ནང་དོན་རིགས་གཅིག་འདེམས་པ།",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP ཕྱིར་གཏོང་། ({{success}} ལེགས་པོ། {{partial}} ཆ་ཤས། {{failed}} མ་ལེགས།)",
+  "Batch export canceled": "ཚོང་ཟོག་ཕྱིར་གཏོང་མེད་པ་བཟོ་བ།",
+  "Batch export failed": "ཚོང་ཟོག་ཕྱིར་གཏོང་བྱེད་མི་ཐུབ་པ།",
+  "Playlist videos ({{count}})": "གླུ་གཞས་ཐོ་གཞུང་བརྙན་འཕྲིན། ({{count}})",
+  "Unselect all": "ཚང་མ་འདེམས་སྒྲུག་མ་བྱས།",
+  "Select all": "ཚང་མ་འདེམས།",
+  "Loading playlist videos...": "སྒྲ་སྒམ་གྱི་བརྙན་འཕྲིན།",
+  "No playlist videos found on this page.": "ཤོག་ངོས་འདིའི་སྟེང་དུ་སྒྲ་སྒམ་གྱི་བརྙན་འཕྲིན་གང་ཡང་མཐོང་མ་བྱུང་།",
+  "Content & formats": "ནང་དོན་དང་རྣམ་པ།",
+  "Description": "ཞིབ་བརྗོད",
+  "Progress: {{completed}}/{{total}}": "འཕེལ་རྒྱས། {{completed}}/{{total}}",
+  "Exporting...": "ཕྱིར་གཏོང་།",
+  "Export {{count}} Videos": "{{count}} བརྙན་འཕྲིན་ཕྱིར་གཏོང་།"
 }

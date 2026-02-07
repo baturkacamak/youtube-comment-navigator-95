@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "Thumela ngeqoqo",
+  "Select at least one video": "Khetha okungenani ividiyo eyodwa",
+  "Select at least one content type": "Khetha okungenani uhlobo olulodwa lokuqukethwe",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "I-ZIP ekhishiwe ({{success}} impumelelo, {{partial}} ingxenye, {{failed}} yehlulekile)",
+  "Batch export canceled": "Ukuthunyelwa kwenqwaba kukhanseliwe",
+  "Batch export failed": "Ukuthunyelwa kwenqwaba kuhlulekile",
+  "Playlist videos ({{count}})": "Amavidiyo ohlu lwadlalwayo ({{count}})",
+  "Unselect all": "Yeka ukukhetha konke",
+  "Select all": "Khetha konke",
+  "Loading playlist videos...": "Ilayisha amavidiyo ohlu lwadlalwayo...",
+  "No playlist videos found on this page.": "Awekho amavidiyo ohlu lwadlalwayo atholakele kuleli khasi.",
+  "Content & formats": "Okuqukethwe namafomethi",
+  "Description": "Incazelo",
+  "Progress: {{completed}}/{{total}}": "Inqubekelaphambili: {{completed}}/{{total}}",
+  "Exporting...": "Ithekelisa...",
+  "Export {{count}} Videos": "Thumela amavidiyo angu-{{count}}"
 }

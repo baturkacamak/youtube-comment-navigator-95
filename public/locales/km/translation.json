@@ -193,5 +193,21 @@
   "Controversy Radar": "រ៉ាដាជម្លោះ",
   "Detect debates, disagreements, and polarizing topics.": "រកឃើញការជជែកដេញដោល ការមិនយល់ស្រប និងប្រធានបទដែលមានប៉ូល។",
   "Audience Profiling": "ទម្រង់ទស្សនិកជន",
-  "Understand who your viewers are based on their language and interests.": "ស្វែងយល់ថាអ្នកទស្សនារបស់អ្នកជានរណា ដោយផ្អែកលើភាសា និងចំណាប់អារម្មណ៍របស់ពួកគេ។"
+  "Understand who your viewers are based on their language and interests.": "ស្វែងយល់ថាអ្នកទស្សនារបស់អ្នកជានរណា ដោយផ្អែកលើភាសា និងចំណាប់អារម្មណ៍របស់ពួកគេ។",
+  "Batch Export": "ការនាំចេញបាច់",
+  "Select at least one video": "ជ្រើសរើសវីដេអូយ៉ាងហោចណាស់មួយ។",
+  "Select at least one content type": "ជ្រើសរើសប្រភេទមាតិកាយ៉ាងហោចណាស់មួយ។",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "បាននាំចេញ ZIP (ជោគជ័យ {{success}}, {{partial}} ផ្នែកខ្លះ {{failed}} បរាជ័យ)",
+  "Batch export canceled": "ការនាំចេញបាច់ត្រូវបានលុបចោល",
+  "Batch export failed": "ការនាំចេញជាបាច់បានបរាជ័យ",
+  "Playlist videos ({{count}})": "បញ្ជីចាក់វីដេអូ ({{count}})",
+  "Unselect all": "ឈប់ជ្រើសរើសទាំងអស់។",
+  "Select all": "ជ្រើសរើសទាំងអស់។",
+  "Loading playlist videos...": "កំពុងផ្ទុកវីដេអូបញ្ជីចាក់...",
+  "No playlist videos found on this page.": "រកមិនឃើញវីដេអូបញ្ជីចាក់នៅលើទំព័រនេះទេ។",
+  "Content & formats": "មាតិកា & ទម្រង់",
+  "Description": "ការពិពណ៌នា",
+  "Progress: {{completed}}/{{total}}": "វឌ្ឍនភាព៖ {{completed}}/{{total}}",
+  "Exporting...": "កំពុងនាំចេញ...",
+  "Export {{count}} Videos": "នាំចេញវីដេអូ {{count}}"
 }

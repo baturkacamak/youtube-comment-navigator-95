@@ -193,5 +193,21 @@
   "Controversy Radar": "Kontroversie Radar",
   "Detect debates, disagreements, and polarizing topics.": "Bespeur debatte, meningsverskille en polariserende onderwerpe.",
   "Audience Profiling": "Gehoorprofilering",
-  "Understand who your viewers are based on their language and interests.": "Verstaan wie jou kykers is gebaseer op hul taal en belangstellings."
+  "Understand who your viewers are based on their language and interests.": "Verstaan wie jou kykers is gebaseer op hul taal en belangstellings.",
+  "Batch Export": "Batch Uitvoer",
+  "Select at least one video": "Kies ten minste een video",
+  "Select at least one content type": "Kies ten minste een tipe inhoud",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Uitgevoer zip ({{success}} sukses, {{partial}} gedeeltelik, {{failed}} misluk)",
+  "Batch export canceled": "Groepuitvoer gekanselleer",
+  "Batch export failed": "Bondeluitvoer het misluk",
+  "Playlist videos ({{count}})": "Snitlysvideo's ({{count}})",
+  "Unselect all": "Ontkies alles",
+  "Select all": "Kies alles",
+  "Loading playlist videos...": "Laai tans snitlysvideo's...",
+  "No playlist videos found on this page.": "Geen snitlysvideo's op hierdie bladsy gevind nie.",
+  "Content & formats": "Inhoud en formate",
+  "Description": "Beskrywing",
+  "Progress: {{completed}}/{{total}}": "Vordering: {{completed}}/{{total}}",
+  "Exporting...": "Voer tans uit …",
+  "Export {{count}} Videos": "Voer {{count}} video's uit"
 }

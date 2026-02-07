@@ -193,5 +193,21 @@
   "Controversy Radar": "વિવાદ રડાર",
   "Detect debates, disagreements, and polarizing topics.": "ચર્ચાઓ, અસંમતિ અને ધ્રુવીકરણના વિષયો શોધો.",
   "Audience Profiling": "પ્રેક્ષક પ્રોફાઇલિંગ",
-  "Understand who your viewers are based on their language and interests.": "તેમની ભાષા અને રુચિઓના આધારે તમારા દર્શકો કોણ છે તે સમજો."
+  "Understand who your viewers are based on their language and interests.": "તેમની ભાષા અને રુચિઓના આધારે તમારા દર્શકો કોણ છે તે સમજો.",
+  "Batch Export": "બેચ નિકાસ",
+  "Select at least one video": "ઓછામાં ઓછી એક વિડિઓ પસંદ કરો",
+  "Select at least one content type": "ઓછામાં ઓછો એક સામગ્રી પ્રકાર પસંદ કરો",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "નિકાસ કરેલ ઝીપ ({{success}} સફળતા, {{partial}} આંશિક, {{failed}} નિષ્ફળ)",
+  "Batch export canceled": "બેચ નિકાસ રદ કરી",
+  "Batch export failed": "બેચ નિકાસ નિષ્ફળ",
+  "Playlist videos ({{count}})": "પ્લેલિસ્ટ વિડિઓઝ ({{count}})",
+  "Unselect all": "બધાને નાપસંદ કરો",
+  "Select all": "બધા પસંદ કરો",
+  "Loading playlist videos...": "પ્લેલિસ્ટ વિડિઓઝ લોડ કરી રહ્યું છે...",
+  "No playlist videos found on this page.": "આ પૃષ્ઠ પર કોઈ પ્લેલિસ્ટ વિડિઓઝ મળી નથી.",
+  "Content & formats": "સામગ્રી અને ફોર્મેટ્સ",
+  "Description": "વર્ણન",
+  "Progress: {{completed}}/{{total}}": "પ્રગતિ: {{completed}}/{{total}}",
+  "Exporting...": "નિકાસ કરી રહ્યું છે...",
+  "Export {{count}} Videos": "{{count}} વિડિઓઝ નિકાસ કરો"
 }

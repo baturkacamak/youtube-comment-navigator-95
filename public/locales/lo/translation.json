@@ -193,5 +193,21 @@
   "Controversy Radar": "ເຣດາຄວາມຂັດແຍ້ງ",
   "Detect debates, disagreements, and polarizing topics.": "ກວດຈັບການໂຕ້ວາທີ, ຄວາມບໍ່ເຫັນດີ, ແລະ ຫົວຂໍ້ທີ່ມີການແບ່ງຝ່າຍ.",
   "Audience Profiling": "ການສ້າງໂປຣໄຟລ໌ຜູ້ຊົມ",
-  "Understand who your viewers are based on their language and interests.": "ເຂົ້າໃຈວ່າຜູ້ຊົມຂອງທ່ານແມ່ນໃຜໂດຍອີງຕາມພາສາ ແລະ ຄວາມສົນໃຈຂອງເຂົາເຈົ້າ."
+  "Understand who your viewers are based on their language and interests.": "ເຂົ້າໃຈວ່າຜູ້ຊົມຂອງທ່ານແມ່ນໃຜໂດຍອີງຕາມພາສາ ແລະ ຄວາມສົນໃຈຂອງເຂົາເຈົ້າ.",
+  "Batch Export": "batch ສົ່ງອອກ",
+  "Select at least one video": "ເລືອກຢ່າງໜ້ອຍໜຶ່ງວິດີໂອ",
+  "Select at least one content type": "ເລືອກຢ່າງໜ້ອຍໜຶ່ງປະເພດເນື້ອຫາ",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ສົ່ງອອກ ZIP (ສຳເລັດ {{success}}, {{partial}} ບາງສ່ວນ, {{failed}} ລົ້ມເຫລວ)",
+  "Batch export canceled": "ຍົກເລີກການສົ່ງອອກຊຸດ",
+  "Batch export failed": "ການສົ່ງອອກຊຸດລົ້ມເຫລວ",
+  "Playlist videos ({{count}})": "ວິດີໂອລາຍການຫຼິ້ນ ({{count}})",
+  "Unselect all": "ຍົກເລີກການເລືອກທັງໝົດ",
+  "Select all": "ເລືອກທັງໝົດ",
+  "Loading playlist videos...": "ກຳລັງໂຫຼດວິດີໂອລາຍການຫຼິ້ນ...",
+  "No playlist videos found on this page.": "ບໍ່ພົບວິດີໂອລາຍການຫຼິ້ນຢູ່ໃນໜ້ານີ້.",
+  "Content & formats": "ເນື້ອຫາ ແລະຮູບແບບ",
+  "Description": "ລາຍລະອຽດ",
+  "Progress: {{completed}}/{{total}}": "ຄວາມຄືບໜ້າ: {{completed}}/{{total}}",
+  "Exporting...": "ກຳລັງສົ່ງອອກ...",
+  "Export {{count}} Videos": "ສົ່ງອອກວິດີໂອ {{count}}"
 }

@@ -193,5 +193,21 @@
   "Controversy Radar": "Controverseradar",
   "Detect debates, disagreements, and polarizing topics.": "Detecteer debatten, onenigheden en polariserende onderwerpen.",
   "Audience Profiling": "Publieksprofilering",
-  "Understand who your viewers are based on their language and interests.": "Begrijp wie uw kijkers zijn op basis van hun taal en interesses."
+  "Understand who your viewers are based on their language and interests.": "Begrijp wie uw kijkers zijn op basis van hun taal en interesses.",
+  "Batch Export": "Batch-export",
+  "Select at least one video": "Selecteer ten minste één video",
+  "Select at least one content type": "Selecteer ten minste één inhoudstype",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Geëxporteerde ZIP ({{success}} geslaagd, {{partial}} gedeeltelijk, {{failed}} mislukt)",
+  "Batch export canceled": "Batchexport geannuleerd",
+  "Batch export failed": "Batchexport is mislukt",
+  "Playlist videos ({{count}})": "Afspeellijstvideo's ({{count}})",
+  "Unselect all": "Deselecteer alles",
+  "Select all": "Selecteer alles",
+  "Loading playlist videos...": "Afspeellijstvideo's laden...",
+  "No playlist videos found on this page.": "Er zijn geen afspeellijstvideo's gevonden op deze pagina.",
+  "Content & formats": "Inhoud & formaten",
+  "Description": "Beschrijving",
+  "Progress: {{completed}}/{{total}}": "Voortgang: {{completed}}/{{total}}",
+  "Exporting...": "Exporteren...",
+  "Export {{count}} Videos": "Exporteer {{count}} video's"
 }

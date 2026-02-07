@@ -193,5 +193,21 @@
   "Controversy Radar": "Eztabaida Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detektatu eztabaidak, desadostasunak eta gai polarizatzaileak.",
   "Audience Profiling": "Publikoaren Profila",
-  "Understand who your viewers are based on their language and interests.": "Ulertu nortzuk diren zure ikusleak haien hizkuntza eta interesen arabera."
+  "Understand who your viewers are based on their language and interests.": "Ulertu nortzuk diren zure ikusleak haien hizkuntza eta interesen arabera.",
+  "Batch Export": "Loteen esportazioa",
+  "Select at least one video": "Hautatu gutxienez bideo bat",
+  "Select at least one content type": "Hautatu gutxienez eduki mota bat",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Esportatu da ZIP ({{success}} arrakasta, {{partial}} partziala, {{failed}} huts egin du)",
+  "Batch export canceled": "Multzoko esportazioa bertan behera utzi da",
+  "Batch export failed": "Taldeka esportatzea huts egin du",
+  "Playlist videos ({{count}})": "Erreprodukzio-zerrendako bideoak ({{count}})",
+  "Unselect all": "Deshautatu guztiak",
+  "Select all": "Hautatu guztiak",
+  "Loading playlist videos...": "Erreprodukzio zerrendako bideoak kargatzen...",
+  "No playlist videos found on this page.": "Ez da erreprodukzio zerrendako bideorik aurkitu orrialde honetan.",
+  "Content & formats": "Edukiak eta formatuak",
+  "Description": "Deskribapena",
+  "Progress: {{completed}}/{{total}}": "Aurrerapena: {{completed}}/{{total}}",
+  "Exporting...": "Esportatzen...",
+  "Export {{count}} Videos": "Esportatu {{count}} bideo"
 }

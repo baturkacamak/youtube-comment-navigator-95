@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Controverse",
   "Detect debates, disagreements, and polarizing topics.": "Detectează dezbateri, dezacorduri și subiecte polarizante.",
   "Audience Profiling": "Profilare Public",
-  "Understand who your viewers are based on their language and interests.": "Înțelege cine sunt spectatorii tăi pe baza limbii și intereselor lor."
+  "Understand who your viewers are based on their language and interests.": "Înțelege cine sunt spectatorii tăi pe baza limbii și intereselor lor.",
+  "Batch Export": "Export lot",
+  "Select at least one video": "Selectați cel puțin un videoclip",
+  "Select at least one content type": "Selectați cel puțin un tip de conținut",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP exportat ({{success}} reușit, {{partial}} parțial, {{failed}} eșuat)",
+  "Batch export canceled": "Exportul în lot a fost anulat",
+  "Batch export failed": "Exportul în lot a eșuat",
+  "Playlist videos ({{count}})": "Videoclipuri din lista de redare ({{count}})",
+  "Unselect all": "Deselectați toate",
+  "Select all": "Selectați toate",
+  "Loading playlist videos...": "Se încarcă videoclipuri din lista de redare...",
+  "No playlist videos found on this page.": "Nu s-au găsit videoclipuri din lista de redare pe această pagină.",
+  "Content & formats": "Conținut și formate",
+  "Description": "Descriere",
+  "Progress: {{completed}}/{{total}}": "Progres: {{completed}}/{{total}}",
+  "Exporting...": "Exportator...",
+  "Export {{count}} Videos": "Exportați {{count}} videoclipuri"
 }

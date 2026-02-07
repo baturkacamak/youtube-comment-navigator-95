@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "బ్యాచ్ ఎగుమతి",
+  "Select at least one video": "కనీసం ఒక వీడియోని ఎంచుకోండి",
+  "Select at least one content type": "కనీసం ఒక కంటెంట్ రకాన్ని ఎంచుకోండి",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "జిప్ ఎగుమతి చేయబడింది ({{success}} విజయం, {{partial}} పాక్షికం, {{failed}} విఫలమైంది)",
+  "Batch export canceled": "బ్యాచ్ ఎగుమతి రద్దు చేయబడింది",
+  "Batch export failed": "బ్యాచ్ ఎగుమతి విఫలమైంది",
+  "Playlist videos ({{count}})": "ప్లేజాబితా వీడియోలు ({{count}})",
+  "Unselect all": "అన్నీ ఎంపికను తీసివేయండి",
+  "Select all": "అన్నింటినీ ఎంచుకోండి",
+  "Loading playlist videos...": "ప్లేజాబితా వీడియోలను లోడ్ చేస్తోంది...",
+  "No playlist videos found on this page.": "ఈ పేజీలో ప్లేజాబితా వీడియోలు ఏవీ కనుగొనబడలేదు.",
+  "Content & formats": "కంటెంట్ & ఫార్మాట్‌లు",
+  "Description": "వివరణ",
+  "Progress: {{completed}}/{{total}}": "పురోగతి: {{completed}}/{{total}}",
+  "Exporting...": "ఎగుమతి చేస్తోంది...",
+  "Export {{count}} Videos": "{{count}} వీడియోలను ఎగుమతి చేయండి"
 }

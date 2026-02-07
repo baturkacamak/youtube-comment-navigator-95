@@ -193,5 +193,21 @@
   "Controversy Radar": "Kontroversijų Radaras",
   "Detect debates, disagreements, and polarizing topics.": "Aptikkite debatus, nesutarimus ir poliarizuojančias temas.",
   "Audience Profiling": "Auditorijos Profiliavimas",
-  "Understand who your viewers are based on their language and interests.": "Supraskite, kas yra jūsų žiūrovai, remdamiesi jų kalba ir interesais."
+  "Understand who your viewers are based on their language and interests.": "Supraskite, kas yra jūsų žiūrovai, remdamiesi jų kalba ir interesais.",
+  "Batch Export": "Partijos eksportas",
+  "Select at least one video": "Pasirinkite bent vieną vaizdo įrašą",
+  "Select at least one content type": "Pasirinkite bent vieną turinio tipą",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksportuotas ZIP kodas ({{success}} sėkmingas, {{partial}} dalinis, {{failed}} nepavyko)",
+  "Batch export canceled": "Paketinis eksportavimas atšauktas",
+  "Batch export failed": "Nepavyko eksportuoti paketo",
+  "Playlist videos ({{count}})": "Grojaraščio vaizdo įrašai ({{count}})",
+  "Unselect all": "Atšaukti visų pasirinkimą",
+  "Select all": "Pasirinkite viską",
+  "Loading playlist videos...": "Įkeliami grojaraščio vaizdo įrašai...",
+  "No playlist videos found on this page.": "Šiame puslapyje grojaraščio vaizdo įrašų nerasta.",
+  "Content & formats": "Turinys ir formatai",
+  "Description": "Aprašymas",
+  "Progress: {{completed}}/{{total}}": "Pažanga: {{completed}} / {{total}}",
+  "Exporting...": "Eksportuojama...",
+  "Export {{count}} Videos": "Eksportuokite {{count}} vaizdo įrašus"
 }

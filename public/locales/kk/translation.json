@@ -193,5 +193,21 @@
   "Controversy Radar": "Дау-дамай радары",
   "Detect debates, disagreements, and polarizing topics.": "Пікірталастарды, келіспеушіліктерді және қарама-қайшы тақырыптарды анықтаңыз.",
   "Audience Profiling": "Аудиторияны профильдеу",
-  "Understand who your viewers are based on their language and interests.": "Көрермендеріңіздің тілі мен қызығушылықтарына қарай кім екенін түсініңіз."
+  "Understand who your viewers are based on their language and interests.": "Көрермендеріңіздің тілі мен қызығушылықтарына қарай кім екенін түсініңіз.",
+  "Batch Export": "Пакеттік экспорт",
+  "Select at least one video": "Кем дегенде бір бейнені таңдаңыз",
+  "Select at least one content type": "Кем дегенде бір мазмұн түрін таңдаңыз",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Экспортталған ZIP ({{success}} сәтті, {{partial}} ішінара, {{failed}} сәтсіз аяқталды)",
+  "Batch export canceled": "Пакеттік экспорттан бас тартылды",
+  "Batch export failed": "Пакет экспорттау сәтсіз аяқталды",
+  "Playlist videos ({{count}})": "Ойнату тізімі бейнелері ({{count}})",
+  "Unselect all": "Барлығын таңдауды алып тастаңыз",
+  "Select all": "Барлығын таңдаңыз",
+  "Loading playlist videos...": "Ойнату тізімі бейнелері жүктелуде...",
+  "No playlist videos found on this page.": "Бұл бетте ойнату тізімі бейнелері табылмады.",
+  "Content & formats": "Мазмұн және форматтар",
+  "Description": "Сипаттама",
+  "Progress: {{completed}}/{{total}}": "Барысы: {{completed}}/{{total}}",
+  "Exporting...": "Экспорттауда...",
+  "Export {{count}} Videos": "{{count}} бейнелерін экспорттау"
 }

@@ -193,5 +193,21 @@
   "Controversy Radar": "ਵਿਵਾਦ ਰਾਡਾਰ",
   "Detect debates, disagreements, and polarizing topics.": "ਬਹਿਸਾਂ, ਅਸਹਿਮਤੀਆਂ ਅਤੇ ਧਰੁਵੀਕਰਨ ਵਾਲੇ ਵਿਸ਼ਿਆਂ ਦਾ ਪਤਾ ਲਗਾਓ।",
   "Audience Profiling": "ਦਰਸ਼ਕ ਪ੍ਰੋਫਾਈਲਿੰਗ",
-  "Understand who your viewers are based on their language and interests.": "ਸਮਝੋ ਕਿ ਤੁਹਾਡੇ ਦਰਸ਼ਕ ਉਨ੍ਹਾਂ ਦੀ ਭਾਸ਼ਾ ਅਤੇ ਰੁਚੀਆਂ ਦੇ ਅਧਾਰ ਤੇ ਕੌਣ ਹਨ।"
+  "Understand who your viewers are based on their language and interests.": "ਸਮਝੋ ਕਿ ਤੁਹਾਡੇ ਦਰਸ਼ਕ ਉਨ੍ਹਾਂ ਦੀ ਭਾਸ਼ਾ ਅਤੇ ਰੁਚੀਆਂ ਦੇ ਅਧਾਰ ਤੇ ਕੌਣ ਹਨ।",
+  "Batch Export": "ਬੈਚ ਨਿਰਯਾਤ",
+  "Select at least one video": "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਵੀਡੀਓ ਚੁਣੋ",
+  "Select at least one content type": "ਘੱਟੋ-ਘੱਟ ਇੱਕ ਸਮੱਗਰੀ ਕਿਸਮ ਚੁਣੋ",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ਨਿਰਯਾਤ ZIP ({{success}} ਸਫਲਤਾ, {{partial}} ਅੰਸ਼ਕ, {{failed}} ਅਸਫਲ)",
+  "Batch export canceled": "ਬੈਚ ਨਿਰਯਾਤ ਰੱਦ ਕੀਤਾ ਗਿਆ",
+  "Batch export failed": "ਬੈਚ ਨਿਰਯਾਤ ਅਸਫਲ ਰਿਹਾ",
+  "Playlist videos ({{count}})": "ਪਲੇਲਿਸਟ ਵੀਡੀਓ ({{count}})",
+  "Unselect all": "ਸਭ ਨੂੰ ਅਣਚੁਣਿਆ ਕਰੋ",
+  "Select all": "ਸਭ ਚੁਣੋ",
+  "Loading playlist videos...": "ਪਲੇਲਿਸਟ ਵੀਡੀਓਜ਼ ਨੂੰ ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+  "No playlist videos found on this page.": "ਇਸ ਪੰਨੇ 'ਤੇ ਕੋਈ ਪਲੇਲਿਸਟ ਵੀਡੀਓ ਨਹੀਂ ਮਿਲੇ।",
+  "Content & formats": "ਸਮੱਗਰੀ ਅਤੇ ਫਾਰਮੈਟ",
+  "Description": "ਵਰਣਨ",
+  "Progress: {{completed}}/{{total}}": "ਪ੍ਰਗਤੀ: {{completed}}/{{total}}",
+  "Exporting...": "ਨਿਰਯਾਤ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+  "Export {{count}} Videos": "{{count}} ਵੀਡੀਓਜ਼ ਨਿਰਯਾਤ ਕਰੋ"
 }

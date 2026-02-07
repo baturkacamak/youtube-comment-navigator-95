@@ -193,5 +193,21 @@
   "Controversy Radar": "Kontrovers-radar",
   "Detect debates, disagreements, and polarizing topics.": "Oppdag debatter, uenigheter og polariserende emner.",
   "Audience Profiling": "Publikumsprofilering",
-  "Understand who your viewers are based on their language and interests.": "Forstå hvem seerne dine er basert på deres språk og interesser."
+  "Understand who your viewers are based on their language and interests.": "Forstå hvem seerne dine er basert på deres språk og interesser.",
+  "Batch Export": "Batch eksport",
+  "Select at least one video": "Velg minst én video",
+  "Select at least one content type": "Velg minst én innholdstype",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksportert ZIP ({{success}} vellykket, {{partial}} delvis, {{failed}} mislyktes)",
+  "Batch export canceled": "Batch-eksport avbrutt",
+  "Batch export failed": "Batch-eksport mislyktes",
+  "Playlist videos ({{count}})": "Spillelistevideoer ({{count}})",
+  "Unselect all": "Fjern markeringen av alle",
+  "Select all": "Velg alle",
+  "Loading playlist videos...": "Laster spillelistevideoer ...",
+  "No playlist videos found on this page.": "Ingen spillelistevideoer funnet på denne siden.",
+  "Content & formats": "Innhold og formater",
+  "Description": "Beskrivelse",
+  "Progress: {{completed}}/{{total}}": "Fremgang: {{completed}}/{{total}}",
+  "Exporting...": "Eksporterer...",
+  "Export {{count}} Videos": "Eksporter {{count}} videoer"
 }

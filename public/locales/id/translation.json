@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Kontroversi",
   "Detect debates, disagreements, and polarizing topics.": "Deteksi debat, ketidaksepakatan, dan topik yang memecah belah.",
   "Audience Profiling": "Pemrofilan Audiens",
-  "Understand who your viewers are based on their language and interests.": "Pahami siapa penonton Anda berdasarkan bahasa dan minat mereka."
+  "Understand who your viewers are based on their language and interests.": "Pahami siapa penonton Anda berdasarkan bahasa dan minat mereka.",
+  "Batch Export": "Ekspor Batch",
+  "Select at least one video": "Pilih setidaknya satu video",
+  "Select at least one content type": "Pilih setidaknya satu jenis konten",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP yang diekspor ({{success}} berhasil, {{partial}} sebagian, {{failed}} gagal)",
+  "Batch export canceled": "Ekspor batch dibatalkan",
+  "Batch export failed": "Ekspor batch gagal",
+  "Playlist videos ({{count}})": "Video daftar putar ({{count}})",
+  "Unselect all": "Batalkan pilihan semua",
+  "Select all": "Pilih semua",
+  "Loading playlist videos...": "Memuat video daftar putar...",
+  "No playlist videos found on this page.": "Tidak ada video daftar putar yang ditemukan di halaman ini.",
+  "Content & formats": "Konten & format",
+  "Description": "Keterangan",
+  "Progress: {{completed}}/{{total}}": "Kemajuan: {{completed}}/{{total}}",
+  "Exporting...": "Mengekspor...",
+  "Export {{count}} Videos": "Ekspor {{count}} Video"
 }

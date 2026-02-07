@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Esemokwu",
   "Detect debates, disagreements, and polarizing topics.": "Chọpụta arụmụka, esemokwu, na isiokwu na-ekewa.",
   "Audience Profiling": "Nprofiling ndị na-ege ntị",
-  "Understand who your viewers are based on their language and interests.": "Ghọta ndị na-ekiri gị dabere n'asụsụ na mmasị ha."
+  "Understand who your viewers are based on their language and interests.": "Ghọta ndị na-ekiri gị dabere n'asụsụ na mmasị ha.",
+  "Batch Export": "Mbupụ ogbe",
+  "Select at least one video": "Họrọ opekata mpe otu vidiyo",
+  "Select at least one content type": "Họrọ opekata mpe otu ụdị ọdịnaya",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP ebugara (ihe ịga nke ọma {{success}}, akụkụ {{partial}}, {{failed}} dara)",
+  "Batch export canceled": "Kagbuo mbupụ ogbe",
+  "Batch export failed": "Mbupu ogbe dara",
+  "Playlist videos ({{count}})": "Vidiyo ndepụta ọkpụkpọ ({{count}})",
+  "Unselect all": "Hapụ ha niile",
+  "Select all": "Họrọ ha niile",
+  "Loading playlist videos...": "Na-ebu vidiyo ndepụta ọkpụkpọ...",
+  "No playlist videos found on this page.": "Enweghị vidiyo ndepụta ọkpụkpọ ahụrụ na ibe a.",
+  "Content & formats": "Ọdịnaya & usoro",
+  "Description": "Nkọwa",
+  "Progress: {{completed}}/{{total}}": "Ọganihu: {{completed}}/{{total}}",
+  "Exporting...": "Na-ebupụ...",
+  "Export {{count}} Videos": "Bupu vidiyo {{count}}"
 }

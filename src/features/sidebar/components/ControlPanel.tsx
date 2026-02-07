@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowsUpDownIcon, ChevronDownIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { DownloadAccordion } from '../../shared/components/DownloadAccordion';
 import Collapsible from '../../shared/components/Collapsible';
+import BatchExportAccordion from '../../batch-export/components/BatchExportAccordion';
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   filters,
@@ -29,6 +30,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           <FilterList filters={filters} setFilters={setFilters} />
         </div>
         <div className="flex items-center gap-4">
+          <BatchExportAccordion />
           <DownloadAccordion contentType="comments" visibleData={comments} allData={allComments} />
           <button
             onClick={() => setShowAdvanced(!showAdvanced)}

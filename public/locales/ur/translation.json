@@ -193,5 +193,21 @@
   "Controversy Radar": "تنازعہ ریڈار",
   "Detect debates, disagreements, and polarizing topics.": "بحث، اختلاف اور پولرائزنگ موضوعات کا پتہ لگائیں۔",
   "Audience Profiling": "سامعین کی پروفائلنگ",
-  "Understand who your viewers are based on their language and interests.": "سمجھیں کہ آپ کے ناظرین ان کی زبان اور دلچسپیوں کی بنیاد پر کون ہیں۔"
+  "Understand who your viewers are based on their language and interests.": "سمجھیں کہ آپ کے ناظرین ان کی زبان اور دلچسپیوں کی بنیاد پر کون ہیں۔",
+  "Batch Export": "بیچ ایکسپورٹ",
+  "Select at least one video": "کم از کم ایک ویڈیو منتخب کریں",
+  "Select at least one content type": "کم از کم ایک مواد کی قسم منتخب کریں",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP برآمد شدہ ({{success}} کامیاب، {{partial}} جزوی، {{failed}} ناکام)",
+  "Batch export canceled": "بیچ ایکسپورٹ منسوخ",
+  "Batch export failed": "بیچ ایکسپورٹ ناکام ہوگیا",
+  "Playlist videos ({{count}})": "پلے لسٹ ویڈیوز ({{count}})",
+  "Unselect all": "سب کو غیر منتخب کریں",
+  "Select all": "سب کو منتخب کریں",
+  "Loading playlist videos...": "پلے لسٹ ویڈیوز لوڈ ہو رہے ہیں ...",
+  "No playlist videos found on this page.": "اس صفحے پر کوئی پلے لسٹ ویڈیوز نہیں ملی۔",
+  "Content & formats": "مواد اور فارمیٹس",
+  "Description": "تفصیل",
+  "Progress: {{completed}}/{{total}}": "پیش رفت: {{completed}}/{{total}}",
+  "Exporting...": "برآمد ...",
+  "Export {{count}} Videos": "{{count}} ویڈیوز برآمد کریں"
 }

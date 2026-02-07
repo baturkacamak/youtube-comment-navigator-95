@@ -193,5 +193,21 @@
   "Controversy Radar": "Радар за Противоречия",
   "Detect debates, disagreements, and polarizing topics.": "Открийте дебати, несъгласия и поляризиращи теми.",
   "Audience Profiling": "Профилиране на Аудиторията",
-  "Understand who your viewers are based on their language and interests.": "Разберете кои са вашите зрители въз основа на техния език и интереси."
+  "Understand who your viewers are based on their language and interests.": "Разберете кои са вашите зрители въз основа на техния език и интереси.",
+  "Batch Export": "Пакетно експортиране",
+  "Select at least one video": "Изберете поне един видеоклип",
+  "Select at least one content type": "Изберете поне един тип съдържание",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Експортиран ZIP ({{success}} успех, {{partial}} частично, {{failed}} неуспешно)",
+  "Batch export canceled": "Пакетното експортиране е анулирано",
+  "Batch export failed": "Пакетното експортиране не бе успешно",
+  "Playlist videos ({{count}})": "Видеоклипове в плейлист ({{count}})",
+  "Unselect all": "Отменете избора на всички",
+  "Select all": "Изберете всички",
+  "Loading playlist videos...": "Зареждат се видеоклипове от плейлиста...",
+  "No playlist videos found on this page.": "На тази страница няма намерени видеоклипове от плейлист.",
+  "Content & formats": "Съдържание и формати",
+  "Description": "Описание",
+  "Progress: {{completed}}/{{total}}": "Напредък: {{completed}}/{{total}}",
+  "Exporting...": "Експортиране...",
+  "Export {{count}} Videos": "Експортирайте {{count}} видеоклипове"
 }

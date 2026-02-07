@@ -193,5 +193,21 @@
   "Controversy Radar": "Rada Konfli",
   "Detect debates, disagreements, and polarizing topics.": "Detekte deba, dezakò, ak sijè polarize.",
   "Audience Profiling": "Profiling Odyans",
-  "Understand who your viewers are based on their language and interests.": "Konprann ki moun telespektatè ou yo baze sou lang yo ak enterè yo."
+  "Understand who your viewers are based on their language and interests.": "Konprann ki moun telespektatè ou yo baze sou lang yo ak enterè yo.",
+  "Batch Export": "Ekspòtasyon pakèt",
+  "Select at least one video": "Chwazi omwen yon videyo",
+  "Select at least one content type": "Chwazi omwen yon kalite kontni",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Ekspòtasyon postal ({{success}} siksè, {{partial}} pasyèl, {{failed}} echwe)",
+  "Batch export canceled": "Ekspòtasyon pakèt anile",
+  "Batch export failed": "Ekspòtasyon pakèt echwe",
+  "Playlist videos ({{count}})": "Lis videyo ({{count}})",
+  "Unselect all": "Dezeleksyone tout",
+  "Select all": "Chwazi tout",
+  "Loading playlist videos...": "Chaje videyo lis...",
+  "No playlist videos found on this page.": "Pa gen videyo lis yo jwenn sou paj sa a.",
+  "Content & formats": "Kontni ak fòma",
+  "Description": "Deskripsyon",
+  "Progress: {{completed}}/{{total}}": "Pwogrè: {{completed}}/{{total}}",
+  "Exporting...": "Ekspòte...",
+  "Export {{count}} Videos": "Ekspòte {{count}} videyo"
 }

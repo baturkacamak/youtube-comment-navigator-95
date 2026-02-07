@@ -193,5 +193,21 @@
   "Controversy Radar": "רדאר מחלוקות",
   "Detect debates, disagreements, and polarizing topics.": "זהה ויכוחים, אי הסכמות ונושאים מקטבים.",
   "Audience Profiling": "פרופיל קהל",
-  "Understand who your viewers are based on their language and interests.": "הבן מי הם הצופים שלך על סמך שפתם ותחומי העניין שלהם."
+  "Understand who your viewers are based on their language and interests.": "הבן מי הם הצופים שלך על סמך שפתם ותחומי העניין שלהם.",
+  "Batch Export": "ייצוא אצווה",
+  "Select at least one video": "בחר סרטון אחד לפחות",
+  "Select at least one content type": "בחר סוג תוכן אחד לפחות",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP מיוצא ({{success}} הצלחה, {{partial}} חלקית, {{failed}} נכשל)",
+  "Batch export canceled": "ייצוא אצווה בוטל",
+  "Batch export failed": "ייצוא אצווה נכשל",
+  "Playlist videos ({{count}})": "סרטונים בפלייליסט ({{count}})",
+  "Unselect all": "בטל את הבחירה בכולם",
+  "Select all": "בחר הכל",
+  "Loading playlist videos...": "טוען סרטוני פלייליסט...",
+  "No playlist videos found on this page.": "לא נמצאו סרטונים בפלייליסט בדף זה.",
+  "Content & formats": "תוכן ופורמטים",
+  "Description": "תֵאוּר",
+  "Progress: {{completed}}/{{total}}": "התקדמות: {{completed}}/{{total}}",
+  "Exporting...": "מייצא...",
+  "Export {{count}} Videos": "ייצא {{count}} סרטונים"
 }

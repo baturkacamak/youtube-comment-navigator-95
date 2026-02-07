@@ -193,5 +193,21 @@
   "Controversy Radar": "争议雷达",
   "Detect debates, disagreements, and polarizing topics.": "检测辩论、分歧和两极分化的话题。",
   "Audience Profiling": "受众画像",
-  "Understand who your viewers are based on their language and interests.": "根据语言和兴趣了解您的观众是谁。"
+  "Understand who your viewers are based on their language and interests.": "根据语言和兴趣了解您的观众是谁。",
+  "Batch Export": "批量导出",
+  "Select at least one video": "至少选择一个视频",
+  "Select at least one content type": "选择至少一种内容类型",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "导出的 ZIP（{{success}} 成功，{{partial}} 部分，{{failed}} 失败）",
+  "Batch export canceled": "批量导出取消",
+  "Batch export failed": "批量导出失败",
+  "Playlist videos ({{count}})": "播放列表视频 ({{count}})",
+  "Unselect all": "取消选择全部",
+  "Select all": "选择全部",
+  "Loading playlist videos...": "正在加载播放列表视频...",
+  "No playlist videos found on this page.": "此页面上未找到播放列表视频。",
+  "Content & formats": "内容与格式",
+  "Description": "描述",
+  "Progress: {{completed}}/{{total}}": "进度：{{completed}}/{{total}}",
+  "Exporting...": "出口...",
+  "Export {{count}} Videos": "导出 {{count}} 视频"
 }

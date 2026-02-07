@@ -193,5 +193,21 @@
   "Controversy Radar": "Mübahisə Radarı",
   "Detect debates, disagreements, and polarizing topics.": "Debatları, fikir ayrılıqlarını və qütbləşdirici mövzuları aşkar edin.",
   "Audience Profiling": "Auditoriya Profilləşdirməsi",
-  "Understand who your viewers are based on their language and interests.": "Dillərinə və maraqlarına əsasən izləyicilərinizin kim olduğunu anlayın."
+  "Understand who your viewers are based on their language and interests.": "Dillərinə və maraqlarına əsasən izləyicilərinizin kim olduğunu anlayın.",
+  "Batch Export": "Toplu İxrac",
+  "Select at least one video": "Ən azı bir video seçin",
+  "Select at least one content type": "Ən azı bir məzmun növü seçin",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Eksport edilmiş ZIP ​​({{success}} müvəffəqiyyəti, {{partial}} qismən, {{failed}} uğursuz)",
+  "Batch export canceled": "Toplu ixrac ləğv edildi",
+  "Batch export failed": "Toplu ixrac uğursuz oldu",
+  "Playlist videos ({{count}})": "Pleylist videoları ({{count}})",
+  "Unselect all": "Hamısının seçimini ləğv edin",
+  "Select all": "Hamısını seçin",
+  "Loading playlist videos...": "Pleylist videoları yüklənir...",
+  "No playlist videos found on this page.": "Bu səhifədə heç bir pleylist videosu tapılmadı.",
+  "Content & formats": "Məzmun və formatlar",
+  "Description": "Təsvir",
+  "Progress: {{completed}}/{{total}}": "Tərəqqi: {{completed}}/{{total}}",
+  "Exporting...": "Eksport edilir...",
+  "Export {{count}} Videos": "{{count}} videolarını ixrac edin"
 }

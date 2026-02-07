@@ -9,6 +9,7 @@ import i18n, { getLanguageDirection } from './i18n';
 import { isLocalEnvironment, languageOptions } from './features/shared/utils/appConstants';
 import { ToastProvider } from './features/shared/contexts/ToastContext';
 import ToastContainer from './features/shared/components/ToastContainer';
+import PlaylistBatchExportWidget from './features/batch-export/components/PlaylistBatchExportWidget';
 
 // --- Helper Classes ---
 
@@ -31,6 +32,21 @@ class DOMHelper {
     return newAppContainer;
   }
 
+  static createPlaylistBatchContainer(containerId: string): HTMLElement {
+    const existing = document.getElementById(containerId);
+    if (existing) return existing;
+
+    const container = document.createElement('div');
+    container.id = containerId;
+    container.style.position = 'fixed';
+    container.style.top = '88px';
+    container.style.right = '16px';
+    container.style.zIndex = '2147483646';
+    container.style.maxWidth = '440px';
+    document.body.appendChild(container);
+    return container;
+  }
+
   static removeAppContainer(containerId: string) {
     const appContainer = document.getElementById(containerId);
     if (appContainer) {
@@ -42,6 +58,17 @@ class DOMHelper {
     return (
       window.location.pathname === '/watch' && new URLSearchParams(window.location.search).has('v')
     );
+  }
+
+  static isPlaylistPage() {
+    return (
+      window.location.pathname === '/playlist' &&
+      new URLSearchParams(window.location.search).has('list')
+    );
+  }
+
+  static isSupportedPage() {
+    return this.isVideoWatchPage() || this.isPlaylistPage();
   }
 }
 
@@ -82,8 +109,14 @@ class URLChangeHandler {
     const urlObj = new URL(url);
     let baseUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`;
     const videoId = urlObj.searchParams.get('v');
+    const playlistId = urlObj.searchParams.get('list');
     if (videoId) {
       baseUrl += `?v=${videoId}`;
+      if (playlistId) {
+        baseUrl += `&list=${playlistId}`;
+      }
+    } else if (playlistId) {
+      baseUrl += `?list=${playlistId}`;
     }
     return baseUrl;
   }
@@ -105,9 +138,11 @@ class URLChangeHandler {
 
 class YouTubeCommentNavigator {
   appContainerId = 'youtube-comment-navigator-app';
+  playlistBatchContainerId = 'youtube-comment-navigator-playlist-batch';
   commentsSectionId = 'comments';
   pubSub: PubSub;
   root: ReactDOM.Root | null = null;
+  playlistRoot: ReactDOM.Root | null = null;
   private isInitialized = false;
 
   constructor(pubSub: PubSub) {
@@ -118,29 +153,56 @@ class YouTubeCommentNavigator {
 
   checkAndInjectWithInterval(isUrlChanged = false) {
     const intervalId = setInterval(async () => {
-      if (!DOMHelper.isVideoWatchPage()) {
+      if (!DOMHelper.isSupportedPage()) {
         clearInterval(intervalId);
         this.removeInjectedContent();
         return;
       }
-      if (document.getElementById(this.commentsSectionId)) {
+
+      if (DOMHelper.isVideoWatchPage() && document.getElementById(this.commentsSectionId)) {
         clearInterval(intervalId);
-        await this.checkAndInject();
+        await this.checkAndInjectWatchPage();
         if (isUrlChanged) {
           window.postMessage({ type: 'URL_CHANGE_TO_VIDEO', url: window.location.href }, '*');
         }
+        return;
+      }
+
+      if (DOMHelper.isPlaylistPage()) {
+        clearInterval(intervalId);
+        await this.checkAndInjectPlaylistPage();
+        return;
       }
     }, 2000);
   }
 
-  async checkAndInject() {
-    if (!DOMHelper.isVideoWatchPage()) return;
-
+  async checkAndInjectWatchPage() {
     await this.ensureInitialized();
+
+    if (this.playlistRoot) {
+      this.playlistRoot.unmount();
+      this.playlistRoot = null;
+      DOMHelper.removeAppContainer(this.playlistBatchContainerId);
+    }
 
     const appContainer = DOMHelper.createAppContainer(this.commentsSectionId, this.appContainerId);
     if (appContainer && !this.root) {
       this.mountReactApp(appContainer);
+    }
+  }
+
+  async checkAndInjectPlaylistPage() {
+    await this.ensureInitialized();
+
+    if (this.root) {
+      this.root.unmount();
+      this.root = null;
+      DOMHelper.removeAppContainer(this.appContainerId);
+    }
+
+    const container = DOMHelper.createPlaylistBatchContainer(this.playlistBatchContainerId);
+    if (container && !this.playlistRoot) {
+      this.mountPlaylistBatchWidget(container);
     }
   }
 
@@ -221,6 +283,31 @@ class YouTubeCommentNavigator {
       ) : (
         <AppWrapper />
       )
+    );
+  }
+
+  mountPlaylistBatchWidget(container: HTMLElement) {
+    this.playlistRoot = ReactDOM.createRoot(container);
+
+    const applyInitialTheme = () => {
+      try {
+        const savedSettings = localStorage.getItem('settings');
+        const settings = savedSettings ? JSON.parse(savedSettings) : { /* no-op */ };
+        const theme = settings.theme || localStorage.getItem('theme') || 'light';
+        const isDark = theme === 'dark';
+        document.documentElement.classList.toggle('dark', isDark);
+        container.classList.toggle('dark', isDark);
+      } catch {
+        // Ignore errors, default to light theme
+      }
+    };
+    applyInitialTheme();
+
+    this.playlistRoot.render(
+      <ToastProvider>
+        <PlaylistBatchExportWidget />
+        <ToastContainer />
+      </ToastProvider>
     );
   }
 
@@ -316,7 +403,12 @@ class YouTubeCommentNavigator {
       this.root.unmount();
       this.root = null;
     }
+    if (this.playlistRoot) {
+      this.playlistRoot.unmount();
+      this.playlistRoot = null;
+    }
     DOMHelper.removeAppContainer(this.appContainerId);
+    DOMHelper.removeAppContainer(this.playlistBatchContainerId);
   }
 }
 

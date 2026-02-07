@@ -193,5 +193,21 @@
   "Controversy Radar": "Vita Radar",
   "Detect debates, disagreements, and polarizing topics.": "Észlelje a vitákat, nézeteltéréseket és megosztó témákat.",
   "Audience Profiling": "Közönségprofilozás",
-  "Understand who your viewers are based on their language and interests.": "Értse meg, kik a nézői a nyelvük és érdeklődési körük alapján."
+  "Understand who your viewers are based on their language and interests.": "Értse meg, kik a nézői a nyelvük és érdeklődési körük alapján.",
+  "Batch Export": "Kötegelt exportálás",
+  "Select at least one video": "Válasszon ki legalább egy videót",
+  "Select at least one content type": "Válasszon ki legalább egy tartalomtípust",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP-fájl exportálása ({{success}} sikeres, {{partial}} részleges, {{failed}} sikertelen)",
+  "Batch export canceled": "A kötegelt exportálás megszakítva",
+  "Batch export failed": "A kötegelt export nem sikerült",
+  "Playlist videos ({{count}})": "Lejátszási listás videók ({{count}})",
+  "Unselect all": "Törölje az összes kijelölését",
+  "Select all": "Válassza ki az összeset",
+  "Loading playlist videos...": "Lejátszási listás videók betöltése...",
+  "No playlist videos found on this page.": "Nem található lejátszási listás videó ezen az oldalon.",
+  "Content & formats": "Tartalom és formátumok",
+  "Description": "Leírás",
+  "Progress: {{completed}}/{{total}}": "Haladás: {{completed}}/{{total}}",
+  "Exporting...": "Exportálás...",
+  "Export {{count}} Videos": "{{count}} videók exportálása"
 }

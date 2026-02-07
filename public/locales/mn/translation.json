@@ -193,5 +193,21 @@
   "Controversy Radar": "Маргааны радарт",
   "Detect debates, disagreements, and polarizing topics.": "Мэтгэлцээн, санал зөрөлдөөн, туйлширсан сэдвүүдийг илрүүлэх.",
   "Audience Profiling": "Үзэгчдийн профайл",
-  "Understand who your viewers are based on their language and interests.": "Үзэгчид хэн болохыг тэдний хэл, сонирхолд тулгуурлан ойлгоорой."
+  "Understand who your viewers are based on their language and interests.": "Үзэгчид хэн болохыг тэдний хэл, сонирхолд тулгуурлан ойлгоорой.",
+  "Batch Export": "Багц экспорт",
+  "Select at least one video": "Дор хаяж нэг видео сонгоно уу",
+  "Select at least one content type": "Дор хаяж нэг агуулгын төрлийг сонгоно уу",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Экспортолсон ZIP ({{success}} амжилттай, {{partial}} хэсэгчилсэн, {{failed}} амжилтгүй болсон)",
+  "Batch export canceled": "Багц экспортыг цуцалсан",
+  "Batch export failed": "Багц экспорт амжилтгүй боллоо",
+  "Playlist videos ({{count}})": "Тоглуулах жагсаалтын видео ({{count}})",
+  "Unselect all": "Бүгдийг нь сонгоно уу",
+  "Select all": "Бүгдийг сонгоно уу",
+  "Loading playlist videos...": "Тоглуулах жагсаалтын видеог ачаалж байна...",
+  "No playlist videos found on this page.": "Энэ хуудсан дээр тоглуулах жагсаалтын видео олдсонгүй.",
+  "Content & formats": "Агуулга ба формат",
+  "Description": "Тодорхойлолт",
+  "Progress: {{completed}}/{{total}}": "Явц: {{completed}}/{{total}}",
+  "Exporting...": "Экспорт хийж байна...",
+  "Export {{count}} Videos": "{{count}} видеог экспортлох"
 }

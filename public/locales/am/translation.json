@@ -193,5 +193,21 @@
   "Controversy Radar": "የክርክር ራዳር",
   "Detect debates, disagreements, and polarizing topics.": "ክርክሮችን፣ አለመግባባቶችን እና አከራካሪ ርዕሶችን ይለዩ።",
   "Audience Profiling": "የታዳሚ መገለጫ",
-  "Understand who your viewers are based on their language and interests.": "በቋንቋቸው እና በፍላጎታቸው መሰረት ተመልካቾችዎ እነማን እንደሆኑ ይረዱ።"
+  "Understand who your viewers are based on their language and interests.": "በቋንቋቸው እና በፍላጎታቸው መሰረት ተመልካቾችዎ እነማን እንደሆኑ ይረዱ።",
+  "Batch Export": "ባች ወደ ውጭ መላክ",
+  "Select at least one video": "ቢያንስ አንድ ቪዲዮ ይምረጡ",
+  "Select at least one content type": "ቢያንስ አንድ የይዘት አይነት ይምረጡ",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ወደ ውጭ የተላከ ዚፕ ({{success}} ስኬት፣ {{partial}} ከፊል፣ {{failed}} አልተሳካም)",
+  "Batch export canceled": "ባች ወደ ውጭ መላክ ተሰርዟል።",
+  "Batch export failed": "ባች ወደ ውጭ መላክ አልተሳካም።",
+  "Playlist videos ({{count}})": "የአጫዋች ዝርዝር ቪዲዮዎች ({{count}})",
+  "Unselect all": "ሁሉንም አይምረጡ",
+  "Select all": "ሁሉንም ይምረጡ",
+  "Loading playlist videos...": "የአጫዋች ዝርዝር ቪዲዮዎችን በመጫን ላይ...",
+  "No playlist videos found on this page.": "በዚህ ገጽ ላይ ምንም የአጫዋች ዝርዝር ቪዲዮዎች አልተገኙም።",
+  "Content & formats": "ይዘት እና ቅርጸቶች",
+  "Description": "መግለጫ",
+  "Progress: {{completed}}/{{total}}": "ሂደት፡ {{completed}}/{{total}}",
+  "Exporting...": "ወደ ውጭ በመላክ ላይ...",
+  "Export {{count}} Videos": "የ{{count}} ቪዲዮዎችን ወደ ውጪ ላክ"
 }

@@ -68,7 +68,6 @@ const CommentList: React.FC<CommentListProps> = () => {
     error,
     clearError,
     refresh,
-    clearComments,
   } = useCommentsFromDB({
     videoId,
     filters,
@@ -79,16 +78,6 @@ const CommentList: React.FC<CommentListProps> = () => {
   });
 
   const isLoading = dbLoading || globalLoading;
-
-  // Clear comments immediately when global loading starts (don't wait for DB event)
-  const prevGlobalLoadingRef = useRef(globalLoading);
-  useEffect(() => {
-    // Detect when globalLoading transitions from false to true
-    if (!prevGlobalLoadingRef.current && globalLoading && comments.length > 0) {
-      clearComments();
-    }
-    prevGlobalLoadingRef.current = globalLoading;
-  }, [globalLoading, comments.length, clearComments]);
 
   // Sync totalCount to Redux for components that still need it
   useEffect(() => {

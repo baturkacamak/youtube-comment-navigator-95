@@ -193,5 +193,21 @@
   "Controversy Radar": "Tartışma Radarı",
   "Detect debates, disagreements, and polarizing topics.": "Tartışmaları, anlaşmazlıkları ve kutuplaştırıcı konuları tespit et.",
   "Audience Profiling": "İzleyici Profillemesi",
-  "Understand who your viewers are based on their language and interests.": "Dillerine ve ilgi alanlarına göre izleyicilerinin kim olduğunu anla."
+  "Understand who your viewers are based on their language and interests.": "Dillerine ve ilgi alanlarına göre izleyicilerinin kim olduğunu anla.",
+  "Batch Export": "Toplu Dışa Aktarma",
+  "Select at least one video": "En az bir video seçin",
+  "Select at least one content type": "En az bir içerik türü seçin",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Dışa aktarılan ZIP ({{success}} başarılı, {{partial}} kısmi, {{failed}} başarısız oldu)",
+  "Batch export canceled": "Toplu dışa aktarma iptal edildi",
+  "Batch export failed": "Toplu dışa aktarma başarısız oldu",
+  "Playlist videos ({{count}})": "Oynatma listesi videoları ({{count}})",
+  "Unselect all": "Tümünün seçimini kaldır",
+  "Select all": "Tümünü seç",
+  "Loading playlist videos...": "Oynatma videoları yükleniyor...",
+  "No playlist videos found on this page.": "Bu sayfada oynatma listesi videosu bulunamadı.",
+  "Content & formats": "İçerik ve formatlar",
+  "Description": "Tanım",
+  "Progress: {{completed}}/{{total}}": "İlerleme durumu: {{completed}}/{{total}}",
+  "Exporting...": "Dışa aktarılıyor...",
+  "Export {{count}} Videos": "{{count}} Videoyu Dışa Aktar"
 }
