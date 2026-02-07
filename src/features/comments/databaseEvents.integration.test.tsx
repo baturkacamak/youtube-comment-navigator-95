@@ -76,7 +76,7 @@ const createComment = (id: string, videoId: string, overrides: Partial<Comment> 
     weightedZScore: 0,
     bayesianAverage: 0,
     isBookmarked: false,
-    bookmarkAddedDate: 0,
+    bookmarkAddedDate: '',
     published: new Date(Date.now() - numericId * 1000).toISOString(),
     ...overrides,
   };
@@ -109,9 +109,7 @@ describe('Database Events Integration Tests', () => {
   describe('comments:deleted Event', () => {
     it('clears UI immediately when comments:deleted event fires', async () => {
       const videoId = 'test-video';
-      const comments = Array.from({ length: 10 }, (_, i) =>
-        createComment(`${i}`, videoId)
-      );
+      const comments = Array.from({ length: 10 }, (_, i) => createComment(`${i}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -123,10 +121,13 @@ describe('Database Events Integration Tests', () => {
       );
 
       // Wait for comments to load
-      await waitFor(() => {
-        expect(result.current.comments.length).toBeGreaterThan(0);
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBeGreaterThan(0);
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       const loadedCount = result.current.comments.length;
       expect(loadedCount).toBeGreaterThan(0);
@@ -170,10 +171,13 @@ describe('Database Events Integration Tests', () => {
       );
 
       // Wait for both to load
-      await waitFor(() => {
-        expect(result1.current.comments.length).toBe(5);
-        expect(result2.current.comments.length).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result1.current.comments.length).toBe(5);
+          expect(result2.current.comments.length).toBe(5);
+        },
+        { timeout: 3000 }
+      );
 
       // Delete only video-1 comments
       act(() => {
@@ -191,9 +195,7 @@ describe('Database Events Integration Tests', () => {
   describe('comments:added Event', () => {
     it('refreshes UI when new comments added (page 0 only)', async () => {
       const videoId = 'test-video';
-      const initialComments = Array.from({ length: 5 }, (_, i) =>
-        createComment(`${i}`, videoId)
-      );
+      const initialComments = Array.from({ length: 5 }, (_, i) => createComment(`${i}`, videoId));
       await db.comments.bulkAdd(initialComments);
 
       const { result } = renderHook(() =>
@@ -205,15 +207,16 @@ describe('Database Events Integration Tests', () => {
       );
 
       // Wait for initial load
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(5);
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(5);
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       // Add new comments to database
-      const newComments = Array.from({ length: 3 }, (_, i) =>
-        createComment(`new-${i}`, videoId)
-      );
+      const newComments = Array.from({ length: 3 }, (_, i) => createComment(`new-${i}`, videoId));
       await db.comments.bulkAdd(newComments);
 
       // Fire event
@@ -222,9 +225,12 @@ describe('Database Events Integration Tests', () => {
       });
 
       // Should refresh and show new total
-      await waitFor(() => {
-        expect(result.current.totalCount).toBe(8);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.totalCount).toBe(8);
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('does NOT refresh when comments:added fires during loading', async () => {
@@ -265,10 +271,13 @@ describe('Database Events Integration Tests', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(1);
-        expect(result.current.comments[0].replyCount).toBe(0);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(1);
+          expect(result.current.comments[0].replyCount).toBe(0);
+        },
+        { timeout: 3000 }
+      );
 
       // Add replies to database
       await db.comments.where('commentId').equals('1').modify({ replyCount: 3 });
@@ -279,19 +288,20 @@ describe('Database Events Integration Tests', () => {
       });
 
       // Should refresh and show updated count
-      await waitFor(() => {
-        const updatedComment = result.current.comments.find(c => c.commentId === '1');
-        expect(updatedComment?.replyCount).toBe(3);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const updatedComment = result.current.comments.find((c) => c.commentId === '1');
+          expect(updatedComment?.replyCount).toBe(3);
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
   describe('Multiple Components Reacting', () => {
     it('multiple hooks react to same event', async () => {
       const videoId = 'test-video';
-      const comments = Array.from({ length: 10 }, (_, i) =>
-        createComment(`${i}`, videoId)
-      );
+      const comments = Array.from({ length: 10 }, (_, i) => createComment(`${i}`, videoId));
       await db.comments.bulkAdd(comments);
 
       // Render two hooks watching the same video
@@ -314,10 +324,13 @@ describe('Database Events Integration Tests', () => {
       );
 
       // Wait for both to load
-      await waitFor(() => {
-        expect(result1.current.comments.length).toBe(5);
-        expect(result2.current.comments.length).toBe(10);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result1.current.comments.length).toBe(5);
+          expect(result2.current.comments.length).toBe(10);
+        },
+        { timeout: 3000 }
+      );
 
       // Delete all comments
       await db.comments.clear();
@@ -338,9 +351,7 @@ describe('Database Events Integration Tests', () => {
   describe('Event Throttling', () => {
     it('throttles rapid comments:added events', async () => {
       const videoId = 'test-video';
-      const comments = Array.from({ length: 5 }, (_, i) =>
-        createComment(`${i}`, videoId)
-      );
+      const comments = Array.from({ length: 5 }, (_, i) => createComment(`${i}`, videoId));
       await db.comments.bulkAdd(comments);
 
       const { result } = renderHook(() =>
@@ -351,10 +362,13 @@ describe('Database Events Integration Tests', () => {
         })
       );
 
-      await waitFor(() => {
-        expect(result.current.comments.length).toBe(5);
-        expect(result.current.isLoading).toBe(false);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(result.current.comments.length).toBe(5);
+          expect(result.current.isLoading).toBe(false);
+        },
+        { timeout: 3000 }
+      );
 
       // Fire multiple events rapidly
       act(() => {
@@ -365,7 +379,7 @@ describe('Database Events Integration Tests', () => {
 
       // Should only trigger one refresh (throttled)
       // The hook has a 1-second throttle
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Check that throttling worked (stats should show 3 events but fewer refreshes)
       const stats = dbEvents.getStats();
@@ -386,7 +400,7 @@ describe('Database Events Integration Tests', () => {
       );
 
       // Wait for subscription
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should have handlers registered
       const hadHandlers = dbEvents.hasHandlers();
@@ -417,7 +431,7 @@ describe('Database Events Integration Tests', () => {
           })
         );
 
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         unmount();
       }
 

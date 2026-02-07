@@ -4,34 +4,210 @@ import Dexie from 'dexie';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import logger from '../../shared/utils/logger';
 
-// Helper function to apply filters and search keyword to a comment
-const applyFiltersAndSearch = (
-  comment: Comment,
-  filters: any,
-  searchKeyword: string,
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
-): boolean => {
-  // Ensure top-level only if specified, this check must be first
-  if (options.topLevelOnly && comment.replyLevel !== 0) return false;
+interface RangeFilter {
+  min?: number | string;
+  max?: number | string;
+}
 
-  // Live chat filtering
-  if (options.excludeLiveChat && comment.isLiveChat) return false;
-  if (options.onlyLiveChat && !comment.isLiveChat) return false;
+interface DateRangeFilter {
+  start?: string;
+  end?: string;
+}
 
-  let passesFilters = true;
-  if (filters.timestamps) passesFilters = passesFilters && comment.hasTimestamp === true;
-  if (filters.heart) passesFilters = passesFilters && comment.isHearted === true;
-  if (filters.links) passesFilters = passesFilters && comment.hasLinks === true;
-  if (filters.members) passesFilters = passesFilters && comment.isMember === true;
-  if (filters.donated) passesFilters = passesFilters && comment.isDonated === true;
-  if (filters.creator) passesFilters = passesFilters && comment.isAuthorContentCreator === true;
+interface CommentFilters {
+  timestamps?: boolean;
+  heart?: boolean;
+  links?: boolean;
+  members?: boolean;
+  donated?: boolean;
+  creator?: boolean;
+  verified?: boolean;
+  hasLinks?: boolean;
+  isHearted?: boolean;
+  isMember?: boolean;
+  isDonated?: boolean;
+  isAuthorContentCreator?: boolean;
+  likesThreshold?: RangeFilter;
+  repliesLimit?: RangeFilter;
+  wordCount?: RangeFilter;
+  dateTimeRange?: DateRangeFilter;
+}
 
-  let passesSearch = true;
-  if (searchKeyword) {
-    passesSearch = comment.content?.toLowerCase().includes(searchKeyword.toLowerCase());
+const DEFAULT_FILTERS: CommentFilters = {};
+
+const toFiniteNumber = (value: unknown): number | null => {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  return null;
+};
+
+const normalizeRange = (range?: RangeFilter): { min: number; max: number } => {
+  const minValue = toFiniteNumber(range?.min);
+  const maxValue =
+    range?.max === Infinity ? Infinity : (toFiniteNumber(range?.max) as number | null);
+
+  const min = minValue !== null ? Math.max(0, minValue) : 0;
+  const max = maxValue !== null ? maxValue : Infinity;
+
+  return {
+    min,
+    max,
+  };
+};
+
+const parseDateToMs = (value: unknown): number | null => {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) ? value : null;
   }
 
-  return passesFilters && passesSearch;
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Date.parse(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+};
+
+const hasActiveRangeFilter = (range?: RangeFilter): boolean => {
+  const normalized = normalizeRange(range);
+  return normalized.min > 0 || normalized.max < Infinity;
+};
+
+const hasActiveDateRangeFilter = (dateRange?: DateRangeFilter): boolean => {
+  return parseDateToMs(dateRange?.start) !== null || parseDateToMs(dateRange?.end) !== null;
+};
+
+const hasActiveCommentFilters = (filters: CommentFilters): boolean => {
+  if (
+    filters.timestamps ||
+    filters.heart ||
+    filters.links ||
+    filters.members ||
+    filters.donated ||
+    filters.creator ||
+    filters.verified ||
+    filters.hasLinks ||
+    filters.isHearted ||
+    filters.isMember ||
+    filters.isDonated ||
+    filters.isAuthorContentCreator
+  ) {
+    return true;
+  }
+
+  if (
+    hasActiveRangeFilter(filters.likesThreshold) ||
+    hasActiveRangeFilter(filters.repliesLimit) ||
+    hasActiveRangeFilter(filters.wordCount)
+  ) {
+    return true;
+  }
+
+  return hasActiveDateRangeFilter(filters.dateTimeRange);
+};
+
+const applyFiltersAndSearch = (
+  comment: Comment,
+  filters: CommentFilters,
+  searchKeyword: string,
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
+): boolean => {
+  // Ensure top-level only if specified, this check must be first
+  if (options.topLevelOnly && comment.replyLevel !== 0) {
+    return false;
+  }
+
+  // Live chat filtering
+  if (options.excludeLiveChat && comment.isLiveChat) {
+    return false;
+  }
+
+  if (options.onlyLiveChat && !comment.isLiveChat) {
+    return false;
+  }
+
+  const requireTimestamp = filters.timestamps === true;
+  const requireHeart = filters.heart === true || filters.isHearted === true;
+  const requireLinks = filters.links === true || filters.hasLinks === true;
+  const requireMembers = filters.members === true || filters.isMember === true;
+  const requireDonated = filters.donated === true || filters.isDonated === true;
+  const requireCreator =
+    filters.creator === true ||
+    filters.verified === true ||
+    filters.isAuthorContentCreator === true;
+
+  if (requireTimestamp && comment.hasTimestamp !== true) {
+    return false;
+  }
+  if (requireHeart && comment.isHearted !== true) {
+    return false;
+  }
+  if (requireLinks && comment.hasLinks !== true) {
+    return false;
+  }
+  if (requireMembers && comment.isMember !== true) {
+    return false;
+  }
+  if (requireDonated && comment.isDonated !== true) {
+    return false;
+  }
+  if (requireCreator && comment.isAuthorContentCreator !== true) {
+    return false;
+  }
+
+  const likesRange = normalizeRange(filters.likesThreshold);
+  if (likesRange.min > 0 && comment.likes < likesRange.min) {
+    return false;
+  }
+  if (likesRange.max < Infinity && comment.likes > likesRange.max) {
+    return false;
+  }
+
+  const repliesRange = normalizeRange(filters.repliesLimit);
+  if (repliesRange.min > 0 && comment.replyCount < repliesRange.min) {
+    return false;
+  }
+  if (repliesRange.max < Infinity && comment.replyCount > repliesRange.max) {
+    return false;
+  }
+
+  const commentWordCount = comment.wordCount || 0;
+  const wordCountRange = normalizeRange(filters.wordCount);
+  if (wordCountRange.min > 0 && commentWordCount < wordCountRange.min) {
+    return false;
+  }
+  if (wordCountRange.max < Infinity && commentWordCount > wordCountRange.max) {
+    return false;
+  }
+
+  const rangeStart = parseDateToMs(filters.dateTimeRange?.start);
+  const rangeEnd = parseDateToMs(filters.dateTimeRange?.end);
+  if (rangeStart !== null || rangeEnd !== null) {
+    const commentDate = parseDateToMs(comment.publishedDate);
+    if (commentDate === null) {
+      return false;
+    }
+    if (rangeStart !== null && commentDate < rangeStart) {
+      return false;
+    }
+    if (rangeEnd !== null && commentDate > rangeEnd) {
+      return false;
+    }
+  }
+
+  if (searchKeyword) {
+    const normalizedKeyword = searchKeyword.toLowerCase();
+    const inContent = comment.content?.toLowerCase().includes(normalizedKeyword);
+    const inAuthor = comment.author?.toLowerCase().includes(normalizedKeyword);
+    return Boolean(inContent || inAuthor);
+  }
+
+  return true;
 };
 
 export const loadPagedComments = async (
@@ -41,11 +217,13 @@ export const loadPagedComments = async (
   pageSize: number = PAGINATION.DEFAULT_PAGE_SIZE,
   sortBy: string = 'date',
   sortOrder: string = 'desc',
-  filters: any = { /* no-op */ },
+  filters: CommentFilters = DEFAULT_FILTERS,
   searchKeyword: string = '',
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): Promise<Comment[]> => {
-  const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+  const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random()
+    .toString(36)
+    .substr(2, 5)}`;
   const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
   logger.start(timerId);
 
@@ -70,7 +248,6 @@ export const loadPagedComments = async (
   }
 
   try {
-    
     const offset = page * pageSize;
     const baseIndex = 'videoId+replyLevel';
     const buildIndexKey = (field: string) => `[${baseIndex}+${field}]`;
@@ -133,12 +310,10 @@ export const loadPagedComments = async (
     }
     logger.end(queryTimer);
 
-    // Apply filters using the helper function
+    // Apply filters/search only when needed to avoid full scans on default filter objects.
     let filteredCollection = collection;
-    const activeFilters = Object.entries(filters).filter(([, value]) => value);
-
     if (
-      activeFilters.length > 0 ||
+      hasActiveCommentFilters(filters) ||
       searchKeyword ||
       options.excludeLiveChat ||
       options.onlyLiveChat
@@ -151,7 +326,7 @@ export const loadPagedComments = async (
       logger.end(filterTimer);
     }
 
-    // Apply reverse *before* pagination for index-based sorts (excluding author/random)
+    // Apply reverse before pagination for index-based sorts (excluding author/random).
     if (sortOrder === 'desc' && !['random', 'author'].includes(sortBy)) {
       filteredCollection = filteredCollection.reverse();
     }
@@ -169,8 +344,6 @@ export const loadPagedComments = async (
     }
 
     if (sortBy === 'random') {
-      // PERF: Random sort requires loading all matching comments
-      // For very large datasets (10k+), consider limiting or using reservoir sampling
       logger.warn(`${logPrefix} Random sort: loading filtered comments for shuffle.`);
       const scanTimer = `${timerId}-randomShuffle`;
       logger.start(scanTimer);
@@ -180,24 +353,22 @@ export const loadPagedComments = async (
         .between(bounds.lower, bounds.upper, true, true);
 
       allTopLevelCollection = allTopLevelCollection.filter((comment) =>
-        applyFiltersAndSearch(comment, filters, searchKeyword)
+        applyFiltersAndSearch(comment, filters, searchKeyword, options)
       );
 
       const allTopLevel = await allTopLevelCollection.toArray();
 
-      // Fisher-Yates shuffle (unbiased, O(n))
-      // The previous Math.random()-0.5 comparator was biased and O(n log n)
+      // Fisher-Yates shuffle (unbiased, O(n)).
       for (let i = allTopLevel.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [allTopLevel[i], allTopLevel[j]] = [allTopLevel[j], allTopLevel[i]];
       }
 
       logger.end(scanTimer);
-      const result = allTopLevel.slice(offset, offset + pageSize);
-            return result;
+      return allTopLevel.slice(offset, offset + pageSize);
     }
 
-        return pagedComments;
+    return pagedComments;
   } catch (error) {
     logger.error(`${logPrefix} Error loading paged comments:`, error);
     return [];
@@ -207,14 +378,14 @@ export const loadPagedComments = async (
 };
 
 /**
- * Counts total comments matching the criteria (including search)
+ * Counts total comments matching the criteria (including search).
  */
 export const countComments = async (
   commentsTable: Dexie.Table<Comment, number>,
   videoId: string,
-  filters: any = { /* no-op */ },
+  filters: CommentFilters = DEFAULT_FILTERS,
   searchKeyword: string = '',
-  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = { /* no-op */ }
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): Promise<number> => {
   const timerId = `countComments-${videoId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
   const logPrefix = `[countComments] video ${videoId}`;
@@ -237,10 +408,8 @@ export const countComments = async (
       baseCollection = commentsTable.where('videoId').equals(videoId);
     }
 
-    // Apply filters and search using the helper function
-    const activeFilters = Object.entries(filters).filter(([, value]) => value);
     if (
-      activeFilters.length > 0 ||
+      hasActiveCommentFilters(filters) ||
       searchKeyword ||
       options.excludeLiveChat ||
       options.onlyLiveChat
@@ -250,8 +419,7 @@ export const countComments = async (
       );
     }
 
-    const count = await baseCollection.count();
-        return count;
+    return await baseCollection.count();
   } catch (error) {
     logger.error(`${logPrefix} Error counting comments:`, error);
     return 0;
@@ -265,7 +433,9 @@ export const fetchRepliesForComment = async (
   videoId: string,
   parentId: string
 ): Promise<Comment[]> => {
-  const timerId = `fetchRepliesForComment-${parentId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
+  const timerId = `fetchRepliesForComment-${parentId}-${Date.now()}-${Math.random()
+    .toString(36)
+    .substr(2, 5)}`;
   const logPrefix = `[fetchRepliesForComment] videoId: ${videoId}, parentId: ${parentId}`;
   logger.start(timerId);
 
@@ -281,18 +451,13 @@ export const fetchRepliesForComment = async (
   }
 
   try {
-        const replies = await commentsTable
+    const replies = await commentsTable
       .where('videoId')
       .equals(videoId)
-      .and((item) => {
-        const isReplyLevel1 = item.replyLevel === 1;
-        const hasMatchingParent = item.commentParentId === parentId;
-        return isReplyLevel1 && hasMatchingParent;
-      })
+      .and((item) => item.replyLevel === 1 && item.commentParentId === parentId)
       .toArray();
 
-    
-    if (replies.length > 0) { /* no-op */ } else {
+    if (replies.length === 0) {
       const parentComment = await commentsTable.where('commentId').equals(parentId).first();
       const expectedReplies = parentComment?.replyCount || 0;
 
@@ -300,8 +465,13 @@ export const fetchRepliesForComment = async (
         logger.warn(
           `${logPrefix} No replies found in DB, but parent comment (replyCount: ${expectedReplies}) indicates replies should exist.`
         );
-      } else { /* no-op */ }
+      } else {
+        logger.info(
+          `${logPrefix} No replies found, and parent comment does not indicate any replies (or parent not found).`
+        );
+      }
     }
+
     return replies;
   } catch (err) {
     logger.error(`${logPrefix} Failed to fetch replies:`, err);

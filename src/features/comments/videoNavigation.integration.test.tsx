@@ -111,7 +111,7 @@ const createComment = (id: string, videoId: string, content?: string): Comment =
     weightedZScore: 0,
     bayesianAverage: 0,
     isBookmarked: false,
-    bookmarkAddedDate: 0,
+    bookmarkAddedDate: '',
     published: new Date(Date.now() - numericId * 1000).toISOString(),
   };
 };
@@ -193,11 +193,14 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Wait for video 1 comments to load
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBeGreaterThan(0);
-        expect(screen.getByText(/from video 1/)).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBeGreaterThan(0);
+          expect(screen.queryAllByText(/from video 1/).length).toBeGreaterThan(0);
+        },
+        { timeout: 3000 }
+      );
 
       // ACT: Navigate to video 2
       // 1. Set loading state (simulates navigation start)
@@ -228,20 +231,21 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // ASSERT: Old comments gone, new comments visible
-      await waitFor(() => {
-        expect(screen.queryByText(/from video 1/)).not.toBeInTheDocument();
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBeGreaterThan(0);
-        // Check that displayed comments are from video 2
-        const firstItem = items[0];
-        expect(firstItem).toHaveAttribute('data-video-id', 'video-2');
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryAllByText(/from video 1/)).toHaveLength(0);
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBeGreaterThan(0);
+          // Check that displayed comments are from video 2
+          const firstItem = items[0];
+          expect(firstItem).toHaveAttribute('data-video-id', 'video-2');
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('shows loading state during navigation', async () => {
-      const comments = Array.from({ length: 5 }, (_, i) =>
-        createComment(`${i}`, 'video-1')
-      );
+      const comments = Array.from({ length: 5 }, (_, i) => createComment(`${i}`, 'video-1'));
       await db.comments.bulkAdd(comments);
 
       const store = createTestStore();
@@ -252,9 +256,12 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Wait for initial load
-      await waitFor(() => {
-        expect(screen.getAllByTestId('comment-item').length).toBe(5);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getAllByTestId('comment-item').length).toBe(5);
+        },
+        { timeout: 3000 }
+      );
 
       // Trigger navigation loading
       act(() => {
@@ -300,11 +307,14 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Should show only verified comment from video 1
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBe(1);
-        expect(screen.getByText('Creator comment')).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBe(1);
+          expect(screen.getByText('Creator comment')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
 
       // Navigate to video 2
       await db.comments.clear();
@@ -324,11 +334,14 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Filter should still be applied - only verified comment shows
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBe(1);
-        expect(screen.getByText('Video 2 creator')).toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBe(1);
+          expect(screen.getByText('Video 2 creator')).toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
 
     it('preserves search keyword across video changes', async () => {
@@ -347,10 +360,13 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Should filter by keyword in video 1
-      await waitFor(() => {
-        expect(screen.getByText('Great video!')).toBeInTheDocument();
-        expect(screen.queryByText('Nice work')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('Great video!')).toBeInTheDocument();
+          expect(screen.queryByText('Nice work')).not.toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
 
       // Navigate to video 2
       await db.comments.clear();
@@ -368,10 +384,13 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Keyword should still filter in video 2
-      await waitFor(() => {
-        expect(screen.getByText('Great tutorial')).toBeInTheDocument();
-        expect(screen.queryByText('Good stuff')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('Great tutorial')).toBeInTheDocument();
+          expect(screen.queryByText('Good stuff')).not.toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
   });
 
@@ -391,11 +410,14 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Wait for initial page (typically 20 items)
-      await waitFor(() => {
-        const items = screen.getAllByTestId('comment-item');
-        expect(items.length).toBeGreaterThan(0);
-        expect(items.length).toBeLessThanOrEqual(20);
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          const items = screen.getAllByTestId('comment-item');
+          expect(items.length).toBeGreaterThan(0);
+          expect(items.length).toBeLessThanOrEqual(20);
+        },
+        { timeout: 3000 }
+      );
 
       // Note: Full pagination test would require scrolling simulation
       // This test verifies that navigation starts fresh from page 0
@@ -440,11 +462,14 @@ describe('Video Navigation Integration Tests', () => {
       );
 
       // Should eventually show video 3 content
-      await waitFor(() => {
-        expect(screen.getByText('Video 3')).toBeInTheDocument();
-        expect(screen.queryByText('Video 1')).not.toBeInTheDocument();
-        expect(screen.queryByText('Video 2')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.getByText('Video 3')).toBeInTheDocument();
+          expect(screen.queryByText('Video 1')).not.toBeInTheDocument();
+          expect(screen.queryByText('Video 2')).not.toBeInTheDocument();
+        },
+        { timeout: 3000 }
+      );
     });
   });
 });
