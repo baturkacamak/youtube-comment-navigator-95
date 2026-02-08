@@ -77,6 +77,15 @@ describe('DownloadAccordion', () => {
     expect(panel).toHaveStyle({ visibility: 'hidden' });
   });
 
+  it('applies container-first panel classes for responsive positioning', () => {
+    render(<DownloadAccordion contentType="comments" visibleData={[]} />);
+
+    const panel = screen.getByTestId('collapsible');
+    expect(panel.className).toContain('cq-[34rem]:start-0');
+    expect(panel.className).toContain('end-0');
+    expect(panel.style.minWidth).toBe('');
+  });
+
   it('closes panel when clicking outside', () => {
     render(
       <div>

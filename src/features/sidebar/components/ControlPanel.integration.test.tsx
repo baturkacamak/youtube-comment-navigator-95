@@ -75,6 +75,26 @@ describe('ControlPanel Download Integration', () => {
     (useToast as any).mockReturnValue({ showToast: mockShowToast });
   });
 
+  it('uses container-first classes for responsive control and download layout', () => {
+    const fetchAllComments = vi.fn().mockResolvedValue([]);
+    const { container } = render(
+      <ControlPanel
+        filters={baseFilters}
+        setFilters={vi.fn()}
+        comments={visibleComments}
+        allComments={fetchAllComments}
+      />
+    );
+
+    const controlPanel = container.querySelector('.control-panel');
+    const mainRow = container.querySelector('.control-panel__main-row');
+    const downloadPanel = container.querySelector('#download-panel');
+
+    expect(controlPanel).toHaveClass('cq');
+    expect(mainRow?.className).toContain('cq-[52rem]:flex-row');
+    expect(downloadPanel?.className).toContain('cq-[34rem]:start-0');
+  });
+
   it('downloads all comments when "All" scope is selected', async () => {
     const allComments = Array.from({ length: 45 }, (_, i) => ({
       commentId: `all-${i + 1}`,

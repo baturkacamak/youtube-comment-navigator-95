@@ -24,19 +24,19 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
   };
 
   return (
-    <div className="tabs tabs--container">
-      <div className="tabs__list flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar">
+    <div className="tabs tabs--container cq">
+      <div className="tabs__list [scrollbar-gutter:stable] flex items-center gap-1 overflow-x-auto pb-1 custom-scrollbar cq-[44rem]:flex-wrap cq-[44rem]:overflow-x-visible cq-[44rem]:gap-2 cq-[44rem]:pb-0">
         {tabs.map((tab) => (
           <button
             key={tab.title.id}
-            className={`tabs__button relative shrink-0 whitespace-nowrap px-3 py-2 text-sm flex items-center gap-2 transition-all duration-300 ${
+            className={`tabs__button relative shrink-0 whitespace-nowrap px-3 py-2 text-sm cq-[44rem]:px-[0.9rem] cq-[44rem]:py-2 cq-[44rem]:text-[0.95rem] flex items-center gap-2 transition-all duration-300 ${
               activeTab === tab.title.id
                 ? 'text-teal-600 dark:text-teal-400'
                 : 'text-gray-800 dark:text-gray-300'
             } focus:outline-none hover:text-teal-400`}
             onClick={() => handleTabClick(tab.title.id)}
           >
-            <tab.title.icon className="tabs__button-icon w-4 h-4" />
+            <tab.title.icon className="tabs__button-icon w-4 h-4 cq-[44rem]:w-[1.125rem] cq-[44rem]:h-[1.125rem]" />
             {tab.title.label}
             {activeTab === tab.title.id && (
               <motion.div
@@ -50,7 +50,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
           </button>
         ))}
       </div>
-      <hr className="tabs__divider h-px -mt-1 bg-gray-300 dark:bg-gray-600" />
+      <hr className="tabs__divider h-px -mt-1 cq-[44rem]:-mt-2 bg-gray-300 dark:bg-gray-600" />
       <div className="tabs__content tab-content-container">
         {tabs.map(
           (tab) =>

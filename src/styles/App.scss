@@ -3,8 +3,6 @@
 #youtube-comment-navigator-app {
   box-sizing: border-box;
   font-size: 16px;
-  container-type: inline-size;
-  container-name: ycn-app;
 
   *,
   *:before,
@@ -59,95 +57,6 @@
     &::-webkit-outer-spin-button {
       -webkit-appearance: default-button;
       margin: 0;
-    }
-  }
-
-  .app-shell {
-    min-height: 0;
-  }
-
-  .app-shell__content {
-    min-width: 0;
-  }
-
-  .app-shell__control-panel-wrap {
-    container-type: inline-size;
-    container-name: ycn-controls;
-  }
-
-  .control-panel {
-    container-type: inline-size;
-    container-name: ycn-controls-inner;
-  }
-
-  .tabs {
-    container-type: inline-size;
-    container-name: ycn-tabs;
-  }
-
-  .tabs__list {
-    scrollbar-gutter: stable;
-  }
-
-  .download-accordion__panel {
-    inset-inline-end: 0;
-    inset-inline-start: auto;
-    inline-size: min(20rem, calc(100cqi - 0.5rem));
-    max-inline-size: min(92vw, 20rem);
-  }
-
-  @container ycn-tabs (min-width: 44rem) {
-    .tabs__list {
-      flex-wrap: wrap;
-      overflow-x: visible;
-      gap: 0.5rem;
-      padding-bottom: 0;
-    }
-
-    .tabs__button {
-      font-size: 0.95rem;
-      padding: 0.5rem 0.9rem;
-    }
-
-    .tabs__button-icon {
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    .tabs__divider {
-      margin-top: -0.5rem;
-    }
-  }
-
-  @container ycn-controls-inner (min-width: 52rem) {
-    .control-panel__main-row {
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .control-panel__filters {
-      align-items: center;
-    }
-
-    .control-panel__actions {
-      justify-content: flex-end;
-    }
-  }
-
-  @container ycn-controls (min-width: 34rem) {
-    .download-accordion__panel {
-      inset-inline-start: 0;
-      inset-inline-end: auto;
-      inline-size: auto;
-      min-inline-size: 220px;
-      max-inline-size: none;
-    }
-  }
-
-  @container ycn-app (min-width: 48rem) {
-    .app-shell__content {
-      gap: 1rem;
     }
   }
 }

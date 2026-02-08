@@ -1,9 +1,8 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html",
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: 'class',
   important: '#youtube-comment-navigator-app',
   theme: {
@@ -24,5 +23,15 @@ module.exports = {
       },
     },
   },
-  plugins: [],
-}
+  plugins: [
+    plugin(function ({ addUtilities, matchVariant }) {
+      addUtilities({
+        '.cq': {
+          'container-type': 'inline-size',
+        },
+      });
+
+      matchVariant('cq', (value) => `@container (min-width: ${value})`);
+    }),
+  ],
+};

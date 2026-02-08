@@ -106,7 +106,7 @@ const App: React.FC = () => {
         },
         content: (
           <>
-            <div className="app-shell__control-panel-wrap dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
+            <div className="app-shell__control-panel-wrap cq dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
               <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
@@ -143,7 +143,7 @@ const App: React.FC = () => {
         content: (
           <>
             {showFiltersSorts && (
-              <div className="app-shell__control-panel-wrap dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
+              <div className="app-shell__control-panel-wrap cq dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
                 <ControlPanel
                   filters={filters}
                   setFilters={setFiltersCallback}
@@ -198,13 +198,13 @@ const App: React.FC = () => {
 
   return (
     <div
-      className={`app-shell relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
+      className={`app-shell cq min-h-0 relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
     >
       <Collapsible isOpen={isSettingsOpen}>
         <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
       </Collapsible>
       <div
-        className={`app-shell__content flex flex-col gap-3 w-full transition-all duration-500 relative ${drawerClass}`}
+        className={`app-shell__content min-w-0 flex flex-col gap-3 cq-[48rem]:gap-4 w-full transition-all duration-500 relative ${drawerClass}`}
       >
         <Box
           className="app-shell__header flex flex-col w-full gap-2"
