@@ -113,23 +113,13 @@ class DOMHelper {
     container.style.bottom = '';
     container.style.zIndex = '2147483646';
 
-    let targetWidth = Math.min(420, window.innerWidth - 24);
+    const targetWidth = Math.min(420, window.innerWidth - 24);
 
     if (panelHost) {
       const panelRect = panelHost.getBoundingClientRect();
-      const panelVisibleWidth = Math.max(0, window.innerWidth - panelRect.left);
-      const rightOffset = panelVisibleWidth + 16;
-      const availableLeftWidth = panelRect.left - 24;
-
-      if (availableLeftWidth >= 280) {
-        targetWidth = Math.min(420, availableLeftWidth);
-        container.style.right = `${rightOffset}px`;
-      } else {
-        // On narrow layouts, pin to left so native comments remain visible.
-        targetWidth = Math.min(360, Math.max(260, window.innerWidth - panelVisibleWidth - 24));
-        container.style.left = '16px';
-        container.style.right = '';
-      }
+      const panelWidth = Math.max(280, Math.floor(panelRect.width || 0));
+      const offscreenOffset = Math.min(220, Math.max(96, Math.floor(panelWidth * 0.45)));
+      container.style.right = `-${offscreenOffset}px`;
     }
 
     const roundedWidth = Math.max(260, Math.floor(targetWidth));
