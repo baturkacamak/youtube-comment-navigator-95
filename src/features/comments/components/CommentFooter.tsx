@@ -62,7 +62,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
                   videoId,
                   comment.commentId
                 );
-                                return replies;
+                return replies;
               } catch (_error) {
                 logger.error(
                   `[RepliesHover] Error fetching replies for comment: ${comment.commentId}`,
@@ -77,13 +77,13 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             onResult: (result) => {
               try {
                 if (!result || result.length === 0) {
-                                    return;
+                  return;
                 }
                 // Cache the fetched replies instead of dispatching
-                                cacheFetchedReplies(result);
+                cacheFetchedReplies(result);
                 // Emit event that replies are loaded
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
-                              } catch (error) {
+              } catch (error) {
                 logger.error(
                   `[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`,
                   error
@@ -114,43 +114,47 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
       };
     }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
+    const actionClass =
+      'comment-footer__action inline-flex shrink-0 items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300';
+
     return (
       <div
-        className="flex items-center justify-between space-x-2 mt-2 border-solid border-t pt-2 select-none"
+        className="comment-footer cq flex flex-col gap-2 mt-2 border-solid border-t pt-2 select-none"
         aria-hidden="true"
       >
-        <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
+        <div className="comment-footer__metrics flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600 dark:text-gray-400">
           <div className="flex items-center">
-            <HandThumbUpIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-            <span className="text-sm font-bold" aria-label={t('Likes')}>
+            <HandThumbUpIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+            <span className="text-xs font-semibold" aria-label={t('Likes')}>
               {comment.viewLikes || comment.likes}
             </span>
           </div>
           <div className="flex items-center">
-            <ClockIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-            <span className="text-sm" aria-label={t('Published date')}>
+            <ClockIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+            <span className="text-xs" aria-label={t('Published date')}>
               {getFormattedDate(comment.publishedDate)}
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-6">
+
+        <div className="comment-footer__actions flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1">
           <button
             onClick={handleCopyToClipboard}
-            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+            className={actionClass}
             aria-label={t('Copy to clipboard')}
           >
             {copySuccess ? (
               <>
                 <CheckCircleIcon
-                  className="w-4 h-4 mr-1 text-green-500 animate-pulse"
+                  className="w-3.5 h-3.5 mr-1 text-green-500 animate-pulse"
                   aria-hidden="true"
                 />
-                <span className="text-sm">{t('Copied')}</span>
+                <span className="text-xs">{t('Copied')}</span>
               </>
             ) : (
               <>
-                <ClipboardIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-                <span className="text-sm">{t('Copy')}</span>
+                <ClipboardIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                <span className="text-xs">{t('Copy')}</span>
               </>
             )}
           </button>
@@ -158,23 +162,23 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             href={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+            className={actionClass}
             aria-label={t('Go to original comment')}
           >
-            <LinkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-            <span className="text-sm">{t('Original')}</span>
+            <LinkIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+            <span className="text-xs">{t('Original')}</span>
           </a>
           {comment.replyCount > 0 && (
             <button
               ref={viewRepliesButtonRef}
               onClick={onToggleReplies}
-              className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300 disabled:opacity-50"
+              className={`${actionClass} disabled:opacity-50`}
               aria-label={showReplies ? t('Hide replies') : t('Show replies')}
               disabled={isFetchingReplies}
             >
               {isFetchingReplies ? (
                 <svg
-                  className="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-600 dark:text-gray-400"
+                  className="animate-spin -ml-0.5 mr-1.5 h-3.5 w-3.5 text-gray-600 dark:text-gray-400"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -195,13 +199,13 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
                 </svg>
               ) : (
                 <ChevronDownIcon
-                  className={`w-4 h-4 mr-1 transform transition-transform duration-300 ${
+                  className={`w-3.5 h-3.5 mr-1 transform transition-transform duration-300 ${
                     showReplies ? 'rotate-180' : 'rotate-0'
                   }`}
                   aria-hidden="true"
                 />
               )}
-              <span className="text-sm">
+              <span className="text-xs">
                 {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
               </span>
             </button>
@@ -213,10 +217,11 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
           />
         </div>
-        <div className="flex items-center gap-4">
+
+        <div className="comment-footer__meta flex items-center gap-2 flex-wrap">
           {comment.isAuthorContentCreator && (
             <span
-              className="ml-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full"
+              className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
               aria-label={t('Content creator')}
             >
               {t('Creator')}
@@ -224,20 +229,20 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           )}
           {comment.isDonated && (
             <span
-              className="ml-2 flex items-center text-green-600"
+              className="flex items-center text-green-600 text-xs"
               aria-label={t('Donation amount')}
             >
-              <BanknotesIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+              <BanknotesIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
               {comment.donationAmount}
             </span>
           )}
           {comment.isHearted && (
             <Tooltip text={t('Hearted by Creator')}>
               <span
-                className="ml-2 flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
+                className="flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
                 aria-label={t('Hearted by Creator')}
               >
-                <HeartIcon className="w-4 h-4" aria-hidden="true" />
+                <HeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
               </span>
             </Tooltip>
           )}
@@ -246,7 +251,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               <img
                 src={comment.authorBadgeUrl}
                 alt={t('Member Badge')}
-                className="ml-2 w-4 h-4"
+                className="w-3.5 h-3.5"
                 aria-label={t('Member Badge')}
                 loading="lazy"
                 decoding="async"
@@ -257,17 +262,17 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center"
+            className="inline-flex min-w-0 items-center"
             aria-label={t("Go to author's channel")}
           >
             <img
               src={comment.authorAvatarUrl}
               alt={`${comment.author}'s avatar`}
-              className="w-8 h-8 rounded-full border border-solid border-gray-400 dark:border-gray-600"
+              className="w-6 h-6 cq-[42rem]:w-7 cq-[42rem]:h-7 rounded-full border border-solid border-gray-400 dark:border-gray-600"
               loading="lazy"
               decoding="async"
             />
-            <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
+            <span className="ml-2 text-sm font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[11rem] cq-[48rem]:max-w-none">
               {comment.author}
             </span>
           </a>

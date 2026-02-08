@@ -26,41 +26,63 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
     {
       name: 'timestamps',
       label: t('Timestamps'),
-      icon: <ClockIcon className={`w-5 h-5 mr-2 ${getAnimationClass('timestamps', 'swing')}`} />,
+      icon: (
+        <ClockIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('timestamps', 'swing')}`}
+        />
+      ),
     },
     {
       name: 'heart',
       label: t('Heart'),
-      icon: <HeartIcon className={`w-5 h-5 mr-2 ${getAnimationClass('heart', 'heartBeat')}`} />,
+      icon: (
+        <HeartIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('heart', 'heartBeat')}`}
+        />
+      ),
     },
     {
       name: 'links',
       label: t('Links'),
-      icon: <LinkIcon className={`w-5 h-5 mr-2 ${getAnimationClass('links', 'flash')}`} />,
+      icon: (
+        <LinkIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('links', 'flash')}`}
+        />
+      ),
     },
     {
       name: 'members',
       label: t('Members'),
       icon: (
-        <UserGroupIcon className={`w-5 h-5 mr-2 ${getAnimationClass('members', 'rubberBand')}`} />
+        <UserGroupIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('members', 'rubberBand')}`}
+        />
       ),
     },
     {
       name: 'donated',
       label: t('Donated'),
-      icon: <GiftIcon className={`w-5 h-5 mr-2 ${getAnimationClass('donated', 'bounceIn')}`} />,
+      icon: (
+        <GiftIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('donated', 'bounceIn')}`}
+        />
+      ),
     },
     {
       name: 'creator',
       label: t('Creator'),
-      icon: <UserIcon className={`w-5 h-5 mr-2 ${getAnimationClass('creator', 'jello')}`} />,
+      icon: (
+        <UserIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('creator', 'jello')}`}
+        />
+      ),
     },
   ];
 
   return (
-    <>
+    <div className="filter-list w-full grid grid-cols-2 gap-x-2 gap-y-1 cq-[40rem]:grid-cols-3 cq-[64rem]:grid-cols-6">
       {filterOptions.map((option) => (
-        <div key={option.name}>
+        <div key={option.name} className="min-w-0">
           <CheckboxFilter
             name={option.label}
             icon={option.icon}
@@ -71,7 +93,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
           />
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

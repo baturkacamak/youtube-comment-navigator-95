@@ -73,7 +73,7 @@ const SearchBar: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center p-2 relative"
+      className="search-bar flex items-center p-1.5 cq-[40rem]:p-2 relative"
       aria-label={t('Search form')}
     >
       <Input
@@ -81,26 +81,26 @@ const SearchBar: React.FC = () => {
         placeholder={placeholder}
         value={searchKeyword}
         onChange={(e) => setSearchKeywordLocal(e.target.value)}
-        className="flex-grow p-2"
+        className="search-bar__input flex-grow p-2 text-sm cq-[40rem]:text-base"
         aria-label={placeholder}
       />
       <button
         type="button"
         onClick={handleClear}
-        className={`absolute p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out
+        className={`absolute p-1.5 cq-[40rem]:p-2 bg-neutral-300 dark:bg-gray-600 text-gray-800 dark:text-gray-200 focus:outline-none transition-all duration-300 ease-in-out
                  ${isRtl ? ' left-10 ' : ' right-10 '}
                  ${searchKeyword ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0'}`}
         style={{ transformOrigin: isRtl ? 'left' : 'right' }}
         aria-label={t('Clear search')}
       >
-        <XCircleIcon className="w-5 h-5 text-red-500" />
+        <XCircleIcon className="w-4 h-4 cq-[40rem]:w-5 cq-[40rem]:h-5 text-red-500" />
       </button>
       <button
         type="submit"
-        className={`p-2 bg-stone-500 dark:bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 ${isRtl ? 'rounded-l-lg ' : 'rounded-r-lg'}`}
+        className={`p-1.5 cq-[40rem]:p-2 bg-stone-500 dark:bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-600 ${isRtl ? 'rounded-l-lg ' : 'rounded-r-lg'}`}
         aria-label={t('Submit search')}
       >
-        <MagnifyingGlassIcon className="w-5 h-5" />
+        <MagnifyingGlassIcon className="w-4 h-4 cq-[40rem]:w-5 cq-[40rem]:h-5" />
       </button>
     </form>
   );

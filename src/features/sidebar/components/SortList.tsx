@@ -45,7 +45,9 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       name: 'Likes',
       label: t('Likes'),
       icon: (
-        <HandThumbUpIcon className={`w-5 h-5 mr-px ${getAnimationClass('likes', 'heartBeat')}`} />
+        <HandThumbUpIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('likes', 'heartBeat')}`}
+        />
       ),
       value: 'likes',
     },
@@ -53,7 +55,9 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       name: 'Length',
       label: t('Word Count'),
       icon: (
-        <DocumentTextIcon className={`w-5 h-5 mr-px ${getAnimationClass('length', 'flash')}`} />
+        <DocumentTextIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('length', 'flash')}`}
+        />
       ),
       value: 'length',
     },
@@ -62,7 +66,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Replies'),
       icon: (
         <ChatBubbleLeftRightIcon
-          className={`w-5 h-5 mr-px ${getAnimationClass('replies', 'bounceIn')}`}
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('replies', 'bounceIn')}`}
         />
       ),
       value: 'replies',
@@ -70,44 +74,54 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
     {
       name: 'Date',
       label: t('Date'),
-      icon: <ClockIcon className={`w-5 h-5 mr-px ${getAnimationClass('date', 'swing')}`} />,
+      icon: (
+        <ClockIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('date', 'swing')}`}
+        />
+      ),
       value: 'date',
     },
     {
       name: 'Author',
       label: t('Author'),
-      icon: <UsersIcon className={`w-5 h-5 mr-px ${getAnimationClass('author', 'rubberBand')}`} />,
+      icon: (
+        <UsersIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('author', 'rubberBand')}`}
+        />
+      ),
       value: 'author',
     },
     {
       name: 'Random',
       label: t('Random'),
-      icon: <ArrowsUpDownIcon className={`w-5 h-5 mr-px ${getAnimationClass('random', 'flip')}`} />,
+      icon: (
+        <ArrowsUpDownIcon
+          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('random', 'flip')}`}
+        />
+      ),
       value: 'random',
     },
   ];
 
   return (
-    <>
-      <div className="flex gap-4">
-        {sortOptions.map((option) => (
-          <div key={option.value}>
-            <RadioFilter
-              name={option.name}
-              label={option.label}
-              icon={option.icon}
-              value={option.value}
-              selectedValue={filters.sortBy}
-              sortOrder={filters.sortOrder}
-              isRandom={option.value === 'random'}
-              onChange={option.value === 'random' ? handleRandomChange : handleRadioChange}
-              onToggleSortOrder={option.value === 'random' ? handleRandomChange : toggleSortOrder}
-              aria-label={t(`Sort By`) + option.label}
-            />
-          </div>
-        ))}
-      </div>
-    </>
+    <div className="sort-list w-full grid grid-cols-2 gap-x-2 gap-y-1 cq-[40rem]:grid-cols-3 cq-[64rem]:grid-cols-6">
+      {sortOptions.map((option) => (
+        <div key={option.value} className="min-w-0">
+          <RadioFilter
+            name={option.name}
+            label={option.label}
+            icon={option.icon}
+            value={option.value}
+            selectedValue={filters.sortBy}
+            sortOrder={filters.sortOrder}
+            isRandom={option.value === 'random'}
+            onChange={option.value === 'random' ? handleRandomChange : handleRadioChange}
+            onToggleSortOrder={option.value === 'random' ? handleRandomChange : toggleSortOrder}
+            aria-label={t(`Sort By`) + option.label}
+          />
+        </div>
+      ))}
+    </div>
   );
 };
 

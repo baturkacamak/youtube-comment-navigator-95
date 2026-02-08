@@ -15,20 +15,24 @@ const Box: React.FC<BoxProps> = ({
     if (/^#|rgb/.test(color)) {
       return { background: color };
     }
-    return { /* no-op */ };
+    return {
+      /* no-op */
+    };
   };
 
   const borderStyles = (color: string) => {
     if (/^#|rgb/.test(color)) {
       return { borderColor: color };
     }
-    return { /* no-op */ };
+    return {
+      /* no-op */
+    };
   };
 
   return (
     <div
       className={classNames(
-        'p-4 transition-colors duration-500 rounded-lg shadow-md',
+        'p-3 cq-[48rem]:p-4 transition-colors duration-500 rounded-lg shadow-md',
         {
           [bgColor]: !/^#|rgb/.test(bgColor),
           [darkBgColor]: !/^#|rgb/.test(darkBgColor),

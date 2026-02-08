@@ -11,7 +11,7 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
 }) => {
   return (
     <label
-      className={`flex items-center select-none text-gray-800 dark:text-gray-200 mb-1 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      className={`checkbox-filter flex min-w-0 items-center select-none text-gray-800 dark:text-gray-200 text-xs cq-[42rem]:text-sm mb-1 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <div className="relative">
         <input
@@ -26,11 +26,11 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
           aria-label={name}
         />
         <div
-          className={`h-5 w-5 border border-solid rounded-md flex items-center justify-center transition-transform duration-300 ease-in-out transform ${checked ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-400 scale-110' : 'bg-white border-gray-500 dark:border-gray-600 scale-100'}`}
+          className={`h-4 w-4 cq-[42rem]:h-5 cq-[42rem]:w-5 border border-solid rounded-md flex items-center justify-center transition-transform duration-300 ease-in-out transform ${checked ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-400 scale-110' : 'bg-white border-gray-500 dark:border-gray-600 scale-100'}`}
         >
           {checked && (
             <svg
-              className="w-4 h-4 text-white"
+              className="w-3 h-3 cq-[42rem]:w-4 cq-[42rem]:h-4 text-white"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"
@@ -41,9 +41,9 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
           )}
         </div>
       </div>
-      <div className="ml-3 flex items-center">
+      <div className="ml-2 cq-[42rem]:ml-3 flex min-w-0 items-center">
         {icon}
-        <span className="truncate">{name}</span>
+        <span className="truncate leading-tight">{name}</span>
       </div>
     </label>
   );

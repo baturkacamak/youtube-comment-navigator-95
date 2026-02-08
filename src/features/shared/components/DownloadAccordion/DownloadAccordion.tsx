@@ -155,17 +155,19 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       {/* Accordion Header Button */}
       <button
         onClick={handleToggle}
-        className="download-accordion__toggle flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+        className="download-accordion__toggle inline-flex items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300"
         aria-expanded={isExpanded}
         aria-controls="download-panel"
       >
         <DocumentArrowDownIcon
-          className="download-accordion__toggle-icon w-4 h-4 mr-1"
+          className="download-accordion__toggle-icon w-3.5 h-3.5 mr-1"
           aria-hidden="true"
         />
-        <span className="download-accordion__toggle-label text-sm">{t('Download')}</span>
+        <span className="download-accordion__toggle-label text-xs cq-[42rem]:text-sm">
+          {t('Download')}
+        </span>
         <ChevronDownIcon
-          className={`download-accordion__toggle-chevron w-4 h-4 ml-1 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+          className={`download-accordion__toggle-chevron w-3.5 h-3.5 ml-1 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
       </button>

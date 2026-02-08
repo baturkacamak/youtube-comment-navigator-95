@@ -42,8 +42,10 @@ const BatchExportAccordion: React.FC = () => {
   const [videos, setVideos] = useState<PlaylistVideoItem[]>([]);
   const [isLoadingVideos, setIsLoadingVideos] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
-  const [selectedContent, setSelectedContent] = useState<BatchExportContentSelection>(defaultContent);
-  const [selectedFormats, setSelectedFormats] = useState<BatchExportFormatSelection>(defaultFormats);
+  const [selectedContent, setSelectedContent] =
+    useState<BatchExportContentSelection>(defaultContent);
+  const [selectedFormats, setSelectedFormats] =
+    useState<BatchExportFormatSelection>(defaultFormats);
   const [isExporting, setIsExporting] = useState(false);
   const [progress, setProgress] = useState<BatchExportProgress | null>(null);
 
@@ -188,14 +190,14 @@ const BatchExportAccordion: React.FC = () => {
     <div className="relative inline-block" ref={containerRef}>
       <button
         onClick={toggleOpen}
-        className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+        className="inline-flex items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300"
         aria-expanded={isExpanded}
         aria-controls="batch-export-panel"
       >
-        <DocumentArrowDownIcon className="w-4 h-4 mr-1" aria-hidden="true" />
-        <span className="text-sm">{t('Batch Export')}</span>
+        <DocumentArrowDownIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+        <span className="text-xs cq-[42rem]:text-sm">{t('Batch Export')}</span>
         <ChevronDownIcon
-          className={`w-4 h-4 ml-1 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+          className={`w-3.5 h-3.5 ml-1 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
       </button>
@@ -203,11 +205,9 @@ const BatchExportAccordion: React.FC = () => {
       <Collapsible
         id="batch-export-panel"
         isOpen={isExpanded}
-        className="absolute right-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+        className="absolute end-0 start-auto top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 w-[min(22rem,calc(100cqi-0.5rem))] max-w-[min(92vw,22rem)] cq-[42rem]:w-[24rem] cq-[42rem]:max-w-[24rem]"
         style={{
           visibility: isExpanded ? 'visible' : 'hidden',
-          minWidth: '360px',
-          maxWidth: '420px',
         }}
       >
         <div className="p-4 space-y-4">
@@ -272,7 +272,10 @@ const BatchExportAccordion: React.FC = () => {
               <select
                 value={selectedFormats.comments}
                 onChange={(event) =>
-                  setSelectedFormats((prev) => ({ ...prev, comments: event.target.value as 'json' | 'csv' }))
+                  setSelectedFormats((prev) => ({
+                    ...prev,
+                    comments: event.target.value as 'json' | 'csv',
+                  }))
                 }
                 disabled={!selectedContent.comments || isExporting}
                 className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-gray-700 dark:text-gray-200"
@@ -318,7 +321,10 @@ const BatchExportAccordion: React.FC = () => {
               <select
                 value={selectedFormats.description}
                 onChange={(event) =>
-                  setSelectedFormats((prev) => ({ ...prev, description: event.target.value as 'txt' | 'json' }))
+                  setSelectedFormats((prev) => ({
+                    ...prev,
+                    description: event.target.value as 'txt' | 'json',
+                  }))
                 }
                 disabled={!selectedContent.description || isExporting}
                 className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-gray-700 dark:text-gray-200"
@@ -337,7 +343,9 @@ const BatchExportAccordion: React.FC = () => {
                   total: progress.totalVideos,
                 })}
               </p>
-              {progress.currentVideoTitle && <p className="truncate">{progress.currentVideoTitle}</p>}
+              {progress.currentVideoTitle && (
+                <p className="truncate">{progress.currentVideoTitle}</p>
+              )}
               <p>{progress.stage}</p>
             </div>
           )}

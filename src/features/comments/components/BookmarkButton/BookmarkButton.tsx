@@ -87,15 +87,15 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = React.memo(({ comment }) =
           ref={bookmarkButtonRef}
           onClick={handleBookmark}
           disabled={isProcessing}
-          className={`flex items-center transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400' : 'text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'} ${isProcessing ? 'cursor-not-allowed opacity-50' : ''}`}
+          className={`bookmark-button inline-flex shrink-0 items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-xs transition-all duration-300 ${isBookmarked ? 'text-yellow-600 dark:text-yellow-400 border-yellow-300/80 dark:border-yellow-500/60' : 'text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600'} ${isProcessing ? 'cursor-not-allowed opacity-50' : ''}`}
           aria-label={t('Bookmark')}
         >
           {isBookmarked ? (
-            <BookmarkSlashIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+            <BookmarkSlashIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
           ) : (
-            <BookmarkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+            <BookmarkIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
           )}
-          <span className="text-sm">{t('Bookmark')}</span>
+          <span className="text-xs">{t('Bookmark')}</span>
         </button>
       </Tooltip>
       {isBookmarked && isNoteInputVisible && (

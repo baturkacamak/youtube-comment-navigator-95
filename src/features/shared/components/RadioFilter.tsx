@@ -34,7 +34,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({
   };
 
   return (
-    <label className="flex items-center select-none text-gray-800 dark:text-gray-200 mb-2 cursor-pointer">
+    <label className="radio-filter flex min-w-0 items-center select-none text-gray-800 dark:text-gray-200 mb-1 cq-[42rem]:mb-2 cursor-pointer text-xs cq-[42rem]:text-sm">
       <div className="relative">
         <input
           type="radio"
@@ -48,24 +48,28 @@ const RadioFilter: React.FC<RadioFilterProps> = ({
           aria-label={name}
         />
         <div
-          className={`h-5 w-5 border rounded-full border-solid flex items-center justify-center transition-all duration-300 ease-in-out ${selectedValue === value ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-100 scale-110' : 'bg-white dark:bg-white-700 border-gray-500 dark:border-gray-600'}`}
+          className={`h-4 w-4 cq-[42rem]:h-5 cq-[42rem]:w-5 border rounded-full border-solid flex items-center justify-center transition-all duration-300 ease-in-out ${selectedValue === value ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-100 scale-110' : 'bg-white dark:bg-white-700 border-gray-500 dark:border-gray-600'}`}
         ></div>
       </div>
-      <div className={`flex items-center space-x-2 ${isRtl ? 'mr-3' : 'ml-3'}`}>
+      <div
+        className={`flex min-w-0 items-center space-x-1.5 cq-[42rem]:space-x-2 ${isRtl ? 'mr-2 cq-[42rem]:mr-3' : 'ml-2 cq-[42rem]:ml-3'}`}
+      >
         {icon}
-        <span className="truncate">{label}</span>
+        <span className="truncate leading-tight">{label}</span>
         {selectedValue === value && (
           <button
             onClick={isRandom ? handleRandomClick : onToggleSortOrder}
-            className={`transition-transform duration-500 ease-in-out ${isRtl ? 'mr-2' : 'ml-2'}`}
+            className={`inline-flex shrink-0 transition-transform duration-500 ease-in-out ${isRtl ? 'mr-1 cq-[42rem]:mr-2' : 'ml-1 cq-[42rem]:ml-2'}`}
             aria-label={isRandom ? t('Randomize order') : t('Toggle sort order')}
             aria-live="polite"
           >
             {isRandom ? (
-              <ArrowPathIcon className={`w-4 h-4 transform ${spin ? 'animate-spin' : ''}`} />
+              <ArrowPathIcon
+                className={`w-3.5 h-3.5 cq-[42rem]:w-4 cq-[42rem]:h-4 transform ${spin ? 'animate-spin' : ''}`}
+              />
             ) : (
               <ArrowUpIcon
-                className={`w-4 h-4 transform transition-transform duration-300 ease-in-out ${sortOrder === 'asc' ? '' : 'rotate-180'}`}
+                className={`w-3.5 h-3.5 cq-[42rem]:w-4 cq-[42rem]:h-4 transform transition-transform duration-300 ease-in-out ${sortOrder === 'asc' ? '' : 'rotate-180'}`}
               />
             )}
           </button>
