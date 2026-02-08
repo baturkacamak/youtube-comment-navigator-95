@@ -110,6 +110,7 @@ describe('CommentFooter', () => {
     const content = container.querySelector('.comment-footer__content');
     const actions = container.querySelector('.comment-footer__actions');
     const author = container.querySelector('.comment-footer__author');
+    const authorName = container.querySelector('.comment-footer__author-name');
     const badges = container.querySelector('.comment-footer__badges');
 
     expect(content).toBeInTheDocument();
@@ -124,6 +125,11 @@ describe('CommentFooter', () => {
     expect(author).toHaveClass('min-w-0');
     expect(author).toHaveClass('max-w-full');
     expect(author).toHaveClass('shrink');
+    expect(author).toHaveClass('overflow-hidden');
+    expect(authorName).toBeInTheDocument();
+    expect(authorName).toHaveClass('min-w-0');
+    expect(authorName).toHaveClass('truncate');
+    expect(authorName).not.toHaveClass('max-w-none');
     expect(badges).not.toBeInTheDocument();
   });
 });

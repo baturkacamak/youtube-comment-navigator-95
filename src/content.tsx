@@ -106,35 +106,40 @@ class DOMHelper {
     container: HTMLElement,
     panelHost: HTMLElement | null
   ) {
+    const viewportPadding = 24;
+    const baseRightOffset = 16;
+    const maxPanelReservedWidth = 480;
+    const minPanelReservedWidth = 280;
+    const minOverlayWidth = 220;
+    const preferredOverlayWidth = 420;
+
     container.style.position = 'fixed';
     container.style.top = '88px';
-    container.style.right = '16px';
+    container.style.right = `${baseRightOffset}px`;
     container.style.left = '';
     container.style.bottom = '';
     container.style.zIndex = '2147483646';
 
-    let targetWidth = Math.min(420, window.innerWidth - 24);
+    let targetWidth = Math.min(preferredOverlayWidth, window.innerWidth - viewportPadding);
 
     if (panelHost) {
       const panelRect = panelHost.getBoundingClientRect();
-      const panelVisibleWidth = Math.max(0, window.innerWidth - panelRect.left);
-      const rightOffset = panelVisibleWidth + 16;
-      const availableLeftWidth = panelRect.left - 24;
+      const estimatedPanelWidth = Math.min(
+        maxPanelReservedWidth,
+        Math.max(minPanelReservedWidth, Math.floor(panelRect.width || 0))
+      );
+      const rightOffset = estimatedPanelWidth + baseRightOffset;
+      const availableLeftWidth = window.innerWidth - rightOffset - viewportPadding;
 
-      if (availableLeftWidth >= 280) {
-        targetWidth = Math.min(420, availableLeftWidth);
+      if (availableLeftWidth >= 260) {
+        targetWidth = Math.min(preferredOverlayWidth, availableLeftWidth);
         container.style.right = `${rightOffset}px`;
-      } else {
-        // On narrow layouts, pin to left so native comments remain visible.
-        targetWidth = Math.min(360, Math.max(260, window.innerWidth - panelVisibleWidth - 24));
-        container.style.left = '16px';
-        container.style.right = '';
       }
     }
 
     const roundedWidth = Math.max(260, Math.floor(targetWidth));
-    const availableViewportWidth = Math.max(220, window.innerWidth - 24);
-    const finalWidth = Math.max(220, Math.min(roundedWidth, availableViewportWidth));
+    const availableViewportWidth = Math.max(minOverlayWidth, window.innerWidth - viewportPadding);
+    const finalWidth = Math.max(minOverlayWidth, Math.min(roundedWidth, availableViewportWidth));
     container.style.width = `${finalWidth}px`;
     container.style.maxWidth = `${finalWidth}px`;
   }

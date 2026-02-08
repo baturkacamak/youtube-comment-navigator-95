@@ -194,9 +194,9 @@ describe('content.tsx integration', () => {
 
     expect(appContainer.parentElement).toBe(document.body);
     expect(appContainer.style.position).toBe('fixed');
-    expect(appContainer.style.left).toBe('16px');
-    expect(appContainer.style.right).toBe('');
-    expect(appContainer.style.width).toBe('260px');
-    expect(appContainer.style.maxWidth).toBe('260px');
+    expect(appContainer.style.left).toBe('');
+    expect(appContainer.style.right).toBe('396px');
+    expect(appContainer.style.width).toBe('420px');
+    expect(appContainer.style.maxWidth).toBe('420px');
   });
 });

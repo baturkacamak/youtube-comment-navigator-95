@@ -240,8 +240,9 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="comment-footer__author inline-flex min-w-0 max-w-full items-center shrink"
+            className="comment-footer__author inline-flex min-w-0 max-w-full items-center shrink overflow-hidden"
             aria-label={t("Go to author's channel")}
+            title={comment.author}
           >
             <img
               src={comment.authorAvatarUrl}
@@ -250,7 +251,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               loading="lazy"
               decoding="async"
             />
-            <span className="ml-2 text-sm font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[5.5rem] cq-[30rem]:max-w-[7.5rem] cq-[38rem]:max-w-[11rem] cq-[48rem]:max-w-none">
+            <span className="comment-footer__author-name min-w-0 ml-2 text-sm font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[5.5rem] cq-[30rem]:max-w-[7.5rem] cq-[38rem]:max-w-[11rem] cq-[48rem]:max-w-[14rem] cq-[60rem]:max-w-[18rem]">
               {comment.author}
             </span>
           </a>
