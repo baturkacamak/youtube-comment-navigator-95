@@ -159,7 +159,7 @@ describe('content.tsx integration', () => {
     expect(document.getElementById('youtube-comment-navigator-playlist-batch')).toBeNull();
   });
 
-  it('supports shorts mount and repositions into comments panel when it opens', async () => {
+  it('supports shorts mount and keeps app outside comments panel so native comments stay visible', async () => {
     setUrl('/shorts/short-a');
     document.body.innerHTML = '<div id="shorts-shell"></div>';
 
@@ -192,8 +192,11 @@ describe('content.tsx integration', () => {
 
     await vi.advanceTimersByTimeAsync(1200);
 
-    expect(appContainer.parentElement).toBe(shortsPanel);
-    expect(appContainer.style.position).toBe('');
-    expect(appContainer.style.width).toBe('100%');
+    expect(appContainer.parentElement).toBe(document.body);
+    expect(appContainer.style.position).toBe('fixed');
+    expect(appContainer.style.left).toBe('16px');
+    expect(appContainer.style.right).toBe('');
+    expect(appContainer.style.width).toBe('260px');
+    expect(appContainer.style.maxWidth).toBe('260px');
   });
 });

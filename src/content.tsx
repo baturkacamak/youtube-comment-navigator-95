@@ -62,20 +62,11 @@ class DOMHelper {
   static repositionShortsContainer(container: HTMLElement) {
     const panelHost = this.getVisibleShortsPanelHost();
 
-    if (panelHost) {
-      if (container.parentNode !== panelHost) {
-        container.remove();
-        panelHost.prepend(container);
-      }
-      this.configureShortsPanelContainer(container);
-      return;
-    }
-
     if (container.parentNode !== document.body) {
       container.remove();
       document.body.appendChild(container);
     }
-    this.configureShortsFloatingContainer(container);
+    this.configureShortsFloatingContainer(container, panelHost);
   }
 
   static createPlaylistBatchContainer(containerId: string): HTMLElement {
@@ -111,26 +102,41 @@ class DOMHelper {
     container.style.width = '100%';
   }
 
-  private static configureShortsPanelContainer(container: HTMLElement) {
-    container.style.position = '';
-    container.style.top = '';
-    container.style.right = '';
-    container.style.bottom = '';
-    container.style.left = '';
-    container.style.maxWidth = '';
-    container.style.zIndex = '';
-    container.style.width = '100%';
-  }
-
-  private static configureShortsFloatingContainer(container: HTMLElement) {
+  private static configureShortsFloatingContainer(
+    container: HTMLElement,
+    panelHost: HTMLElement | null
+  ) {
     container.style.position = 'fixed';
     container.style.top = '88px';
     container.style.right = '16px';
     container.style.left = '';
     container.style.bottom = '';
     container.style.zIndex = '2147483646';
-    container.style.width = 'min(420px, calc(100vw - 24px))';
-    container.style.maxWidth = '420px';
+
+    let targetWidth = Math.min(420, window.innerWidth - 24);
+
+    if (panelHost) {
+      const panelRect = panelHost.getBoundingClientRect();
+      const panelVisibleWidth = Math.max(0, window.innerWidth - panelRect.left);
+      const rightOffset = panelVisibleWidth + 16;
+      const availableLeftWidth = panelRect.left - 24;
+
+      if (availableLeftWidth >= 280) {
+        targetWidth = Math.min(420, availableLeftWidth);
+        container.style.right = `${rightOffset}px`;
+      } else {
+        // On narrow layouts, pin to left so native comments remain visible.
+        targetWidth = Math.min(360, Math.max(260, window.innerWidth - panelVisibleWidth - 24));
+        container.style.left = '16px';
+        container.style.right = '';
+      }
+    }
+
+    const roundedWidth = Math.max(260, Math.floor(targetWidth));
+    const availableViewportWidth = Math.max(220, window.innerWidth - 24);
+    const finalWidth = Math.max(220, Math.min(roundedWidth, availableViewportWidth));
+    container.style.width = `${finalWidth}px`;
+    container.style.maxWidth = `${finalWidth}px`;
   }
 
   private static getVisibleShortsPanelHost(): HTMLElement | null {
