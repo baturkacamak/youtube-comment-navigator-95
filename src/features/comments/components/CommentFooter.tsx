@@ -116,7 +116,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
     }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
     const actionClass =
-      'comment-footer__action inline-flex shrink-0 items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-1.5 cq-[40rem]:px-2 py-1 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300';
+      'comment-footer__action inline-flex shrink-0 items-center justify-center h-6 w-6 cq-[40rem]:h-auto cq-[40rem]:w-auto rounded-md border border-gray-200 dark:border-gray-700 bg-white/75 dark:bg-gray-800/75 px-0 cq-[40rem]:px-2 py-0 cq-[40rem]:py-1 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300';
     const fullDate = getFormattedDate(comment.publishedDate);
     const parsedDate = new Date(comment.publishedDate);
     const compactDate = Number.isNaN(parsedDate.getTime())
@@ -129,7 +129,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
 
     return (
       <div
-        className="comment-footer cq flex flex-col gap-2 mt-2 border-solid border-t pt-2 select-none"
+        className="comment-footer cq flex flex-col gap-1.5 mt-2 border-solid border-t pt-2 select-none"
         aria-hidden="true"
       >
         <div className="comment-footer__metrics flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600 dark:text-gray-400">
@@ -151,7 +151,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           </div>
         </div>
 
-        <div className="comment-footer__actions flex items-center gap-2 overflow-x-auto custom-scrollbar pb-1">
+        <div className="comment-footer__actions flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1">
           <button
             onClick={handleCopyToClipboard}
             className={actionClass}
@@ -192,7 +192,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             >
               {isFetchingReplies ? (
                 <svg
-                  className="animate-spin -ml-0.5 mr-1.5 h-3.5 w-3.5 text-gray-600 dark:text-gray-400"
+                  className="animate-spin h-3.5 w-3.5 cq-[40rem]:-ml-0.5 cq-[40rem]:mr-1.5 text-gray-600 dark:text-gray-400"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -222,9 +222,6 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               <span className="hidden cq-[40rem]:inline text-xs">
                 {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
               </span>
-              <span className="inline cq-[40rem]:hidden text-[11px] font-semibold">
-                {comment.replyCount}
-              </span>
             </button>
           )}
           <BookmarkButton comment={comment} />
@@ -235,46 +232,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           />
         </div>
 
-        <div className="comment-footer__meta flex items-center gap-2 flex-wrap">
-          {comment.isAuthorContentCreator && (
-            <span
-              className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
-              aria-label={t('Content creator')}
-            >
-              {t('Creator')}
-            </span>
-          )}
-          {comment.isDonated && (
-            <span
-              className="flex items-center text-green-600 text-xs"
-              aria-label={t('Donation amount')}
-            >
-              <BanknotesIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-              {comment.donationAmount}
-            </span>
-          )}
-          {comment.isHearted && (
-            <Tooltip text={t('Hearted by Creator')}>
-              <span
-                className="flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
-                aria-label={t('Hearted by Creator')}
-              >
-                <HeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
-              </span>
-            </Tooltip>
-          )}
-          {comment.isMember && (
-            <Tooltip text={`${t('Member since')} ${comment.authorMemberSince}`}>
-              <img
-                src={comment.authorBadgeUrl}
-                alt={t('Member Badge')}
-                className="w-3.5 h-3.5"
-                aria-label={t('Member Badge')}
-                loading="lazy"
-                decoding="async"
-              />
-            </Tooltip>
-          )}
+        <div className="comment-footer__meta flex items-center justify-between gap-2">
           <a
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
@@ -293,6 +251,47 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               {comment.author}
             </span>
           </a>
+          <div className="inline-flex items-center gap-1.5 cq-[40rem]:gap-2 shrink-0">
+            {comment.isAuthorContentCreator && (
+              <span
+                className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
+                aria-label={t('Content creator')}
+              >
+                {t('Creator')}
+              </span>
+            )}
+            {comment.isDonated && (
+              <span
+                className="flex items-center text-green-600 text-xs"
+                aria-label={t('Donation amount')}
+              >
+                <BanknotesIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                {comment.donationAmount}
+              </span>
+            )}
+            {comment.isHearted && (
+              <Tooltip text={t('Hearted by Creator')}>
+                <span
+                  className="flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
+                  aria-label={t('Hearted by Creator')}
+                >
+                  <HeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                </span>
+              </Tooltip>
+            )}
+            {comment.isMember && (
+              <Tooltip text={`${t('Member since')} ${comment.authorMemberSince}`}>
+                <img
+                  src={comment.authorBadgeUrl}
+                  alt={t('Member Badge')}
+                  className="w-3.5 h-3.5"
+                  aria-label={t('Member Badge')}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </Tooltip>
+            )}
+          </div>
         </div>
       </div>
     );

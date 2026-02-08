@@ -91,9 +91,9 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = React.memo(({ comment }) =
           aria-label={t('Bookmark')}
         >
           {isBookmarked ? (
-            <BookmarkSlashIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+            <BookmarkSlashIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
           ) : (
-            <BookmarkIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+            <BookmarkIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
           )}
           <span className="hidden cq-[40rem]:inline text-xs">{t('Bookmark')}</span>
         </button>
