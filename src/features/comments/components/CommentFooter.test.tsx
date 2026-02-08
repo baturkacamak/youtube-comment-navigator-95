@@ -110,16 +110,21 @@ describe('CommentFooter', () => {
     const content = container.querySelector('.comment-footer__content');
     const actions = container.querySelector('.comment-footer__actions');
     const author = container.querySelector('.comment-footer__author');
+    const badges = container.querySelector('.comment-footer__badges');
 
     expect(content).toBeInTheDocument();
     expect(content).toHaveClass('flex');
+    expect(content).toHaveClass('w-full');
     expect(content).toHaveClass('flex-wrap');
+    expect(content).toHaveClass('justify-between');
     expect(actions).toBeInTheDocument();
     expect(actions).toHaveClass('inline-flex');
     expect(actions).not.toHaveClass('overflow-x-auto');
     expect(author).toBeInTheDocument();
+    expect(author).toHaveClass('ml-auto');
     expect(author).toHaveClass('min-w-0');
     expect(author).toHaveClass('max-w-full');
     expect(author).toHaveClass('shrink');
+    expect(badges).not.toBeInTheDocument();
   });
 });

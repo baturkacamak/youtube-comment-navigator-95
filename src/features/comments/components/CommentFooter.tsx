@@ -126,13 +126,16 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           day: 'numeric',
           ...(parsedDate.getFullYear() !== new Date().getFullYear() ? { year: '2-digit' } : {}),
         });
+    const hasBadges = Boolean(
+      comment.isAuthorContentCreator || comment.isDonated || comment.isHearted || comment.isMember
+    );
 
     return (
       <div
         className="comment-footer cq flex flex-col gap-1.5 mt-2 border-solid border-t pt-2 select-none"
         aria-hidden="true"
       >
-        <div className="comment-footer__content flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
+        <div className="comment-footer__content flex w-full flex-wrap items-center justify-between gap-x-1.5 gap-y-1.5">
           <div className="comment-footer__metrics inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 shrink-0">
             <div className="flex items-center">
               <HandThumbUpIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
@@ -237,7 +240,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="comment-footer__author inline-flex min-w-0 max-w-full items-center shrink"
+            className="comment-footer__author ml-auto inline-flex min-w-0 max-w-full items-center shrink"
             aria-label={t("Go to author's channel")}
           >
             <img
@@ -252,47 +255,49 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             </span>
           </a>
 
-          <div className="comment-footer__badges inline-flex items-center gap-1.5 cq-[40rem]:gap-2 shrink-0">
-            {comment.isAuthorContentCreator && (
-              <span
-                className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
-                aria-label={t('Content creator')}
-              >
-                {t('Creator')}
-              </span>
-            )}
-            {comment.isDonated && (
-              <span
-                className="flex items-center text-green-600 text-xs"
-                aria-label={t('Donation amount')}
-              >
-                <BanknotesIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                {comment.donationAmount}
-              </span>
-            )}
-            {comment.isHearted && (
-              <Tooltip text={t('Hearted by Creator')}>
+          {hasBadges && (
+            <div className="comment-footer__badges inline-flex items-center gap-1.5 cq-[40rem]:gap-2 shrink-0">
+              {comment.isAuthorContentCreator && (
                 <span
-                  className="flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
-                  aria-label={t('Hearted by Creator')}
+                  className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
+                  aria-label={t('Content creator')}
                 >
-                  <HeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                  {t('Creator')}
                 </span>
-              </Tooltip>
-            )}
-            {comment.isMember && (
-              <Tooltip text={`${t('Member since')} ${comment.authorMemberSince}`}>
-                <img
-                  src={comment.authorBadgeUrl}
-                  alt={t('Member Badge')}
-                  className="w-3.5 h-3.5"
-                  aria-label={t('Member Badge')}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </Tooltip>
-            )}
-          </div>
+              )}
+              {comment.isDonated && (
+                <span
+                  className="flex items-center text-green-600 text-xs"
+                  aria-label={t('Donation amount')}
+                >
+                  <BanknotesIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+                  {comment.donationAmount}
+                </span>
+              )}
+              {comment.isHearted && (
+                <Tooltip text={t('Hearted by Creator')}>
+                  <span
+                    className="flex items-center text-red-600 animate-pulse bg-red-100 rounded-full p-1"
+                    aria-label={t('Hearted by Creator')}
+                  >
+                    <HeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                  </span>
+                </Tooltip>
+              )}
+              {comment.isMember && (
+                <Tooltip text={`${t('Member since')} ${comment.authorMemberSince}`}>
+                  <img
+                    src={comment.authorBadgeUrl}
+                    alt={t('Member Badge')}
+                    className="w-3.5 h-3.5"
+                    aria-label={t('Member Badge')}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </Tooltip>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );
