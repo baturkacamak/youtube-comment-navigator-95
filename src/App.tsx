@@ -26,6 +26,8 @@ import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFr
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 import Collapsible from './features/shared/components/Collapsible';
+import { db } from './features/shared/utils/database/database';
+import { loadAllComments } from './features/comments/services/pagination';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -56,6 +58,25 @@ const App: React.FC = () => {
 
   const videoId = extractYouTubeVideoIdFromUrl();
   const liveTotalUnfilteredCount = useTotalUnfilteredCount(videoId);
+
+  const fetchAllCommentsForDownload = React.useCallback(async () => {
+    if (!videoId) {
+      return [];
+    }
+
+    return loadAllComments(
+      db.comments,
+      videoId,
+      filters.sortBy || 'date',
+      filters.sortOrder || 'desc',
+      filters,
+      searchKeyword,
+      {
+        topLevelOnly: true,
+        excludeLiveChat: true,
+      }
+    );
+  }, [videoId, filters, searchKeyword]);
 
   const hasActiveFilters =
     !!filters.keyword ||
@@ -89,8 +110,8 @@ const App: React.FC = () => {
               <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
-                comments={filteredAndSortedComments}
-                allComments={comments}
+                comments={comments}
+                allComments={fetchAllCommentsForDownload}
               />
             </div>
             <CommentList />
@@ -157,6 +178,7 @@ const App: React.FC = () => {
       filteredAndSortedBookmarks,
       showFiltersSorts,
       comments,
+      fetchAllCommentsForDownload,
       bookmarkedOnlyComments,
       liveChatMessageCount,
     ]

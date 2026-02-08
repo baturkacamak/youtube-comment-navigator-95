@@ -378,6 +378,49 @@ export const loadPagedComments = async (
 };
 
 /**
+ * Loads all comments matching the same criteria used for paged queries.
+ * Useful for exports where pagination caps (e.g. first 20 items) should not apply.
+ */
+export const loadAllComments = async (
+  commentsTable: Dexie.Table<Comment, number>,
+  videoId: string,
+  sortBy: string = 'date',
+  sortOrder: string = 'desc',
+  filters: CommentFilters = DEFAULT_FILTERS,
+  searchKeyword: string = '',
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
+): Promise<Comment[]> => {
+  const logPrefix = `[loadAllComments] videoId: ${videoId}`;
+
+  if (!videoId) {
+    logger.error(`${logPrefix} - Validation Error: videoId is required.`);
+    return [];
+  }
+
+  try {
+    const total = await countComments(commentsTable, videoId, filters, searchKeyword, options);
+    if (total <= 0) {
+      return [];
+    }
+
+    return await loadPagedComments(
+      commentsTable,
+      videoId,
+      PAGINATION.INITIAL_PAGE,
+      total,
+      sortBy,
+      sortOrder,
+      filters,
+      searchKeyword,
+      options
+    );
+  } catch (error) {
+    logger.error(`${logPrefix} Error loading all comments:`, error);
+    return [];
+  }
+};
+
+/**
  * Counts total comments matching the criteria (including search).
  */
 export const countComments = async (

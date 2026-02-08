@@ -1,5 +1,10 @@
 import { Comment } from '../../../types/commentTypes';
-import { loadPagedComments, countComments, fetchRepliesForComment } from './pagination';
+import {
+  loadPagedComments,
+  loadAllComments,
+  countComments,
+  fetchRepliesForComment,
+} from './pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import Dexie from 'dexie';
 import logger from '../../shared/utils/logger';
@@ -455,6 +460,52 @@ describe('Pagination Services', () => {
       await loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', defaultLikeFilters);
 
       expect(mockFilter).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('loadAllComments', () => {
+    it('should load every matching comment in a single export query', async () => {
+      const allComments = Array.from({ length: 45 }, (_, i) => ({
+        ...sampleComment1,
+        commentId: `c-${i + 1}`,
+      }));
+      mockCount.mockResolvedValue(45);
+      mockToArray.mockResolvedValue(allComments);
+
+      const result = await loadAllComments(mockTable, 'v1');
+
+      expect(mockCount).toHaveBeenCalled();
+      expect(mockOffset).toHaveBeenCalledWith(0);
+      expect(mockLimit).toHaveBeenCalledWith(45);
+      expect(result).toEqual(allComments);
+    });
+
+    it('should return empty array when there are no matching comments', async () => {
+      mockCount.mockResolvedValue(0);
+
+      const result = await loadAllComments(mockTable, 'v1');
+
+      expect(result).toEqual([]);
+      expect(mockLimit).not.toHaveBeenCalled();
+      expect(mockOffset).not.toHaveBeenCalled();
+    });
+
+    it('should pass filters and search options through to counting and loading', async () => {
+      const filters = { hasLinks: true };
+      mockCount.mockResolvedValue(1);
+      mockFilter.mockImplementation((filterFn) => {
+        mockToArray.mockResolvedValue([sampleComment2].filter(filterFn));
+        return collectionMethods;
+      });
+
+      const result = await loadAllComments(mockTable, 'v1', 'date', 'desc', filters, 'link', {
+        topLevelOnly: true,
+        excludeLiveChat: true,
+      });
+
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
+      expect(mockFilter).toHaveBeenCalled();
+      expect(result).toEqual([sampleComment2]);
     });
   });
 
