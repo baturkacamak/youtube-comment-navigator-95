@@ -159,7 +159,7 @@ describe('content.tsx integration', () => {
     expect(document.getElementById('youtube-comment-navigator-playlist-batch')).toBeNull();
   });
 
-  it('supports shorts mount and keeps app outside comments panel so native comments stay visible', async () => {
+  it('supports shorts mount and shifts app right when native shorts comments panel opens', async () => {
     setUrl('/shorts/short-a');
     document.body.innerHTML = '<div id="shorts-shell"></div>';
 
@@ -170,6 +170,8 @@ describe('content.tsx integration', () => {
     expect(appContainer).not.toBeNull();
     expect(appContainer.parentElement).toBe(document.body);
     expect(appContainer.style.position).toBe('fixed');
+    expect(appContainer.style.right).toBe('16px');
+    expect(appContainer.style.transform).toBe('');
 
     const shortsPanel = document.createElement('ytd-reel-engagement-panel-overlay-renderer');
     shortsPanel.getBoundingClientRect = vi.fn(
@@ -195,8 +197,15 @@ describe('content.tsx integration', () => {
     expect(appContainer.parentElement).toBe(document.body);
     expect(appContainer.style.position).toBe('fixed');
     expect(appContainer.style.left).toBe('');
-    expect(appContainer.style.right).toBe('396px');
+    expect(appContainer.style.right).toBe('16px');
     expect(appContainer.style.width).toBe('420px');
     expect(appContainer.style.maxWidth).toBe('420px');
+    expect(appContainer.style.transform).toMatch(/^translateX\(\d+px\)$/);
+
+    shortsPanel.remove();
+    await vi.advanceTimersByTimeAsync(1200);
+
+    expect(appContainer.style.transform).toBe('');
+    expect(appContainer.style.right).toBe('16px');
   });
 });

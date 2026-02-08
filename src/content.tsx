@@ -100,6 +100,8 @@ class DOMHelper {
     container.style.zIndex = '';
     container.style.maxWidth = '';
     container.style.width = '100%';
+    container.style.transform = '';
+    container.style.transition = '';
   }
 
   private static configureShortsFloatingContainer(
@@ -108,8 +110,6 @@ class DOMHelper {
   ) {
     const viewportPadding = 24;
     const baseRightOffset = 16;
-    const maxPanelReservedWidth = 480;
-    const minPanelReservedWidth = 280;
     const minOverlayWidth = 220;
     const preferredOverlayWidth = 420;
 
@@ -119,29 +119,22 @@ class DOMHelper {
     container.style.left = '';
     container.style.bottom = '';
     container.style.zIndex = '2147483646';
+    container.style.transition = 'transform 180ms ease-out';
 
-    let targetWidth = Math.min(preferredOverlayWidth, window.innerWidth - viewportPadding);
-
-    if (panelHost) {
-      const panelRect = panelHost.getBoundingClientRect();
-      const estimatedPanelWidth = Math.min(
-        maxPanelReservedWidth,
-        Math.max(minPanelReservedWidth, Math.floor(panelRect.width || 0))
-      );
-      const rightOffset = estimatedPanelWidth + baseRightOffset;
-      const availableLeftWidth = window.innerWidth - rightOffset - viewportPadding;
-
-      if (availableLeftWidth >= 260) {
-        targetWidth = Math.min(preferredOverlayWidth, availableLeftWidth);
-        container.style.right = `${rightOffset}px`;
-      }
-    }
-
-    const roundedWidth = Math.max(260, Math.floor(targetWidth));
     const availableViewportWidth = Math.max(minOverlayWidth, window.innerWidth - viewportPadding);
-    const finalWidth = Math.max(minOverlayWidth, Math.min(roundedWidth, availableViewportWidth));
+    const finalWidth = Math.max(
+      minOverlayWidth,
+      Math.min(preferredOverlayWidth, availableViewportWidth)
+    );
     container.style.width = `${finalWidth}px`;
     container.style.maxWidth = `${finalWidth}px`;
+
+    if (panelHost) {
+      const offscreenShift = Math.min(120, Math.max(56, Math.floor(finalWidth * 0.22)));
+      container.style.transform = `translateX(${offscreenShift}px)`;
+    } else {
+      container.style.transform = '';
+    }
   }
 
   private static getVisibleShortsPanelHost(): HTMLElement | null {
