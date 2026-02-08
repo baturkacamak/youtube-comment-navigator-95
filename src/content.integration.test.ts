@@ -173,7 +173,8 @@ describe('content.tsx integration', () => {
     expect(appContainer.style.right).toBe('16px');
     expect(appContainer.style.transform).toBe('');
 
-    const shortsPanel = document.createElement('ytd-reel-engagement-panel-overlay-renderer');
+    const shortsPanel = document.createElement('div');
+    shortsPanel.id = 'anchored-panel';
     shortsPanel.getBoundingClientRect = vi.fn(
       () =>
         ({

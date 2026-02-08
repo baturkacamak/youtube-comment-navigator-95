@@ -15,6 +15,8 @@ import PlaylistBatchExportWidget from './features/batch-export/components/Playli
 
 class DOMHelper {
   private static readonly SHORTS_PANEL_SELECTORS = [
+    '#anchored-panel:not([hidden])',
+    '#anchored-panel',
     'ytd-reel-engagement-panel-overlay-renderer:not([hidden])',
     'ytd-engagement-panel-section-list-renderer[target-id*="comments"]:not([hidden])',
     'ytd-engagement-panel-section-list-renderer[target-id*="engagement-panel-comments"]:not([hidden])',
@@ -130,7 +132,12 @@ class DOMHelper {
     container.style.maxWidth = `${finalWidth}px`;
 
     if (panelHost) {
-      const offscreenShift = Math.min(120, Math.max(56, Math.floor(finalWidth * 0.22)));
+      const panelWidth = Math.max(
+        0,
+        Math.floor(panelHost.getBoundingClientRect().width || finalWidth)
+      );
+      const panelAwareShift = Math.floor(panelWidth * 0.5);
+      const offscreenShift = Math.min(260, Math.max(96, panelAwareShift));
       container.style.transform = `translateX(${offscreenShift}px)`;
     } else {
       container.style.transform = '';
