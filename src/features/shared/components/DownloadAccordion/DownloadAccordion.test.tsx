@@ -193,6 +193,57 @@ describe('DownloadAccordion', () => {
     expect(executeDownload).toHaveBeenCalledWith(mockAllData, 'json', 'test-file', undefined);
   });
 
+  it('uses visible data by default even when allData is available', async () => {
+    const mockVisibleData = [{ id: 'visible-1' }];
+    const mockFetchAll = vi.fn().mockResolvedValue([{ id: 'all-1' }, { id: 'all-2' }]);
+
+    render(
+      <DownloadAccordion
+        contentType="comments"
+        visibleData={mockVisibleData}
+        allData={mockFetchAll}
+      />
+    );
+
+    const button = screen.getByText('Download').closest('button');
+    fireEvent.click(button!);
+
+    const downloadBtn = screen.getByText('Download Now');
+    fireEvent.click(downloadBtn);
+
+    await waitFor(() => {
+      expect(executeDownload).toHaveBeenCalledWith(mockVisibleData, 'json', 'test-file', undefined);
+    });
+
+    expect(mockFetchAll).not.toHaveBeenCalled();
+  });
+
+  it('uses static allData array when "All" scope is selected', async () => {
+    const mockVisibleData = [{ id: 'visible-1' }];
+    const mockAllData = [{ id: 'all-1' }, { id: 'all-2' }, { id: 'all-3' }];
+
+    render(
+      <DownloadAccordion
+        contentType="comments"
+        visibleData={mockVisibleData}
+        allData={mockAllData}
+      />
+    );
+
+    const button = screen.getByText('Download').closest('button');
+    fireEvent.click(button!);
+
+    const allScopeInput = screen.getByDisplayValue('all');
+    fireEvent.click(allScopeInput);
+
+    const downloadBtn = screen.getByText('Download Now');
+    fireEvent.click(downloadBtn);
+
+    await waitFor(() => {
+      expect(executeDownload).toHaveBeenCalledWith(mockAllData, 'json', 'test-file', undefined);
+    });
+  });
+
   it('shows error toast when data is empty', async () => {
     render(
       <DownloadAccordion

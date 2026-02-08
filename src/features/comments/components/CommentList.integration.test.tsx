@@ -308,6 +308,28 @@ describe('CommentList Integration Tests', () => {
       );
     });
 
+    it('syncs loaded comments to Redux view buffer for export actions', async () => {
+      const comments = Array.from({ length: 6 }, (_, i) =>
+        createComment(`${i + 1}`, 'test-video-id')
+      );
+      await db.comments.bulkAdd(comments);
+
+      const store = createTestStore();
+
+      render(
+        <Provider store={store}>
+          <CommentList />
+        </Provider>
+      );
+
+      await waitFor(
+        () => {
+          expect((store.getState() as any).comments).toHaveLength(6);
+        },
+        { timeout: 3000 }
+      );
+    });
+
     it('shows filter message when search returns no results', async () => {
       const comments = Array.from({ length: 5 }, (_, i) =>
         createComment(`${i}`, 'test-video-id', { content: 'Normal comment' })

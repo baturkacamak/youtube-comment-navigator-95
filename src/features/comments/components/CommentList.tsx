@@ -11,7 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
-import { setTotalCommentsCount, resetFilters, setSearchKeyword } from '../../../store/store';
+import {
+  setTotalCommentsCount,
+  resetFilters,
+  setSearchKeyword,
+  setComments,
+} from '../../../store/store';
 import { useCommentsFromDB } from '../hooks/useCommentsFromDB';
 import { selectIsLoading } from '../../../store/selectors';
 
@@ -83,6 +88,12 @@ const CommentList: React.FC<CommentListProps> = () => {
   useEffect(() => {
     dispatch(setTotalCommentsCount(totalCount));
   }, [totalCount, dispatch]);
+
+  // Keep Redux view buffer in sync with currently rendered comments.
+  // This is used by "Visible Only" exports in the control panel.
+  useEffect(() => {
+    dispatch(setComments(comments));
+  }, [comments, dispatch]);
 
   // Calculate container dimensions to fill remaining space (prevent double scrollbar)
   const containerRef = useRef<HTMLDivElement>(null);

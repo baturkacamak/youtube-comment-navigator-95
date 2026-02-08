@@ -74,8 +74,8 @@ export interface SelectBoxProps {
 export interface ControlPanelProps {
   filters: any;
   setFilters: (filters: any) => void;
-  comments?: any[] | Comment[];
-  allComments?: any[] | Comment[];
+  comments?: unknown;
+  allComments?: unknown | (() => Promise<unknown>);
 }
 
 export interface AdvancedSortingProps {
