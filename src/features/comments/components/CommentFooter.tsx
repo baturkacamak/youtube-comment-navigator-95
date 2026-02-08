@@ -10,6 +10,7 @@ import {
   LinkIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { Comment } from '../../../types/commentTypes';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import Tooltip from '../../shared/components/Tooltip';
@@ -115,7 +116,16 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
     }, [comment.commentId, comment.replyCount, videoId, cacheFetchedReplies]);
 
     const actionClass =
-      'comment-footer__action inline-flex shrink-0 items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300';
+      'comment-footer__action inline-flex shrink-0 items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-1.5 cq-[40rem]:px-2 py-1 text-xs text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300';
+    const fullDate = getFormattedDate(comment.publishedDate);
+    const parsedDate = new Date(comment.publishedDate);
+    const compactDate = Number.isNaN(parsedDate.getTime())
+      ? fullDate
+      : parsedDate.toLocaleDateString(i18n.language, {
+          month: 'short',
+          day: 'numeric',
+          ...(parsedDate.getFullYear() !== new Date().getFullYear() ? { year: '2-digit' } : {}),
+        });
 
     return (
       <div
@@ -131,8 +141,12 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           </div>
           <div className="flex items-center">
             <ClockIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-            <span className="text-xs" aria-label={t('Published date')}>
-              {getFormattedDate(comment.publishedDate)}
+            <span className="sr-only">{fullDate}</span>
+            <span className="text-xs cq-[46rem]:hidden" aria-hidden="true">
+              {compactDate}
+            </span>
+            <span className="hidden cq-[46rem]:inline text-xs" aria-hidden="true">
+              {fullDate}
             </span>
           </div>
         </div>
@@ -146,15 +160,15 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             {copySuccess ? (
               <>
                 <CheckCircleIcon
-                  className="w-3.5 h-3.5 mr-1 text-green-500 animate-pulse"
+                  className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 text-green-500 animate-pulse"
                   aria-hidden="true"
                 />
-                <span className="text-xs">{t('Copied')}</span>
+                <span className="hidden cq-[40rem]:inline text-xs">{t('Copied')}</span>
               </>
             ) : (
               <>
-                <ClipboardIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-                <span className="text-xs">{t('Copy')}</span>
+                <ClipboardIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
+                <span className="hidden cq-[40rem]:inline text-xs">{t('Copy')}</span>
               </>
             )}
           </button>
@@ -165,8 +179,8 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             className={actionClass}
             aria-label={t('Go to original comment')}
           >
-            <LinkIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-            <span className="text-xs">{t('Original')}</span>
+            <LinkIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
+            <span className="hidden cq-[40rem]:inline text-xs">{t('Original')}</span>
           </a>
           {comment.replyCount > 0 && (
             <button
@@ -199,14 +213,17 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
                 </svg>
               ) : (
                 <ChevronDownIcon
-                  className={`w-3.5 h-3.5 mr-1 transform transition-transform duration-300 ${
+                  className={`w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 transform transition-transform duration-300 ${
                     showReplies ? 'rotate-180' : 'rotate-0'
                   }`}
                   aria-hidden="true"
                 />
               )}
-              <span className="text-xs">
+              <span className="hidden cq-[40rem]:inline text-xs">
                 {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
+              </span>
+              <span className="inline cq-[40rem]:hidden text-[11px] font-semibold">
+                {comment.replyCount}
               </span>
             </button>
           )}

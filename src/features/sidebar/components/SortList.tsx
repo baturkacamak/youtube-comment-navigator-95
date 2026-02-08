@@ -46,7 +46,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Likes'),
       icon: (
         <HandThumbUpIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('likes', 'heartBeat')}`}
+          className={`inline-block w-4 h-4 mr-px ${getAnimationClass('likes', 'heartBeat')}`}
         />
       ),
       value: 'likes',
@@ -56,7 +56,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Word Count'),
       icon: (
         <DocumentTextIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('length', 'flash')}`}
+          className={`inline-block w-4 h-4 mr-px ${getAnimationClass('length', 'flash')}`}
         />
       ),
       value: 'length',
@@ -66,7 +66,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Replies'),
       icon: (
         <ChatBubbleLeftRightIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('replies', 'bounceIn')}`}
+          className={`inline-block w-4 h-4 mr-px ${getAnimationClass('replies', 'bounceIn')}`}
         />
       ),
       value: 'replies',
@@ -75,9 +75,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       name: 'Date',
       label: t('Date'),
       icon: (
-        <ClockIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('date', 'swing')}`}
-        />
+        <ClockIcon className={`inline-block w-4 h-4 mr-px ${getAnimationClass('date', 'swing')}`} />
       ),
       value: 'date',
     },
@@ -86,7 +84,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Author'),
       icon: (
         <UsersIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('author', 'rubberBand')}`}
+          className={`inline-block w-4 h-4 mr-px ${getAnimationClass('author', 'rubberBand')}`}
         />
       ),
       value: 'author',
@@ -96,7 +94,7 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
       label: t('Random'),
       icon: (
         <ArrowsUpDownIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-px ${getAnimationClass('random', 'flip')}`}
+          className={`inline-block w-4 h-4 mr-px ${getAnimationClass('random', 'flip')}`}
         />
       ),
       value: 'random',

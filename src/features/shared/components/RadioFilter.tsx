@@ -55,7 +55,7 @@ const RadioFilter: React.FC<RadioFilterProps> = ({
         className={`flex min-w-0 items-center space-x-1.5 cq-[42rem]:space-x-2 ${isRtl ? 'mr-2 cq-[42rem]:mr-3' : 'ml-2 cq-[42rem]:ml-3'}`}
       >
         {icon}
-        <span className="truncate leading-tight">{label}</span>
+        <span className="hidden cq-[38rem]:inline truncate leading-tight">{label}</span>
         {selectedValue === value && (
           <button
             onClick={isRandom ? handleRandomClick : onToggleSortOrder}

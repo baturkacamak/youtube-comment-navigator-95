@@ -28,7 +28,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       label: t('Timestamps'),
       icon: (
         <ClockIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('timestamps', 'swing')}`}
+          className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('timestamps', 'swing')}`}
         />
       ),
     },
@@ -37,7 +37,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       label: t('Heart'),
       icon: (
         <HeartIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('heart', 'heartBeat')}`}
+          className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('heart', 'heartBeat')}`}
         />
       ),
     },
@@ -45,9 +45,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       name: 'links',
       label: t('Links'),
       icon: (
-        <LinkIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('links', 'flash')}`}
-        />
+        <LinkIcon className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('links', 'flash')}`} />
       ),
     },
     {
@@ -55,7 +53,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       label: t('Members'),
       icon: (
         <UserGroupIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('members', 'rubberBand')}`}
+          className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('members', 'rubberBand')}`}
         />
       ),
     },
@@ -64,7 +62,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       label: t('Donated'),
       icon: (
         <GiftIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('donated', 'bounceIn')}`}
+          className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('donated', 'bounceIn')}`}
         />
       ),
     },
@@ -73,7 +71,7 @@ const FilterList: React.FC<FilterListProps> = ({ filters, setFilters }) => {
       label: t('Creator'),
       icon: (
         <UserIcon
-          className={`hidden cq-[34rem]:inline-block w-4 h-4 mr-1.5 ${getAnimationClass('creator', 'jello')}`}
+          className={`inline-block w-4 h-4 mr-1 ${getAnimationClass('creator', 'jello')}`}
         />
       ),
     },

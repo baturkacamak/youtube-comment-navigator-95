@@ -41,9 +41,9 @@ const CheckboxFilter: React.FC<CheckboxFilterProps> = ({
           )}
         </div>
       </div>
-      <div className="ml-2 cq-[42rem]:ml-3 flex min-w-0 items-center">
+      <div className="ml-2 flex min-w-0 items-center justify-center cq-[38rem]:justify-start">
         {icon}
-        <span className="truncate leading-tight">{name}</span>
+        <span className="hidden cq-[38rem]:inline truncate leading-tight">{name}</span>
       </div>
     </label>
   );

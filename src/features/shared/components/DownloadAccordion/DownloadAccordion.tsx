@@ -155,7 +155,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       {/* Accordion Header Button */}
       <button
         onClick={handleToggle}
-        className="download-accordion__toggle inline-flex items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-2 py-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300"
+        className="download-accordion__toggle inline-flex items-center rounded-md border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/70 px-1.5 cq-[40rem]:px-2 py-1 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300"
         aria-expanded={isExpanded}
         aria-controls="download-panel"
       >
@@ -163,7 +163,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
           className="download-accordion__toggle-icon w-3.5 h-3.5 mr-1"
           aria-hidden="true"
         />
-        <span className="download-accordion__toggle-label text-xs cq-[42rem]:text-sm">
+        <span className="download-accordion__toggle-label hidden cq-[40rem]:inline text-xs cq-[42rem]:text-sm">
           {t('Download')}
         </span>
         <ChevronDownIcon
