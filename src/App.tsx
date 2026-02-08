@@ -106,7 +106,7 @@ const App: React.FC = () => {
         },
         content: (
           <>
-            <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+            <div className="app-shell__control-panel-wrap dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
               <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
@@ -143,7 +143,7 @@ const App: React.FC = () => {
         content: (
           <>
             {showFiltersSorts && (
-              <div className="dark:bg-gray-800 p-4 shadow rounded-lg mb-4">
+              <div className="app-shell__control-panel-wrap dark:bg-gray-800 p-3 shadow rounded-lg mb-4">
                 <ControlPanel
                   filters={filters}
                   setFilters={setFiltersCallback}
@@ -198,16 +198,16 @@ const App: React.FC = () => {
 
   return (
     <div
-      className={`relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
+      className={`app-shell relative flex overflow-x-hidden overflow-y-auto bg-slate-50 dark:bg-slate-900 rounded transition-max-h ease-in-out duration-300 max-h-screen custom-scrollbar`}
     >
       <Collapsible isOpen={isSettingsOpen}>
         <SettingsDrawer isOpen={isSettingsOpen} onClose={closeSettings} />
       </Collapsible>
       <div
-        className={`flex flex-col gap-4 w-full transition-all duration-500 relative ${drawerClass}`}
+        className={`app-shell__content flex flex-col gap-3 w-full transition-all duration-500 relative ${drawerClass}`}
       >
         <Box
-          className="flex flex-col w-full gap-2"
+          className="app-shell__header flex flex-col w-full gap-2"
           aria-label={t('Control Panel')}
           borderColor={'border-transparent'}
         >
@@ -216,7 +216,10 @@ const App: React.FC = () => {
           <SearchBar />
         </Box>
         {(!showContentOnSearch || searchKeyword) && (
-          <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>
+          <Box
+            className="app-shell__tabs flex flex-col w-full gap-2"
+            borderColor={'border-transparent'}
+          >
             <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
           </Box>
         )}

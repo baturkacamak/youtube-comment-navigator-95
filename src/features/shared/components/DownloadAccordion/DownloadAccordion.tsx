@@ -174,7 +174,7 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       <Collapsible
         id="download-panel"
         isOpen={isExpanded}
-        className="download-accordion__panel absolute left-0 top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
+        className="download-accordion__panel absolute top-full mt-2 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700"
         style={{
           visibility: isExpanded ? 'visible' : 'hidden',
           minWidth: '220px',

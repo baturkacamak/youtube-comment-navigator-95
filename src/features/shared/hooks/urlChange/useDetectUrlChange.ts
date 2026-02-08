@@ -22,7 +22,7 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
       if (hasVideoIdChanged(currentVideoId)) {
         previousVideoId = currentVideoId;
         await waitForVideoElement(currentVideoId);
-                dispatch(setIsLoading(true));
+        dispatch(setIsLoading(true));
         await callback();
       }
     } catch (error) {
@@ -37,16 +37,24 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
   const waitForVideoElement = (videoId: string | null): Promise<void> => {
     return new Promise<void>((resolve) => {
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-                resolve();
+        resolve();
         return;
       }
 
       const checkVideoElement = () => {
-        const videoElement = document.querySelector(`[video-id="${videoId}"]`);
+        const isShortsPage = window.location.pathname.startsWith('/shorts');
+        const videoElement = isShortsPage
+          ? document.querySelector(
+              'ytd-reel-video-renderer[is-active] video, ytd-reel-video-renderer video, video.html5-main-video'
+            )
+          : document.querySelector(
+              `[video-id="${videoId}"], ytd-watch-flexy video, video.html5-main-video`
+            );
+
         if (videoElement) {
-                    resolve();
+          resolve();
         } else {
-                    setTimeout(checkVideoElement, 500); // Retry after 500ms
+          setTimeout(checkVideoElement, 500); // Retry after 500ms
         }
       };
       checkVideoElement();
@@ -56,7 +64,7 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
   useGlobalEventListener('message', handleUrlChangeMessage);
 
   useEffect(() => {
-        handleUrlChange();
+    handleUrlChange();
   }, []);
 
   return null;

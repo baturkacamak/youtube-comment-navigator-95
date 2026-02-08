@@ -5,14 +5,11 @@ import { db } from '../../../shared/utils/database/database';
 import { Comment } from '../../../../types/commentTypes';
 import logger from '../../../shared/utils/logger';
 import { dbEvents } from '../../../shared/utils/database/dbEvents';
+import { extractYouTubeVideoIdFromUrl } from '../../../shared/utils/extractYouTubeVideoIdFromUrl';
 
 export const extractVideoId = (): string => {
   try {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      return 'mock-video-id';
-    }
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('v') ?? '';
+    return extractYouTubeVideoIdFromUrl();
   } catch (error) {
     logger.error('Failed to extract video ID:', error);
     return '';

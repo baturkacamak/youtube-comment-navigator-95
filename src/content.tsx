@@ -14,22 +14,68 @@ import PlaylistBatchExportWidget from './features/batch-export/components/Playli
 // --- Helper Classes ---
 
 class DOMHelper {
-  static createAppContainer(commentsSectionId: string, containerId: string): HTMLElement | null {
+  private static readonly SHORTS_PANEL_SELECTORS = [
+    'ytd-reel-engagement-panel-overlay-renderer:not([hidden])',
+    'ytd-engagement-panel-section-list-renderer[target-id*="comments"]:not([hidden])',
+    'ytd-engagement-panel-section-list-renderer[target-id*="engagement-panel-comments"]:not([hidden])',
+  ];
+
+  static createWatchAppContainer(
+    commentsSectionId: string,
+    containerId: string
+  ): HTMLElement | null {
     const commentsSection = document.getElementById(commentsSectionId);
     if (!commentsSection) {
       return null;
     }
 
-    const existing = document.getElementById(containerId);
-    if (existing) return existing;
+    const parent = commentsSection.parentNode;
+    if (!parent) {
+      return null;
+    }
+
+    const existing = document.getElementById(containerId) as HTMLElement | null;
+    if (existing) {
+      if (existing.parentNode !== parent || existing.nextSibling !== commentsSection) {
+        existing.remove();
+        parent.insertBefore(existing, commentsSection);
+      }
+      this.configureWatchContainer(existing);
+      return existing;
+    }
 
     const newAppContainer = document.createElement('div');
     newAppContainer.id = containerId;
-    newAppContainer.style.width = '100%';
-    if (commentsSection.parentNode) {
-      commentsSection.parentNode.insertBefore(newAppContainer, commentsSection);
-    }
+    this.configureWatchContainer(newAppContainer);
+    parent.insertBefore(newAppContainer, commentsSection);
     return newAppContainer;
+  }
+
+  static ensureShortsAppContainer(containerId: string): HTMLElement {
+    const existing = document.getElementById(containerId) as HTMLElement | null;
+    const container = existing || document.createElement('div');
+    container.id = containerId;
+    this.repositionShortsContainer(container);
+    return container;
+  }
+
+  static repositionShortsContainer(container: HTMLElement) {
+    const panelHost = this.getVisibleShortsPanelHost();
+
+    if (panelHost) {
+      if (container.parentNode !== panelHost) {
+        container.remove();
+        panelHost.prepend(container);
+      }
+      this.configureShortsPanelContainer(container);
+      return;
+    }
+
+    if (container.parentNode !== document.body) {
+      container.remove();
+      document.body.appendChild(container);
+    }
+    this.configureShortsFloatingContainer(container);
   }
 
   static createPlaylistBatchContainer(containerId: string): HTMLElement {
@@ -54,10 +100,67 @@ class DOMHelper {
     }
   }
 
+  private static configureWatchContainer(container: HTMLElement) {
+    container.style.position = '';
+    container.style.top = '';
+    container.style.right = '';
+    container.style.bottom = '';
+    container.style.left = '';
+    container.style.zIndex = '';
+    container.style.maxWidth = '';
+    container.style.width = '100%';
+  }
+
+  private static configureShortsPanelContainer(container: HTMLElement) {
+    container.style.position = '';
+    container.style.top = '';
+    container.style.right = '';
+    container.style.bottom = '';
+    container.style.left = '';
+    container.style.maxWidth = '';
+    container.style.zIndex = '';
+    container.style.width = '100%';
+  }
+
+  private static configureShortsFloatingContainer(container: HTMLElement) {
+    container.style.position = 'fixed';
+    container.style.top = '88px';
+    container.style.right = '16px';
+    container.style.left = '';
+    container.style.bottom = '';
+    container.style.zIndex = '2147483646';
+    container.style.width = 'min(420px, calc(100vw - 24px))';
+    container.style.maxWidth = '420px';
+  }
+
+  private static getVisibleShortsPanelHost(): HTMLElement | null {
+    for (const selector of this.SHORTS_PANEL_SELECTORS) {
+      const candidate = document.querySelector(selector) as HTMLElement | null;
+      if (candidate && this.isElementVisible(candidate)) {
+        return candidate;
+      }
+    }
+    return null;
+  }
+
+  private static isElementVisible(element: HTMLElement): boolean {
+    const style = window.getComputedStyle(element);
+    if (style.display === 'none' || style.visibility === 'hidden' || style.opacity === '0') {
+      return false;
+    }
+
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  }
+
   static isVideoWatchPage() {
     return (
       window.location.pathname === '/watch' && new URLSearchParams(window.location.search).has('v')
     );
+  }
+
+  static isShortsPage() {
+    return window.location.pathname.startsWith('/shorts');
   }
 
   static isPlaylistPage() {
@@ -68,7 +171,7 @@ class DOMHelper {
   }
 
   static isSupportedPage() {
-    return this.isVideoWatchPage() || this.isPlaylistPage();
+    return this.isVideoWatchPage() || this.isShortsPage() || this.isPlaylistPage();
   }
 }
 
@@ -78,7 +181,9 @@ class PubSub {
   events: Record<string, EventCallback[]>;
 
   constructor() {
-    this.events = { /* no-op */ };
+    this.events = {
+      /* no-op */
+    };
   }
 
   subscribe(event: string, callback: EventCallback) {
@@ -143,6 +248,8 @@ class YouTubeCommentNavigator {
   pubSub: PubSub;
   root: ReactDOM.Root | null = null;
   playlistRoot: ReactDOM.Root | null = null;
+  private shortsPlacementIntervalId: number | null = null;
+  private activeMountMode: 'watch' | 'shorts' | 'playlist' | null = null;
   private isInitialized = false;
 
   constructor(pubSub: PubSub) {
@@ -168,6 +275,15 @@ class YouTubeCommentNavigator {
         return;
       }
 
+      if (DOMHelper.isShortsPage()) {
+        clearInterval(intervalId);
+        await this.checkAndInjectShortsPage();
+        if (isUrlChanged) {
+          window.postMessage({ type: 'URL_CHANGE_TO_VIDEO', url: window.location.href }, '*');
+        }
+        return;
+      }
+
       if (DOMHelper.isPlaylistPage()) {
         clearInterval(intervalId);
         await this.checkAndInjectPlaylistPage();
@@ -178,6 +294,7 @@ class YouTubeCommentNavigator {
 
   async checkAndInjectWatchPage() {
     await this.ensureInitialized();
+    this.stopShortsPlacementSync();
 
     if (this.playlistRoot) {
       this.playlistRoot.unmount();
@@ -185,14 +302,51 @@ class YouTubeCommentNavigator {
       DOMHelper.removeAppContainer(this.playlistBatchContainerId);
     }
 
-    const appContainer = DOMHelper.createAppContainer(this.commentsSectionId, this.appContainerId);
-    if (appContainer && !this.root) {
+    const appContainer = DOMHelper.createWatchAppContainer(
+      this.commentsSectionId,
+      this.appContainerId
+    );
+    if (!appContainer) {
+      return;
+    }
+
+    if (this.activeMountMode !== 'watch' && this.root) {
+      this.root.unmount();
+      this.root = null;
+    }
+
+    if (!this.root) {
       this.mountReactApp(appContainer);
     }
+    this.activeMountMode = 'watch';
+  }
+
+  async checkAndInjectShortsPage() {
+    await this.ensureInitialized();
+
+    if (this.playlistRoot) {
+      this.playlistRoot.unmount();
+      this.playlistRoot = null;
+      DOMHelper.removeAppContainer(this.playlistBatchContainerId);
+    }
+
+    const appContainer = DOMHelper.ensureShortsAppContainer(this.appContainerId);
+
+    if (this.activeMountMode !== 'shorts' && this.root) {
+      this.root.unmount();
+      this.root = null;
+    }
+
+    if (!this.root) {
+      this.mountReactApp(appContainer);
+    }
+    this.activeMountMode = 'shorts';
+    this.startShortsPlacementSync();
   }
 
   async checkAndInjectPlaylistPage() {
     await this.ensureInitialized();
+    this.stopShortsPlacementSync();
 
     if (this.root) {
       this.root.unmount();
@@ -203,6 +357,32 @@ class YouTubeCommentNavigator {
     const container = DOMHelper.createPlaylistBatchContainer(this.playlistBatchContainerId);
     if (container && !this.playlistRoot) {
       this.mountPlaylistBatchWidget(container);
+    }
+    this.activeMountMode = 'playlist';
+  }
+
+  private startShortsPlacementSync() {
+    if (this.shortsPlacementIntervalId) {
+      return;
+    }
+
+    this.shortsPlacementIntervalId = window.setInterval(() => {
+      if (!DOMHelper.isShortsPage()) {
+        this.stopShortsPlacementSync();
+        return;
+      }
+
+      const container = document.getElementById(this.appContainerId) as HTMLElement | null;
+      if (container) {
+        DOMHelper.repositionShortsContainer(container);
+      }
+    }, 1000);
+  }
+
+  private stopShortsPlacementSync() {
+    if (this.shortsPlacementIntervalId !== null) {
+      clearInterval(this.shortsPlacementIntervalId);
+      this.shortsPlacementIntervalId = null;
     }
   }
 
@@ -228,7 +408,11 @@ class YouTubeCommentNavigator {
     const applyInitialTheme = () => {
       try {
         const savedSettings = localStorage.getItem('settings');
-        const settings = savedSettings ? JSON.parse(savedSettings) : { /* no-op */ };
+        const settings = savedSettings
+          ? JSON.parse(savedSettings)
+          : {
+              /* no-op */
+            };
         const theme = settings.theme || localStorage.getItem('theme') || 'light';
         const isDark = theme === 'dark';
         document.documentElement.classList.toggle('dark', isDark);
@@ -292,7 +476,11 @@ class YouTubeCommentNavigator {
     const applyInitialTheme = () => {
       try {
         const savedSettings = localStorage.getItem('settings');
-        const settings = savedSettings ? JSON.parse(savedSettings) : { /* no-op */ };
+        const settings = savedSettings
+          ? JSON.parse(savedSettings)
+          : {
+              /* no-op */
+            };
         const theme = settings.theme || localStorage.getItem('theme') || 'light';
         const isDark = theme === 'dark';
         document.documentElement.classList.toggle('dark', isDark);
@@ -371,7 +559,9 @@ class YouTubeCommentNavigator {
     const translations = await response.json();
 
     if (!window.__YCN_TRANSLATIONS__) {
-      window.__YCN_TRANSLATIONS__ = { /* no-op */ };
+      window.__YCN_TRANSLATIONS__ = {
+        /* no-op */
+      };
     }
     window.__YCN_TRANSLATIONS__[language] = translations;
 
@@ -399,6 +589,7 @@ class YouTubeCommentNavigator {
 
   removeInjectedContent() {
     window.postMessage({ type: 'STOP_VIDEO_NAVIGATION', url: window.location.href }, '*');
+    this.stopShortsPlacementSync();
     if (this.root) {
       this.root.unmount();
       this.root = null;
@@ -409,6 +600,7 @@ class YouTubeCommentNavigator {
     }
     DOMHelper.removeAppContainer(this.appContainerId);
     DOMHelper.removeAppContainer(this.playlistBatchContainerId);
+    this.activeMountMode = null;
   }
 }
 
@@ -428,7 +620,11 @@ window.addEventListener('message', (event: MessageEvent) => {
   const { type, payload } = event.data;
 
   if (type === 'CHANGE_LANGUAGE') {
-    const { language } = payload || { /* no-op */ };
+    const { language } =
+      payload ||
+      {
+        /* no-op */
+      };
     if (!language) return;
 
     navigator.loadAndInjectLanguage(language).catch(() => {

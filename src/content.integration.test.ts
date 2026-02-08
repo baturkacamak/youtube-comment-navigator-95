@@ -158,4 +158,42 @@ describe('content.tsx integration', () => {
     expect(document.getElementById('youtube-comment-navigator-app')).toBeNull();
     expect(document.getElementById('youtube-comment-navigator-playlist-batch')).toBeNull();
   });
+
+  it('supports shorts mount and repositions into comments panel when it opens', async () => {
+    setUrl('/shorts/short-a');
+    document.body.innerHTML = '<div id="shorts-shell"></div>';
+
+    await import('./content');
+    await vi.advanceTimersByTimeAsync(2500);
+
+    const appContainer = document.getElementById('youtube-comment-navigator-app') as HTMLElement;
+    expect(appContainer).not.toBeNull();
+    expect(appContainer.parentElement).toBe(document.body);
+    expect(appContainer.style.position).toBe('fixed');
+
+    const shortsPanel = document.createElement('ytd-reel-engagement-panel-overlay-renderer');
+    shortsPanel.getBoundingClientRect = vi.fn(
+      () =>
+        ({
+          width: 380,
+          height: 600,
+          top: 0,
+          left: 0,
+          right: 380,
+          bottom: 600,
+          x: 0,
+          y: 0,
+          toJSON: () => ({
+            /* no-op */
+          }),
+        }) as DOMRect
+    );
+    document.body.appendChild(shortsPanel);
+
+    await vi.advanceTimersByTimeAsync(1200);
+
+    expect(appContainer.parentElement).toBe(shortsPanel);
+    expect(appContainer.style.position).toBe('');
+    expect(appContainer.style.width).toBe('100%');
+  });
 });
