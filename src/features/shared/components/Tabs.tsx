@@ -29,15 +29,16 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onTabChange }) => {
         {tabs.map((tab) => (
           <button
             key={tab.title.id}
-            className={`tabs__button relative shrink-0 whitespace-nowrap rounded-md px-2.5 py-1.5 text-xs cq-[44rem]:px-[0.9rem] cq-[44rem]:py-2 cq-[44rem]:text-[0.95rem] flex items-center gap-1.5 cq-[44rem]:gap-2 transition-all duration-300 ${
+            aria-label={typeof tab.title.label === 'string' ? tab.title.label : tab.title.id}
+            className={`tabs__button relative shrink-0 min-w-9 justify-center whitespace-nowrap rounded-md px-2 py-1.5 text-xs cq-[44rem]:px-[0.9rem] cq-[44rem]:py-2 cq-[44rem]:text-[0.95rem] flex items-center gap-1.5 cq-[44rem]:gap-2 transition-all duration-300 ${
               activeTab === tab.title.id
                 ? 'text-teal-700 dark:text-teal-300 bg-teal-50/90 dark:bg-teal-900/40'
                 : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/70 dark:hover:bg-gray-700/60'
             } focus:outline-none hover:text-teal-400`}
             onClick={() => handleTabClick(tab.title.id)}
           >
-            <tab.title.icon className="tabs__button-icon hidden cq-[36rem]:inline-block w-4 h-4 cq-[44rem]:w-[1.125rem] cq-[44rem]:h-[1.125rem]" />
-            {tab.title.label}
+            <tab.title.icon className="tabs__button-icon w-4 h-4 cq-[44rem]:w-[1.125rem] cq-[44rem]:h-[1.125rem]" />
+            <span className="hidden cq-[56rem]:inline">{tab.title.label}</span>
             {activeTab === tab.title.id && (
               <motion.div
                 layoutId="underline"

@@ -34,28 +34,36 @@ const RadioFilter: React.FC<RadioFilterProps> = ({
   };
 
   return (
-    <label className="radio-filter flex min-w-0 items-center select-none text-gray-800 dark:text-gray-200 mb-1 cq-[42rem]:mb-2 cursor-pointer text-xs cq-[42rem]:text-sm">
-      <div className="relative">
-        <input
-          type="radio"
-          name="sortBy"
-          value={value}
-          checked={selectedValue === value}
-          onChange={onChange}
-          onClick={handleRadioClick}
-          className="absolute opacity-0 h-0 w-0"
-          aria-checked={selectedValue === value}
-          aria-label={name}
-        />
+    <label
+      className={`radio-filter inline-flex min-w-0 items-center justify-center cq-[56rem]:justify-start select-none rounded-md border px-1.5 py-1 text-xs cq-[42rem]:text-sm text-gray-700 dark:text-gray-200 mb-1 cq-[42rem]:mb-2 cursor-pointer transition-colors duration-200 ${
+        selectedValue === value
+          ? 'border-teal-300 bg-teal-50/80 dark:border-teal-500/60 dark:bg-teal-900/30'
+          : 'border-gray-200 bg-white/70 dark:border-gray-700 dark:bg-gray-800/60'
+      }`}
+    >
+      <input
+        type="radio"
+        name="sortBy"
+        value={value}
+        checked={selectedValue === value}
+        onChange={onChange}
+        onClick={handleRadioClick}
+        className="absolute opacity-0 h-0 w-0"
+        aria-checked={selectedValue === value}
+        aria-label={name}
+      />
+      <div className="relative hidden cq-[56rem]:block">
         <div
           className={`h-4 w-4 cq-[42rem]:h-5 cq-[42rem]:w-5 border rounded-full border-solid flex items-center justify-center transition-all duration-300 ease-in-out ${selectedValue === value ? 'bg-slate-400 dark:bg-teal-400 border-slate-900 dark:border-teal-100 scale-110' : 'bg-white dark:bg-white-700 border-gray-500 dark:border-gray-600'}`}
         ></div>
       </div>
       <div
-        className={`flex min-w-0 items-center space-x-1.5 cq-[42rem]:space-x-2 ${isRtl ? 'mr-2 cq-[42rem]:mr-3' : 'ml-2 cq-[42rem]:ml-3'}`}
+        className={`flex min-w-0 items-center space-x-1.5 cq-[42rem]:space-x-2 ${isRtl ? 'mr-0 cq-[56rem]:mr-2 cq-[42rem]:mr-3' : 'ml-0 cq-[56rem]:ml-2 cq-[42rem]:ml-3'}`}
       >
-        {icon}
-        <span className="hidden cq-[38rem]:inline truncate leading-tight">{label}</span>
+        <span className={`${selectedValue === value ? 'text-teal-700 dark:text-teal-300' : ''}`}>
+          {icon}
+        </span>
+        <span className="hidden cq-[56rem]:inline truncate leading-tight">{label}</span>
         {selectedValue === value && (
           <button
             onClick={isRandom ? handleRandomClick : onToggleSortOrder}

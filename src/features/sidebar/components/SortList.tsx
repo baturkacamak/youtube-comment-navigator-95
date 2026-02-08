@@ -102,9 +102,9 @@ const SortList: React.FC<SortListProps> = ({ filters, setFilters }) => {
   ];
 
   return (
-    <div className="sort-list w-full grid grid-cols-2 gap-x-2 gap-y-1 cq-[40rem]:grid-cols-3 cq-[64rem]:grid-cols-6">
+    <div className="sort-list w-full flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1 cq-[56rem]:grid cq-[56rem]:grid-cols-3 cq-[72rem]:grid-cols-6 cq-[56rem]:gap-x-2 cq-[56rem]:gap-y-1 cq-[56rem]:overflow-visible cq-[56rem]:pb-0">
       {sortOptions.map((option) => (
-        <div key={option.value} className="min-w-0">
+        <div key={option.value} className="min-w-0 shrink-0 cq-[56rem]:shrink">
           <RadioFilter
             name={option.name}
             label={option.label}
