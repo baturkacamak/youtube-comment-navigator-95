@@ -34,7 +34,9 @@ vi.mock('../../shared/components/Tooltip', () => ({
 
 vi.mock('../../shared/utils/hoverAction', () => ({
   default: class {
-    destroy() { /* no-op */ }
+    destroy() {
+      /* no-op */
+    }
   },
 }));
 
@@ -53,7 +55,9 @@ vi.mock('../../shared/utils/logger', () => ({
 
 vi.mock('../../shared/utils/database/database', () => ({
   db: {
-    comments: { /* no-op */ },
+    comments: {
+      /* no-op */
+    },
   },
 }));
 
@@ -98,5 +102,24 @@ describe('CommentFooter', () => {
 
     expect(footerDiv).toHaveAttribute('aria-hidden', 'true');
     expect(footerDiv).toHaveClass('select-none');
+  });
+
+  it('uses container-responsive footer groups that can stay on one line when there is space', () => {
+    const { container } = render(<CommentFooter {...defaultProps} />);
+
+    const content = container.querySelector('.comment-footer__content');
+    const actions = container.querySelector('.comment-footer__actions');
+    const author = container.querySelector('.comment-footer__author');
+
+    expect(content).toBeInTheDocument();
+    expect(content).toHaveClass('flex');
+    expect(content).toHaveClass('flex-wrap');
+    expect(actions).toBeInTheDocument();
+    expect(actions).toHaveClass('inline-flex');
+    expect(actions).not.toHaveClass('overflow-x-auto');
+    expect(author).toBeInTheDocument();
+    expect(author).toHaveClass('min-w-0');
+    expect(author).toHaveClass('max-w-full');
+    expect(author).toHaveClass('shrink');
   });
 });

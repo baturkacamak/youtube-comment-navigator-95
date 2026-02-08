@@ -132,112 +132,112 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
         className="comment-footer cq flex flex-col gap-1.5 mt-2 border-solid border-t pt-2 select-none"
         aria-hidden="true"
       >
-        <div className="comment-footer__metrics flex flex-wrap items-center gap-x-3 gap-y-1 text-gray-600 dark:text-gray-400">
-          <div className="flex items-center">
-            <HandThumbUpIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-            <span className="text-xs font-semibold" aria-label={t('Likes')}>
-              {comment.viewLikes || comment.likes}
-            </span>
-          </div>
-          <div className="flex items-center">
-            <ClockIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
-            <span className="sr-only">{fullDate}</span>
-            <span className="text-xs cq-[46rem]:hidden" aria-hidden="true">
-              {compactDate}
-            </span>
-            <span className="hidden cq-[46rem]:inline text-xs" aria-hidden="true">
-              {fullDate}
-            </span>
-          </div>
-        </div>
-
-        <div className="comment-footer__actions flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1">
-          <button
-            onClick={handleCopyToClipboard}
-            className={actionClass}
-            aria-label={t('Copy to clipboard')}
-          >
-            {copySuccess ? (
-              <>
-                <CheckCircleIcon
-                  className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 text-green-500 animate-pulse"
-                  aria-hidden="true"
-                />
-                <span className="hidden cq-[40rem]:inline text-xs">{t('Copied')}</span>
-              </>
-            ) : (
-              <>
-                <ClipboardIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
-                <span className="hidden cq-[40rem]:inline text-xs">{t('Copy')}</span>
-              </>
-            )}
-          </button>
-          <a
-            href={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={actionClass}
-            aria-label={t('Go to original comment')}
-          >
-            <LinkIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
-            <span className="hidden cq-[40rem]:inline text-xs">{t('Original')}</span>
-          </a>
-          {comment.replyCount > 0 && (
-            <button
-              ref={viewRepliesButtonRef}
-              onClick={onToggleReplies}
-              className={`${actionClass} disabled:opacity-50`}
-              aria-label={showReplies ? t('Hide replies') : t('Show replies')}
-              disabled={isFetchingReplies}
-            >
-              {isFetchingReplies ? (
-                <svg
-                  className="animate-spin h-3.5 w-3.5 cq-[40rem]:-ml-0.5 cq-[40rem]:mr-1.5 text-gray-600 dark:text-gray-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                <ChevronDownIcon
-                  className={`w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 transform transition-transform duration-300 ${
-                    showReplies ? 'rotate-180' : 'rotate-0'
-                  }`}
-                  aria-hidden="true"
-                />
-              )}
-              <span className="hidden cq-[40rem]:inline text-xs">
-                {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
+        <div className="comment-footer__content flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
+          <div className="comment-footer__metrics inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 shrink-0">
+            <div className="flex items-center">
+              <HandThumbUpIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+              <span className="text-xs font-semibold" aria-label={t('Likes')}>
+                {comment.viewLikes || comment.likes}
               </span>
-            </button>
-          )}
-          <BookmarkButton comment={comment} />
-          <ShareButton
-            textToShare={comment.content}
-            subject={t('Comment from YouTube')}
-            url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
-          />
-        </div>
+            </div>
+            <div className="flex items-center">
+              <ClockIcon className="w-3.5 h-3.5 mr-1" aria-hidden="true" />
+              <span className="sr-only">{fullDate}</span>
+              <span className="text-xs cq-[46rem]:hidden" aria-hidden="true">
+                {compactDate}
+              </span>
+              <span className="hidden cq-[46rem]:inline text-xs" aria-hidden="true">
+                {fullDate}
+              </span>
+            </div>
+          </div>
 
-        <div className="comment-footer__meta flex items-center justify-between gap-2">
+          <div className="comment-footer__actions inline-flex items-center gap-1 shrink-0">
+            <button
+              onClick={handleCopyToClipboard}
+              className={actionClass}
+              aria-label={t('Copy to clipboard')}
+            >
+              {copySuccess ? (
+                <>
+                  <CheckCircleIcon
+                    className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 text-green-500 animate-pulse"
+                    aria-hidden="true"
+                  />
+                  <span className="hidden cq-[40rem]:inline text-xs">{t('Copied')}</span>
+                </>
+              ) : (
+                <>
+                  <ClipboardIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
+                  <span className="hidden cq-[40rem]:inline text-xs">{t('Copy')}</span>
+                </>
+              )}
+            </button>
+            <a
+              href={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={actionClass}
+              aria-label={t('Go to original comment')}
+            >
+              <LinkIcon className="w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1" aria-hidden="true" />
+              <span className="hidden cq-[40rem]:inline text-xs">{t('Original')}</span>
+            </a>
+            {comment.replyCount > 0 && (
+              <button
+                ref={viewRepliesButtonRef}
+                onClick={onToggleReplies}
+                className={`${actionClass} disabled:opacity-50`}
+                aria-label={showReplies ? t('Hide replies') : t('Show replies')}
+                disabled={isFetchingReplies}
+              >
+                {isFetchingReplies ? (
+                  <svg
+                    className="animate-spin h-3.5 w-3.5 cq-[40rem]:-ml-0.5 cq-[40rem]:mr-1.5 text-gray-600 dark:text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <ChevronDownIcon
+                    className={`w-3.5 h-3.5 mr-0 cq-[40rem]:mr-1 transform transition-transform duration-300 ${
+                      showReplies ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    aria-hidden="true"
+                  />
+                )}
+                <span className="hidden cq-[40rem]:inline text-xs">
+                  {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
+                </span>
+              </button>
+            )}
+            <BookmarkButton comment={comment} />
+            <ShareButton
+              textToShare={comment.content}
+              subject={t('Comment from YouTube')}
+              url={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
+            />
+          </div>
+
           <a
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-w-0 items-center"
+            className="comment-footer__author inline-flex min-w-0 max-w-full items-center shrink"
             aria-label={t("Go to author's channel")}
           >
             <img
@@ -247,11 +247,12 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               loading="lazy"
               decoding="async"
             />
-            <span className="ml-2 text-sm font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[11rem] cq-[48rem]:max-w-none">
+            <span className="ml-2 text-sm font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[5.5rem] cq-[30rem]:max-w-[7.5rem] cq-[38rem]:max-w-[11rem] cq-[48rem]:max-w-none">
               {comment.author}
             </span>
           </a>
-          <div className="inline-flex items-center gap-1.5 cq-[40rem]:gap-2 shrink-0">
+
+          <div className="comment-footer__badges inline-flex items-center gap-1.5 cq-[40rem]:gap-2 shrink-0">
             {comment.isAuthorContentCreator && (
               <span
                 className="bg-blue-600 text-white text-[11px] px-2 py-0.5 rounded-full"
