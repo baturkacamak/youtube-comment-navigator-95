@@ -121,7 +121,6 @@ describe('CommentFooter', () => {
     expect(actions).toHaveClass('inline-flex');
     expect(actions).not.toHaveClass('overflow-x-auto');
     expect(author).toBeInTheDocument();
-    expect(author).toHaveClass('ml-auto');
     expect(author).toHaveClass('min-w-0');
     expect(author).toHaveClass('max-w-full');
     expect(author).toHaveClass('shrink');

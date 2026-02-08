@@ -240,7 +240,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="comment-footer__author ml-auto inline-flex min-w-0 max-w-full items-center shrink"
+            className="comment-footer__author inline-flex min-w-0 max-w-full items-center shrink"
             aria-label={t("Go to author's channel")}
           >
             <img
