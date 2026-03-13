@@ -36,6 +36,8 @@ export interface UseCommentsFromDBResult {
   error: Error | null;
   /** Clear any error state */
   clearError: () => void;
+  /** Clear comments immediately (for instant UI updates) */
+  clearComments: () => void;
 }
 
 /** Performance metrics for debugging */
@@ -83,6 +85,17 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
+  const isLoadingRef = useRef(isLoading);
+  const loadingMoreRef = useRef(loadingMore);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    loadingMoreRef.current = loadingMore;
+  }, [loadingMore]);
+
   const metricsRef = useRef<PerformanceMetrics>({
     lastFetchDuration: 0,
     lastCountDuration: 0,
@@ -93,6 +106,12 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   // Clear error state
   const clearError = useCallback(() => {
     setError(null);
+  }, []);
+
+  // Clear comments immediately (for instant UI feedback)
+  const clearComments = useCallback(() => {
+    setComments([]);
+    setPage(0);
   }, []);
 
   // Memoize sort values from filters
@@ -211,6 +230,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     }
     abortControllerRef.current = new AbortController();
 
+    setComments([]); // Clear comments immediately to show loader
     setIsLoading(true);
     setPage(0);
     setError(null);
@@ -255,6 +275,13 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
     const unsubscribe = dbEvents.onAll((event) => {
       if (event.videoId === videoId) {
+        // Handle comments deleted - clear local state immediately
+        if (event.type === 'comments:deleted') {
+          setComments([]);
+          setPage(0);
+          return;
+        }
+
         // Refresh data when new content arrives
         if (
           event.type === 'comments:added' ||
@@ -262,7 +289,12 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
           event.type === 'replies:added'
         ) {
           // Only refresh if we are on the first page or if the list is empty
-          if (page === 0 || comments.length === 0) {
+          // AND we are not currently loading (to avoid race conditions/resets)
+          if (
+            (page === 0 || comments.length === 0) &&
+            !isLoadingRef.current &&
+            !loadingMoreRef.current
+          ) {
             pendingRefresh = true;
             throttledRefresh();
           }
@@ -290,14 +322,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       const data = await fetchPage(nextPage, true);
       if (data && data.length > 0) {
         setPage(nextPage);
-      } else {
-        // If no error occurred during fetch but result is empty,
-        // the database returned 0 results despite hasMore being true.
-        if (metricsRef.current.failedFetches === failuresBefore) {
-          setError(
-            new Error('Unable to load more comments. The database might be empty or out of sync.')
-          );
-        }
       }
     } catch (err) {
       logger.error(`${logPrefix} loadMore failed:`, err);
@@ -313,6 +337,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       return;
     }
 
+    setComments([]); // Clear comments immediately
     setIsLoading(true);
     setPage(0);
     setError(null);
@@ -333,13 +358,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     const interval = setInterval(() => {
       const metrics = metricsRef.current;
       if (metrics.totalFetches > 0) {
-        logger.debug(`${logPrefix} Performance metrics`, {
-          lastFetchDuration: `${metrics.lastFetchDuration.toFixed(2)}ms`,
-          lastCountDuration: `${metrics.lastCountDuration.toFixed(2)}ms`,
-          totalFetches: metrics.totalFetches,
-          failedFetches: metrics.failedFetches,
-          successRate: `${((1 - metrics.failedFetches / metrics.totalFetches) * 100).toFixed(1)}%`,
-        });
+        /* no-op */
       }
     }, 30000); // Every 30 seconds
 
@@ -356,6 +375,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     page,
     error,
     clearError,
+    clearComments,
   };
 };
 
@@ -393,9 +413,15 @@ export const useLiveCommentCount = (
           return await countComments(
             db.comments,
             videoId,
-            filters || {},
+            filters ||
+              {
+                /* no-op */
+              },
             searchKeyword || '',
-            options || {}
+            options ||
+              {
+                /* no-op */
+              }
           );
         } catch (err) {
           logger.error('[useLiveCommentCount] Count query failed:', err);

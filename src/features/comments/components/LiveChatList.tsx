@@ -3,7 +3,7 @@
  * Manages fetching and displaying live chat messages using the new transcript interface
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../types/rootState';
 import {
@@ -21,8 +21,11 @@ import {
 import LiveChatTranscript from './LiveChatTranscript';
 import logger from '../../shared/utils/logger';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
+import { XCircleIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from 'react-i18next';
 
 const LiveChatList: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const liveChatMessages = useSelector((state: RootState) => state.liveChat);
   const liveChatState = useSelector((state: RootState) => state.liveChatState);
@@ -65,7 +68,7 @@ const LiveChatList: React.FC = () => {
   /**
    * Fetch live chat messages from database with error handling
    */
-  const fetchLiveChatFromDB = async () => {
+  const fetchLiveChatFromDB = useCallback(async () => {
     if (!videoId) {
       logger.warn('[LiveChatList] No videoId found');
       return;
@@ -103,7 +106,7 @@ const LiveChatList: React.FC = () => {
     } finally {
       dispatch(setLiveChatLoading(false));
     }
-  };
+  }, [videoId, page, pageSize, liveChatState.isLoading, dispatch]);
 
   /**
    * Handle timestamp click - seek video to specific time
@@ -153,9 +156,47 @@ const LiveChatList: React.FC = () => {
   return (
     <div className="livechat-list-container h-full">
       {liveChatState.error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded mb-4">
-          <strong className="font-bold">Error:</strong>
-          <span className="block sm:inline ml-2">{liveChatState.error}</span>
+        <div
+          className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 px-4 py-3 rounded mb-4 shadow-sm"
+          role="alert"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center flex-1">
+              <XCircleIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+              <div>
+                <strong className="font-bold">{t('Error loading live chat:')}</strong>
+                <span className="block sm:inline ml-2">{liveChatState.error}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 ml-4">
+              <button
+                onClick={() => {
+                  dispatch(setLiveChatError(null));
+                  setPage(0);
+                  setHasMore(true);
+                  fetchLiveChatFromDB();
+                }}
+                className="px-3 py-1 bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-800 text-white rounded transition-colors text-sm font-medium"
+              >
+                {t('Retry')}
+              </button>
+              <button
+                onClick={() => dispatch(setLiveChatError(null))}
+                className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100 font-bold"
+              >
+                <span className="sr-only">Close</span>
+                <svg
+                  className="fill-current h-6 w-6"
+                  role="button"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                >
+                  <title>Close</title>
+                  <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.03-2.759-3.031a1.2 1.2 0 1 1 1.697-1.697l2.652 3.031 2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.031 2.758 3.03a1.2 1.2 0 0 1 0 1.698z" />
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

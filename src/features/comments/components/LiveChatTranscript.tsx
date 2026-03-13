@@ -81,12 +81,12 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400 text-lg font-medium mb-2">
-            {t('No live chat messages')}
+          <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-700 dark:text-gray-300 text-lg font-medium mb-2">
+            {t('This video has no live chat')}
           </p>
-          <p className="text-gray-500 dark:text-gray-500 text-sm">
-            {t('This video does not have live chat, or it has not been loaded yet.')}
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
+            {t('Live chat is only available for live streams and premieres.')}
           </p>
         </div>
       </div>

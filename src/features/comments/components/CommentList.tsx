@@ -73,6 +73,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     error,
     clearError,
     refresh,
+    clearComments,
   } = useCommentsFromDB({
     videoId,
     filters,
@@ -83,6 +84,15 @@ const CommentList: React.FC<CommentListProps> = () => {
   });
 
   const isLoading = dbLoading || globalLoading;
+  // Clear comments immediately when global loading starts (don't wait for DB event)
+  const prevGlobalLoadingRef = useRef(globalLoading);
+  useEffect(() => {
+    // Detect when globalLoading transitions from false to true
+    if (!prevGlobalLoadingRef.current && globalLoading && comments.length > 0) {
+      clearComments();
+    }
+    prevGlobalLoadingRef.current = globalLoading;
+  }, [globalLoading, comments.length, clearComments]);
 
   // Sync totalCount to Redux for components that still need it
   useEffect(() => {
@@ -157,6 +167,17 @@ const CommentList: React.FC<CommentListProps> = () => {
     },
     [comments, hasMore]
   );
+
+  const totalMeasuredHeight = React.useMemo(() => {
+    let total = 0;
+    for (let index = 0; index < comments.length; index += 1) {
+      total += getRowHeight(index);
+    }
+    if (hasMore) {
+      total += getRowHeight(comments.length);
+    }
+    return total;
+  }, [comments.length, getRowHeight, hasMore]);
 
   // Callback to update actual height after render
   const setRowHeight = useCallback((index: number, height: number) => {
@@ -255,7 +276,14 @@ const CommentList: React.FC<CommentListProps> = () => {
     // Check if filters or search are active
     const hasActiveFilters =
       !!searchKeyword ||
+      !!filters?.keyword ||
       filters?.verified ||
+      filters?.timestamps ||
+      filters?.heart ||
+      filters?.links ||
+      filters?.members ||
+      filters?.donated ||
+      filters?.creator ||
       filters?.hasLinks ||
       (filters?.likesThreshold?.min || 0) > 0 ||
       (filters?.likesThreshold?.max || Infinity) < Infinity ||
@@ -305,7 +333,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     <div
       ref={containerRef}
       className="w-full flex flex-col relative"
-      style={{ height: listHeight, minHeight: '400px' }}
+      style={{ height: Math.min(listHeight, Math.max(totalMeasuredHeight, 220)), minHeight: '220px' }}
     >
       {/* Loading overlay when reloading comments - only show when hook is actively loading */}
       {dbLoading && comments.length > 0 && (
@@ -373,10 +401,17 @@ const CommentList: React.FC<CommentListProps> = () => {
             // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
               return (
+<<<<<<< HEAD
                 <div style={{ height: 400, width: '100%', overflow: 'hidden' }}>
                   <List
                     ref={listRef}
                     height={400}
+=======
+                <div style={{ height: Math.max(Math.min(totalMeasuredHeight, 400), 220), width: '100%', overflow: 'hidden' }}>
+                  <List
+                    ref={listRef}
+                    height={Math.max(Math.min(totalMeasuredHeight, 400), 220)}
+>>>>>>> feature/loading-error-states
                     width={width || window.innerWidth || 500}
                     itemCount={itemCount}
                     itemSize={getRowHeight}
