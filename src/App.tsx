@@ -22,7 +22,7 @@ import Tabs from './features/shared/components/Tabs';
 import { useSelector } from 'react-redux';
 import { RootState } from './types/rootState';
 import i18n from 'i18next';
-import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
+import { useCommentsFromDB, useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 import Collapsible from './features/shared/components/Collapsible';
@@ -58,6 +58,13 @@ const App: React.FC = () => {
 
   const videoId = extractYouTubeVideoIdFromUrl();
   const liveTotalUnfilteredCount = useTotalUnfilteredCount(videoId);
+  const { comments: visibleCommentsForDownload } = useCommentsFromDB({
+    videoId,
+    filters,
+    searchKeyword,
+    topLevelOnly: true,
+    excludeLiveChat: true,
+  });
 
   const fetchAllCommentsForDownload = React.useCallback(async () => {
     if (!videoId) {
@@ -110,7 +117,7 @@ const App: React.FC = () => {
               <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
-                comments={comments}
+                comments={visibleCommentsForDownload}
                 allComments={fetchAllCommentsForDownload}
               />
             </div>
@@ -178,6 +185,7 @@ const App: React.FC = () => {
       filteredAndSortedBookmarks,
       showFiltersSorts,
       comments,
+      visibleCommentsForDownload,
       fetchAllCommentsForDownload,
       bookmarkedOnlyComments,
       liveChatMessageCount,

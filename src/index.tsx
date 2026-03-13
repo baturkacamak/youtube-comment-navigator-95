@@ -64,8 +64,10 @@ if (rootElement) {
     return (
       <Provider store={store}>
         <ToastProvider>
-          <App />
-          <ToastContainer />
+          <div className="relative isolate">
+            <App />
+            <ToastContainer />
+          </div>
         </ToastProvider>
       </Provider>
     );

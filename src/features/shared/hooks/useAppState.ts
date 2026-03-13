@@ -9,7 +9,6 @@ import {
   selectSearchKeyword,
   selectTotalCommentsCount,
 } from '../../../store/selectors';
-import useCommentsIncrementalLoader from '../../comments/hooks/useCommentsIncrementalLoader';
 import useFilteredComments from '../../comments/hooks/useFilteredComments';
 import { Filters } from '../../../types/filterTypes';
 import { calculateFilteredWordCount } from '../utils/calculateWordCount';
@@ -37,8 +36,6 @@ const useAppState = () => {
 
   const { sortComments } = useSortedComments(false);
   const { filterComments } = useFilteredComments();
-  const { initialLoadCompleted } = useCommentsIncrementalLoader();
-
   const videoId = extractYouTubeVideoIdFromUrl();
 
   // Use reactive hook to get the count of comments matching current filters/search
@@ -125,7 +122,6 @@ const useAppState = () => {
     comments,
     filters,
     transcripts,
-    initialLoadCompleted,
     filteredAndSortedComments,
     setFiltersCallback,
     showBookmarked,
