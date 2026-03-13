@@ -193,5 +193,21 @@
   "Controversy Radar": "বিতর্ক রাডার",
   "Detect debates, disagreements, and polarizing topics.": "বিতর্ক, মতবিরোধ এবং মেরুকরণকারী বিষয়গুলি সনাক্ত করুন।",
   "Audience Profiling": "দর্শক প্রোফাইলিং",
-  "Understand who your viewers are based on their language and interests.": "ভাষা এবং আগ্রহের ভিত্তিতে আপনার দর্শকরা কারা তা বুঝুন।"
+  "Understand who your viewers are based on their language and interests.": "ভাষা এবং আগ্রহের ভিত্তিতে আপনার দর্শকরা কারা তা বুঝুন।",
+  "Batch Export": "ব্যাচ রপ্তানি",
+  "Select at least one video": "অন্তত একটি ভিডিও নির্বাচন করুন",
+  "Select at least one content type": "অন্তত একটি বিষয়বস্তুর প্রকার নির্বাচন করুন",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "রপ্তানি করা ZIP ({{success}} সাফল্য, {{partial}} আংশিক, {{failed}} ব্যর্থ)",
+  "Batch export canceled": "ব্যাচ রপ্তানি বাতিল করা হয়েছে৷",
+  "Batch export failed": "ব্যাচ রপ্তানি ব্যর্থ হয়েছে",
+  "Playlist videos ({{count}})": "প্লেলিস্ট ভিডিও ({{count}})",
+  "Unselect all": "সবগুলোকে বাদ দিন",
+  "Select all": "সব নির্বাচন করুন",
+  "Loading playlist videos...": "প্লেলিস্ট ভিডিও লোড হচ্ছে...",
+  "No playlist videos found on this page.": "এই পৃষ্ঠায় কোন প্লেলিস্ট ভিডিও পাওয়া যায়নি.",
+  "Content & formats": "বিষয়বস্তু এবং বিন্যাস",
+  "Description": "বর্ণনা",
+  "Progress: {{completed}}/{{total}}": "অগ্রগতি: {{completed}}/{{total}}",
+  "Exporting...": "রপ্তানি হচ্ছে...",
+  "Export {{count}} Videos": "{{count}} ভিডিও রপ্তানি করুন"
 }

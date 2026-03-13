@@ -193,5 +193,21 @@
   "Controversy Radar": "Rada ya Utata",
   "Detect debates, disagreements, and polarizing topics.": "Tambua mijadala, kutokubaliana, na mada zinazogawanya.",
   "Audience Profiling": "Uwasilishaji wa Hadhira",
-  "Understand who your viewers are based on their language and interests.": "Elewa watazamaji wako ni kina nani kulingana na lugha na maslahi yao."
+  "Understand who your viewers are based on their language and interests.": "Elewa watazamaji wako ni kina nani kulingana na lugha na maslahi yao.",
+  "Batch Export": "Usafirishaji wa Kundi",
+  "Select at least one video": "Chagua angalau video moja",
+  "Select at least one content type": "Chagua angalau aina moja ya maudhui",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP iliyohamishwa ({{success}} mafanikio, {{partial}} nusu, {{failed}} imeshindwa)",
+  "Batch export canceled": "Uhamishaji wa kundi umeghairiwa",
+  "Batch export failed": "Imeshindwa kutuma bechi",
+  "Playlist videos ({{count}})": "Video za orodha ya kucheza ({{count}})",
+  "Unselect all": "Acha kuchagua zote",
+  "Select all": "Chagua zote",
+  "Loading playlist videos...": "Inapakia video za orodha ya kucheza...",
+  "No playlist videos found on this page.": "Hakuna video za orodha ya kucheza zilizopatikana kwenye ukurasa huu.",
+  "Content & formats": "Maudhui na miundo",
+  "Description": "Maelezo",
+  "Progress: {{completed}}/{{total}}": "Maendeleo: {{completed}}/{{total}}",
+  "Exporting...": "Inahamisha...",
+  "Export {{count}} Videos": "Hamisha Video {{count}}"
 }

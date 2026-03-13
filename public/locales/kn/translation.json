@@ -193,5 +193,21 @@
   "Controversy Radar": "ವಿವಾದದ ರಾಡಾರ್",
   "Detect debates, disagreements, and polarizing topics.": "ಚರ್ಚೆಗಳು, ಭಿನ್ನಾಭಿಪ್ರಾಯಗಳು ಮತ್ತು ಧ್ರುವೀಕರಣದ ವಿಷಯಗಳನ್ನು ಪತ್ತೆ ಮಾಡಿ.",
   "Audience Profiling": "ಪ್ರೇಕ್ಷಕರ ಪ್ರೊಫೈಲಿಂಗ್",
-  "Understand who your viewers are based on their language and interests.": "ನಿಮ್ಮ ವೀಕ್ಷಕರು ಅವರ ಭಾಷೆ ಮತ್ತು ಆಸಕ್ತಿಗಳ ಆಧಾರದ ಮೇಲೆ ಯಾರೆಂದು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ."
+  "Understand who your viewers are based on their language and interests.": "ನಿಮ್ಮ ವೀಕ್ಷಕರು ಅವರ ಭಾಷೆ ಮತ್ತು ಆಸಕ್ತಿಗಳ ಆಧಾರದ ಮೇಲೆ ಯಾರೆಂದು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ.",
+  "Batch Export": "ಬ್ಯಾಚ್ ರಫ್ತು",
+  "Select at least one video": "ಕನಿಷ್ಠ ಒಂದು ವೀಡಿಯೊವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "Select at least one content type": "ಕನಿಷ್ಠ ಒಂದು ವಿಷಯ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ರಫ್ತು ಮಾಡಿದ ZIP ({{success}} ಯಶಸ್ಸು, {{partial}} ಭಾಗಶಃ, {{failed}} ವಿಫಲವಾಗಿದೆ)",
+  "Batch export canceled": "ಬ್ಯಾಚ್ ರಫ್ತು ರದ್ದುಗೊಳಿಸಲಾಗಿದೆ",
+  "Batch export failed": "ಬ್ಯಾಚ್ ರಫ್ತು ವಿಫಲವಾಗಿದೆ",
+  "Playlist videos ({{count}})": "ಪ್ಲೇಪಟ್ಟಿ ವೀಡಿಯೊಗಳು ({{count}})",
+  "Unselect all": "ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆ ಮಾಡಬೇಡಿ",
+  "Select all": "ಎಲ್ಲವನ್ನೂ ಆಯ್ಕೆಮಾಡಿ",
+  "Loading playlist videos...": "ಪ್ಲೇಪಟ್ಟಿ ವೀಡಿಯೊಗಳನ್ನು ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "No playlist videos found on this page.": "ಈ ಪುಟದಲ್ಲಿ ಯಾವುದೇ ಪ್ಲೇಪಟ್ಟಿ ವೀಡಿಯೊಗಳು ಕಂಡುಬಂದಿಲ್ಲ.",
+  "Content & formats": "ವಿಷಯ ಮತ್ತು ಸ್ವರೂಪಗಳು",
+  "Description": "ವಿವರಣೆ",
+  "Progress: {{completed}}/{{total}}": "ಪ್ರಗತಿ: {{completed}}/{{total}}",
+  "Exporting...": "ರಫ್ತು ಮಾಡಲಾಗುತ್ತಿದೆ...",
+  "Export {{count}} Videos": "{{count}} ವೀಡಿಯೊಗಳನ್ನು ರಫ್ತು ಮಾಡಿ"
 }

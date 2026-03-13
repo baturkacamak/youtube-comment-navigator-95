@@ -193,5 +193,21 @@
   "Controversy Radar": "Kiistatutka",
   "Detect debates, disagreements, and polarizing topics.": "Havaitse väittelyt, erimielisyydet ja polarisoivat aiheet.",
   "Audience Profiling": "Yleisön Profilointi",
-  "Understand who your viewers are based on their language and interests.": "Ymmärrä keitä katsojasi ovat heidän kielensä ja kiinnostuksen kohteidensa perusteella."
+  "Understand who your viewers are based on their language and interests.": "Ymmärrä keitä katsojasi ovat heidän kielensä ja kiinnostuksen kohteidensa perusteella.",
+  "Batch Export": "Erävienti",
+  "Select at least one video": "Valitse vähintään yksi video",
+  "Select at least one content type": "Valitse vähintään yksi sisältötyyppi",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Viety ZIP ({{success}} onnistui, {{partial}} osittainen, {{failed}} epäonnistui)",
+  "Batch export canceled": "Erävienti peruutettu",
+  "Batch export failed": "Erävienti epäonnistui",
+  "Playlist videos ({{count}})": "Soittolistavideot ({{count}})",
+  "Unselect all": "Poista kaikki valinnat",
+  "Select all": "Valitse kaikki",
+  "Loading playlist videos...": "Ladataan soittolistavideoita...",
+  "No playlist videos found on this page.": "Tältä sivulta ei löytynyt soittolistavideoita.",
+  "Content & formats": "Sisältö ja muodot",
+  "Description": "Kuvaus",
+  "Progress: {{completed}}/{{total}}": "Edistyminen: {{completed}}/{{total}}",
+  "Exporting...": "Viedään...",
+  "Export {{count}} Videos": "Vie {{count}} videoita"
 }

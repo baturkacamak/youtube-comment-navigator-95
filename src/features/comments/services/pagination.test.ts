@@ -1,5 +1,10 @@
 import { Comment } from '../../../types/commentTypes';
-import { loadPagedComments, countComments, fetchRepliesForComment } from './pagination';
+import {
+  loadPagedComments,
+  loadAllComments,
+  countComments,
+  fetchRepliesForComment,
+} from './pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import Dexie from 'dexie';
 import logger from '../../shared/utils/logger';
@@ -237,6 +242,42 @@ describe('Pagination Services', () => {
       expect(result).toEqual(mockFilteredData);
     });
 
+    it('should support legacy filter keys (verified + hasLinks)', async () => {
+      const filters = { verified: true, hasLinks: true };
+      const mockFilteredData = [sampleComment2];
+      mockFilter.mockImplementation((filterFn) => {
+        mockToArray.mockResolvedValue(
+          [sampleComment1, sampleComment2, sampleComment3].filter(filterFn)
+        );
+        return collectionMethods;
+      });
+      const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', filters);
+      vi.runAllTimers();
+      const result = await resultPromise;
+      expect(mockFilter).toHaveBeenCalled();
+      expect(result).toEqual(mockFilteredData);
+    });
+
+    it('should apply range filters (likes, replies, wordCount)', async () => {
+      const filters = {
+        likesThreshold: { min: 8, max: 15 },
+        repliesLimit: { min: 1, max: 2 },
+        wordCount: { min: 3, max: 4 },
+      };
+      const mockFilteredData = [sampleComment1];
+      mockFilter.mockImplementation((filterFn) => {
+        mockToArray.mockResolvedValue(
+          [sampleComment1, sampleComment2, sampleComment3].filter(filterFn)
+        );
+        return collectionMethods;
+      });
+      const resultPromise = loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', filters);
+      vi.runAllTimers();
+      const result = await resultPromise;
+      expect(mockFilter).toHaveBeenCalled();
+      expect(result).toEqual(mockFilteredData);
+    });
+
     it('should apply search keyword', async () => {
       const searchKeyword = 'link';
       const mockFilteredData = [sampleComment2];
@@ -254,7 +295,9 @@ describe('Pagination Services', () => {
         10,
         'date',
         'desc',
-        {},
+        {
+          /* no-op */
+        },
         searchKeyword
       );
       vi.runAllTimers();
@@ -344,7 +387,9 @@ describe('Pagination Services', () => {
         10,
         'date',
         'desc',
-        {},
+        {
+          /* no-op */
+        },
         searchKeyword
       );
       vi.runAllTimers();
@@ -397,6 +442,71 @@ describe('Pagination Services', () => {
       expect(mockToArray).toHaveBeenCalled();
       expect(result).toEqual([]);
     });
+
+    it('should skip filter scan when only default filter object is provided', async () => {
+      const defaultLikeFilters = {
+        keyword: '',
+        verified: false,
+        hasLinks: false,
+        sortBy: '',
+        sortOrder: '',
+        likesThreshold: { min: 0, max: Infinity },
+        repliesLimit: { min: 0, max: Infinity },
+        wordCount: { min: 0, max: Infinity },
+        dateTimeRange: { start: '', end: '' },
+      };
+      mockToArray.mockResolvedValue([sampleComment1, sampleComment2]);
+
+      await loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', defaultLikeFilters);
+
+      expect(mockFilter).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('loadAllComments', () => {
+    it('should load every matching comment in a single export query', async () => {
+      const allComments = Array.from({ length: 45 }, (_, i) => ({
+        ...sampleComment1,
+        commentId: `c-${i + 1}`,
+      }));
+      mockCount.mockResolvedValue(45);
+      mockToArray.mockResolvedValue(allComments);
+
+      const result = await loadAllComments(mockTable, 'v1');
+
+      expect(mockCount).toHaveBeenCalled();
+      expect(mockOffset).toHaveBeenCalledWith(0);
+      expect(mockLimit).toHaveBeenCalledWith(45);
+      expect(result).toEqual(allComments);
+    });
+
+    it('should return empty array when there are no matching comments', async () => {
+      mockCount.mockResolvedValue(0);
+
+      const result = await loadAllComments(mockTable, 'v1');
+
+      expect(result).toEqual([]);
+      expect(mockLimit).not.toHaveBeenCalled();
+      expect(mockOffset).not.toHaveBeenCalled();
+    });
+
+    it('should pass filters and search options through to counting and loading', async () => {
+      const filters = { hasLinks: true };
+      mockCount.mockResolvedValue(1);
+      mockFilter.mockImplementation((filterFn) => {
+        mockToArray.mockResolvedValue([sampleComment2].filter(filterFn));
+        return collectionMethods;
+      });
+
+      const result = await loadAllComments(mockTable, 'v1', 'date', 'desc', filters, 'link', {
+        topLevelOnly: true,
+        excludeLiveChat: true,
+      });
+
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
+      expect(mockFilter).toHaveBeenCalled();
+      expect(result).toEqual([sampleComment2]);
+    });
   });
 
   describe('countComments', () => {
@@ -417,7 +527,15 @@ describe('Pagination Services', () => {
       const expectedCount = 3;
       mockCount.mockResolvedValue(expectedCount);
 
-      const result = await countComments(mockTable, 'v1', {}, '', { topLevelOnly: true });
+      const result = await countComments(
+        mockTable,
+        'v1',
+        {
+          /* no-op */
+        },
+        '',
+        { topLevelOnly: true }
+      );
 
       expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
       expect(mockBetween).toHaveBeenCalledWith(['v1', 0], ['v1', 0], true, true);
@@ -519,6 +637,48 @@ describe('Pagination Services', () => {
       expect(mockEquals).toHaveBeenCalledWith('v1');
       // Check that the count spy was called
       expect(countSpy).toHaveBeenCalled();
+      expect(result).toBe(expectedCount);
+    });
+
+    it('should apply date range filter when counting', async () => {
+      const filters = {
+        dateTimeRange: {
+          start: '2023-01-02T00:00:00Z',
+          end: '2023-01-02T23:59:59Z',
+        },
+      };
+      const expectedCount = 1;
+
+      mockFilter.mockImplementation((filterFn) => {
+        const filtered = [sampleComment1, sampleComment2, sampleComment3].filter(filterFn);
+        mockCount.mockResolvedValue(filtered.length);
+        return collectionMethods;
+      });
+
+      const resultPromise = countComments(mockTable, 'v1', filters);
+      vi.runAllTimers();
+      const result = await resultPromise;
+
+      expect(mockFilter).toHaveBeenCalled();
+      expect(result).toBe(expectedCount);
+    });
+
+    it('should support live chat options when counting', async () => {
+      const topLevelComment = { ...sampleComment1, commentId: 'normal-1', isLiveChat: false };
+      const liveChatComment = { ...sampleComment2, commentId: 'live-1', isLiveChat: true };
+      const expectedCount = 1;
+
+      mockFilter.mockImplementation((filterFn) => {
+        const filtered = [topLevelComment, liveChatComment].filter(filterFn);
+        mockCount.mockResolvedValue(filtered.length);
+        return collectionMethods;
+      });
+
+      const resultPromise = countComments(mockTable, 'v1', {}, '', { onlyLiveChat: true });
+      vi.runAllTimers();
+      const result = await resultPromise;
+
+      expect(mockFilter).toHaveBeenCalled();
       expect(result).toBe(expectedCount);
     });
 

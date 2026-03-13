@@ -193,5 +193,21 @@
   "Controversy Radar": "رادار الجدل",
   "Detect debates, disagreements, and polarizing topics.": "اكتشف النقاشات والخلافات والموضوعات المستقطبة.",
   "Audience Profiling": "تنميط الجمهور",
-  "Understand who your viewers are based on their language and interests.": "افهم من هم مشاهديك بناءً على لغتهم واهتماماتهم."
+  "Understand who your viewers are based on their language and interests.": "افهم من هم مشاهديك بناءً على لغتهم واهتماماتهم.",
+  "Batch Export": "تصدير دفعة",
+  "Select at least one video": "حدد مقطع فيديو واحدًا على الأقل",
+  "Select at least one content type": "حدد نوع محتوى واحدًا على الأقل",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "تم تصدير ملف ZIP (نجاح {{success}}، {{partial}} جزئي، فشل {{failed}})",
+  "Batch export canceled": "تم إلغاء تصدير الدفعة",
+  "Batch export failed": "فشل تصدير الدفعة",
+  "Playlist videos ({{count}})": "مقاطع فيديو قائمة التشغيل ({{count}})",
+  "Unselect all": "قم بإلغاء تحديد الكل",
+  "Select all": "حدد الكل",
+  "Loading playlist videos...": "جارٍ تحميل مقاطع الفيديو في قائمة التشغيل...",
+  "No playlist videos found on this page.": "لم يتم العثور على مقاطع فيديو قائمة التشغيل في هذه الصفحة.",
+  "Content & formats": "المحتوى والأشكال",
+  "Description": "وصف",
+  "Progress: {{completed}}/{{total}}": "التقدم: {{completed}}/{{total}}",
+  "Exporting...": "جارٍ التصدير...",
+  "Export {{count}} Videos": "تصدير {{count}} من مقاطع الفيديو"
 }

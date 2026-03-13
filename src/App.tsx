@@ -22,10 +22,12 @@ import Tabs from './features/shared/components/Tabs';
 import { useSelector } from 'react-redux';
 import { RootState } from './types/rootState';
 import i18n from 'i18next';
-import { useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
+import { useCommentsFromDB, useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 import Collapsible from './features/shared/components/Collapsible';
+import { db } from './features/shared/utils/database/database';
+import { loadAllComments } from './features/comments/services/pagination';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -56,6 +58,32 @@ const App: React.FC = () => {
 
   const videoId = extractYouTubeVideoIdFromUrl();
   const liveTotalUnfilteredCount = useTotalUnfilteredCount(videoId);
+  const { comments: visibleCommentsForDownload } = useCommentsFromDB({
+    videoId,
+    filters,
+    searchKeyword,
+    topLevelOnly: true,
+    excludeLiveChat: true,
+  });
+
+  const fetchAllCommentsForDownload = React.useCallback(async () => {
+    if (!videoId) {
+      return [];
+    }
+
+    return loadAllComments(
+      db.comments,
+      videoId,
+      filters.sortBy || 'date',
+      filters.sortOrder || 'desc',
+      filters,
+      searchKeyword,
+      {
+        topLevelOnly: true,
+        excludeLiveChat: true,
+      }
+    );
+  }, [videoId, filters, searchKeyword]);
 
   const hasActiveFilters =
     !!filters.keyword ||
@@ -89,8 +117,8 @@ const App: React.FC = () => {
               <ControlPanel
                 filters={filters}
                 setFilters={setFiltersCallback}
-                comments={filteredAndSortedComments}
-                allComments={comments}
+                comments={visibleCommentsForDownload}
+                allComments={fetchAllCommentsForDownload}
               />
             </div>
             <CommentList />
@@ -157,6 +185,8 @@ const App: React.FC = () => {
       filteredAndSortedBookmarks,
       showFiltersSorts,
       comments,
+      visibleCommentsForDownload,
+      fetchAllCommentsForDownload,
       bookmarkedOnlyComments,
       liveChatMessageCount,
     ]

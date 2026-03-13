@@ -193,5 +193,21 @@
   "Controversy Radar": "Controversy Radar",
   "Detect debates, disagreements, and polarizing topics.": "Detect debates, disagreements, and polarizing topics.",
   "Audience Profiling": "Audience Profiling",
-  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests."
+  "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
+  "Batch Export": "කණ්ඩායම් අපනයනය",
+  "Select at least one video": "අවම වශයෙන් එක් වීඩියෝවක් තෝරන්න",
+  "Select at least one content type": "අවම වශයෙන් එක් අන්තර්ගත වර්ගයක් තෝරන්න",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "අපනයනය කළ ZIP ({{success}} සාර්ථකයි, {{partial}} අර්ධ, {{failed}} අසාර්ථකයි)",
+  "Batch export canceled": "කණ්ඩායම් අපනයනය අවලංගු කරන ලදී",
+  "Batch export failed": "කණ්ඩායම් අපනයනය අසාර්ථක විය",
+  "Playlist videos ({{count}})": "ධාවන ලැයිස්තු වීඩියෝ ({{count}})",
+  "Unselect all": "සියල්ල තෝරා නොගන්න",
+  "Select all": "සියල්ල තෝරන්න",
+  "Loading playlist videos...": "ධාවන ලැයිස්තු වීඩියෝ පූරණය වෙමින්...",
+  "No playlist videos found on this page.": "මෙම පිටුවේ ධාවන ලැයිස්තු වීඩියෝ කිසිවක් හමු නොවීය.",
+  "Content & formats": "අන්තර්ගතය සහ ආකෘති",
+  "Description": "විස්තරය",
+  "Progress: {{completed}}/{{total}}": "ප්‍රගතිය: {{completed}}/{{total}}",
+  "Exporting...": "අපනයනය කරමින්...",
+  "Export {{count}} Videos": "වීඩියෝ {{count}} අපනයනය කරන්න"
 }

@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Tranh luận",
   "Detect debates, disagreements, and polarizing topics.": "Phát hiện các cuộc tranh luận, bất đồng và các chủ đề gây chia rẽ.",
   "Audience Profiling": "Hồ sơ Khán giả",
-  "Understand who your viewers are based on their language and interests.": "Hiểu người xem của bạn là ai dựa trên ngôn ngữ và sở thích của họ."
+  "Understand who your viewers are based on their language and interests.": "Hiểu người xem của bạn là ai dựa trên ngôn ngữ và sở thích của họ.",
+  "Batch Export": "Xuất hàng loạt",
+  "Select at least one video": "Chọn ít nhất một video",
+  "Select at least one content type": "Chọn ít nhất một loại nội dung",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Đã xuất ZIP ({{success}} thành công, {{partial}} một phần, {{failed}} không thành công)",
+  "Batch export canceled": "Đã hủy xuất hàng loạt",
+  "Batch export failed": "Xuất hàng loạt không thành công",
+  "Playlist videos ({{count}})": "Video danh sách phát ({{count}})",
+  "Unselect all": "Bỏ chọn tất cả",
+  "Select all": "Chọn tất cả",
+  "Loading playlist videos...": "Đang tải video danh sách phát...",
+  "No playlist videos found on this page.": "Không tìm thấy video trong danh sách phát trên trang này.",
+  "Content & formats": "Nội dung & định dạng",
+  "Description": "Sự miêu tả",
+  "Progress: {{completed}}/{{total}}": "Tiến trình: {{completed}}/{{total}}",
+  "Exporting...": "Đang xuất...",
+  "Export {{count}} Videos": "Xuất {{count}} Video"
 }

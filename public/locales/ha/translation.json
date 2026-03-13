@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar Rigima",
   "Detect debates, disagreements, and polarizing topics.": "Gano muhawara, rashin jituwa, da batutuwa masu rarrabuwar kawuna.",
   "Audience Profiling": "Bayanin Masu Kallo",
-  "Understand who your viewers are based on their language and interests.": "Fahimtar su waye masu kallon ku dangane da yarensu da abubuwan sha'awarsu."
+  "Understand who your viewers are based on their language and interests.": "Fahimtar su waye masu kallon ku dangane da yarensu da abubuwan sha'awarsu.",
+  "Batch Export": "Fitar da rukuni",
+  "Select at least one video": "Zaɓi aƙalla bidiyo ɗaya",
+  "Select at least one content type": "Zaɓi aƙalla nau'in abun ciki ɗaya",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP da aka fitar (nasara {{success}}, {{partial}} bangare, {{failed}} ya kasa)",
+  "Batch export canceled": "An soke fitar da tsari",
+  "Batch export failed": "Batch fitarwa ya kasa",
+  "Playlist videos ({{count}})": "Bidiyon lissafin waƙa ({{count}})",
+  "Unselect all": "Cire duk",
+  "Select all": "Zaɓi duka",
+  "Loading playlist videos...": "Ana loda bidiyon lissafin waƙa...",
+  "No playlist videos found on this page.": "Ba a sami bidiyon lissafin waƙa a wannan shafin ba.",
+  "Content & formats": "Abun ciki & tsari",
+  "Description": "Bayani",
+  "Progress: {{completed}}/{{total}}": "Ci gaba: {{completed}}/{{total}}",
+  "Exporting...": "Ana fitarwa...",
+  "Export {{count}} Videos": "Fitar da Bidiyoyin {{count}}"
 }

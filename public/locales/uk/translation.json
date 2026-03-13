@@ -193,5 +193,21 @@
   "Controversy Radar": "Радар Суперечок",
   "Detect debates, disagreements, and polarizing topics.": "Виявляйте дебати, незгоди та поляризуючі теми.",
   "Audience Profiling": "Профілювання Аудиторії",
-  "Understand who your viewers are based on their language and interests.": "Зрозумійте, хто ваші глядачі, на основі їх мови та інтересів."
+  "Understand who your viewers are based on their language and interests.": "Зрозумійте, хто ваші глядачі, на основі їх мови та інтересів.",
+  "Batch Export": "Пакетний експорт",
+  "Select at least one video": "Виберіть хоча б одне відео",
+  "Select at least one content type": "Виберіть принаймні один тип вмісту",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Експортовано ZIP ({{success}} успішно, {{partial}} частково, {{failed}} не вдалося)",
+  "Batch export canceled": "Пакетний експорт скасовано",
+  "Batch export failed": "Помилка пакетного експорту",
+  "Playlist videos ({{count}})": "Відео в списку відтворення ({{count}})",
+  "Unselect all": "Скасувати вибір усіх",
+  "Select all": "Вибрати все",
+  "Loading playlist videos...": "Завантаження відео зі списку відтворення...",
+  "No playlist videos found on this page.": "На цій сторінці не знайдено відео зі списку відтворення.",
+  "Content & formats": "Вміст і формати",
+  "Description": "опис",
+  "Progress: {{completed}}/{{total}}": "Перебіг: {{completed}}/{{total}}",
+  "Exporting...": "Експорт...",
+  "Export {{count}} Videos": "Експортувати {{count}} відео"
 }

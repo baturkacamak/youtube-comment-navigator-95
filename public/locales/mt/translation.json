@@ -187,5 +187,21 @@
   "Controversy Radar": "Radar tal-Kontroversja",
   "Detect debates, disagreements, and polarizing topics.": "Identifika dibattiti, nuqqas ta' qbil, u suġġetti polarizzanti.",
   "Audience Profiling": "Profil tal-Udjenza",
-  "Understand who your viewers are based on their language and interests.": "Ifhem min huma t-telespettaturi tiegħek abbażi tal-lingwa u l-interessi tagħhom."
+  "Understand who your viewers are based on their language and interests.": "Ifhem min huma t-telespettaturi tiegħek abbażi tal-lingwa u l-interessi tagħhom.",
+  "Batch Export": "Esportazzjoni tal-lott",
+  "Select at least one video": "Agħżel mill-inqas vidjo wieħed",
+  "Select at least one content type": "Agħżel mill-inqas tip wieħed ta' kontenut",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP esportat ({{success}} suċċess, {{partial}} parzjali, {{failed}} fallut)",
+  "Batch export canceled": "Esportazzjoni tal-lott ikkanċellata",
+  "Batch export failed": "L-esportazzjoni tal-lott falliet",
+  "Playlist videos ({{count}})": "Videos tal-playlist ({{count}})",
+  "Unselect all": "Unselect kollha",
+  "Select all": "Agħżel kollha",
+  "Loading playlist videos...": "Qiegħed il-vidjows tal-playlist qed jgħabbi...",
+  "No playlist videos found on this page.": "Ma nstab l-ebda vidjow tal-playlist fuq din il-paġna.",
+  "Content & formats": "Kontenut u formati",
+  "Description": "Deskrizzjoni",
+  "Progress: {{completed}}/{{total}}": "Avvanz: {{completed}}/{{total}}",
+  "Exporting...": "Jesportaw...",
+  "Export {{count}} Videos": "Esporta {{count}} Vidjows"
 }

@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar de controvèrsia",
   "Detect debates, disagreements, and polarizing topics.": "Detecteu debats, desacords i temes polaritzadors.",
   "Audience Profiling": "Perfil de l'audiència",
-  "Understand who your viewers are based on their language and interests.": "Enteneu qui són els vostres espectadors segons el seu idioma i interessos."
+  "Understand who your viewers are based on their language and interests.": "Enteneu qui són els vostres espectadors segons el seu idioma i interessos.",
+  "Batch Export": "Exportació per lots",
+  "Select at least one video": "Seleccioneu almenys un vídeo",
+  "Select at least one content type": "Seleccioneu almenys un tipus de contingut",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP exportat ({{success}} correcte, {{partial}} parcial, {{failed}} fallada)",
+  "Batch export canceled": "Exportació per lots cancel·lada",
+  "Batch export failed": "L'exportació per lots ha fallat",
+  "Playlist videos ({{count}})": "Vídeos de la llista de reproducció ({{count}})",
+  "Unselect all": "Desmarca-ho tot",
+  "Select all": "Seleccioneu-ho tot",
+  "Loading playlist videos...": "S'estan carregant els vídeos de la llista de reproducció...",
+  "No playlist videos found on this page.": "No s'han trobat vídeos de llista de reproducció en aquesta pàgina.",
+  "Content & formats": "Continguts i formats",
+  "Description": "Descripció",
+  "Progress: {{completed}}/{{total}}": "Progrés: {{completed}}/{{total}}",
+  "Exporting...": "S'està exportant...",
+  "Export {{count}} Videos": "Exporta {{count}} vídeos"
 }

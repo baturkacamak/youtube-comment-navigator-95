@@ -193,5 +193,21 @@
   "Controversy Radar": "Radar ng Kontrobersya",
   "Detect debates, disagreements, and polarizing topics.": "Tuklasin ang mga debate, hindi pagkakasundo, at mga paksang naghahati.",
   "Audience Profiling": "Pag-profile ng Audience",
-  "Understand who your viewers are based on their language and interests.": "Unawain kung sino ang iyong mga manonood batay sa kanilang wika at mga interes."
+  "Understand who your viewers are based on their language and interests.": "Unawain kung sino ang iyong mga manonood batay sa kanilang wika at mga interes.",
+  "Batch Export": "Maramihang Pag-export",
+  "Select at least one video": "Pumili ng kahit isang video",
+  "Select at least one content type": "Pumili ng kahit isang uri ng nilalaman",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "Na-export na ZIP ({{success}} tagumpay, {{partial}} bahagyang, {{failed}} ay nabigo)",
+  "Batch export canceled": "Kinansela ang batch export",
+  "Batch export failed": "Nabigo ang batch export",
+  "Playlist videos ({{count}})": "Mga video sa playlist ({{count}})",
+  "Unselect all": "Alisin sa pagkakapili ang lahat",
+  "Select all": "Piliin lahat",
+  "Loading playlist videos...": "Nilo-load ang mga playlist na video...",
+  "No playlist videos found on this page.": "Walang nakitang mga playlist na video sa page na ito.",
+  "Content & formats": "Nilalaman at mga format",
+  "Description": "Paglalarawan",
+  "Progress: {{completed}}/{{total}}": "Pag-unlad: {{completed}}/{{total}}",
+  "Exporting...": "Ini-export...",
+  "Export {{count}} Videos": "I-export ang {{count}} na Video"
 }

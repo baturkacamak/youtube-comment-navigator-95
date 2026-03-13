@@ -193,5 +193,21 @@
   "Controversy Radar": "დავის რადარი",
   "Detect debates, disagreements, and polarizing topics.": "აღმოაჩინეთ დებატები, უთანხმოებები და პოლარიზებული თემები.",
   "Audience Profiling": "აუდიტორიის პროფილირება",
-  "Understand who your viewers are based on their language and interests.": "გაიგეთ ვინ არიან თქვენი მაყურებლები მათი ენისა და ინტერესების მიხედვით."
+  "Understand who your viewers are based on their language and interests.": "გაიგეთ ვინ არიან თქვენი მაყურებლები მათი ენისა და ინტერესების მიხედვით.",
+  "Batch Export": "პარტიული ექსპორტი",
+  "Select at least one video": "აირჩიეთ მინიმუმ ერთი ვიდეო",
+  "Select at least one content type": "აირჩიეთ შინაარსის მინიმუმ ერთი ტიპი",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP ექსპორტირებული ({{success}} წარმატებით, {{partial}} ნაწილობრივი, {{failed}} ვერ)",
+  "Batch export canceled": "პარტიული ექსპორტი გაუქმდა",
+  "Batch export failed": "სერიის ექსპორტი ვერ მოხერხდა",
+  "Playlist videos ({{count}})": "დასაკრავი სიის ვიდეოები ({{count}})",
+  "Unselect all": "გააუქმეთ ყველა",
+  "Select all": "აირჩიეთ ყველა",
+  "Loading playlist videos...": "დასაკრავი სიის ვიდეოების ჩატვირთვა...",
+  "No playlist videos found on this page.": "ამ გვერდზე დასაკრავი სიის ვიდეოები ვერ მოიძებნა.",
+  "Content & formats": "შინაარსი და ფორმატები",
+  "Description": "აღწერა",
+  "Progress: {{completed}}/{{total}}": "პროგრესი: {{completed}}/{{total}}",
+  "Exporting...": "მიმდინარეობს ექსპორტი...",
+  "Export {{count}} Videos": "{{count}} ვიდეოების ექსპორტი"
 }

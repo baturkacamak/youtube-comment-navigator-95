@@ -193,5 +193,21 @@
   "Controversy Radar": "رادار جنجال",
   "Detect debates, disagreements, and polarizing topics.": "شناسایی بحث‌ها، مخالفت‌ها و موضوعات قطبی.",
   "Audience Profiling": "پروفایل مخاطبان",
-  "Understand who your viewers are based on their language and interests.": "درک اینکه بینندگان شما بر اساس زبان و علایقشان چه کسانی هستند."
+  "Understand who your viewers are based on their language and interests.": "درک اینکه بینندگان شما بر اساس زبان و علایقشان چه کسانی هستند.",
+  "Batch Export": "صادرات دسته ای",
+  "Select at least one video": "حداقل یک ویدیو را انتخاب کنید",
+  "Select at least one content type": "حداقل یک نوع محتوا را انتخاب کنید",
+  "Exported ZIP ({{success}} success, {{partial}} partial, {{failed}} failed)": "ZIP صادر شد ({{success}} موفقیت آمیز، {{partial}} جزئی، {{failed}} ناموفق)",
+  "Batch export canceled": "صادرات دسته ای لغو شد",
+  "Batch export failed": "صادرات دسته ای انجام نشد",
+  "Playlist videos ({{count}})": "ویدیوهای فهرست پخش ({{count}})",
+  "Unselect all": "همه را لغو انتخاب کنید",
+  "Select all": "همه را انتخاب کنید",
+  "Loading playlist videos...": "در حال بارگیری ویدیوهای لیست پخش...",
+  "No playlist videos found on this page.": "هیچ ویدیوی لیست پخشی در این صفحه یافت نشد.",
+  "Content & formats": "محتوا و قالب ها",
+  "Description": "توضیحات",
+  "Progress: {{completed}}/{{total}}": "پیشرفت: {{completed}}/{{total}}",
+  "Exporting...": "صادرات...",
+  "Export {{count}} Videos": "ویدیوهای {{count}} را صادر کنید"
 }
