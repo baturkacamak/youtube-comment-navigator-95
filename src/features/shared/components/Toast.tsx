@@ -33,34 +33,34 @@ const Toast: React.FC<ToastProps> = ({ toast, onDismiss }) => {
   const getStyles = () => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 dark:bg-green-900/30 border-green-500 text-green-800 dark:text-green-200';
+        return 'border-emerald-400/80 bg-slate-900/95 text-emerald-100 ring-1 ring-emerald-400/20';
       case 'error':
-        return 'bg-red-50 dark:bg-red-900/30 border-red-500 text-red-800 dark:text-red-200';
+        return 'border-rose-400/80 bg-slate-900/95 text-rose-100 ring-1 ring-rose-400/20';
       case 'warning':
-        return 'bg-yellow-50 dark:bg-yellow-900/30 border-yellow-500 text-yellow-800 dark:text-yellow-200';
+        return 'border-amber-400/80 bg-slate-900/95 text-amber-100 ring-1 ring-amber-400/20';
       case 'info':
-        return 'bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-800 dark:text-blue-200';
+        return 'border-cyan-400/80 bg-slate-900/95 text-cyan-100 ring-1 ring-cyan-400/20';
     }
   };
 
   return (
     <div
       className={classNames(
-        'flex items-start gap-3 p-4 mb-2 border-l-4 rounded-lg shadow-lg',
+        'pointer-events-auto flex items-start gap-3 rounded-xl border-l-4 px-4 py-3 shadow-2xl backdrop-blur-sm',
         'animate-fade-in transition-all duration-300',
-        'min-w-[300px] max-w-[400px]',
+        'min-w-[280px] max-w-[360px]',
         getStyles()
       )}
       role="alert"
       aria-live="polite"
     >
       <div className="flex-shrink-0 mt-0.5">{getIcon()}</div>
-      <div className="flex-1 break-words">{message}</div>
+      <div className="flex-1 break-words text-sm leading-5">{message}</div>
       <button
         onClick={() => onDismiss(id)}
         className={classNames(
-          'flex-shrink-0 hover:opacity-70 transition-opacity',
-          'focus:outline-none focus:ring-2 focus:ring-offset-2 rounded',
+          'flex-shrink-0 rounded transition-opacity hover:opacity-70',
+          'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900',
           type === 'success' && 'focus:ring-green-500',
           type === 'error' && 'focus:ring-red-500',
           type === 'warning' && 'focus:ring-yellow-500',

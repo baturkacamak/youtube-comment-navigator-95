@@ -33,6 +33,7 @@ import {
   shouldShowLiveChatErrorToast,
 } from '../../../comments/services/liveChat/liveChatErrorHandler';
 import { useToast } from '../../contexts/ToastContext';
+import type { Toast } from '../../contexts/ToastContext';
 
 const useFetchDataOnUrlChange = () => {
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ const fetchAndSetBookmarks = async (dispatch: any) => {
 
 const fetchAndSetTranscripts = async (
   dispatch: any,
-  showToast: (toast: { type: string; message: string; duration?: number }) => void
+  showToast: (toast: Omit<Toast, 'id'>) => void
 ) => {
   try {
     const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
@@ -117,7 +118,7 @@ const fetchAndSetTranscripts = async (
 
 const fetchAndSetLiveChat = async (
   dispatch: any,
-  showToast: (toast: { type: string; message: string; duration?: number }) => void
+  showToast: (toast: Omit<Toast, 'id'>) => void
 ) => {
   const videoId = extractVideoId();
   if (!videoId) {
