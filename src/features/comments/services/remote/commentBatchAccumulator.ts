@@ -126,7 +126,7 @@ export async function accumulateComments(
   // IMMEDIATE FLUSH: Show first batch immediately so users don't stare at empty screen
   // This ensures good UX while still batching subsequent fetches for performance
   if (acc.totalFlushed === 0) {
-    logger.info(`[BatchAccumulator] First batch - flushing immediately for instant display`);
+    logger.debug(`[BatchAccumulator] First batch - flushing immediately for instant display`);
     return await flushAccumulator(videoId);
   }
 
@@ -158,7 +158,7 @@ export async function flushAccumulator(
   const count = commentsToFlush.length;
   acc.buffer = [];
 
-  logger.info(`[BatchAccumulator] Flushing ${count} comments to IndexedDB for video ${videoId}`);
+  logger.debug(`[BatchAccumulator] Flushing ${count} comments to IndexedDB for video ${videoId}`);
 
   try {
     await db.transaction('rw', db.comments, async () => {
