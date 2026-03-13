@@ -401,17 +401,10 @@ const CommentList: React.FC<CommentListProps> = () => {
             // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
               return (
-<<<<<<< HEAD
-                <div style={{ height: 400, width: '100%', overflow: 'hidden' }}>
-                  <List
-                    ref={listRef}
-                    height={400}
-=======
                 <div style={{ height: Math.max(Math.min(totalMeasuredHeight, 400), 220), width: '100%', overflow: 'hidden' }}>
                   <List
                     ref={listRef}
                     height={Math.max(Math.min(totalMeasuredHeight, 400), 220)}
->>>>>>> feature/loading-error-states
                     width={width || window.innerWidth || 500}
                     itemCount={itemCount}
                     itemSize={getRowHeight}
