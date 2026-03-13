@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ArrowPathIcon,
@@ -10,6 +10,7 @@ import {
 } from '@heroicons/react/24/solid';
 import Collapsible from '../../shared/components/Collapsible';
 import Tooltip from '../../shared/components/Tooltip';
+import ConfirmationDialog from '../../shared/components/ConfirmationDialog';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AnalysisStatus } from '../hooks/useAnalysisManager';
 import { useLocalIntelligence } from '../hooks/useLocalIntelligence';
@@ -48,11 +49,25 @@ const AnalysisCard: React.FC<AnalysisCardProps> = ({
   const { t } = useTranslation();
   const { status: nanoStatus } = useLocalIntelligence();
   const isNanoReady = nanoStatus === 'ready';
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
 
   const isIdle = status === 'idle';
   const isLoading = status === 'loading';
   const hasResult = status === 'success' && result;
   const hasError = status === 'error';
+
+  const handleClearClick = () => {
+    setShowClearConfirm(true);
+  };
+
+  const handleConfirmClear = () => {
+    setShowClearConfirm(false);
+    onClear();
+  };
+
+  const handleCancelClear = () => {
+    setShowClearConfirm(false);
+  };
 
   return (
     <div
@@ -123,7 +138,7 @@ const AnalysisCard: React.FC<AnalysisCardProps> = ({
                 )}
               </button>
               <button
-                onClick={onClear}
+                onClick={handleClearClick}
                 className="flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                 title={t('Clear and rerun')}
               >
@@ -197,6 +212,18 @@ const AnalysisCard: React.FC<AnalysisCardProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showClearConfirm}
+        onConfirm={handleConfirmClear}
+        onCancel={handleCancelClear}
+        title={t('Clear all analysis?')}
+        message={t('This will remove all generated insights. You can regenerate them anytime.')}
+        confirmText={t('Clear')}
+        cancelText={t('Cancel')}
+        variant="warning"
+      />
     </div>
   );
 };
