@@ -322,14 +322,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       const data = await fetchPage(nextPage, true);
       if (data && data.length > 0) {
         setPage(nextPage);
-      } else {
-        // If no error occurred during fetch but result is empty,
-        // the database returned 0 results despite hasMore being true.
-        if (metricsRef.current.failedFetches === failuresBefore) {
-          setError(
-            new Error('Unable to load more comments. The database might be empty or out of sync.')
-          );
-        }
       }
     } catch (err) {
       logger.error(`${logPrefix} loadMore failed:`, err);
