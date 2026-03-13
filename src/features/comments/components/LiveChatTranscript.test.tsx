@@ -40,8 +40,34 @@ vi.mock('../../shared/components/DownloadAccordion', () => ({
 
 describe('LiveChatTranscript', () => {
   const mockMessages = [
-    { messageId: '1', author: 'User1', message: 'Hello', videoOffsetTimeSec: 10 },
-    { messageId: '2', author: 'User2', message: 'World', videoOffsetTimeSec: 20 },
+    {
+      messageId: '1',
+      videoId: 'video-1',
+      author: 'User1',
+      authorChannelId: 'channel-1',
+      authorAvatarUrl: '',
+      isAuthorContentCreator: false,
+      message: 'Hello',
+      timestampUsec: '10000000',
+      timestampMs: 10000,
+      publishedDate: 10000,
+      published: '2026-03-13T12:00:10.000Z',
+      videoOffsetTimeSec: 10,
+    },
+    {
+      messageId: '2',
+      videoId: 'video-1',
+      author: 'User2',
+      authorChannelId: 'channel-2',
+      authorAvatarUrl: '',
+      isAuthorContentCreator: false,
+      message: 'World',
+      timestampUsec: '20000000',
+      timestampMs: 20000,
+      publishedDate: 20000,
+      published: '2026-03-13T12:00:20.000Z',
+      videoOffsetTimeSec: 20,
+    },
   ];
 
   it('renders loading state when empty and loading', () => {

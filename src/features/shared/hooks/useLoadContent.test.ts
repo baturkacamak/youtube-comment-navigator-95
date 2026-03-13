@@ -1,7 +1,6 @@
 import { renderHook, act } from '@testing-library/react-hooks';
 import useLoadContent from './useLoadContent';
 import { useDispatch } from 'react-redux';
-import { useToast } from '../contexts/ToastContext';
 import { fetchAndProcessLiveChat } from '../../comments/services/liveChat/fetchLiveChat';
 import {
   hasLiveChatMessages,
@@ -14,10 +13,6 @@ import { setLiveChatError, setLiveChatLoading } from '../../../store/store';
 // Mock dependencies
 vi.mock('react-redux', () => ({
   useDispatch: vi.fn(),
-}));
-
-vi.mock('../contexts/ToastContext', () => ({
-  useToast: vi.fn(),
 }));
 
 vi.mock('../../comments/services/remote/remoteFetch', () => ({
@@ -59,12 +54,10 @@ vi.mock('../../comments/services/liveChat/liveChatErrorHandler', () => ({
 
 describe('useLoadContent', () => {
   const mockDispatch = vi.fn();
-  const mockShowToast = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
     (useDispatch as any).mockReturnValue(mockDispatch);
-    (useToast as any).mockReturnValue({ showToast: mockShowToast });
     (extractVideoId as any).mockReturnValue('test-video-id');
   });
 
@@ -120,7 +113,7 @@ describe('useLoadContent', () => {
       expect(fetchAndProcessLiveChat).toHaveBeenCalled();
     });
 
-    it('handles errors and shows toast', async () => {
+    it('handles errors and sets error state', async () => {
       (hasLiveChatMessages as any).mockResolvedValue(false);
       (fetchAndProcessLiveChat as any).mockRejectedValue(new Error('Network Error'));
 
@@ -131,12 +124,6 @@ describe('useLoadContent', () => {
       });
 
       expect(mockDispatch).toHaveBeenCalledWith(setLiveChatError('Network Error'));
-      expect(mockShowToast).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'error',
-          message: 'Live Chat Error',
-        })
-      );
       expect(mockDispatch).toHaveBeenCalledWith(setLiveChatLoading(false));
     });
   });

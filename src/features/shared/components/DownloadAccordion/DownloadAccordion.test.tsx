@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import DownloadAccordion from './DownloadAccordion';
 import { executeDownload } from './downloadUtils';
-import { useToast } from '../../contexts/ToastContext';
+import logger from '../../utils/logger';
 
 // Mock dependencies
 vi.mock('react-i18next', () => ({
@@ -15,10 +15,6 @@ vi.mock('react-i18next', () => ({
 vi.mock('./downloadUtils', () => ({
   executeDownload: vi.fn(),
   generateFileName: vi.fn().mockReturnValue('test-file'),
-}));
-
-vi.mock('../../contexts/ToastContext', () => ({
-  useToast: vi.fn(),
 }));
 
 vi.mock('../Collapsible', () => ({
@@ -43,12 +39,9 @@ vi.mock('../../utils/logger', () => ({
 }));
 
 describe('DownloadAccordion', () => {
-  const mockShowToast = vi.fn();
-
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    (useToast as any).mockReturnValue({ showToast: mockShowToast });
   });
 
   it('renders download button correctly', () => {
@@ -160,12 +153,6 @@ describe('DownloadAccordion', () => {
       );
     });
 
-    expect(mockShowToast).toHaveBeenCalledWith(
-      expect.objectContaining({
-        type: 'success',
-        message: expect.stringContaining('Exported 1 comments'),
-      })
-    );
   });
 
   it('handles async allData retrieval', async () => {
@@ -193,7 +180,7 @@ describe('DownloadAccordion', () => {
     expect(executeDownload).toHaveBeenCalledWith(mockAllData, 'json', 'test-file', undefined);
   });
 
-  it('shows error toast when data is empty', async () => {
+  it('allows exporting empty data without crashing', async () => {
     render(
       <DownloadAccordion
         contentType="comments"
@@ -208,18 +195,11 @@ describe('DownloadAccordion', () => {
     fireEvent.click(downloadBtn);
 
     await waitFor(() => {
-      expect(mockShowToast).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'error',
-          message: 'No data to export',
-        })
-      );
+      expect(executeDownload).toHaveBeenCalledWith([], 'json', 'test-file', undefined);
     });
-
-    expect(executeDownload).not.toHaveBeenCalled();
   });
 
-  it('shows error toast when download fails', async () => {
+  it('logs when download fails', async () => {
     (executeDownload as any).mockImplementation(() => {
       throw new Error('Download failed');
     });
@@ -233,12 +213,7 @@ describe('DownloadAccordion', () => {
     fireEvent.click(downloadBtn);
 
     await waitFor(() => {
-      expect(mockShowToast).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'error',
-          message: 'Download failed',
-        })
-      );
+      expect((logger as any).error).toHaveBeenCalled();
     });
   });
 });
