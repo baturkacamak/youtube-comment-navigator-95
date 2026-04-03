@@ -3,7 +3,6 @@
 import { CACHE_KEYS } from '../../../shared/utils/appConstants';
 import { db } from '../../../shared/utils/database/database';
 import { Comment } from '../../../../types/commentTypes';
-import logger from '../../../shared/utils/logger';
 import { dbEvents } from '../../../shared/utils/database/dbEvents';
 
 export const extractVideoId = (): string => {
@@ -14,7 +13,6 @@ export const extractVideoId = (): string => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('v') ?? '';
   } catch (error) {
-    logger.error('Failed to extract video ID:', error);
     return '';
   }
 };
@@ -23,7 +21,6 @@ export const storeContinuationToken = async (videoId: string, token: string): Pr
   try {
     await db.setItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId), token);
   } catch (error) {
-    logger.error('Failed to store continuation token:', error);
   }
 };
 
@@ -31,7 +28,6 @@ export const getContinuationToken = async (videoId: string): Promise<string | nu
   try {
     return await db.getItem<string>(CACHE_KEYS.CONTINUATION_TOKEN(videoId));
   } catch (error) {
-    logger.error('Failed to retrieve continuation token:', error);
     return null;
   }
 };
@@ -40,7 +36,6 @@ export const clearContinuationToken = async (videoId: string): Promise<void> => 
   try {
     await db.removeItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId));
   } catch (error) {
-    logger.error('Failed to clear continuation token:', error);
   }
 };
 
@@ -48,7 +43,6 @@ export const getCachedComments = async (videoId: string): Promise<Comment[] | nu
   try {
     return await db.comments.where('videoId').equals(videoId).toArray();
   } catch (error) {
-    logger.error('Failed to fetch cached comments:', error);
     return null;
   }
 };
@@ -60,7 +54,6 @@ export const deleteCommentsFromDb = async (videoId: string): Promise<number> => 
     dbEvents.emitCommentsDeleted(videoId, deleted);
     return deleted;
   } catch (error) {
-    logger.error('[Utils] Failed to delete existing comments:', error);
     return 0;
   }
 };

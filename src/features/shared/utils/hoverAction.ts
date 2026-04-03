@@ -1,4 +1,3 @@
-import logger from './logger';
 import { debounce } from './debounce';
 
 class cacheEntry {
@@ -100,7 +99,6 @@ class hoverAction {
 
     // --- Start Guard Clauses ---
     if (!options.element) {
-      logger.error(`[${this.eventNamePrefix}]`, 'No target element provided during construction.');
       // isInitialized remains false, other properties are left with initial defaults
       // Need to initialize properties dependent on others here to satisfy TS if we returned early
       this.focusDelay = this.hoverDelay; // Initialize dependent defaults even on error path
@@ -111,18 +109,12 @@ class hoverAction {
     this.element = options.element;
 
     if (this.element.hasAttribute(hoverAction.HOVER_ACTION_INITIALIZED_ATTR)) {
-      logger.warn(
-        `[${this.eventNamePrefix}]`,
-        'hoverAction already initialized on this element.',
-        this.element
-      );
       this.focusDelay = this.hoverDelay; // Initialize dependent defaults
       this.abortOnBlur = this.abortOnLeave;
       return;
     }
 
     if (!options.action || typeof options.action !== 'function') {
-      logger.error(`[${this.eventNamePrefix}]`, 'No valid action function provided.');
       this.focusDelay = this.hoverDelay; // Initialize dependent defaults
       this.abortOnBlur = this.abortOnLeave;
       return;
@@ -174,15 +166,10 @@ class hoverAction {
     }
     // Check cache before executing, similar to executeAction's internal check
     if (this.cacheEntry && !this.cacheEntry.isExpired()) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'execute() called, returning cached result.');
       if (this.onResult) this.onResult(this.cacheEntry.data); // Call onResult for consistency
       return Promise.resolve(this.cacheEntry.data);
     }
     if (this.executeOnlyOnce && this.actionExecuted && !this.cacheEntry) {
-      logger.debug(
-        `[${this.eventNamePrefix}]`,
-        'execute() called, returning previous non-cached result (executeOnlyOnce).'
-      );
       if (this.onResult) this.onResult(this.actionResult); // Call onResult for consistency
       return Promise.resolve(this.actionResult);
     }
@@ -193,18 +180,12 @@ class hoverAction {
   reset(clearCache = true): void {
     if (!this.isInitialized) return;
 
-    logger.debug(
-      `[${this.eventNamePrefix}]`,
-      'Resetting state',
-      clearCache ? 'with cache cleared.' : ', cache preserved.'
-    );
 
     this.actionExecuted = false;
     if (clearCache) {
       this.actionResult = undefined; // Reset to initial value
       this.cacheEntry = null;
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Cache cleared on reset.');
     }
     // Don't clear actionPromise here, abortAction handles ongoing promises.
 
@@ -283,7 +264,6 @@ class hoverAction {
         // { trailing: true, leading: false } // Example options object - uncomment/adjust if supported
       );
 
-      logger.debug(`[${this.eventNamePrefix}]`, `Debounce mode enabled with delay ${delay}ms`);
     }
 
     // Add event listeners
@@ -301,7 +281,6 @@ class hoverAction {
       this.element.addEventListener('touchcancel', this.handleTouchEnd);
       this.element.addEventListener('touchmove', this.handleTouchMove, { passive: true });
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Touch support enabled');
     }
   }
 
@@ -309,17 +288,14 @@ class hoverAction {
   private handleMouseEnter(): void {
     if (!this.isInitialized || this.isTouchDevice) return; // Avoid ghost mouse events on touch
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Mouse enter');
     this.initiateActionTrigger('hover');
   }
 
   private handleMouseLeave(): void {
     if (!this.isInitialized) return;
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Mouse leave');
     this.cancelActionTrigger('hover');
     if (this.abortOnLeave && this.isLoading) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Aborting action due to mouseleave');
       this.abortAction('mouseleave');
     }
   }
@@ -327,38 +303,32 @@ class hoverAction {
   private handleFocus(): void {
     if (!this.isInitialized) return;
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Focus gained');
     this.initiateActionTrigger('focus');
   }
 
   private handleBlur(e: FocusEvent): void {
     if (!this.isInitialized) return;
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Focus lost');
     this.cancelActionTrigger('focus');
 
     // Check if focus moved outside the element before aborting
     const relatedTarget = e.relatedTarget as Element | null;
     if (!this.element.contains(relatedTarget)) {
       if (this.abortOnBlur && this.isLoading) {
-        logger.debug(`[${this.eventNamePrefix}]`, 'Aborting action due to blur');
         this.abortAction('blur');
       }
     } else {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Blur ignored, focus moved within element.');
     }
   }
 
   private handleClick(e: MouseEvent): void {
     if (!this.isInitialized) return;
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Click detected');
 
     this.clearTimers(); // Cancel any pending delayed actions
 
     // If debouncing, flush any pending action immediately on click
     if (this.triggerMode === 'debounce' && this.debouncedExecuteAction?.flush) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Flushing debounced action on click.');
       this.debouncedExecuteAction.flush();
       // After flushing, the action might now be running or completed. The logic below handles it.
     }
@@ -367,23 +337,13 @@ class hoverAction {
     if (this.isLoading && this.actionPromise) {
       // Action is currently running, wait for it to finish then call onClick
 
-      logger.debug(
-        `[${this.eventNamePrefix}]`,
-        'Click occurred while loading, awaiting result for onClick.'
-      );
       this.actionPromise
         .then((result) => this.handleClickWithResult(result, e))
         .catch((err) => {
           // Avoid calling onClick if action was aborted, unless desired
           if (!(err instanceof DOMException && err.name === 'AbortError')) {
-            (logger.warn as any)(
-              `[${this.eventNamePrefix}]`,
-              'Action failed before onClick call.',
-              err
-            );
             this.handleClickWithResult(undefined, e); // Call with undefined on error
           } else {
-            logger.debug(`[${this.eventNamePrefix}]`, 'Action aborted, onClick skipped.');
           }
         });
     } else if (this.actionExecuted) {
@@ -395,17 +355,14 @@ class hoverAction {
         resultToUse = this.cacheEntry.data;
         source = 'valid cache';
 
-        logger.debug(`[${this.eventNamePrefix}]`, `Click using ${source}.`);
         this.handleClickWithResult(resultToUse, e);
       } else if (this.cacheEntry && this.cacheEntry.isExpired()) {
         source = 'expired cache';
 
-        logger.debug(`[${this.eventNamePrefix}]`, `Click with ${source}, re-executing action.`);
         this.executeAction() // Re-execute on click if cache expired
           .then((result) => this.handleClickWithResult(result, e))
           .catch((err) => {
             if (!(err instanceof DOMException && err.name === 'AbortError')) {
-              (logger.warn as any)(`[${this.eventNamePrefix}]`, 'Re-executed action failed.', err);
               this.handleClickWithResult(undefined, e);
             }
           });
@@ -414,22 +371,15 @@ class hoverAction {
         resultToUse = this.actionResult;
         source = 'previous result (no cache or executeOnlyOnce)';
 
-        logger.debug(`[${this.eventNamePrefix}]`, `Click using ${source}.`);
         this.handleClickWithResult(resultToUse, e);
       }
     } else {
       // Action has not been triggered yet, execute it now on click
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Action not yet run, executing on click.');
       this.executeAction()
         .then((result) => this.handleClickWithResult(result, e))
         .catch((err) => {
           if (!(err instanceof DOMException && err.name === 'AbortError')) {
-            (logger.warn as any)(
-              `[${this.eventNamePrefix}]`,
-              'Action triggered by click failed.',
-              err
-            );
             this.handleClickWithResult(undefined, e);
           }
         });
@@ -453,35 +403,20 @@ class hoverAction {
       this.touchStartY = e.touches[0].clientY;
 
       if (this.shouldExecute()) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          `Touch start, setting timer for ${this.touchDelay}ms`
-        );
         this.touchTimer = setTimeout(() => {
-          logger.debug(`[${this.eventNamePrefix}]`, 'Touch timer expired.');
           // Check if touch hasn't been cancelled (e.g., by move)
           if (this.touchStartX !== null) {
-            logger.debug(`[${this.eventNamePrefix}]`, 'Executing action from touch timer.');
             this.executeAction();
           } else {
-            logger.debug(
-              `[${this.eventNamePrefix}]`,
-              'Touch timer expired, but touch already cancelled.'
-            );
           }
           this.touchTimer = null; // Timer fulfilled or irrelevant
         }, this.touchDelay);
       } else {
-        logger.debug(`[${this.eventNamePrefix}]`, 'Touch start, shouldExecute returned false.');
         // If cached, could potentially call onClick here or wait for touchend/click
       }
     } else {
       // Multi-touch detected, cancel any pending touch timer
 
-      logger.debug(
-        `[${this.eventNamePrefix}]`,
-        'Multi-touch start, cancelling timer and ignoring.'
-      );
       this.clearTouchTimer();
       this.touchStartX = null; // Reset touch tracking
       this.touchStartY = null;
@@ -491,7 +426,6 @@ class hoverAction {
   private handleTouchEnd(_e: TouchEvent): void {
     if (!this.isInitialized || !this.supportTouch) return;
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Touch end/cancel.');
     this.clearTouchTimer(); // Clear timer if touch ends before firing
 
     // Reset touch start coordinates
@@ -512,10 +446,6 @@ class hoverAction {
       const dx = e.touches[0].clientX - this.touchStartX;
       const dy = e.touches[0].clientY - this.touchStartY;
       if (Math.sqrt(dx * dx + dy * dy) > this.touchMoveThreshold) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          'Touch move exceeded threshold, cancelling timer.'
-        );
         this.clearTouchTimer();
         // Reset coordinates as the touch hold is broken
         this.touchStartX = null;
@@ -528,7 +458,6 @@ class hoverAction {
   private initiateActionTrigger(type: 'hover' | 'focus'): void {
     const delay = type === 'focus' ? this.focusDelay : this.hoverDelay;
 
-    logger.debug(`[${this.eventNamePrefix}]`, `Initiating trigger: ${type}, delay: ${delay}ms`);
 
     // Cancel timers for other interaction types
     if (type === 'hover') this.clearFocusTimer();
@@ -536,26 +465,19 @@ class hoverAction {
     // Do not clear touch timer from hover/focus events
 
     if (!this.shouldExecute()) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Trigger skipped (shouldExecute is false).');
       // If there's a valid result already (cached or from executeOnlyOnce),
       // call onResult immediately to provide feedback.
       const result = this.getCachedOrExecutedResult();
       if (result !== undefined && this.onResult) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          'Calling onResult immediately with existing data.'
-        );
         try {
           this.onResult(result.data);
         } catch (err) {
-          logger.error(`Error in onResult`, err);
         }
       }
       return;
     }
 
     if (this.triggerMode === 'debounce') {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Calling debounced executeAction.');
       // Check debouncedExecuteAction exists before calling
       if (this.debouncedExecuteAction) {
         this.debouncedExecuteAction();
@@ -566,9 +488,7 @@ class hoverAction {
       if (type === 'hover') this.clearHoverTimer();
       if (type === 'focus') this.clearFocusTimer();
 
-      logger.debug(`[${this.eventNamePrefix}]`, `Setting ${type} timer.`);
       const timerId = setTimeout(() => {
-        logger.debug(`[${this.eventNamePrefix}]`, `${type} timer expired, executing action.`);
         this.executeAction();
         // Clear the timer variable once it has executed its action
         if (type === 'focus') this.focusTimer = null;
@@ -582,9 +502,7 @@ class hoverAction {
   }
 
   private cancelActionTrigger(type: 'hover' | 'focus'): void {
-    logger.debug(`[${this.eventNamePrefix}]`, `Cancelling trigger: ${type}`);
     if (this.triggerMode === 'debounce') {
-      logger.debug(`[${this.eventNamePrefix}]`, 'Cancelling debounced action.');
       // FIX: Explicitly check if cancel method exists before calling
       if (this.debouncedExecuteAction && typeof this.debouncedExecuteAction.cancel === 'function') {
         this.debouncedExecuteAction.cancel();
@@ -609,7 +527,6 @@ class hoverAction {
       clearTimeout(this.hoverTimer);
       this.hoverTimer = null;
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Cleared hover timer.');
     }
   }
   private clearFocusTimer(): void {
@@ -617,7 +534,6 @@ class hoverAction {
       clearTimeout(this.focusTimer);
       this.focusTimer = null;
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Cleared focus timer.');
     }
   }
   private clearTouchTimer(): void {
@@ -625,7 +541,6 @@ class hoverAction {
       clearTimeout(this.touchTimer);
       this.touchTimer = null;
 
-      logger.debug(`[${this.eventNamePrefix}]`, 'Cleared touch timer.');
     }
   }
 
@@ -635,37 +550,23 @@ class hoverAction {
     if (!this.isInitialized) return false;
 
     if (this.isLoading) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'shouldExecute: false (already loading)');
       return false;
     }
 
     if (this.executeOnlyOnce && this.actionExecuted) {
       if (this.cacheEntry && !this.cacheEntry.isExpired()) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          'shouldExecute: false (executeOnlyOnce, valid cache)'
-        );
         return false; // Already executed, valid cache exists
       }
       if (this.cacheEntry && this.cacheEntry.isExpired()) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          'shouldExecute: true (executeOnlyOnce, cache expired)'
-        );
         return true; // Cache expired, allow re-execution
       }
       if (!this.cacheEntry) {
-        logger.debug(
-          `[${this.eventNamePrefix}]`,
-          'shouldExecute: false (executeOnlyOnce, no cache)'
-        );
         return false; // Already executed, no cache configured
       }
     }
 
     // Default case: okay to execute
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'shouldExecute: true');
     return true;
   }
 
@@ -683,7 +584,6 @@ class hoverAction {
   // Aborts the currently running action, if any
   private abortAction(reason: string = 'unknown'): void {
     if (this.abortController && this.isLoading) {
-      logger.debug(`[${this.eventNamePrefix}]`, `Aborting action. Reason: ${reason}`);
       // Pass a reason; AbortSignal standard uses DOMException
       const abortReason = new DOMException(`Action aborted: ${reason}`, 'AbortError');
       this.abortController.abort(abortReason);
@@ -699,10 +599,6 @@ class hoverAction {
 
     // Final check before execution starts
     if (this.isLoading) {
-      logger.debug(
-        `[${this.eventNamePrefix}]`,
-        'executeAction called while loading, returning existing promise.'
-      );
       // Should always have an actionPromise if isLoading is true
       return (
         this.actionPromise ??
@@ -717,16 +613,11 @@ class hoverAction {
     // Check for existing valid results again (cache or executeOnlyOnce)
     const existingResult = this.getCachedOrExecutedResult();
     if (existingResult) {
-      logger.debug(
-        `[${this.eventNamePrefix}]`,
-        `executeAction returning data from ${existingResult.source}.`
-      );
       if (this.onResult) {
         // Ensure onResult is called even when returning cached data
         try {
           this.onResult(existingResult.data);
         } catch (err) {
-          logger.error('Error in onResult', err);
         }
       }
       return Promise.resolve(existingResult.data);
@@ -734,11 +625,9 @@ class hoverAction {
 
     // Clear expired cache entry if present
     if (this.cacheEntry && this.cacheEntry.isExpired()) {
-      logger.debug(`[${this.eventNamePrefix}]`, 'executeAction proceeding, cache expired.');
       this.cacheEntry = null;
     }
 
-    logger.debug(`[${this.eventNamePrefix}]`, 'Executing action function...');
     this.setLoading(true);
     this.abortController = new AbortController(); // New controller for this run
 
@@ -750,7 +639,6 @@ class hoverAction {
         try {
           this.onProgress(progress);
         } catch (err) {
-          (logger.error as any)(`[${this.eventNamePrefix}]`, 'Error in onProgress callback:', err);
         }
       }
     };
@@ -761,15 +649,10 @@ class hoverAction {
       .then((result) => {
         // Check if aborted *during* the action's async execution
         if (signal.aborted) {
-          logger.debug(
-            `[${this.eventNamePrefix}]`,
-            'Action resolved but was aborted before result processing.'
-          );
           // Throw standard AbortError for consistent catch handling
           throw signal.reason ?? new DOMException('Aborted', 'AbortError');
         }
 
-        logger.debug(`[${this.eventNamePrefix}]`, 'Action executed successfully.', result);
         this.actionResult = result;
         this.actionExecuted = true;
 
@@ -778,7 +661,6 @@ class hoverAction {
           // Allow 0 TTL for session cache maybe?
           this.cacheEntry = new cacheEntry(result, this.cacheTTL);
 
-          logger.debug(`[${this.eventNamePrefix}]`, `Result cached with TTL: ${this.cacheTTL}ms`);
         }
 
         // === Success State Update ===
@@ -791,7 +673,6 @@ class hoverAction {
           try {
             this.onResult(result);
           } catch (err) {
-            logger.error('Error in onResult', err);
           }
         }
         this.dispatchEvent('result', { result });
@@ -802,9 +683,7 @@ class hoverAction {
         const isAbort = err instanceof DOMException && err.name === 'AbortError';
 
         if (isAbort) {
-          logger.debug(`[${this.eventNamePrefix}]`, 'Action aborted.');
         } else {
-          (logger.warn as any)(`[${this.eventNamePrefix}]`, 'Action execution failed.', err);
         }
 
         // === Error/Abort State Update ===
@@ -819,10 +698,8 @@ class hoverAction {
 
         // Trigger events
         if (isAbort) {
-          logger.debug(`[${this.eventNamePrefix}]`, 'Action aborted.');
           this.dispatchEvent('aborted', { reason: signal.reason });
         } else {
-          (logger.error as any)(`[${this.eventNamePrefix}]`, 'Action encountered an error:', err);
           this.dispatchEvent('error', { error: err });
         }
 
@@ -840,7 +717,6 @@ class hoverAction {
     if (this.isLoading === isLoading || !this.isInitialized) return;
     this.isLoading = isLoading;
 
-    logger.debug(`[${this.eventNamePrefix}]`, `Setting loading state: ${isLoading}`);
     if (this.element) {
       // Check element exists
       if (this.loadingClass) {
@@ -855,12 +731,10 @@ class hoverAction {
   // Wrapper for the onClick callback with error handling
 
   private handleClickWithResult(result: any, _e: Event): void {
-    logger.debug(`[${this.eventNamePrefix}]`, 'Calling onClick callback.');
     if (this.onClick) {
       try {
         this.onClick(result, _e);
       } catch {
-        (logger.error as any)(`[${this.eventNamePrefix}]`, 'Error in onClick callback:');
       }
     }
     this.dispatchEvent('clickProcessed', { result, originalEvent: _e });

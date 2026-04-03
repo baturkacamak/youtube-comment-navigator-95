@@ -6,7 +6,6 @@ import { Comment } from '../../../types/commentTypes';
 import { FilterState } from '../../../types/filterTypes';
 import { loadPagedComments, countComments } from '../services/pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
-import logger from '../../shared/utils/logger';
 import { dbEvents } from '../../shared/utils/database/dbEvents';
 import { throttle } from '../../shared/utils/debounce';
 
@@ -150,7 +149,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         return count;
       } catch (err) {
         const error = err instanceof Error ? err : new Error(String(err));
-        logger.error(`${logPrefix} Count query failed:`, error);
         setError(error);
         return 0;
       }
@@ -182,7 +180,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
       try {
         if (debug) {
-          logger.debug(`${logPrefix} fetchPage calling loadPagedComments`, { pageNum, pageSize });
         }
         const data = await loadPagedComments(
           db.comments,
@@ -197,7 +194,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         );
 
         if (debug) {
-          logger.debug(`${logPrefix} fetchPage received data`, { count: data.length });
         }
 
         const duration = performance.now() - startTime;
@@ -214,7 +210,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
       } catch (err) {
         const fetchError = err instanceof Error ? err : new Error(String(err));
         metricsRef.current.failedFetches++;
-        logger.error(`${logPrefix} Page fetch failed:`, fetchError);
         setError(fetchError);
         return [];
       }
@@ -254,7 +249,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
 
     fetchPage(0, false)
       .catch((err) => {
-        logger.error(`${logPrefix} Initial load failed:`, err);
       })
       .finally(() => {
         setIsLoading(false);
@@ -341,7 +335,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
         setPage(nextPage);
       }
     } catch (err) {
-      logger.error(`${logPrefix} loadMore failed:`, err);
       setError(err instanceof Error ? err : new Error(String(err)));
     } finally {
       setLoadingMore(false);
@@ -362,7 +355,6 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     try {
       await fetchPage(0, false);
     } catch (err) {
-      logger.error(`${logPrefix} Refresh failed:`, err);
     } finally {
       setIsLoading(false);
     }
@@ -441,7 +433,6 @@ export const useLiveCommentCount = (
               }
           );
         } catch (err) {
-          logger.error('[useLiveCommentCount] Count query failed:', err);
           return 0;
         }
       },
@@ -486,7 +477,6 @@ export const useTotalUnfilteredCount = (videoId: string | null): number => {
         try {
           return await db.comments.where('videoId').equals(videoId).count();
         } catch (err) {
-          logger.error('[useTotalUnfilteredCount] Error:', err);
           return 0;
         }
       },

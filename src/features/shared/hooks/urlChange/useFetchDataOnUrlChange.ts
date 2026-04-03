@@ -10,14 +10,10 @@ import {
   setLiveChatLoading,
   setBookmarkedLiveChatMessages,
 } from '../../../../store/store';
-import {
-  fetchCaptionTrackBaseUrl,
-  fetchTranscriptFromRemote,
-} from '../../../transcripts/services/remoteFetch';
+import { fetchTranscript } from '../../../transcripts/services/fetchTranscript';
 import { fetchAndProcessLiveChat } from '../../../comments/services/liveChat/fetchLiveChat';
 import { extractVideoId } from '../../../comments/services/remote/utils';
 import { db } from '../../utils/database/database';
-import logger from '../../utils/logger';
 import { seedMockData } from '../../utils/mockDataSeeder';
 import { isLocalEnvironment } from '../../utils/appConstants';
 import {
@@ -40,17 +36,12 @@ const useFetchDataOnUrlChange = () => {
   const { showToast } = useToast();
 
   useDetectUrlChange(async () => {
-    logger.info('[useFetchDataOnUrlChange] URL Change Detected');
     dispatch(resetState());
 
     const isLocal = isLocalEnvironment();
     const hostname = window.location.hostname;
-    logger.info(
-      `[useFetchDataOnUrlChange] Environment check: isLocal=${isLocal}, hostname=${hostname}`
-    );
 
     if (isLocal && (hostname === 'localhost' || hostname === '127.0.0.1')) {
-      logger.info('[useFetchDataOnUrlChange] Triggering Mock Data Seeder');
       await seedMockData(dispatch);
       return;
     }
@@ -94,13 +85,10 @@ const fetchAndSetTranscripts = async (
   showToast: (toast: Omit<Toast, 'id'>) => void
 ) => {
   try {
-    const captionTrackBaseUrl = await fetchCaptionTrackBaseUrl();
-    if (captionTrackBaseUrl) {
-      const transcriptData = await fetchTranscriptFromRemote(captionTrackBaseUrl);
-      if (transcriptData) {
-        dispatch(setTranscripts(transcriptData.items));
-        dispatch(setFilteredTranscripts(transcriptData.items));
-      }
+    const transcriptData = await fetchTranscript();
+    if (transcriptData) {
+      dispatch(setTranscripts(transcriptData.items));
+      dispatch(setFilteredTranscripts(transcriptData.items));
     }
   } catch (error: any) {
     if (shouldShowTranscriptErrorToast(error)) {
@@ -122,7 +110,6 @@ const fetchAndSetLiveChat = async (
 ) => {
   const videoId = extractVideoId();
   if (!videoId) {
-    logger.debug('[useFetchDataOnUrlChange] No videoId found for live chat');
     return;
   }
 
@@ -131,9 +118,6 @@ const fetchAndSetLiveChat = async (
     const existingMessages = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
     if (existingMessages > 0) {
-      logger.info(
-        `[useFetchDataOnUrlChange] Live chat already exists (${existingMessages} messages), skipping fetch`
-      );
       return;
     }
 
@@ -143,11 +127,9 @@ const fetchAndSetLiveChat = async (
 
     fetchAndProcessLiveChat(videoId, window, controller.signal)
       .then(() => {
-        logger.success('[useFetchDataOnUrlChange] Live chat loaded successfully');
       })
       .catch((error: any) => {
         if (error.name !== 'AbortError') {
-          logger.error('[useFetchDataOnUrlChange] Failed to load live chat:', error);
 
           if (shouldShowLiveChatErrorToast(error)) {
             const message = getLiveChatFetchErrorMessage(error);
@@ -165,7 +147,6 @@ const fetchAndSetLiveChat = async (
         dispatch(setLiveChatLoading(false));
       });
   } catch (error: any) {
-    logger.error('[useFetchDataOnUrlChange] Error checking for live chat:', error);
   }
 };
 

@@ -1,6 +1,5 @@
 import { db } from './database/database';
 import { Comment } from '../../../types/commentTypes';
-import logger from './logger';
 import mockCommentsData from '../../../comments.json';
 import {
   setComments,
@@ -17,7 +16,6 @@ import { loadPagedComments, countComments } from '../../comments/services/pagina
 const MOCK_VIDEO_ID = 'mock-video-id';
 
 export const seedMockData = async (dispatch: any) => {
-  logger.info('[MockDataSeeder] Starting mock data seeding...');
   dispatch(setIsLoading(true));
 
   try {
@@ -27,11 +25,7 @@ export const seedMockData = async (dispatch: any) => {
 
     if (existingCount === 0 || existingCount !== jsonCount) {
       if (existingCount === 0) {
-        logger.info('[MockDataSeeder] No existing mock data found. Seeding from JSON...');
       } else {
-        logger.info(
-          `[MockDataSeeder] Data mismatch (DB: ${existingCount}, JSON: ${jsonCount}). Re-seeding...`
-        );
         await db.comments.where('videoId').equals(MOCK_VIDEO_ID).delete();
       }
 
@@ -67,13 +61,7 @@ export const seedMockData = async (dispatch: any) => {
 
       // Bulk add to IndexedDB for performance
       await db.comments.bulkAdd(commentsToInsert);
-      logger.success(
-        `[MockDataSeeder] Successfully seeded ${commentsToInsert.length} mock comments.`
-      );
     } else {
-      logger.info(
-        `[MockDataSeeder] Mock data is up to date (${existingCount} comments). Skipping seed.`
-      );
     }
 
     // Now load the initial page of comments from the DB, just like the real app does
@@ -131,9 +119,7 @@ export const seedMockData = async (dispatch: any) => {
     dispatch(setLiveChat(mockLiveChat));
     dispatch(setLiveChatMessageCount(20));
 
-    logger.success('[MockDataSeeder] Mock data loaded to state and DB.');
   } catch (error) {
-    logger.error('[MockDataSeeder] Failed to seed mock data:', error);
   } finally {
     dispatch(setIsLoading(false));
   }

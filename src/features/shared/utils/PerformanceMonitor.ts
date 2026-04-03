@@ -1,4 +1,3 @@
-import logger from './logger';
 
 export interface PerformanceMetric {
   label: string;
@@ -17,7 +16,6 @@ class PerformanceMonitor {
   start(label: string) {
     this.activeTimers.set(label, performance.now());
     // Also use the main logger for immediate visibility
-    logger.start(label);
   }
 
   /**
@@ -36,11 +34,9 @@ class PerformanceMonitor {
       this.activeTimers.delete(label);
 
       // Log explicitly for the user to see "The Numbers"
-      logger.info(`[PERFORMANCE] ⏱️ ${label}: ${duration.toFixed(2)}ms`, metadata || '');
 
       // Also call logger.end for consistency if it was tracking it
       // (Note: logger.end calculates its own duration, but that's fine)
-      // logger.end(label);
     }
   }
 
@@ -51,7 +47,6 @@ class PerformanceMonitor {
     if ((performance as any).memory) {
       const memory = (performance as any).memory;
       const usedMB = (memory.usedJSHeapSize / 1024 / 1024).toFixed(2);
-      logger.info(`[PERFORMANCE] 💾 ${label} - Heap: ${usedMB} MB`);
     }
   }
 

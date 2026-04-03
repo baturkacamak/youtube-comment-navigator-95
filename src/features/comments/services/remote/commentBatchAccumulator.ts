@@ -7,7 +7,6 @@
 
 import { db } from '../../../shared/utils/database/database';
 import { dbEvents } from '../../../shared/utils/database/dbEvents';
-import logger from '../../../shared/utils/logger';
 
 /** Default batch size for flushing comments to IndexedDB */
 const DEFAULT_BATCH_SIZE = 500;
@@ -40,7 +39,6 @@ function getAccumulator(videoId: string, isFresh: boolean = false): AccumulatorS
       totalFlushed: 0,
     };
     accumulators.set(videoId, acc);
-    logger.debug(`[BatchAccumulator] Created accumulator for video ${videoId} (fresh: ${isFresh})`);
   }
   return acc;
 }
@@ -71,9 +69,6 @@ async function upsertCommentsBatch(comments: any[], skipLookup: boolean = false)
       if (error.name !== 'BulkError') {
         throw error;
       }
-      logger.warn(
-        `[BatchAccumulator] bulkAdd had ${error.failures?.length || 'some'} duplicates, falling back to upsert`
-      );
     }
   }
 
@@ -119,14 +114,10 @@ export async function accumulateComments(
   const acc = getAccumulator(videoId, isFresh);
   acc.buffer.push(...comments);
 
-  logger.debug(
-    `[BatchAccumulator] Added ${comments.length} comments to buffer. Total buffered: ${acc.buffer.length}`
-  );
 
   // IMMEDIATE FLUSH: Show first batch immediately so users don't stare at empty screen
   // This ensures good UX while still batching subsequent fetches for performance
   if (acc.totalFlushed === 0) {
-    logger.debug(`[BatchAccumulator] First batch - flushing immediately for instant display`);
     return await flushAccumulator(videoId);
   }
 
@@ -158,7 +149,6 @@ export async function flushAccumulator(
   const count = commentsToFlush.length;
   acc.buffer = [];
 
-  logger.debug(`[BatchAccumulator] Flushing ${count} comments to IndexedDB for video ${videoId}`);
 
   try {
     await db.transaction('rw', db.comments, async () => {
@@ -170,9 +160,6 @@ export async function flushAccumulator(
     // After first flush, no longer fresh
     acc.isFresh = false;
 
-    logger.success(
-      `[BatchAccumulator] Flushed ${count} comments. Total flushed: ${acc.totalFlushed}`
-    );
 
     // Emit events for UI updates
     if (emitEvents) {
@@ -187,7 +174,6 @@ export async function flushAccumulator(
   } catch (error) {
     // On error, restore the buffer
     acc.buffer = [...commentsToFlush, ...acc.buffer];
-    logger.error(`[BatchAccumulator] Failed to flush comments:`, error);
     throw error;
   }
 }
@@ -226,7 +212,6 @@ export async function clearAccumulator(videoId: string, flush: boolean = true): 
     await flushAccumulator(videoId);
   }
   accumulators.delete(videoId);
-  logger.debug(`[BatchAccumulator] Cleared accumulator for video ${videoId}`);
 }
 
 /**
@@ -237,12 +222,9 @@ export async function clearAccumulator(videoId: string, flush: boolean = true): 
 export async function clearAllAccumulators(flush: boolean = true): Promise<void> {
   if (flush) {
     const flushPromises = Array.from(accumulators.keys()).map((videoId) =>
-      flushAccumulator(videoId).catch((err) =>
-        logger.error(`[BatchAccumulator] Error flushing ${videoId}:`, err)
-      )
+      flushAccumulator(videoId)
     );
     await Promise.all(flushPromises);
   }
   accumulators.clear();
-  logger.debug('[BatchAccumulator] Cleared all accumulators');
 }

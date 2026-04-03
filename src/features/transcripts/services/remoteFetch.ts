@@ -2,8 +2,92 @@
 import { ProcessedTranscript, processTranscriptData } from '../utils/processTranscriptData';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { youtubeApi } from '../../shared/services/youtubeApi';
-import logger from '../../shared/utils/logger';
 import httpService from '../../shared/services/httpService';
+
+interface TranscriptRequestOptions {
+  language?: string;
+  potToken?: string;
+}
+
+interface TranscriptRequestVariant {
+  label: string;
+  url: string;
+}
+
+const sanitizeTranscriptUrlForLog = (url: string): string => {
+  try {
+    const urlObj = new URL(url);
+    if (urlObj.searchParams.has('pot')) {
+      const pot = urlObj.searchParams.get('pot') || '';
+      urlObj.searchParams.set('pot', `${pot.slice(0, 8)}...`);
+    }
+    if (urlObj.searchParams.has('signature')) {
+      const signature = urlObj.searchParams.get('signature') || '';
+      urlObj.searchParams.set('signature', `${signature.slice(0, 12)}...`);
+    }
+    return urlObj.toString();
+  } catch {
+    return url;
+  }
+};
+
+export const buildTranscriptRequestUrl = (
+  url: string,
+  { language, potToken }: TranscriptRequestOptions = {}
+): string => {
+  const urlObj = new URL(url);
+  urlObj.searchParams.set('fmt', 'json3');
+  urlObj.searchParams.set('c', 'WEB');
+
+  if (language) {
+    const baseLanguage = urlObj.searchParams.get('lang');
+    if (baseLanguage !== language) {
+      urlObj.searchParams.set('tlang', language);
+    } else {
+      urlObj.searchParams.delete('tlang');
+    }
+  } else {
+    urlObj.searchParams.delete('tlang');
+  }
+
+  if (potToken) {
+    urlObj.searchParams.set('pot', potToken);
+    urlObj.searchParams.set('potc', '1');
+  }
+
+  return urlObj.toString();
+};
+
+const buildTranscriptRequestVariants = (
+  url: string,
+  { language, potToken }: TranscriptRequestOptions = {}
+): TranscriptRequestVariant[] => {
+  const variants: TranscriptRequestVariant[] = [];
+  const seen = new Set<string>();
+
+  const pushVariant = (label: string, value: string) => {
+    if (!seen.has(value)) {
+      seen.add(value);
+      variants.push({ label, url: value });
+    }
+  };
+
+  pushVariant('json3-with-pot', buildTranscriptRequestUrl(url, { language, potToken }));
+
+  const jsonOnlyUrl = new URL(url);
+  jsonOnlyUrl.searchParams.set('fmt', 'json3');
+  if (language) {
+    const baseLanguage = jsonOnlyUrl.searchParams.get('lang');
+    if (baseLanguage !== language) {
+      jsonOnlyUrl.searchParams.set('tlang', language);
+    }
+  }
+  pushVariant('json3-no-pot', jsonOnlyUrl.toString());
+
+  pushVariant('raw-base-url', url);
+
+  return variants;
+};
 
 /**
  * Fetches a transcript from a remote URL.
@@ -16,54 +100,55 @@ export async function fetchTranscriptFromRemote(
   language?: string
 ): Promise<ProcessedTranscript> {
   try {
-    logger.debug('Fetching transcript from remote URL:', url);
-    logger.debug('Language:', language);
-    const urlObj = new URL(url);
-    urlObj.searchParams.set('fmt', 'json3');
-    urlObj.searchParams.set('c', 'WEB');
+    if (!url) {
+      throw new Error('Transcript base URL not found.');
+    }
 
     // 1. Try to get the intercepted POT token first (most reliable)
     // Wait up to 3 seconds for the injected script to find it
     let potToken = await youtubeApi.waitForPotToken(3000);
 
     if (potToken) {
-      logger.debug('Using intercepted POT token:', potToken);
-      urlObj.searchParams.set('pot', potToken);
-      urlObj.searchParams.set('potc', '1');
     } else {
       // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
-      logger.warn(
-        'Intercepted POT token not available after wait. Attempting to fetch from player API...'
-      );
       try {
         const playerResponse = await youtubeApi.fetchPlayer();
         potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
 
         if (potToken) {
-          logger.debug('Found POT token from manual player fetch:', potToken);
-          urlObj.searchParams.set('pot', potToken);
-          urlObj.searchParams.set('potc', '1');
         } else {
-          logger.warn('POT token not found in manual player response either.', playerResponse);
         }
       } catch (e) {
-        logger.error('Error fetching player response for POT token:', e);
       }
     }
 
-    const finalUrl = urlObj.toString();
-    logger.debug('Fetching transcript from URL:', finalUrl);
+    const variants = buildTranscriptRequestVariants(url, { language, potToken });
 
-    const response = await httpService.get(finalUrl);
-    const data = JSON.parse(response);
+    let response = '';
+    let data: any = null;
+    let lastError: unknown = null;
+
+    for (const variant of variants) {
+      try {
+
+        response = await youtubeApi.fetchTimedText(variant.url);
+
+        data = JSON.parse(response);
+        break;
+      } catch (error) {
+        lastError = error;
+      }
+    }
+
+    if (!data) {
+      throw (lastError instanceof Error ? lastError : new Error(String(lastError)));
+    }
+
 
     // Assuming the response is the raw transcript data that needs processing
-    return processTranscriptData(data);
+    const processed = processTranscriptData(data);
+    return processed;
   } catch (error) {
-    logger.error('Failed to fetch transcript from remote:', {
-      url,
-      error: error instanceof Error ? error.message : String(error),
-    });
     throw error;
   }
 }
@@ -89,7 +174,6 @@ export async function fetchCaptionTracks(url: string): Promise<string> {
     // The response is a string that needs to be parsed to find the captionTracks JSON
     const captionTracksJson = response.split('"captionTracks":')[1];
     if (!captionTracksJson) {
-      logger.warn('Could not find captionTracks in the response.', { url });
       throw new Error('Caption tracks not found in the response.');
     }
 
@@ -99,14 +183,9 @@ export async function fetchCaptionTracks(url: string): Promise<string> {
     if (captionTracks.captionTracks?.[0]?.baseUrl) {
       return captionTracks.captionTracks[0].baseUrl;
     } else {
-      logger.warn('Base URL for transcript not found in caption tracks.', { url });
       throw new Error('Transcript base URL not found.');
     }
   } catch (error) {
-    logger.error('Failed to fetch or parse caption tracks:', {
-      url,
-      error: error instanceof Error ? error.message : String(error),
-    });
     throw error;
   }
 }
@@ -117,10 +196,19 @@ export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
 
     // Use the new YouTube API service to fetch player data
     const data = await youtubeApi.fetchPlayer(videoId);
+    const captionTracks =
+      data?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
+    const audioTracks = data?.captions?.playerCaptionsTracklistRenderer?.audioTracks || [];
+    const translatedLanguages =
+      data?.captions?.playerCaptionsTracklistRenderer?.translationLanguages || [];
 
-    return data?.captions?.playerCaptionsTracklistRenderer?.captionTracks[0]?.baseUrl || null;
+
+    const baseUrl = captionTracks[0]?.baseUrl || null;
+    if (!baseUrl) {
+    }
+
+    return baseUrl;
   } catch (error) {
-    logger.error('Failed to fetch video details:', error);
     return null;
   }
 };
@@ -140,7 +228,6 @@ export const fetchVideoDetails = async (): Promise<{ title: string; channel: str
         if (!snippet) return null;
         return {title: snippet.title, channel: snippet.channelTitle};
     } catch (error) {
-        logger.error("Failed to fetch video details:", error);
         return null;
     }
 };

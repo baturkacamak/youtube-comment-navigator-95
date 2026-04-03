@@ -26,7 +26,6 @@
  * ```
  */
 
-import logger from '../logger';
 
 export type DBEventType =
   | 'comments:added'
@@ -92,7 +91,6 @@ class DatabaseEventEmitter {
   private readonly logPrefix = '[DBEvents]';
 
   constructor() {
-    logger.debug(`${this.logPrefix} DatabaseEventEmitter initialized`);
   }
 
   /**
@@ -100,7 +98,6 @@ class DatabaseEventEmitter {
    */
   setDebugMode(enabled: boolean): void {
     this.debugMode = enabled;
-    logger.info(`${this.logPrefix} Debug mode ${enabled ? 'enabled' : 'disabled'}`);
   }
 
   /**
@@ -119,37 +116,27 @@ class DatabaseEventEmitter {
    */
   on(type: DBEventType, handler: DBEventHandler): () => void {
     if (!type) {
-      logger.error(`${this.logPrefix} on() called with invalid type:`, type);
       throw new Error('Event type is required');
     }
 
     if (typeof handler !== 'function') {
-      logger.error(`${this.logPrefix} on() called with non-function handler`);
       throw new Error('Handler must be a function');
     }
 
     if (!this.handlers.has(type)) {
       this.handlers.set(type, new Set());
-      logger.debug(`${this.logPrefix} Created handler set for event type: ${type}`);
     }
 
     this.handlers.get(type)!.add(handler);
 
     const handlerCount = this.handlers.get(type)!.size;
-    logger.debug(`${this.logPrefix} Handler registered for "${type}" (total: ${handlerCount})`);
 
     // Return unsubscribe function
     return () => {
       const deleted = this.handlers.get(type)?.delete(handler);
       if (deleted) {
         const remaining = this.handlers.get(type)?.size ?? 0;
-        logger.debug(
-          `${this.logPrefix} Handler unsubscribed from "${type}" (remaining: ${remaining})`
-        );
       } else {
-        logger.warn(
-          `${this.logPrefix} Attempted to unsubscribe non-existent handler from "${type}"`
-        );
       }
     };
   }
@@ -162,21 +149,15 @@ class DatabaseEventEmitter {
    */
   onAll(handler: DBEventHandler): () => void {
     if (typeof handler !== 'function') {
-      logger.error(`${this.logPrefix} onAll() called with non-function handler`);
       throw new Error('Handler must be a function');
     }
 
     this.allHandlers.add(handler);
-    logger.debug(`${this.logPrefix} Global handler registered (total: ${this.allHandlers.size})`);
 
     return () => {
       const deleted = this.allHandlers.delete(handler);
       if (deleted) {
-        logger.debug(
-          `${this.logPrefix} Global handler unsubscribed (remaining: ${this.allHandlers.size})`
-        );
       } else {
-        logger.warn(`${this.logPrefix} Attempted to unsubscribe non-existent global handler`);
       }
     };
   }
@@ -195,7 +176,6 @@ class DatabaseEventEmitter {
     };
 
     const unsubscribe = this.on(type, wrappedHandler);
-    logger.debug(`${this.logPrefix} One-time handler registered for "${type}"`);
 
     return unsubscribe;
   }
@@ -210,12 +190,10 @@ class DatabaseEventEmitter {
     const startTime = performance.now();
 
     if (!type) {
-      logger.error(`${this.logPrefix} emit() called with invalid type`);
       return;
     }
 
     if (!data.videoId) {
-      logger.warn(`${this.logPrefix} emit() called without videoId for type: ${type}`);
     }
 
     const event: DBEvent = {
@@ -230,12 +208,6 @@ class DatabaseEventEmitter {
     this.stats.lastEventTimestamp = event.timestamp;
 
     if (this.debugMode) {
-      logger.debug(`${this.logPrefix} Emitting event: ${type}`, {
-        videoId: event.videoId,
-        count: event.count,
-        commentIdsCount: event.commentIds?.length,
-        metadata: event.metadata,
-      });
     }
 
     let handlersNotified = 0;
@@ -253,11 +225,6 @@ class DatabaseEventEmitter {
           this.stats.totalHandlerErrors++;
           const errorMessage = error instanceof Error ? error.message : String(error);
           const errorStack = error instanceof Error ? error.stack : undefined;
-          logger.error(`${this.logPrefix} Error in handler for "${type}"`, {
-            error: errorMessage,
-            stack: errorStack,
-            videoId: event.videoId,
-          });
         }
       });
     }
@@ -273,11 +240,6 @@ class DatabaseEventEmitter {
           this.stats.totalHandlerErrors++;
           const errorMessage = error instanceof Error ? error.message : String(error);
           const errorStack = error instanceof Error ? error.stack : undefined;
-          logger.error(`${this.logPrefix} Error in global handler for "${type}"`, {
-            error: errorMessage,
-            stack: errorStack,
-            videoId: event.videoId,
-          });
         }
       });
     }
@@ -292,23 +254,11 @@ class DatabaseEventEmitter {
       this.handlerTimes.reduce((a, b) => a + b, 0) / this.handlerTimes.length;
 
     if (handlersNotified === 0) {
-      logger.debug(`${this.logPrefix} Event "${type}" emitted but no handlers registered`);
     } else if (this.debugMode) {
-      logger.debug(
-        `${this.logPrefix} Event "${type}" delivered to ${handlersNotified} handlers in ${duration.toFixed(2)}ms`,
-        {
-          errorsOccurred,
-        }
-      );
     }
 
     // Log warning if handlers are slow
     if (duration > 100) {
-      logger.warn(`${this.logPrefix} Slow event handling detected`, {
-        type,
-        duration: `${duration.toFixed(2)}ms`,
-        handlersNotified,
-      });
     }
   }
 
@@ -317,18 +267,11 @@ class DatabaseEventEmitter {
    */
   emitCommentsAdded(videoId: string, count: number, commentIds?: string[]): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitCommentsAdded called without videoId`);
       return;
     }
     if (count < 0) {
-      logger.warn(`${this.logPrefix} emitCommentsAdded called with negative count: ${count}`);
     }
 
-    logger.debug(`${this.logPrefix} Comments added`, {
-      videoId,
-      count,
-      commentIdsCount: commentIds?.length,
-    });
     this.emit('comments:added', { videoId, count, commentIds });
   }
 
@@ -337,15 +280,9 @@ class DatabaseEventEmitter {
    */
   emitCommentsUpdated(videoId: string, count: number, commentIds?: string[]): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitCommentsUpdated called without videoId`);
       return;
     }
 
-    logger.debug(`${this.logPrefix} Comments updated`, {
-      videoId,
-      count,
-      commentIdsCount: commentIds?.length,
-    });
     this.emit('comments:updated', { videoId, count, commentIds });
   }
 
@@ -354,15 +291,9 @@ class DatabaseEventEmitter {
    */
   emitCommentsDeleted(videoId: string, count: number, commentIds?: string[]): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitCommentsDeleted called without videoId`);
       return;
     }
 
-    logger.debug(`${this.logPrefix} Comments deleted`, {
-      videoId,
-      count,
-      commentIdsCount: commentIds?.length,
-    });
     this.emit('comments:deleted', { videoId, count, commentIds });
   }
 
@@ -371,18 +302,11 @@ class DatabaseEventEmitter {
    */
   emitRepliesAdded(videoId: string, count: number, commentIds?: string[]): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitRepliesAdded called without videoId`);
       return;
     }
     if (count < 0) {
-      logger.warn(`${this.logPrefix} emitRepliesAdded called with negative count: ${count}`);
     }
 
-    logger.debug(`${this.logPrefix} Replies added`, {
-      videoId,
-      count,
-      commentIdsCount: commentIds?.length,
-    });
     this.emit('replies:added', { videoId, count, commentIds });
   }
 
@@ -391,11 +315,9 @@ class DatabaseEventEmitter {
    */
   emitBulkCommentsAdded(videoId: string, count: number): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitBulkCommentsAdded called without videoId`);
       return;
     }
 
-    logger.debug(`${this.logPrefix} Bulk comments added`, { videoId, count });
     this.emit('comments:bulk-add', { videoId, count });
   }
 
@@ -404,11 +326,9 @@ class DatabaseEventEmitter {
    */
   emitLiveChatAdded(videoId: string, count: number): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitLiveChatAdded called without videoId`);
       return;
     }
 
-    logger.debug(`${this.logPrefix} Live chat messages added`, { videoId, count });
     this.emit('livechat:added', { videoId, count });
   }
 
@@ -417,14 +337,11 @@ class DatabaseEventEmitter {
    */
   emitCountUpdated(videoId: string, count: number): void {
     if (!videoId) {
-      logger.error(`${this.logPrefix} emitCountUpdated called without videoId`);
       return;
     }
     if (count < 0) {
-      logger.warn(`${this.logPrefix} emitCountUpdated called with negative count: ${count}`);
     }
 
-    logger.debug(`${this.logPrefix} Count updated`, { videoId, count });
     this.emit('count:updated', { videoId, count });
   }
 
@@ -432,12 +349,6 @@ class DatabaseEventEmitter {
    * Emit error event
    */
   emitError(videoId: string, error: Error, metadata?: Record<string, any>): void {
-    logger.error(`${this.logPrefix} Error event emitted`, {
-      videoId,
-      error: error.message,
-      stack: error.stack,
-      metadata,
-    });
 
     this.emit('error:occurred', {
       videoId,
@@ -496,7 +407,6 @@ class DatabaseEventEmitter {
     this.handlers.clear();
     this.allHandlers.clear();
 
-    logger.info(`${this.logPrefix} All handlers cleared (removed: ${totalHandlers})`);
   }
 
   /**
@@ -511,7 +421,6 @@ class DatabaseEventEmitter {
       averageHandlerTime: 0,
     };
     this.handlerTimes = [];
-    logger.debug(`${this.logPrefix} Statistics reset`);
   }
 }
 

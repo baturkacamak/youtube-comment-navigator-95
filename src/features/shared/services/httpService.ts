@@ -1,4 +1,3 @@
-import logger from '../utils/logger';
 
 // Define necessary types locally for self-containment
 export type RequestHeaders = Record<string, string>;
@@ -44,85 +43,38 @@ class HttpService {
     let lastError: any = null;
     const requestId = Math.random().toString(36).substr(2, 9);
 
-    logger.debug('Starting HTTP request', {
-      requestId,
-      method,
-      url: url.length > 100 ? url.substring(0, 100) + '...' : url,
-      hasData: !!data,
-      headerCount: Object.keys(headers).length,
-    });
 
     // 1. Try using the modern Fetch API first
     if (typeof fetch === 'function') {
       try {
-        logger.debug('Using Fetch API for request', { method, url, requestId });
         const result = await this.makeFetchRequest(method, url, data, browserHeaders, credentials);
-        logger.debug('Request completed successfully via fetch', { requestId });
         return result;
       } catch (error) {
         lastError = error;
         if (this.isDefinitiveHttpError(error)) {
           const statusCode = error instanceof HttpError ? error.statusCode : 'unknown';
-          logger.warn('HTTP request failed with client error status, no fallback.', {
-            requestId,
-            method,
-            url,
-            statusCode,
-            error: error instanceof Error ? error.message : 'Unknown error',
-          });
           throw error;
         }
-        logger.error('Fetch request failed, attempting XMLHttpRequest fallback', {
-          requestId,
-          method,
-          url,
-          error: error instanceof Error ? error.message : String(error),
-        });
       }
     } else {
-      logger.warn('Fetch API not available, attempting XMLHttpRequest.', {
-        requestId,
-        method,
-        url,
-      });
     }
 
     // 2. Fall back to XMLHttpRequest
     if (typeof XMLHttpRequest === 'function') {
       try {
-        logger.debug('Using XMLHttpRequest for request', { method, url, requestId });
         const result = await this.makeXHRRequest(method, url, data, browserHeaders, credentials);
-        logger.debug('Request completed successfully via XMLHttpRequest', { requestId });
         return result;
       } catch (error) {
         lastError = error;
-        logger.error('XMLHttpRequest failed, no more fallbacks.', {
-          requestId,
-          method,
-          url,
-          error: error instanceof Error ? error.message : String(error),
-        });
       }
     } else {
-      logger.warn('XMLHttpRequest not available.', { requestId, method, url });
     }
 
     // If we've exhausted all methods, throw the last received error.
     if (lastError) {
-      logger.error('All HTTP methods failed for request', {
-        requestId,
-        method,
-        url,
-        lastError: lastError instanceof Error ? lastError.message : String(lastError),
-      });
       throw lastError;
     }
 
-    logger.error('No suitable request method available in this environment.', {
-      requestId,
-      method,
-      url,
-    });
     throw new HttpError('No suitable request method available', 0);
   }
 
@@ -187,12 +139,6 @@ class HttpService {
 
       response = await fetch(url, options);
     } catch (error) {
-      logger.error('Network error during fetch request', {
-        method,
-        url,
-        errorMessage: error instanceof Error ? error.message : String(error),
-        possibleCauses: ['CORS restrictions', 'Network connectivity issue', 'DNS failure'],
-      });
       throw new HttpError(
         `Fetch request failed: ${error instanceof Error ? error.message : String(error)}`,
         0,
@@ -201,12 +147,6 @@ class HttpService {
     }
 
     if (!response.ok) {
-      logger.warn('Request failed with non-OK status', {
-        method,
-        url,
-        status: response.status,
-        statusText: response.statusText,
-      });
       throw new HttpError(
         `Request failed with status: ${response.status} ${response.statusText}`,
         response.status,
@@ -217,12 +157,6 @@ class HttpService {
     try {
       return await response.text();
     } catch (error) {
-      logger.error('Failed to read response body', {
-        method,
-        url,
-        status: response.status,
-        error: error instanceof Error ? error.message : String(error),
-      });
       throw new HttpError(
         `Failed to read response: ${error instanceof Error ? error.message : String(error)}`,
         response.status,
@@ -266,21 +200,10 @@ class HttpService {
       };
 
       xhr.onerror = () => {
-        logger.error('XMLHttpRequest network error', {
-          method,
-          url,
-          status: xhr.status,
-          possibleCauses: [
-            'CORS restrictions',
-            'Network connectivity issue',
-            'Request blocked by browser',
-          ],
-        });
         reject(new HttpError('Network error occurred', 0, xhr));
       };
 
       xhr.ontimeout = () => {
-        logger.warn('XMLHttpRequest timed out', { method, url, timeout: xhr.timeout });
         reject(new HttpError('Request timed out', 0, xhr));
       };
 
@@ -290,7 +213,6 @@ class HttpService {
         xhr.send(data);
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        logger.error('XMLHttpRequest send failed', { method, url, error: errorMessage });
         reject(new HttpError(`Error sending request: ${errorMessage}`, 0, error));
       }
     });
@@ -324,7 +246,6 @@ class HttpService {
       typeof TextDecoder === 'undefined' ||
       typeof ReadableStream === 'undefined'
     ) {
-      logger.warn('Streaming not supported, falling back to full download.', { url });
       const fullHtml = await this.get(url, headers, credentials);
       onChunk(fullHtml);
       return;
@@ -332,7 +253,6 @@ class HttpService {
 
     const browserHeaders = this.getRandomizedBrowserHeaders(headers);
     const requestId = Math.random().toString(36).substr(2, 9);
-    logger.debug('Starting HTTP stream request', { requestId, url });
 
     try {
       const controller = new AbortController();
@@ -364,14 +284,12 @@ class HttpService {
           if (buffer.length > 0) {
             onChunk(buffer);
           }
-          logger.debug('Stream finished', { requestId });
           break;
         }
 
         buffer += decoder.decode(value, { stream: true });
         if (onChunk(buffer)) {
           // If callback returns true, abort the stream
-          logger.debug('Aborting stream as requested by callback', { requestId });
           if (reader) await reader.cancel();
           if (controller) controller.abort();
           break;
@@ -379,14 +297,8 @@ class HttpService {
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        logger.debug('Fetch aborted by stream consumer.', { requestId });
         return;
       }
-      logger.error('Stream request failed', {
-        requestId,
-        url,
-        error: error instanceof Error ? error.message : String(error),
-      });
       throw error;
     }
   }

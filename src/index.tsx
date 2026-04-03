@@ -9,7 +9,6 @@ import { getLanguageDirection } from './i18n';
 import i18n from './i18n';
 import store from './store/store'; // Import i18n to access the current language
 import reportWebVitals from './reportWebVitals';
-import logger from './features/shared/utils/logger';
 import { ToastProvider } from './features/shared/contexts/ToastContext';
 import ToastContainer from './features/shared/components/ToastContainer';
 
@@ -90,7 +89,6 @@ if (rootElement) {
 
   // Conditionally import reportWebVitals
   if (!isLocalEnvironment()) {
-    reportWebVitals(logger.info);
   }
   const handleUrlChangeToNotAVideo = (event: { data: { type: string } }) => {
     if (event.data.type === 'STOP_VIDEO_NAVIGATION') {
@@ -103,5 +101,4 @@ if (rootElement) {
     window.removeEventListener('message', handleUrlChangeToNotAVideo);
   });
 } else {
-  logger.error("Root element 'youtube-comment-navigator-app' not found");
 }

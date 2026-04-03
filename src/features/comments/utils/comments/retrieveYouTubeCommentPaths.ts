@@ -1,5 +1,4 @@
 import { transformCommentsData } from './transformCommentsData';
-import logger from '../../../shared/utils/logger';
 
 export const getCommentsFromData = (data: any) => {
   return data.frameworkUpdates?.entityBatchUpdate?.mutations || [];
@@ -34,7 +33,6 @@ const findMutationValue = (entityKey: string, path: string[], allComments: any[]
       return '';
     }, mutation?.payload);
   } catch (e) {
-    logger.warn(`Failed to find mutation value for ${entityKey}:`, e);
     return '';
   }
 };
@@ -104,7 +102,6 @@ export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
         const payload = comment.payload?.commentEntityPayload;
         const isPinned = payload?.pinnedState === 'COMMENT_PINNED_STATE_PINNED';
         if (isPinned) {
-          logger.info(`Skipping pinned comment with id: ${payload?.id}`);
         }
         return payload && !isPinned;
       })
@@ -113,11 +110,9 @@ export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
     const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
     const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
 
-    logger.debug(`Processed ${commentsWithAdditionalInfo.length} comments for video ${videoId}`);
 
     return { items: commentsWithAdditionalInfo };
   } catch (error) {
-    logger.error('Error processing raw JSON comments data:', error);
     return { items: [] };
   }
 };

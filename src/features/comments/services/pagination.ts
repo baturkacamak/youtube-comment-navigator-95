@@ -2,7 +2,6 @@
 import { Comment } from '../../../types/commentTypes';
 import Dexie from 'dexie';
 import { PAGINATION } from '../../shared/utils/appConstants';
-import logger from '../../shared/utils/logger';
 
 interface RangeFilter {
   min?: number | string;
@@ -225,25 +224,14 @@ export const loadPagedComments = async (
     .toString(36)
     .substr(2, 5)}`;
   const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
-  logger.start(timerId);
 
   if (!videoId) {
-    logger.error(`${logPrefix} - Validation Error: videoId is required.`);
-    logger.end(timerId);
     return [];
   }
   if (typeof page !== 'number' || page < 0) {
-    logger.error(
-      `${logPrefix} - Validation Error: Invalid page number '${page}'. Must be a non-negative number.`
-    );
-    logger.end(timerId);
     return [];
   }
   if (typeof pageSize !== 'number' || pageSize <= 0) {
-    logger.error(
-      `${logPrefix} - Validation Error: Invalid pageSize '${pageSize}'. Must be a positive number.`
-    );
-    logger.end(timerId);
     return [];
   }
 
@@ -258,7 +246,6 @@ export const loadPagedComments = async (
     };
 
     const queryTimer = `${timerId}-querySetup`;
-    logger.start(queryTimer);
     let collection: Dexie.Collection<Comment, number>;
     switch (sortBy) {
       case 'date':
@@ -305,10 +292,8 @@ export const loadPagedComments = async (
         collection = commentsTable
           .where(buildIndexKey('publishedDate'))
           .between(bounds.lower, bounds.upper, true, true);
-        logger.warn(`${logPrefix} Unknown sortBy: '${sortBy}', defaulting to 'date'.`);
         break;
     }
-    logger.end(queryTimer);
 
     // Apply filters/search only when needed to avoid full scans on default filter objects.
     let filteredCollection = collection;
@@ -319,11 +304,9 @@ export const loadPagedComments = async (
       options.onlyLiveChat
     ) {
       const filterTimer = `${timerId}-applyingFiltersAndSearch`;
-      logger.start(filterTimer);
       filteredCollection = collection.filter((comment) =>
         applyFiltersAndSearch(comment, filters, searchKeyword, options)
       );
-      logger.end(filterTimer);
     }
 
     // Apply reverse before pagination for index-based sorts (excluding author/random).
@@ -332,9 +315,7 @@ export const loadPagedComments = async (
     }
 
     const arrayTimer = `${timerId}-toArray`;
-    logger.start(arrayTimer);
     const pagedComments = await filteredCollection.offset(offset).limit(pageSize).toArray();
-    logger.end(arrayTimer);
 
     if (sortBy === 'author') {
       pagedComments.sort((a, b) => {
@@ -344,9 +325,7 @@ export const loadPagedComments = async (
     }
 
     if (sortBy === 'random') {
-      logger.warn(`${logPrefix} Random sort: loading filtered comments for shuffle.`);
       const scanTimer = `${timerId}-randomShuffle`;
-      logger.start(scanTimer);
 
       let allTopLevelCollection = commentsTable
         .where(buildIndexKey('publishedDate'))
@@ -364,16 +343,13 @@ export const loadPagedComments = async (
         [allTopLevel[i], allTopLevel[j]] = [allTopLevel[j], allTopLevel[i]];
       }
 
-      logger.end(scanTimer);
       return allTopLevel.slice(offset, offset + pageSize);
     }
 
     return pagedComments;
   } catch (error) {
-    logger.error(`${logPrefix} Error loading paged comments:`, error);
     return [];
   } finally {
-    logger.end(timerId);
   }
 };
 
@@ -393,7 +369,6 @@ export const loadAllComments = async (
   const logPrefix = `[loadAllComments] videoId: ${videoId}`;
 
   if (!videoId) {
-    logger.error(`${logPrefix} - Validation Error: videoId is required.`);
     return [];
   }
 
@@ -415,7 +390,6 @@ export const loadAllComments = async (
       options
     );
   } catch (error) {
-    logger.error(`${logPrefix} Error loading all comments:`, error);
     return [];
   }
 };
@@ -432,11 +406,8 @@ export const countComments = async (
 ): Promise<number> => {
   const timerId = `countComments-${videoId}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`;
   const logPrefix = `[countComments] video ${videoId}`;
-  logger.start(timerId);
 
   if (!videoId) {
-    logger.error(`${logPrefix} - Validation Error: videoId is required.`);
-    logger.end(timerId);
     return 0;
   }
 
@@ -464,10 +435,8 @@ export const countComments = async (
 
     return await baseCollection.count();
   } catch (error) {
-    logger.error(`${logPrefix} Error counting comments:`, error);
     return 0;
   } finally {
-    logger.end(timerId);
   }
 };
 
@@ -480,16 +449,11 @@ export const fetchRepliesForComment = async (
     .toString(36)
     .substr(2, 5)}`;
   const logPrefix = `[fetchRepliesForComment] videoId: ${videoId}, parentId: ${parentId}`;
-  logger.start(timerId);
 
   if (!videoId) {
-    logger.error(`${logPrefix} - Validation Error: videoId is required.`);
-    logger.end(timerId);
     return [];
   }
   if (!parentId) {
-    logger.error(`${logPrefix} - Validation Error: parentId is required.`);
-    logger.end(timerId);
     return [];
   }
 
@@ -505,21 +469,13 @@ export const fetchRepliesForComment = async (
       const expectedReplies = parentComment?.replyCount || 0;
 
       if (expectedReplies > 0) {
-        logger.warn(
-          `${logPrefix} No replies found in DB, but parent comment (replyCount: ${expectedReplies}) indicates replies should exist.`
-        );
       } else {
-        logger.info(
-          `${logPrefix} No replies found, and parent comment does not indicate any replies (or parent not found).`
-        );
       }
     }
 
     return replies;
   } catch (err) {
-    logger.error(`${logPrefix} Failed to fetch replies:`, err);
     return [];
   } finally {
-    logger.end(timerId);
   }
 };

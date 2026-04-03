@@ -1,5 +1,4 @@
 import { extractYouTubeVideoIdFromUrl } from '../utils/extractYouTubeVideoIdFromUrl';
-import logger from '../utils/logger';
 import { YOUTUBE_API_KEY, YOUTUBE_API_URL } from '../utils/appConstants';
 import httpService from './httpService';
 
@@ -65,7 +64,6 @@ export class YouTubeApiService {
       if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
         const token = event.data.token;
         this.capturedPotToken = token;
-        logger.debug('YouTubeApiService received POT token via message:', token);
         if (this.potTokenResolver) {
           this.potTokenResolver(token);
         }
@@ -90,13 +88,11 @@ export class YouTubeApiService {
       return this.capturedPotToken;
     }
 
-    logger.debug('Waiting for POT token... sending request to main world.');
     window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
 
     let timeoutHandle: NodeJS.Timeout;
     const timeoutPromise = new Promise<undefined>((resolve) => {
       timeoutHandle = setTimeout(() => {
-        logger.warn(`Timed out waiting for POT token after ${timeoutMs}ms`);
         resolve(undefined);
       }, timeoutMs);
     });
@@ -150,7 +146,6 @@ export class YouTubeApiService {
       }
       return undefined;
     } catch (error) {
-      logger.warn('Failed to read cookies for auth header:', error);
       return undefined;
     }
   }
@@ -163,7 +158,6 @@ export class YouTubeApiService {
         .map((value) => value.toString(16).padStart(2, '0'))
         .join('');
     } catch (error) {
-      logger.warn('Failed to compute SHA-1 hash:', error);
       return undefined;
     }
   }
@@ -239,14 +233,26 @@ export class YouTubeApiService {
         windowObj?.ytcfg?.INNERTUBE_API_KEY
       );
     } catch (error) {
-      logger.error('Failed to resolve Innertube API key:', error);
       return undefined;
     }
   }
 
   private getInnertubeClientContext(videoId?: string): any {
     const ytcfgData = this.getYtcfgData();
-    return ytcfgData?.INNERTUBE_CONTEXT?.client || this.getClientContext(videoId);
+    const innertubeClient = ytcfgData?.INNERTUBE_CONTEXT?.client;
+
+    if (innertubeClient) {
+      return {
+        ...innertubeClient,
+        originalUrl: window.location.href,
+        mainAppWebInfo: {
+          ...innertubeClient.mainAppWebInfo,
+          graftUrl: `/watch?v=${videoId || extractYouTubeVideoIdFromUrl()}`,
+        },
+      };
+    }
+
+    return this.getClientContext(videoId);
   }
 
   private getClientContext(videoId?: string, customContext?: Partial<ClientContext>): any {
@@ -317,7 +323,6 @@ export class YouTubeApiService {
     if (authHeader) {
       headers.Authorization = authHeader;
     } else {
-      logger.warn('SAPISID auth header not available. Some Innertube requests may fail.');
     }
 
     const normalizedHeaders: Record<string, string> = {};
@@ -328,6 +333,106 @@ export class YouTubeApiService {
     });
 
     return normalizedHeaders;
+  }
+
+  private getTimedTextRequestHeaders(): HeadersInit {
+    const ytcfgData = this.getYtcfgData();
+    const feedbackData = ytcfgData?.GOOGLE_FEEDBACK_PRODUCT_DATA;
+    const clientName = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || '1';
+    const clientVersion = ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || '2.20240620.05.00';
+
+    const headers: Record<string, string> = {
+      Accept: '*/*',
+      'Accept-Language': feedbackData?.accept_language || navigator.language,
+      'x-goog-visitor-id': ytcfgData?.VISITOR_DATA || '',
+      'x-youtube-identity-token': ytcfgData?.ID_TOKEN || '',
+      'x-youtube-client-name': clientName,
+      'x-youtube-client-version': clientVersion,
+      'x-youtube-page-cl': String(ytcfgData?.PAGE_CL || ''),
+      'x-youtube-page-label': ytcfgData?.PAGE_BUILD_LABEL || '',
+      'x-youtube-time-zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+      'x-youtube-utc-offset': String(new Date().getTimezoneOffset() * -1),
+      Origin: window.location.origin,
+    };
+
+    const normalizedHeaders: Record<string, string> = {};
+    Object.entries(headers).forEach(([key, value]) => {
+      if (value) {
+        normalizedHeaders[key] = value;
+      }
+    });
+
+    return normalizedHeaders;
+  }
+
+  private summarizePlayerResponse(response: any): Record<string, unknown> {
+    const playabilityStatus = response?.playabilityStatus;
+    const renderer =
+      playabilityStatus?.errorScreen?.playerErrorMessageRenderer ||
+      playabilityStatus?.errorScreen?.watchEndpointSupportedOnesieRenderer ||
+      null;
+
+    return {
+      playabilityStatus: playabilityStatus?.status || null,
+      reason: playabilityStatus?.reason || null,
+      subreason:
+        renderer?.subreason?.simpleText ||
+        renderer?.subreason?.runs?.map((run: any) => run?.text).join('') ||
+        null,
+      message:
+        renderer?.reason?.simpleText ||
+        renderer?.reason?.runs?.map((run: any) => run?.text).join('') ||
+        null,
+      errorScreenType: renderer ? Object.keys(playabilityStatus?.errorScreen || {}) : [],
+      hasCaptions: Boolean(response?.captions),
+      captionTrackCount:
+        response?.captions?.playerCaptionsTracklistRenderer?.captionTracks?.length || 0,
+      previewPlayability: playabilityStatus || null,
+    };
+  }
+
+  private async fetchViaMainWorld<T>(messageType: string, payload: Record<string, unknown>, timeoutMs: number = 10000): Promise<T> {
+    const requestId = `${messageType}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+    return new Promise<T>((resolve, reject) => {
+      let settled = false;
+
+      const cleanup = () => {
+        window.removeEventListener('message', handleMessage);
+        clearTimeout(timeoutHandle);
+      };
+
+      const finishResolve = (value: T) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve(value);
+      };
+
+      const finishReject = (error: Error) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        reject(error);
+      };
+
+      const expectedType =
+        messageType === 'YCN_REQUEST_TIMEDTEXT_FETCH' ? 'YCN_TIMEDTEXT_FETCH_RESULT' : '';
+
+      const handleMessage = (event: MessageEvent) => {
+        if (event.source !== window) return;
+        if (event.data?.type !== expectedType) return;
+        if (event.data?.requestId !== requestId) return;
+        finishResolve(event.data?.payload as T);
+      };
+
+      const timeoutHandle = window.setTimeout(() => {
+        finishReject(new Error(`Main world request timed out: ${messageType}`));
+      }, timeoutMs);
+
+      window.addEventListener('message', handleMessage);
+      window.postMessage({ type: messageType, requestId, ...payload }, '*');
+    });
   }
 
   public async fetchFromApi<T>({
@@ -362,14 +467,8 @@ export class YouTubeApiService {
         try {
           errorText = await response.text();
         } catch (readError) {
-          logger.warn('Failed to read error response body:', readError);
         }
 
-        logger.error(`YouTube API error response (${endpoint}):`, {
-          status: response.status,
-          statusText: response.statusText,
-          body: errorText,
-        });
 
         throw new Error(
           `YouTube API error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
@@ -378,7 +477,6 @@ export class YouTubeApiService {
 
       return (await response.json()) as T;
     } catch (error) {
-      logger.error(`Error fetching from YouTube API (${endpoint}):`, error);
       throw error;
     }
   }
@@ -390,27 +488,70 @@ export class YouTubeApiService {
       videoId = extractYouTubeVideoIdFromUrl();
     }
 
-    const clientContext = this.getClientContext(videoId);
+    const clientContext = this.getInnertubeClientContext(videoId);
+    const headers = (await this.getStandardRequestHeaders()) as Record<string, string>;
+    const requestBody = {
+      context: {
+        client: clientContext,
+      },
+      videoId,
+      playbackContext: {
+        contentPlaybackContext: {
+          currentUrl: `/watch?v=${videoId}`,
+        },
+      },
+    };
 
-    return this.fetchFromApi({
+
+    const response = await this.fetchFromApi({
       endpoint: 'player',
       queryParams: {
         prettyPrint: 'false',
         ycn: '95',
       },
-      body: {
-        context: {
-          client: clientContext,
-        },
-        videoId,
-        playbackContext: {
-          contentPlaybackContext: {
-            currentUrl: `/watch?v=${videoId}`,
-          },
-        },
-      },
+      body: requestBody,
       signal,
     });
+
+
+    return response;
+  }
+
+  public async fetchTimedText(url: string, signal?: AbortSignal): Promise<string> {
+    try {
+      const headers = this.getTimedTextRequestHeaders() as Record<string, string>;
+      if (signal?.aborted) {
+        throw new DOMException('The operation was aborted.', 'AbortError');
+      }
+
+      const response = await this.fetchViaMainWorld<{
+        ok: boolean;
+        status?: number;
+        statusText?: string;
+        body?: string;
+        error?: { name?: string; message?: string; stack?: string };
+      }>('YCN_REQUEST_TIMEDTEXT_FETCH', { url });
+
+
+      if (!response.ok) {
+        if (response.error) {
+          throw new Error(
+            `YouTube timedtext main world fetch failed: ${response.error.name || 'Error'} ${response.error.message || ''}`.trim()
+          );
+        }
+
+
+        throw new Error(
+          `YouTube timedtext error: ${response.status} ${response.statusText}${response.body ? ` - ${response.body}` : ''}`
+        );
+      }
+
+      const responseText = response.body || '';
+
+      return responseText;
+    } catch (error) {
+      throw error;
+    }
   }
 
   public async fetchNext(options: {
@@ -501,7 +642,6 @@ export class YouTubeApiService {
     const apiKey = this.getInnertubeApiKey();
 
     if (!apiKey) {
-      logger.error('Innertube API key not found. Live chat requests will fail.');
       throw new Error('Innertube API key not found');
     }
 
@@ -547,13 +687,10 @@ export class YouTubeApiService {
           channelTitle: snippet.channelTitle,
           publishedAt: snippet.publishedAt,
         };
-        logger.info('Fetched video details:', details);
         return details;
       }
-      logger.warn('No video details found for videoId:', videoId);
       return null;
     } catch (error) {
-      logger.error(`Failed to fetch video details for ID ${videoId}:`, error);
       return null;
     }
   }

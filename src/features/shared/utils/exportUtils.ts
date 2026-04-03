@@ -1,5 +1,4 @@
 import { Comment } from '../../../types/commentTypes';
-import logger from './logger';
 
 export const formatFileName = (extension: string, videoTitle: string): string => {
   const now = new Date();
@@ -21,7 +20,6 @@ export const exportJSON = async (comments: Comment[], fileName: string) => {
 
 export const exportCSV = async (comments: Comment[], fileName: string) => {
   if (!comments || comments.length === 0) {
-    logger.error('No comments to export');
     return;
   }
   const headers = Object.keys(comments[0]).join(',');

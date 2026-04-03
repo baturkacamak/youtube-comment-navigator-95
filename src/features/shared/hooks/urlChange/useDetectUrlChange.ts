@@ -3,7 +3,6 @@ import { extractYouTubeVideoIdFromUrl } from '../../utils/extractYouTubeVideoIdF
 import { setIsLoading } from '../../../../store/store';
 import { useDispatch } from 'react-redux';
 import useGlobalEventListener from '../useGlobalEventListener';
-import logger from '../../utils/logger';
 
 let previousVideoId: string | null = null;
 
@@ -22,12 +21,10 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
       if (hasVideoIdChanged(currentVideoId)) {
         previousVideoId = currentVideoId;
         await waitForVideoElement(currentVideoId);
-        logger.info('URL changed, executing callback...');
         dispatch(setIsLoading(true));
         await callback();
       }
     } catch (error) {
-      logger.error('Error handling URL change:', error);
     }
   };
 
@@ -38,7 +35,6 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
   const waitForVideoElement = (videoId: string | null): Promise<void> => {
     return new Promise<void>((resolve) => {
       if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        logger.info('Running on localhost, skipping video element check.');
         resolve();
         return;
       }
@@ -46,10 +42,8 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
       const checkVideoElement = () => {
         const videoElement = document.querySelector(`[video-id="${videoId}"]`);
         if (videoElement) {
-          logger.info('Video element found.');
           resolve();
         } else {
-          logger.info('Video element not yet available, retrying...');
           setTimeout(checkVideoElement, 500); // Retry after 500ms
         }
       };
@@ -60,7 +54,6 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
   useGlobalEventListener('message', handleUrlChangeMessage);
 
   useEffect(() => {
-    logger.info('useDetectUrlChange mounted, checking URL...');
     handleUrlChange();
   }, []);
 

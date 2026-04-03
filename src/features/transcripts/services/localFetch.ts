@@ -1,7 +1,6 @@
 // src/features/transcripts/services/localFetch.ts
 import { isLocalEnvironment } from '../../shared/utils/appConstants';
 import { ProcessedTranscript } from '../utils/processTranscriptData';
-import logger from '../../shared/utils/logger';
 import httpService from '../../shared/services/httpService';
 
 const transcriptFile = '/example-comments/transcript.json';
@@ -19,7 +18,6 @@ export const fetchTranscriptFromLocal = async (): Promise<ProcessedTranscript | 
     const data = await response.json();
     return data as ProcessedTranscript;
   } catch (error) {
-    logger.error('Failed to fetch transcript from local:', error);
     return null;
   }
 };

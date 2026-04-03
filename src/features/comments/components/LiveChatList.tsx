@@ -19,7 +19,6 @@ import {
   getLiveChatMessageCount,
 } from '../services/liveChat/liveChatDatabase';
 import LiveChatTranscript from './LiveChatTranscript';
-import logger from '../../shared/utils/logger';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 import { XCircleIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
@@ -60,7 +59,6 @@ const LiveChatList: React.FC = () => {
         })
         .join('\n');
     } catch (error) {
-      logger.error('[LiveChatList] Failed to fetch all messages:', error);
       return '';
     }
   };
@@ -70,7 +68,6 @@ const LiveChatList: React.FC = () => {
    */
   const fetchLiveChatFromDB = useCallback(async () => {
     if (!videoId) {
-      logger.warn('[LiveChatList] No videoId found');
       return;
     }
 
@@ -80,7 +77,6 @@ const LiveChatList: React.FC = () => {
 
     try {
       dispatch(setLiveChatLoading(true));
-      logger.debug(`[LiveChatList] Fetching messages from database (page ${page})`);
 
       const offset = page * pageSize;
       const messages = await loadLiveChatMessages(videoId, offset, pageSize);
@@ -99,9 +95,7 @@ const LiveChatList: React.FC = () => {
       const currentTotal = page * pageSize + messages.length;
       setHasMore(currentTotal < totalCount && messages.length === pageSize);
 
-      logger.success(`[LiveChatList] Loaded ${messages.length} messages (total: ${totalCount})`);
     } catch (error: any) {
-      logger.error('[LiveChatList] Failed to load messages from database:', error);
       dispatch(setLiveChatError(error.message || 'Failed to load live chat messages'));
     } finally {
       dispatch(setLiveChatLoading(false));
@@ -116,12 +110,9 @@ const LiveChatList: React.FC = () => {
       const player = document.querySelector('#movie_player') as any;
       if (player && typeof player.seekTo === 'function') {
         player.seekTo(timestampSeconds, true);
-        logger.info(`[LiveChatList] Seeked to ${timestampSeconds}s`);
       } else {
-        logger.warn('[LiveChatList] YouTube player not available');
       }
     } catch (error: any) {
-      logger.error('[LiveChatList] Failed to seek video:', error);
     }
   };
 
@@ -131,7 +122,6 @@ const LiveChatList: React.FC = () => {
   const handleLoadMore = () => {
     if (!hasMore || liveChatState.isLoading) return;
 
-    logger.info('[LiveChatList] Loading more messages');
     setPage((prevPage) => prevPage + 1);
   };
 
@@ -147,9 +137,7 @@ const LiveChatList: React.FC = () => {
 
   // Handle component mount logging
   useEffect(() => {
-    logger.info('[LiveChatList] Component mounted');
     return () => {
-      logger.info('[LiveChatList] Component unmounted');
     };
   }, []);
 

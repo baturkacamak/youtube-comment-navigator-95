@@ -12,7 +12,6 @@ import getFormattedDate from '../../settings/utils/getFormattedDate';
 import { BookmarkIcon } from '@heroicons/react/24/outline';
 import CommentNote from './CommentNote';
 import { fetchRepliesForComment } from '../services/pagination';
-import logger from '../../shared/utils/logger';
 import { Comment } from '../../../types/commentTypes';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { db } from '../../shared/utils/database/database';
@@ -65,7 +64,6 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
           setTimeout(() => setCopySuccess(false), 2000);
         },
         (err) => {
-          logger.error('Could not copy text: ', err);
         }
       );
     }, [comment.content]);
@@ -93,7 +91,6 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
           // Emit event that replies are loaded
           eventEmitter.emit(`replies-loaded-${comment.commentId}`, replies);
         } catch (error) {
-          logger.error(`[CommentItem ${comment.commentId}] Error fetching replies`, error);
           setFetchedReplies([]);
           setError(t('Failed to load replies. Please try again.'));
           eventEmitter.emit(`replies-loaded-${comment.commentId}`, []);

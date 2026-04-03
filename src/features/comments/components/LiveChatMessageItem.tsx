@@ -9,7 +9,6 @@ import { RootState } from '../../../types/rootState';
 import { LiveChatMessageItemProps } from '../../../types/liveChatTypes';
 import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 import { highlightText } from '../../shared/utils/highlightText';
-import logger from '../../shared/utils/logger';
 import { loadLiveChatReplies } from '../services/liveChat/liveChatDatabase';
 import { Comment } from '../../../types/commentTypes';
 import CommentReplies from './CommentReplies';
@@ -42,12 +41,9 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
       if (showReplies && message.hasReplies && replies.length === 0) {
         setIsLoadingReplies(true);
         try {
-          logger.info(`[LiveChatMessageItem] Loading replies for message ${message.messageId}`);
           const loadedReplies = await loadLiveChatReplies(message.messageId);
           setReplies(loadedReplies);
-          logger.success(`[LiveChatMessageItem] Loaded ${loadedReplies.length} replies`);
         } catch (error) {
-          logger.error('[LiveChatMessageItem] Failed to load replies:', error);
         } finally {
           setIsLoadingReplies(false);
         }

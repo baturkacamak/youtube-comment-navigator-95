@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { DocumentArrowDownIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { DownloadAccordionProps, DownloadFormat, DownloadScope, FORMAT_CONFIG } from './types';
 import { generateFileName, executeDownload } from './downloadUtils';
-import logger from '../../utils/logger';
 import Collapsible from '../Collapsible';
 import { useToast } from '../../contexts/ToastContext';
 
@@ -125,7 +124,6 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       // Auto-close panel after download
       setIsExpanded(false);
     } catch (error) {
-      logger.error('Download failed:', error);
 
       const errorMessage =
         error instanceof Error && error.message ? error.message : 'Export failed. Try again.';

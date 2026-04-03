@@ -4,7 +4,6 @@ import { processRawJsonCommentsData } from '../../utils/comments/retrieveYouTube
 import { extractContinuationToken } from './continuationTokenUtils';
 import { db } from '../../../shared/utils/database/database';
 import { dbEvents } from '../../../shared/utils/database/dbEvents';
-import logger from '../../../shared/utils/logger';
 import {
   accumulateComments,
   flushAccumulator,
@@ -63,7 +62,6 @@ export const flushBufferedComments = async (videoId: string): Promise<number> =>
   const flushed = await flushAccumulator(videoId);
   if (flushed > 0) {
     localCommentCount = await getExistingCommentCount(videoId);
-    logger.success(`Flushed ${flushed} buffered comments. Total count: ${localCommentCount}`);
   }
   return flushed;
 };
@@ -111,7 +109,6 @@ async function getExistingCommentCount(videoId: string): Promise<number> {
   try {
     return await db.comments.where('videoId').equals(videoId).count();
   } catch (error) {
-    logger.error('Failed to retrieve existing comment count:', error);
     return 0;
   }
 }
@@ -156,9 +153,6 @@ async function upsertComments(comments: any[], skipLookup: boolean = false) {
         performanceMonitor.end(`IndexedDB Upsert (${comments.length} items)`);
         throw error;
       }
-      logger.warn(
-        `[upsertComments] bulkAdd had ${error.failures?.length || 'some'} duplicates, falling back to upsert`
-      );
       // Fall through to the standard upsert path below
     }
   }
@@ -191,14 +185,12 @@ export const fetchAndProcessComments = async (
   signal: AbortSignal,
   dispatch?: any // Make dispatch optional to match signature if needed
 ): Promise<FetchAndProcessResult> => {
-  logger.start('fetchAndProcessComments');
   performanceMonitor.start('Total Fetch & Process Operation');
   performanceMonitor.measureMemory('Start Fetch');
 
   try {
     // Check if operation is already aborted before starting
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted before starting.');
       throw new DOMException('Fetch aborted', 'AbortError');
     }
 
@@ -209,9 +201,6 @@ export const fetchAndProcessComments = async (
     if (isFreshVideo) {
       markVideoAsFresh(videoId);
     }
-    logger.debug(
-      `Starting with existing comment count: ${localCommentCount} (fresh: ${isFreshVideo})`
-    );
 
     performanceMonitor.start('Network Fetch (Main)');
     const rawJsonData = await fetchCommentJsonDataFromRemote(token, windowObj, signal);
@@ -219,7 +208,6 @@ export const fetchAndProcessComments = async (
 
     // Check if operation was aborted during fetch
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted during data retrieval.');
       throw new DOMException('Fetch aborted', 'AbortError');
     }
 
@@ -237,7 +225,6 @@ export const fetchAndProcessComments = async (
 
     // Check if operation was aborted before database transaction
     if (signal.aborted) {
-      logger.info('Fetch operation was aborted before database transaction.');
       throw new DOMException('Fetch aborted', 'AbortError');
     }
 
@@ -260,9 +247,6 @@ export const fetchAndProcessComments = async (
 
       // Log buffering status
       const buffered = getBufferSize(videoId);
-      logger.debug(
-        `Buffered ${insertedCount} comments (total buffered: ${buffered}, flushed: ${flushed})`
-      );
     } else {
       // Direct mode: Write immediately to IndexedDB
       await db.transaction('rw', db.comments, async () => {
@@ -275,9 +259,6 @@ export const fetchAndProcessComments = async (
         clearFreshVideoMarker(videoId);
       }
 
-      logger.success(
-        `Inserted ${insertedCount} main comments into IndexedDB. Total count: ${localCommentCount}`
-      );
 
       // Emit database event for reactive UI updates
       if (insertedCount > 0) {
@@ -302,7 +283,6 @@ export const fetchAndProcessComments = async (
 
     performanceMonitor.measureMemory('End Fetch');
     performanceMonitor.end('Total Fetch & Process Operation');
-    logger.end('fetchAndProcessComments');
 
     return {
       processedData: mainProcessedData,
@@ -311,11 +291,8 @@ export const fetchAndProcessComments = async (
     };
   } catch (err) {
     if (err instanceof Error && err.name === 'AbortError') {
-      logger.info('Fetch operation was aborted.');
       throw err; // Re-throw AbortError to be caught by the caller
     }
-    logger.error('Failed to fetch and process comments:', err);
-    logger.end('fetchAndProcessComments');
     performanceMonitor.end('Total Fetch & Process Operation');
     return {
       processedData: { items: [] },
@@ -352,13 +329,11 @@ async function fetchRepliesAndProcess(
   dispatch?: any
 ): Promise<void> {
   const timerId = `fetchRepliesAndProcess-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  logger.start(timerId);
   performanceMonitor.start('Reply Processing (Total)');
 
   try {
     // Check if already aborted
     if (signal.aborted) {
-      logger.info('Reply processing was aborted before starting.');
       throw new DOMException('Reply processing aborted', 'AbortError');
     }
 
@@ -367,13 +342,11 @@ async function fetchRepliesAndProcess(
     performanceMonitor.end('Network Fetch (Replies)');
 
     if (signal.aborted) {
-      logger.info('Reply processing was aborted after fetching replies.');
       throw new DOMException('Reply processing aborted', 'AbortError');
     }
 
     if (replies && replies.length > 0) {
       const BATCH_SIZE = BATCH_CONFIG.REPLY_BATCH_SIZE;
-      logger.debug(`Processing ${replies.length} replies (batch size: ${BATCH_SIZE}).`);
 
       performanceMonitor.start(`Process & Save Replies (${replies.length})`);
 
@@ -382,7 +355,6 @@ async function fetchRepliesAndProcess(
         for (let i = 0; i < replies.length; i += BATCH_SIZE) {
           // Check for abort before each batch
           if (signal.aborted) {
-            logger.warn('Reply processing aborted before batch');
             throw new DOMException('Reply processing aborted', 'AbortError');
           }
 
@@ -394,7 +366,6 @@ async function fetchRepliesAndProcess(
           }
 
           if (signal.aborted) {
-            logger.warn('Reply processing aborted midway.');
             throw new DOMException('Reply processing aborted', 'AbortError');
           }
         }
@@ -411,23 +382,16 @@ async function fetchRepliesAndProcess(
         dispatch(setTotalCommentsCount(localCommentCount));
       }
 
-      logger.debug(
-        `Saved ${replies.length} replies to IndexedDB. Total count: ${localCommentCount}`
-      );
 
       performanceMonitor.end(`Process & Save Replies (${replies.length})`);
     } else {
-      logger.debug('No replies to process.');
     }
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
-      logger.info('Reply processing was aborted.');
       throw error; // Rethrow to be caught by caller
     } else {
-      logger.error('Error processing replies:', error);
     }
   } finally {
-    logger.end(timerId);
     performanceMonitor.end('Reply Processing (Total)');
   }
 }

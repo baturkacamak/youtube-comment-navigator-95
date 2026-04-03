@@ -1,7 +1,6 @@
 import Dexie, { Table } from 'dexie';
 import { Comment } from '../../../../types/commentTypes';
 import { LiveChatMessage } from '../../../../types/liveChatTypes';
-import logger from '../logger';
 
 class Database extends Dexie {
   public comments!: Table<Comment, number>;
@@ -12,7 +11,6 @@ class Database extends Dexie {
     super('youtube-comment-navigator-95');
 
     try {
-      logger.info('[Dexie] Initializing IndexedDB...');
 
       this.version(3).stores({
         comments:
@@ -63,7 +61,6 @@ class Database extends Dexie {
         })
         .upgrade(async (tx) => {
           const count = await tx.table('comments').count();
-          logger.info(`[Dexie] Upgraded to version 4. Comment count: ${count}`);
         });
 
       this.version(5).stores({
@@ -141,7 +138,6 @@ class Database extends Dexie {
         })
         .upgrade(async (tx) => {
           try {
-            logger.info('[Dexie] Upgrading to version 7: Adding liveChatMessages table');
 
             // Migrate existing livechat from comments to liveChatMessages table
             const liveChatComments = await tx
@@ -151,9 +147,6 @@ class Database extends Dexie {
               .toArray();
 
             if (liveChatComments.length > 0) {
-              logger.info(
-                `[Dexie] Migrating ${liveChatComments.length} livechat messages to new table`
-              );
 
               const liveChatMessages: LiveChatMessage[] = liveChatComments.map((comment) => ({
                 messageId: comment.commentId,
@@ -177,14 +170,12 @@ class Database extends Dexie {
               }));
 
               await tx.table('liveChatMessages').bulkAdd(liveChatMessages);
-              logger.success('[Dexie] Successfully migrated livechat messages');
 
               // Optionally delete migrated livechat from comments table
               // Keeping them for now in case of rollback needs
               // await tx.table('comments').where('isLiveChat').equals(1).delete();
             }
           } catch (error: any) {
-            logger.error('[Dexie] Error during version 7 upgrade:', error);
             throw error;
           }
         });
@@ -192,11 +183,7 @@ class Database extends Dexie {
       this.comments = this.table('comments');
       this.liveChatMessages = this.table('liveChatMessages');
       this.kvStore = this.table('kvStore');
-      logger.success(
-        '[Dexie] IndexedDB initialized. Tables ready: comments, liveChatMessages, kvStore'
-      );
     } catch (err: any) {
-      logger.error('[Dexie] Failed to initialize IndexedDB:', err);
     }
   }
 

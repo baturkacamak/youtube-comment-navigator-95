@@ -18,7 +18,6 @@ import getFormattedDate from '../../settings/utils/getFormattedDate';
 import ShareButton from '../../shared/components/ShareButton';
 import hoverAction from '../../shared/utils/hoverAction';
 import { fetchRepliesForComment } from '../services/pagination';
-import logger from '../../shared/utils/logger';
 import { db } from '../../shared/utils/database/database';
 import { eventEmitter } from '../../shared/utils/eventEmitter';
 
@@ -55,51 +54,29 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
           hoverActionInstance = new hoverAction({
             element: viewRepliesButtonRef.current,
             action: async () => {
-              logger.start(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
               try {
                 const replies = await fetchRepliesForComment(
                   db.comments,
                   videoId,
                   comment.commentId
                 );
-                logger.debug(
-                  `[RepliesHover] Fetched ${replies.length} replies for comment: ${comment.commentId}`
-                );
                 return replies;
               } catch (_error) {
-                logger.error(
-                  `[RepliesHover] Error fetching replies for comment: ${comment.commentId}`,
-                  _error
-                );
                 // Return empty array on error to prevent UI breaking
                 return [];
               } finally {
-                logger.end(`[RepliesHover] Fetching replies for comment: ${comment.commentId}`);
               }
             },
             onResult: (result) => {
               try {
                 if (!result || result.length === 0) {
-                  logger.debug(
-                    `[RepliesHover] No result returned for comment: ${comment.commentId}`
-                  );
                   return;
                 }
                 // Cache the fetched replies instead of dispatching
-                logger.debug(
-                  `[RepliesHover] Caching ${result.length} replies for comment: ${comment.commentId}`
-                );
                 cacheFetchedReplies(result);
                 // Emit event that replies are loaded
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
-                logger.debug(
-                  `[RepliesHover] Successfully cached replies via prop for comment: ${comment.commentId}`
-                );
               } catch (error) {
-                logger.error(
-                  `[RepliesHover] Error in onResult handler for comment: ${comment.commentId}`,
-                  error
-                );
               }
             },
             eventNamePrefix: 'hover-replies',

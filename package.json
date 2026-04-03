@@ -1,6 +1,6 @@
 {
   "name": "youtube-comment-navigator-95",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "type": "module",
   "private": true,
   "dependencies": {
@@ -39,7 +39,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build:css",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -48,7 +48,6 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:build-only": "playwright test tests/e2e/build-verification.spec.ts",
-    "build:css": "sed -i 's/rem/em/g' dist/assets/*.css",
     "build:css:rtl": "rtlcss input.css output-rtl.css",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",

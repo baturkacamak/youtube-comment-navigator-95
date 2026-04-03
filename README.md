@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml/badge.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.10.0-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
+[![Version](https://img.shields.io/badge/version-1.10.1-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
 
 ## Overview
 
@@ -153,11 +153,10 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 ### Available Scripts
 
 - **dev**: `vite` - Starts the development server with HMR.
-- **build**: `tsc && vite build && npm run build:css` - Type-checks and builds the production version.
+- **build**: `tsc && vite build` - Type-checks and builds the production version.
 - **preview**: `vite preview` - Preview the build locally.
 - **test**: `vitest` - Runs unit tests.
 - **test:ui**: `vitest --ui` - Runs tests with a UI interface.
-- **build:css**: Converts `rem` units to `em` in the build output for better scaling within the extension.
 - **build:css:rtl**: Generates RTL CSS support.
 
 ### Release Workflow
@@ -168,7 +167,7 @@ We use `just` to simplify release tasks:
 
   ```bash
   just bump        # Interactive menu
-  just bump 1.10.0  # Direct update
+  just bump 1.10.1  # Direct update
   ```
 
   Updates `package.json` and `manifest.json`, creates a git commit and tag.
@@ -177,7 +176,7 @@ We use `just` to simplify release tasks:
   ```bash
   just package
   ```
-  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.10.0.zip`).
+  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.10.1.zip`).
 
 ## 🛠️ Tech Stack
 

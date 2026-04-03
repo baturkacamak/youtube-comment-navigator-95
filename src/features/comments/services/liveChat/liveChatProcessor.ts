@@ -7,7 +7,6 @@ import {
 } from '../../../../types/liveChatTypes';
 import { ensureTextMessageRenderer, formatChatRuns, markTimelineLinks } from './utils';
 import { wrapTryCatch } from './common';
-import logger from '../../../shared/utils/logger';
 
 export interface ChatProcessingContext {
   currentVideoId?: string;
@@ -36,11 +35,9 @@ export function processLiveChatActions(
   const errors: LiveChatError[] = [];
 
   if (!Array.isArray(actions) || actions.length === 0) {
-    logger.warn('[LiveChatProcessor] No actions to process');
     return { messages, replies, errors };
   }
 
-  logger.info(`[LiveChatProcessor] Processing ${actions.length} livechat actions`);
 
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
@@ -62,7 +59,6 @@ export function processLiveChatActions(
       } catch {
         // Not a text message (could be paid message, membership, etc.)
         // Log and continue
-        logger.debug(`[LiveChatProcessor] Action ${i} is not a text message, skipping`);
         continue;
       }
 
@@ -87,12 +83,8 @@ export function processLiveChatActions(
           // Use current time + video offset as timestamp
           const now = Date.now();
           timestampMs = now;
-          logger.debug(
-            `[LiveChatProcessor] Action ${i} using current time as timestamp (no timestampUsec)`
-          );
         } else {
           // No timestamp available - skip this message
-          logger.debug(`[LiveChatProcessor] Action ${i} has no timestamp, skipping`);
           continue; // Silently skip - not an error, just a system message
         }
       } else {
@@ -141,7 +133,6 @@ export function processLiveChatActions(
       const hasAuthor = wrapTryCatch(() => renderer.authorName);
       // Some system messages don't have author, we might want to skip them or handle them
       if (!hasAuthor && !renderer.message.fullText) {
-        logger.debug(`[LiveChatProcessor] Action ${i} has no author or message, skipping`);
         continue;
       }
 
@@ -202,11 +193,6 @@ export function processLiveChatActions(
 
       // Debug log for first few messages to verify timestamp extraction
       if (i < 3) {
-        logger.debug(`[LiveChatProcessor] Message ${i} timestamp:`, {
-          videoOffsetTimeMsec,
-          videoOffsetTimeSeconds,
-          authorName,
-        });
       }
 
       // Check for donation/super chat
@@ -243,7 +229,6 @@ export function processLiveChatActions(
 
       messages.push(liveChatMessage);
     } catch (error: any) {
-      logger.error(`[LiveChatProcessor] Error processing action ${i}:`, error);
       errors.push({
         type: LiveChatErrorType.PARSE_ERROR,
         message: `Failed to process action ${i}: ${error.message}`,
@@ -254,9 +239,6 @@ export function processLiveChatActions(
     }
   }
 
-  logger.success(
-    `[LiveChatProcessor] Processed ${messages.length} messages, ${replies.length} replies, ${errors.length} errors`
-  );
 
   return { messages, replies, errors };
 }

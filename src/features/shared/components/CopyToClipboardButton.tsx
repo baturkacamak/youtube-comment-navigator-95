@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { ClipboardIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
-import logger from '../utils/logger';
 
 interface CopyToClipboardButtonProps {
   textToCopy: string;
@@ -23,7 +22,6 @@ const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
         setCopySuccess(true);
         setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
       })
-      .catch((err) => logger.error('Could not copy text: ', err));
   };
 
   return (

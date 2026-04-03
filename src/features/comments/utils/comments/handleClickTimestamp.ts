@@ -1,4 +1,3 @@
-import logger from '../../../shared/utils/logger';
 import { seekVideo } from '../../../shared/utils/videoController';
 
 const handleClickTimestamp = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -9,7 +8,6 @@ const handleClickTimestamp = (event: React.MouseEvent<HTMLAnchorElement>) => {
     const seconds = timeParts.reduce((acc, part) => acc * 60 + part, 0);
     seekVideo(seconds);
   } else {
-    logger.error('No timestamp found on element');
   }
 };
 
