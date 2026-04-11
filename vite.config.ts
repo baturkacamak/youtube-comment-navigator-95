@@ -5,6 +5,7 @@ import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
 
 const isProduction = process.env.NODE_ENV === 'production' && process.env.KEEP_TEST_IDS !== 'true';
+const stripSourceExtension = (name: string): string => name.replace(/\.(?:[cm]?[jt]sx?)$/, '');
 
 // Custom plugin to replace 'rem' with 'em' in CSS files
 const remToEmPlugin = (): Plugin => {
@@ -55,8 +56,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
+        entryFileNames: ({ name }) => `assets/${stripSourceExtension(name ?? 'entry')}.js`,
+        chunkFileNames: ({ name }) => `assets/${stripSourceExtension(name ?? 'chunk')}.js`,
         assetFileNames: 'assets/[name].[ext]',
       },
     },
