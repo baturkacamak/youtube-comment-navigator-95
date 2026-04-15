@@ -14,21 +14,10 @@ interface TranscriptRequestVariant {
   url: string;
 }
 
-const sanitizeTranscriptUrlForLog = (url: string): string => {
-  try {
-    const urlObj = new URL(url);
-    if (urlObj.searchParams.has('pot')) {
-      const pot = urlObj.searchParams.get('pot') || '';
-      urlObj.searchParams.set('pot', `${pot.slice(0, 8)}...`);
-    }
-    if (urlObj.searchParams.has('signature')) {
-      const signature = urlObj.searchParams.get('signature') || '';
-      urlObj.searchParams.set('signature', `${signature.slice(0, 12)}...`);
-    }
-    return urlObj.toString();
-  } catch {
-    return url;
-  }
+const removeVariantParam = (url: string): string => {
+  const urlObj = new URL(url);
+  urlObj.searchParams.delete('variant');
+  return urlObj.toString();
 };
 
 export const buildTranscriptRequestUrl = (
@@ -73,6 +62,10 @@ const buildTranscriptRequestVariants = (
   };
 
   pushVariant('json3-with-pot', buildTranscriptRequestUrl(url, { language, potToken }));
+  pushVariant(
+    'json3-with-pot-no-variant',
+    buildTranscriptRequestUrl(removeVariantParam(url), { language, potToken })
+  );
 
   const jsonOnlyUrl = new URL(url);
   jsonOnlyUrl.searchParams.set('fmt', 'json3');
@@ -83,8 +76,10 @@ const buildTranscriptRequestVariants = (
     }
   }
   pushVariant('json3-no-pot', jsonOnlyUrl.toString());
+  pushVariant('json3-no-pot-no-variant', removeVariantParam(jsonOnlyUrl.toString()));
 
   pushVariant('raw-base-url', url);
+  pushVariant('raw-base-url-no-variant', removeVariantParam(url));
 
   return variants;
 };
@@ -108,18 +103,12 @@ export async function fetchTranscriptFromRemote(
     // Wait up to 3 seconds for the injected script to find it
     let potToken = await youtubeApi.waitForPotToken(3000);
 
-    if (potToken) {
-    } else {
+    if (!potToken) {
       // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
       try {
         const playerResponse = await youtubeApi.fetchPlayer();
         potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
-
-        if (potToken) {
-        } else {
-        }
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     const variants = buildTranscriptRequestVariants(url, { language, potToken });
@@ -130,8 +119,10 @@ export async function fetchTranscriptFromRemote(
 
     for (const variant of variants) {
       try {
-
         response = await youtubeApi.fetchTimedText(variant.url);
+        if (!response.trim()) {
+          throw new Error('Timedtext response body was empty');
+        }
 
         data = JSON.parse(response);
         break;
@@ -196,12 +187,7 @@ export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
 
     // Use the new YouTube API service to fetch player data
     const data = await youtubeApi.fetchPlayer(videoId);
-    const captionTracks =
-      data?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
-    const audioTracks = data?.captions?.playerCaptionsTracklistRenderer?.audioTracks || [];
-    const translatedLanguages =
-      data?.captions?.playerCaptionsTracklistRenderer?.translationLanguages || [];
-
+    const captionTracks = data?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
 
     const baseUrl = captionTracks[0]?.baseUrl || null;
     if (!baseUrl) {

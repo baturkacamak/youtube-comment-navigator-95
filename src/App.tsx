@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SettingsDrawer from './features/settings/components/SettingsDrawer';
 import ControlPanel from './features/sidebar/components/ControlPanel';
 import SearchBar from './features/search/components/SearchBar';
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import {
   BookmarkIcon,
   ChatBubbleOvalLeftIcon,
+  CommandLineIcon,
   DocumentTextIcon,
   InboxIcon,
   LightBulbIcon,
@@ -28,6 +29,7 @@ import IntelligenceTab from './features/intelligence/components/IntelligenceTab'
 import Collapsible from './features/shared/components/Collapsible';
 import { db } from './features/shared/utils/database/database';
 import { loadAllComments } from './features/comments/services/pagination';
+import DevToolsPanel from './features/devtools/components/DevToolsPanel';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -36,6 +38,9 @@ const App: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const showFiltersSorts = useSelector((state: RootState) => state.settings.showFiltersSorts);
   const showContentOnSearch = useSelector((state: RootState) => state.settings.showContentOnSearch); // Get the state
+  const enableDeveloperMode = useSelector(
+    (state: RootState) => !!state.settings.enableDeveloperMode
+  );
   const searchKeyword = useSelector((state: RootState) => state.searchKeyword); // Get the search keyword
   const liveChatMessageCount = useSelector((state: RootState) => state.liveChatMessageCount); // Get livechat count
 
@@ -103,6 +108,12 @@ const App: React.FC = () => {
   // Both are now fully reactive via useLiveQuery, bypassing Redux conflicts
   const displayCount = hasActiveFilters ? liveFilteredCommentCount : liveTotalUnfilteredCount;
 
+  useEffect(() => {
+    if (!enableDeveloperMode && activeTab === 'devtools') {
+      setActiveTab('comments');
+    }
+  }, [activeTab, enableDeveloperMode, setActiveTab]);
+
   const tabs = React.useMemo(
     () => [
       {
@@ -163,6 +174,18 @@ const App: React.FC = () => {
           </>
         ),
       },
+      ...(enableDeveloperMode
+        ? [
+            {
+              title: {
+                id: 'devtools',
+                label: 'Dev',
+                icon: CommandLineIcon,
+              },
+              content: <DevToolsPanel />,
+            },
+          ]
+        : []),
       {
         title: {
           id: 'intelligence',
@@ -189,6 +212,7 @@ const App: React.FC = () => {
       fetchAllCommentsForDownload,
       bookmarkedOnlyComments,
       liveChatMessageCount,
+      enableDeveloperMode,
     ]
   );
 
@@ -219,7 +243,11 @@ const App: React.FC = () => {
           aria-label={t('Control Panel')}
           borderColor={'border-transparent'}
         >
-          <NavigationHeader openSettings={openSettings} />
+          <NavigationHeader
+            openSettings={openSettings}
+            showDevPanelButton={enableDeveloperMode}
+            openDevPanel={() => setActiveTab('devtools')}
+          />
           <hr className="border border-solid border-gray-200 dark:border-gray-600" />
           <SearchBar />
         </Box>

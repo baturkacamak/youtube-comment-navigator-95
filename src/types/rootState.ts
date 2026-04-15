@@ -19,6 +19,7 @@ export interface RootState {
     fontFamily: string;
     showContentOnSearch: boolean;
     geminiApiKey: string;
+    enableDeveloperMode?: boolean;
   };
   filteredTranscripts: any[];
   bookmarkedLines: any[];

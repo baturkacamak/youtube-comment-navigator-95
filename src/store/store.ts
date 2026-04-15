@@ -65,6 +65,7 @@ const initialState: RootState = {
     showFiltersSorts: true,
     showContentOnSearch: false,
     geminiApiKey: '',
+    enableDeveloperMode: false,
   },
   filters: loadPreference('filter_preferences', defaultFilters),
 
@@ -192,6 +193,10 @@ const commentsSlice = createSlice({
       state.settings.geminiApiKey = action.payload;
       saveSettings({ geminiApiKey: state.settings.geminiApiKey });
     },
+    setEnableDeveloperMode: (state, action: PayloadAction<boolean>) => {
+      state.settings.enableDeveloperMode = action.payload;
+      saveSettings({ enableDeveloperMode: state.settings.enableDeveloperMode });
+    },
 
     setTranscriptSelectedLanguage: (
       state,
@@ -255,6 +260,7 @@ export const {
   setFontFamily,
   setShowContentOnSearch,
   setGeminiApiKey,
+  setEnableDeveloperMode,
 
   setTranscriptSelectedLanguage,
   // Reset action

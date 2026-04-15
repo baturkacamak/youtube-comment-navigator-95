@@ -24,8 +24,7 @@ const useDetectUrlChange = (callback: () => Promise<void>) => {
         dispatch(setIsLoading(true));
         await callback();
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   const hasVideoIdChanged = (currentVideoId: string | null): boolean => {

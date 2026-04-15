@@ -1,6 +1,16 @@
 (function () {
     const MAX_RETRIES = 10;
     const RETRY_DELAY = 1000;
+    let cachedToken = null;
+    let cachedVideoId = null;
+
+    function getCurrentVideoId() {
+        try {
+            return new URL(location.href).searchParams.get('v') || null;
+        } catch (e) {
+            return null;
+        }
+    }
 
     function sanitizeUrl(url) {
         try {
@@ -19,23 +29,99 @@
         }
     }
 
+    function getMoviePlayer() {
+        return window.movie_player || document.getElementById('movie_player') || null;
+    }
+
+    function getMoviePlayerResponse(moviePlayer) {
+        try {
+            if (moviePlayer && typeof moviePlayer.getPlayerResponse === 'function') {
+                return moviePlayer.getPlayerResponse() || null;
+            }
+        } catch (e) {
+        }
+        return null;
+    }
+
+    function getVideoIdFromPlayerResponse(playerResponse) {
+        return playerResponse?.videoDetails?.videoId || null;
+    }
+
+    function getCaptionTracks(playerResponse) {
+        return playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
+    }
+
+    function chooseTranscriptPlayerResponse() {
+        const currentVideoId = getCurrentVideoId();
+        const moviePlayer = getMoviePlayer();
+        const moviePlayerResponse = getMoviePlayerResponse(moviePlayer);
+        const initialPlayerResponse = window.ytInitialPlayerResponse || null;
+
+        const moviePlayerVideoId = getVideoIdFromPlayerResponse(moviePlayerResponse);
+        const initialPlayerVideoId = getVideoIdFromPlayerResponse(initialPlayerResponse);
+
+        if (currentVideoId && moviePlayerVideoId === currentVideoId) {
+            return {
+                moviePlayer,
+                selectedPlayerResponse: moviePlayerResponse,
+                selectedSource: 'movie_player',
+                moviePlayerVideoId,
+                initialPlayerVideoId,
+            };
+        }
+
+        if (currentVideoId && initialPlayerVideoId === currentVideoId) {
+            return {
+                moviePlayer,
+                selectedPlayerResponse: initialPlayerResponse,
+                selectedSource: 'ytInitialPlayerResponse',
+                moviePlayerVideoId,
+                initialPlayerVideoId,
+            };
+        }
+
+        if (moviePlayerResponse) {
+            return {
+                moviePlayer,
+                selectedPlayerResponse: moviePlayerResponse,
+                selectedSource: 'movie_player_fallback',
+                moviePlayerVideoId,
+                initialPlayerVideoId,
+            };
+        }
+
+        return {
+            moviePlayer,
+            selectedPlayerResponse: initialPlayerResponse,
+            selectedSource: initialPlayerResponse ? 'ytInitialPlayerResponse_fallback' : 'none',
+            moviePlayerVideoId,
+            initialPlayerVideoId,
+        };
+    }
+
     function getTranscriptDiagnostics() {
         try {
-            const playerResponse = window.ytInitialPlayerResponse || null;
-            const captionTracks =
-                playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
-            const moviePlayer =
-                window.movie_player ||
-                document.getElementById('movie_player') ||
-                null;
+            const {
+                moviePlayer,
+                selectedPlayerResponse,
+                selectedSource,
+                moviePlayerVideoId,
+                initialPlayerVideoId,
+            } = chooseTranscriptPlayerResponse();
+            const captionTracks = getCaptionTracks(selectedPlayerResponse);
 
             return {
+                currentVideoId: getCurrentVideoId(),
                 readyState: document.readyState,
                 locationHref: location.href,
-                hasYtInitialPlayerResponse: Boolean(playerResponse),
+                hasYtInitialPlayerResponse: Boolean(window.ytInitialPlayerResponse),
                 hasYtInitialData: Boolean(window.ytInitialData),
                 hasYtcfg: Boolean(window.ytcfg),
                 hasMoviePlayer: Boolean(moviePlayer),
+                selectedPlayerResponseSource: selectedSource,
+                selectedPlayerResponseVideoId: getVideoIdFromPlayerResponse(selectedPlayerResponse),
+                moviePlayerResponseVideoId: moviePlayerVideoId,
+                initialPlayerResponseVideoId: initialPlayerVideoId,
                 playerState:
                     moviePlayer && typeof moviePlayer.getPlayerState === 'function'
                         ? moviePlayer.getPlayerState()
@@ -44,10 +130,10 @@
                     moviePlayer && typeof moviePlayer.getVideoUrl === 'function'
                         ? moviePlayer.getVideoUrl()
                         : null,
-                responseVideoId: playerResponse?.videoDetails?.videoId || null,
-                responsePlayabilityStatus: playerResponse?.playabilityStatus?.status || null,
-                responsePlayabilityReason: playerResponse?.playabilityStatus?.reason || null,
-                hasCaptions: Boolean(playerResponse?.captions),
+                responseVideoId: selectedPlayerResponse?.videoDetails?.videoId || null,
+                responsePlayabilityStatus: selectedPlayerResponse?.playabilityStatus?.status || null,
+                responsePlayabilityReason: selectedPlayerResponse?.playabilityStatus?.reason || null,
+                hasCaptions: Boolean(selectedPlayerResponse?.captions),
                 captionTrackCount: captionTracks.length,
                 firstCaptionTrack: captionTracks[0]
                     ? {
@@ -74,10 +160,93 @@
         }
     }
 
-    async function fetchTimedTextInPage(url) {
+    async function fetchTimedTextInPage(url, headers) {
+        const summarizeHeaders = (headers) => {
+            try {
+                return {
+                    contentType: headers.get('content-type'),
+                    contentLength: headers.get('content-length'),
+                    cacheControl: headers.get('cache-control'),
+                };
+            } catch (e) {
+                return null;
+            }
+        };
+
+        const applyHeadersToXhr = (xhr, requestHeaders) => {
+            if (!requestHeaders || typeof requestHeaders !== 'object') {
+                return;
+            }
+
+            Object.entries(requestHeaders).forEach(([key, value]) => {
+                if (!value) {
+                    return;
+                }
+
+                try {
+                    xhr.setRequestHeader(key, String(value));
+                } catch (e) {
+                }
+            });
+        };
+
+        const fetchViaXhr = (requestUrl, requestHeaders) =>
+            new Promise((resolve) => {
+                try {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', requestUrl, true);
+                    xhr.withCredentials = true;
+                    applyHeadersToXhr(xhr, requestHeaders);
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState !== XMLHttpRequest.DONE) {
+                            return;
+                        }
+
+                        resolve({
+                            ok: xhr.status >= 200 && xhr.status < 300,
+                            status: xhr.status,
+                            statusText: xhr.statusText || null,
+                            body: xhr.responseText || '',
+                            transport: 'xhr',
+                            finalUrl: xhr.responseURL || requestUrl,
+                            responseHeaders: {
+                                contentType: xhr.getResponseHeader('content-type'),
+                                contentLength: xhr.getResponseHeader('content-length'),
+                                cacheControl: xhr.getResponseHeader('cache-control'),
+                            },
+                        });
+                    };
+                    xhr.onerror = function () {
+                        resolve({
+                            ok: false,
+                            transport: 'xhr',
+                            error: {
+                                name: 'XHRNetworkError',
+                                message: 'XMLHttpRequest failed',
+                            },
+                        });
+                    };
+                    xhr.send();
+                } catch (e) {
+                    resolve({
+                        ok: false,
+                        transport: 'xhr',
+                        error: e instanceof Error ? {
+                            name: e.name,
+                            message: e.message,
+                            stack: e.stack,
+                        } : {
+                            name: typeof e,
+                            message: String(e),
+                        },
+                    });
+                }
+            });
+
         try {
             const response = await fetch(url, {
                 method: 'GET',
+                headers: headers || undefined,
                 credentials: 'include',
                 mode: 'cors',
                 cache: 'no-store',
@@ -86,16 +255,33 @@
             });
 
             const body = await response.text();
-
-            return {
+            const payload = {
                 ok: response.ok,
                 status: response.status,
                 statusText: response.statusText,
                 body,
+                transport: 'fetch',
+                redirected: response.redirected,
+                finalUrl: response.url || url,
+                responseHeaders: summarizeHeaders(response.headers),
             };
+
+            if (response.ok && !body) {
+                const xhrPayload = await fetchViaXhr(url, headers);
+                xhrPayload.fetchFallbackReason = 'empty-fetch-body';
+                xhrPayload.fetchResponseMeta = {
+                    redirected: response.redirected,
+                    finalUrl: response.url || url,
+                    responseHeaders: summarizeHeaders(response.headers),
+                };
+                return xhrPayload;
+            }
+
+            return payload;
         } catch (e) {
             return {
                 ok: false,
+                transport: 'fetch',
                 error: e instanceof Error ? {
                     name: e.name,
                     message: e.message,
@@ -114,6 +300,7 @@
      */
     function getTranscriptPot() {
         try {
+            const currentVideoId = getCurrentVideoId();
             const visited = new WeakSet();
             const urls = [];
 
@@ -131,6 +318,17 @@
                     try {
                         const value = obj[key];
                         if (typeof value === 'string' && value.includes('pot=')) {
+                            if (currentVideoId) {
+                                try {
+                                    const parsed = new URL(
+                                        value.startsWith('http') ? value : `https://www.youtube.com${value}`
+                                    );
+                                    if (parsed.searchParams.get('v') !== currentVideoId) {
+                                        continue;
+                                    }
+                                } catch (e) {
+                                }
+                            }
                             urls.push(value);
                             return; 
                         } else if (value && typeof value === 'object') {
@@ -172,7 +370,10 @@
                 const urlObj = new URL(fullUrl);
                 const pot = urlObj.searchParams.get('pot');
                 if (!pot) console.warn('[YCN-POT] Candidate found but "pot" param missing:', urls[0]);
-                return pot;
+                return {
+                    token: pot,
+                    videoId: urlObj.searchParams.get('v') || currentVideoId || null,
+                };
             } catch (e) {
                 console.warn('[YCN-POT] Failed to parse candidate URL:', urls[0]);
                 return undefined;
@@ -184,14 +385,16 @@
         }
     }
 
-    let cachedToken = null;
-
     function attemptRetrieve(attempt = 1) {
-        const token = getTranscriptPot();
+        const result = getTranscriptPot();
         
-        if (token) {
-            cachedToken = token;
-            window.postMessage({ type: 'YCN_POT_TOKEN_RECEIVED', token }, '*');
+        if (result?.token) {
+            cachedToken = result.token;
+            cachedVideoId = result.videoId || getCurrentVideoId();
+            window.postMessage(
+                { type: 'YCN_POT_TOKEN_RECEIVED', token: result.token, videoId: cachedVideoId },
+                '*'
+            );
         } else if (attempt < MAX_RETRIES) {
             setTimeout(() => attemptRetrieve(attempt + 1), RETRY_DELAY);
         } else {
@@ -199,11 +402,21 @@
         }
     }
 
+    function clearTranscriptCaches() {
+        cachedToken = null;
+        cachedVideoId = null;
+    }
+
     window.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'YCN_REQUEST_POT_TOKEN') {
-            if (cachedToken) {
-                window.postMessage({ type: 'YCN_POT_TOKEN_RECEIVED', token: cachedToken }, '*');
+            const currentVideoId = getCurrentVideoId();
+            if (cachedToken && cachedVideoId && cachedVideoId === currentVideoId) {
+                window.postMessage(
+                    { type: 'YCN_POT_TOKEN_RECEIVED', token: cachedToken, videoId: cachedVideoId },
+                    '*'
+                );
             } else {
+                clearTranscriptCaches();
                 attemptRetrieve(1);
             }
         }
@@ -218,7 +431,7 @@
             );
         }
         if (event.data && event.data.type === 'YCN_REQUEST_TIMEDTEXT_FETCH') {
-            fetchTimedTextInPage(event.data.url).then((payload) => {
+            fetchTimedTextInPage(event.data.url, event.data.headers).then((payload) => {
                 window.postMessage(
                     {
                         type: 'YCN_TIMEDTEXT_FETCH_RESULT',
@@ -228,6 +441,9 @@
                     '*'
                 );
             });
+        }
+        if (event.data && (event.data.type === 'URL_CHANGED' || event.data.type === 'URL_CHANGE_TO_VIDEO')) {
+            clearTranscriptCaches();
         }
     });
 

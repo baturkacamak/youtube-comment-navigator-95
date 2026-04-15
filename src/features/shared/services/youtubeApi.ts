@@ -51,22 +51,25 @@ export interface VideoDetails {
 export class YouTubeApiService {
   private static instance: YouTubeApiService;
   private capturedPotToken: string | null = null;
-  private potTokenResolver: ((token: string) => void) | null = null;
-  private potTokenPromise: Promise<string>;
+  private capturedPotVideoId: string | null = null;
+  private pendingPotTokenResolvers = new Set<(token: string) => void>();
 
   private constructor() {
-    this.potTokenPromise = new Promise((resolve) => {
-      this.potTokenResolver = resolve;
-    });
-
     // Listen for the POT token from the main world script
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'YCN_POT_TOKEN_RECEIVED') {
         const token = event.data.token;
+        const videoId = event.data.videoId || null;
         this.capturedPotToken = token;
-        if (this.potTokenResolver) {
-          this.potTokenResolver(token);
-        }
+        this.capturedPotVideoId = videoId;
+        this.pendingPotTokenResolvers.forEach((resolve) => resolve(token));
+        this.pendingPotTokenResolvers.clear();
+      }
+
+      if (event.data && (event.data.type === 'URL_CHANGED' || event.data.type === 'URL_CHANGE_TO_VIDEO')) {
+        this.capturedPotToken = null;
+        this.capturedPotVideoId = null;
+        this.pendingPotTokenResolvers.clear();
       }
     });
   }
@@ -84,9 +87,20 @@ export class YouTubeApiService {
    * @returns The POT token if received, or undefined if timed out.
    */
   public async waitForPotToken(timeoutMs: number = 5000): Promise<string | undefined> {
-    if (this.capturedPotToken) {
+    const currentVideoId = extractYouTubeVideoIdFromUrl();
+
+    if (
+      this.capturedPotToken &&
+      this.capturedPotVideoId &&
+      currentVideoId &&
+      this.capturedPotVideoId === currentVideoId
+    ) {
       return this.capturedPotToken;
     }
+
+    const potTokenPromise = new Promise<string>((resolve) => {
+      this.pendingPotTokenResolvers.add(resolve);
+    });
 
     window.postMessage({ type: 'YCN_REQUEST_POT_TOKEN' }, '*');
 
@@ -97,13 +111,22 @@ export class YouTubeApiService {
       }, timeoutMs);
     });
 
-    return Promise.race([this.potTokenPromise, timeoutPromise]).finally(() => {
-      clearTimeout(timeoutHandle);
-    });
+    return Promise.race([potTokenPromise, timeoutPromise])
+      .then((token) => {
+        return token;
+      })
+      .finally(() => {
+        clearTimeout(timeoutHandle);
+        this.pendingPotTokenResolvers.clear();
+      });
   }
 
   public getPotToken(): string | undefined {
-    if (this.capturedPotToken) {
+    if (
+      this.capturedPotToken &&
+      this.capturedPotVideoId &&
+      this.capturedPotVideoId === extractYouTubeVideoIdFromUrl()
+    ) {
       return this.capturedPotToken;
     }
     return undefined;
@@ -365,33 +388,11 @@ export class YouTubeApiService {
     return normalizedHeaders;
   }
 
-  private summarizePlayerResponse(response: any): Record<string, unknown> {
-    const playabilityStatus = response?.playabilityStatus;
-    const renderer =
-      playabilityStatus?.errorScreen?.playerErrorMessageRenderer ||
-      playabilityStatus?.errorScreen?.watchEndpointSupportedOnesieRenderer ||
-      null;
-
-    return {
-      playabilityStatus: playabilityStatus?.status || null,
-      reason: playabilityStatus?.reason || null,
-      subreason:
-        renderer?.subreason?.simpleText ||
-        renderer?.subreason?.runs?.map((run: any) => run?.text).join('') ||
-        null,
-      message:
-        renderer?.reason?.simpleText ||
-        renderer?.reason?.runs?.map((run: any) => run?.text).join('') ||
-        null,
-      errorScreenType: renderer ? Object.keys(playabilityStatus?.errorScreen || {}) : [],
-      hasCaptions: Boolean(response?.captions),
-      captionTrackCount:
-        response?.captions?.playerCaptionsTracklistRenderer?.captionTracks?.length || 0,
-      previewPlayability: playabilityStatus || null,
-    };
-  }
-
-  private async fetchViaMainWorld<T>(messageType: string, payload: Record<string, unknown>, timeoutMs: number = 10000): Promise<T> {
+  private async fetchViaMainWorld<T>(
+    messageType: string,
+    payload: Record<string, unknown>,
+    timeoutMs: number = 10000
+  ): Promise<T> {
     const requestId = `${messageType}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
     return new Promise<T>((resolve, reject) => {
@@ -503,34 +504,39 @@ export class YouTubeApiService {
     };
 
 
-    const response = await this.fetchFromApi({
-      endpoint: 'player',
+      const response = await this.fetchFromApi({
+        endpoint: 'player',
       queryParams: {
         prettyPrint: 'false',
         ycn: '95',
       },
       body: requestBody,
-      signal,
-    });
-
+        signal,
+      });
 
     return response;
   }
 
   public async fetchTimedText(url: string, signal?: AbortSignal): Promise<string> {
     try {
-      const headers = this.getTimedTextRequestHeaders() as Record<string, string>;
       if (signal?.aborted) {
         throw new DOMException('The operation was aborted.', 'AbortError');
       }
 
+      const headers = this.getTimedTextRequestHeaders() as Record<string, string>;
       const response = await this.fetchViaMainWorld<{
         ok: boolean;
         status?: number;
         statusText?: string;
         body?: string;
+        transport?: string;
+        redirected?: boolean;
+        finalUrl?: string;
+        responseHeaders?: Record<string, string | null> | null;
+        fetchFallbackReason?: string;
+        fetchResponseMeta?: Record<string, unknown>;
         error?: { name?: string; message?: string; stack?: string };
-      }>('YCN_REQUEST_TIMEDTEXT_FETCH', { url });
+      }>('YCN_REQUEST_TIMEDTEXT_FETCH', { url, headers });
 
 
       if (!response.ok) {

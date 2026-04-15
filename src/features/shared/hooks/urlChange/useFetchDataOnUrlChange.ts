@@ -36,6 +36,7 @@ const useFetchDataOnUrlChange = () => {
   const { showToast } = useToast();
 
   useDetectUrlChange(async () => {
+    const videoId = extractVideoId();
     dispatch(resetState());
 
     const isLocal = isLocalEnvironment();
@@ -126,11 +127,9 @@ const fetchAndSetLiveChat = async (
     const controller = new AbortController();
 
     fetchAndProcessLiveChat(videoId, window, controller.signal)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error: any) => {
         if (error.name !== 'AbortError') {
-
           if (shouldShowLiveChatErrorToast(error)) {
             const message = getLiveChatFetchErrorMessage(error);
             if (message) {
@@ -146,8 +145,7 @@ const fetchAndSetLiveChat = async (
       .finally(() => {
         dispatch(setLiveChatLoading(false));
       });
-  } catch (error: any) {
-  }
+  } catch (error: any) {}
 };
 
 export default useFetchDataOnUrlChange;
