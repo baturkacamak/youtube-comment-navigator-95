@@ -176,7 +176,11 @@ We use `just` to simplify release tasks:
   ```bash
   just package
   ```
+  <<<<<<< HEAD
   Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.10.5.zip`).
+  =======
+  Builds the project and creates a zip file (e.g., `youtube-comment-navigator-95_v1.10.4.zip`).
+  > > > > > > > origin/main
 
 ## 🛠️ Tech Stack
 

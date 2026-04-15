@@ -3,8 +3,7 @@ import { defineConfig, Plugin } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.json';
-
-const isProduction = process.env.NODE_ENV === 'production' && process.env.KEEP_TEST_IDS !== 'true';
+const stripSourceExtension = (name: string): string => name.replace(/\.(?:[cm]?[jt]sx?)$/, '');
 
 // Custom plugin to replace 'rem' with 'em' in CSS files
 const remToEmPlugin = (): Plugin => {
@@ -34,19 +33,15 @@ const remToEmPlugin = (): Plugin => {
 };
 
 export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest }),
-    remToEmPlugin(),
-  ],
+  plugins: [react(), crx({ manifest }), remToEmPlugin()],
   server: {
     port: 3000,
   },
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'assets/[name].js',
-        chunkFileNames: 'assets/[name].js',
+        entryFileNames: ({ name }) => `assets/${stripSourceExtension(name ?? 'entry')}.js`,
+        chunkFileNames: ({ name }) => `assets/${stripSourceExtension(name ?? 'chunk')}.js`,
         assetFileNames: 'assets/[name].[ext]',
       },
     },
