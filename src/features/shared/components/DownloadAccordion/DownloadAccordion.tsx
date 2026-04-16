@@ -124,7 +124,6 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       // Auto-close panel after download
       setIsExpanded(false);
     } catch (error) {
-
       const errorMessage =
         error instanceof Error && error.message ? error.message : 'Export failed. Try again.';
 

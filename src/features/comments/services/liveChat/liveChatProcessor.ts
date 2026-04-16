@@ -38,7 +38,6 @@ export function processLiveChatActions(
     return { messages, replies, errors };
   }
 
-
   for (let i = 0; i < actions.length; i++) {
     const action = actions[i];
 
@@ -238,7 +237,6 @@ export function processLiveChatActions(
       });
     }
   }
-
 
   return { messages, replies, errors };
 }

@@ -26,7 +26,6 @@
  * ```
  */
 
-
 export type DBEventType =
   | 'comments:added'
   | 'comments:updated'
@@ -90,8 +89,7 @@ class DatabaseEventEmitter {
   private debugMode = false;
   private readonly logPrefix = '[DBEvents]';
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * Enable or disable debug mode
@@ -349,7 +347,6 @@ class DatabaseEventEmitter {
    * Emit error event
    */
   emitError(videoId: string, error: Error, metadata?: Record<string, any>): void {
-
     this.emit('error:occurred', {
       videoId,
       error: {
@@ -406,7 +403,6 @@ class DatabaseEventEmitter {
 
     this.handlers.clear();
     this.allHandlers.clear();
-
   }
 
   /**

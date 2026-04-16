@@ -146,7 +146,10 @@ const formatDescription = (
   ].join('\n');
 };
 
-const fetchAllCommentsForVideo = async (videoId: string, signal?: AbortSignal): Promise<Comment[]> => {
+const fetchAllCommentsForVideo = async (
+  videoId: string,
+  signal?: AbortSignal
+): Promise<Comment[]> => {
   assertNotAborted(signal);
 
   const firstToken = await fetchContinuationTokenFromRemote(videoId);
@@ -177,7 +180,8 @@ const fetchAllCommentsForVideo = async (videoId: string, signal?: AbortSignal): 
       window as unknown as object,
       signal || nonAbortSignal
     );
-    const processed = processRawJsonCommentsData([mainResponse, ...replies], videoId).items as Comment[];
+    const processed = processRawJsonCommentsData([mainResponse, ...replies], videoId)
+      .items as Comment[];
 
     processed.forEach((comment) => {
       if (comment?.commentId && !comments.has(comment.commentId)) {
@@ -223,7 +227,10 @@ const buildDescriptionPayload = (videoId: string, playerData: PlayerResponseData
   };
 };
 
-const resolveVideoTitle = (video: PlaylistVideoItem, playerData: PlayerResponseData | null): string => {
+const resolveVideoTitle = (
+  video: PlaylistVideoItem,
+  playerData: PlayerResponseData | null
+): string => {
   const fromPlayer = playerData?.videoDetails?.title;
   return fromPlayer || video.title || `Video ${video.index}`;
 };
@@ -306,8 +313,11 @@ const buildVideoPayload = async (
   };
 };
 
-export const exportPlaylistBatchAsZip = async (params: BatchExportParams): Promise<BatchExportOutcome> => {
-  const { selectedVideos, selectedContent, selectedFormats, playlistId, onProgress, signal } = params;
+export const exportPlaylistBatchAsZip = async (
+  params: BatchExportParams
+): Promise<BatchExportOutcome> => {
+  const { selectedVideos, selectedContent, selectedFormats, playlistId, onProgress, signal } =
+    params;
   assertNotAborted(signal);
 
   if (selectedVideos.length === 0) {

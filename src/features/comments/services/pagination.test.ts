@@ -82,7 +82,6 @@ const resetMocks = () => {
   mockEquals.mockImplementation(() => queryMethods);
   mockBetween.mockImplementation(() => queryMethods);
   mockCommentsTable.where.mockImplementation(() => queryMethods);
-
 };
 // --- Mock Dexie Setup --- END ---
 

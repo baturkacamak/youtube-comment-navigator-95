@@ -16,12 +16,10 @@ const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
   const [copySuccess, setCopySuccess] = useState(false);
 
   const handleCopyToClipboard = () => {
-    navigator.clipboard
-      .writeText(textToCopy)
-      .then(() => {
-        setCopySuccess(true);
-        setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
-      })
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000); // Reset after 2 seconds
+    });
   };
 
   return (

@@ -294,7 +294,11 @@ class YouTubeCommentNavigator {
     const applyInitialTheme = () => {
       try {
         const savedSettings = localStorage.getItem('settings');
-        const settings = savedSettings ? JSON.parse(savedSettings) : { /* no-op */ };
+        const settings = savedSettings
+          ? JSON.parse(savedSettings)
+          : {
+              /* no-op */
+            };
         const theme = settings.theme || localStorage.getItem('theme') || 'light';
         const isDark = theme === 'dark';
         document.documentElement.classList.toggle('dark', isDark);

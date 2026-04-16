@@ -118,7 +118,6 @@ export const seedMockData = async (dispatch: any) => {
 
     dispatch(setLiveChat(mockLiveChat));
     dispatch(setLiveChatMessageCount(20));
-
   } catch (error) {
   } finally {
     dispatch(setIsLoading(false));

@@ -63,8 +63,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
           setCopySuccess(true);
           setTimeout(() => setCopySuccess(false), 2000);
         },
-        (err) => {
-        }
+        (err) => {}
       );
     }, [comment.content]);
 

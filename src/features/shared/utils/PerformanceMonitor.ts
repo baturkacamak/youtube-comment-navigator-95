@@ -1,4 +1,3 @@
-
 export interface PerformanceMetric {
   label: string;
   duration: number;

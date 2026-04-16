@@ -11,7 +11,6 @@ class Database extends Dexie {
     super('youtube-comment-navigator-95');
 
     try {
-
       this.version(3).stores({
         comments:
           '++id, videoId, author, likes, publishedDate, replyCount, wordCount, normalizedScore, weightedZScore, bayesianAverage, isBookmarked, bookmarkAddedDate, commentId',
@@ -138,7 +137,6 @@ class Database extends Dexie {
         })
         .upgrade(async (tx) => {
           try {
-
             // Migrate existing livechat from comments to liveChatMessages table
             const liveChatComments = await tx
               .table('comments')
@@ -147,7 +145,6 @@ class Database extends Dexie {
               .toArray();
 
             if (liveChatComments.length > 0) {
-
               const liveChatMessages: LiveChatMessage[] = liveChatComments.map((comment) => ({
                 messageId: comment.commentId,
                 videoId: comment.videoId || '',
@@ -183,8 +180,7 @@ class Database extends Dexie {
       this.comments = this.table('comments');
       this.liveChatMessages = this.table('liveChatMessages');
       this.kvStore = this.table('kvStore');
-    } catch (err: any) {
-    }
+    } catch (err: any) {}
   }
 
   async setItem(key: string, value: any): Promise<void> {

@@ -54,7 +54,10 @@ const loadSettingsPreference = (): RootState['settings'] => {
 
   return {
     ...defaultSettings,
-    textSize: typeof savedSettings.textSize === 'string' ? savedSettings.textSize : defaultSettings.textSize,
+    textSize:
+      typeof savedSettings.textSize === 'string'
+        ? savedSettings.textSize
+        : defaultSettings.textSize,
     fontFamily:
       typeof savedSettings.fontFamily === 'string'
         ? savedSettings.fontFamily

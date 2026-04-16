@@ -94,7 +94,6 @@ const LiveChatList: React.FC = () => {
       // If we loaded fewer messages than pageSize, we've reached the end
       const currentTotal = page * pageSize + messages.length;
       setHasMore(currentTotal < totalCount && messages.length === pageSize);
-
     } catch (error: any) {
       dispatch(setLiveChatError(error.message || 'Failed to load live chat messages'));
     } finally {
@@ -112,8 +111,7 @@ const LiveChatList: React.FC = () => {
         player.seekTo(timestampSeconds, true);
       } else {
       }
-    } catch (error: any) {
-    }
+    } catch (error: any) {}
   };
 
   /**
@@ -137,8 +135,7 @@ const LiveChatList: React.FC = () => {
 
   // Handle component mount logging
   useEffect(() => {
-    return () => {
-    };
+    return () => {};
   }, []);
 
   return (

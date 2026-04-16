@@ -133,7 +133,7 @@ export async function fetchTranscriptFromRemote(
   }
 
   if (!data) {
-    throw (lastError instanceof Error ? lastError : new Error(String(lastError)));
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
   }
 
   // Assuming the response is the raw transcript data that needs processing

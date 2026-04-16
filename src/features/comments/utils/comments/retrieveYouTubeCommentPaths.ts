@@ -110,7 +110,6 @@ export const processRawJsonCommentsData = (rawData: any[], videoId: string) => {
     const combinedComments = mergeCommentsWithViewModels(transformedComments, commentViewModels);
     const commentsWithAdditionalInfo = addAdditionalInfoToComments(combinedComments, allComments);
 
-
     return { items: commentsWithAdditionalInfo };
   } catch (error) {
     return { items: [] };

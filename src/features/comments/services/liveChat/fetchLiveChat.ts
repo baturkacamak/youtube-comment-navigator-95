@@ -18,7 +18,6 @@ export const fetchAndProcessLiveChat = async (
     const ytInitialData = windowObj.ytInitialData;
     const continuationResult = extractLiveChatContinuation(ytInitialData);
 
-
     if (!continuationResult.continuationData) {
       throw new Error('Live chat replay not available for this video');
     }
@@ -33,7 +32,6 @@ export const fetchAndProcessLiveChat = async (
     const isReplayMode =
       continuationResult.continuationType === 'replay' ||
       continuationResult.continuationType === 'playerSeek';
-
 
     // Initial fetch to determine mode
     let initialResponse: any;
@@ -139,8 +137,7 @@ async function saveActions(actions: any[], videoId: string) {
 
     // Log any parsing errors
     if (processedData.errors.length > 0) {
-      processedData.errors.forEach((error, idx) => {
-      });
+      processedData.errors.forEach((error, idx) => {});
     }
 
     // Save messages to liveChatMessages table
@@ -189,7 +186,6 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
   let emptyActionLoops = 0;
   const maxEmptyActionLoops = 2;
   const maxLoopCount = 500;
-
 
   while (token && !signal.aborted) {
     loopCount++;
@@ -261,7 +257,6 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
   let emptyActionLoops = 0;
   const maxEmptyActionLoops = 2;
   const maxLoopCount = 500;
-
 
   while (token && !signal.aborted) {
     loopCount++;

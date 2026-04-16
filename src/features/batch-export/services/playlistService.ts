@@ -39,7 +39,10 @@ const titleFromRuns = (runs: Array<{ text?: string }> | undefined): string => {
   if (!runs || runs.length === 0) {
     return '';
   }
-  return runs.map((run) => run?.text || '').join('').trim();
+  return runs
+    .map((run) => run?.text || '')
+    .join('')
+    .trim();
 };
 
 const parseVideoIdFromHref = (href: string | null): string => {
@@ -153,7 +156,8 @@ const isPlaylistPath = (): boolean => {
 export const isPlaylistContextPage = (): boolean => {
   const params = new URLSearchParams(window.location.search);
   return (
-    (isWatchPath() && params.has('v') && params.has('list')) || (isPlaylistPath() && params.has('list'))
+    (isWatchPath() && params.has('v') && params.has('list')) ||
+    (isPlaylistPath() && params.has('list'))
   );
 };
 

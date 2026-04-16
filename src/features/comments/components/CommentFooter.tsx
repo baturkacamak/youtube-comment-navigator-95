@@ -76,8 +76,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
                 cacheFetchedReplies(result);
                 // Emit event that replies are loaded
                 eventEmitter.emit(`replies-loaded-${comment.commentId}`, result);
-              } catch (error) {
-              }
+              } catch (error) {}
             },
             eventNamePrefix: 'hover-replies',
             cacheTTL: 5 * 60 * 1000, // 5 minutes cache

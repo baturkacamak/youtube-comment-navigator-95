@@ -1,4 +1,3 @@
-
 /**
  * Sends a message to the main world to seek the video to the specified time.
  * @param seconds Time in seconds to seek to

@@ -333,7 +333,10 @@ const CommentList: React.FC<CommentListProps> = () => {
     <div
       ref={containerRef}
       className="w-full flex flex-col relative"
-      style={{ height: Math.min(listHeight, Math.max(totalMeasuredHeight, 220)), minHeight: '220px' }}
+      style={{
+        height: Math.min(listHeight, Math.max(totalMeasuredHeight, 220)),
+        minHeight: '220px',
+      }}
     >
       {/* Loading overlay when reloading comments - only show when hook is actively loading */}
       {dbLoading && comments.length > 0 && (
@@ -401,7 +404,13 @@ const CommentList: React.FC<CommentListProps> = () => {
             // Fallback for 0 dimensions: Render with safe defaults
             if (!height || !width) {
               return (
-                <div style={{ height: Math.max(Math.min(totalMeasuredHeight, 400), 220), width: '100%', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    height: Math.max(Math.min(totalMeasuredHeight, 400), 220),
+                    width: '100%',
+                    overflow: 'hidden',
+                  }}
+                >
                   <List
                     ref={listRef}
                     height={Math.max(Math.min(totalMeasuredHeight, 400), 220)}

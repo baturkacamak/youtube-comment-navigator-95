@@ -64,14 +64,11 @@ const ShareButton: React.FC<ShareButtonProps> = React.memo(
         if (shareType in shareUrls) {
           window.open(shareUrls[shareType], '_blank');
         } else if (navigator.share) {
-          navigator
-            .share({ title: subject, text, url })
+          navigator.share({ title: subject, text, url });
         } else {
-          navigator.clipboard
-            .writeText(url ? `${text} ${url}` : text)
-            .then(() => {
-              alert('Text copied to clipboard. You can share it manually.');
-            })
+          navigator.clipboard.writeText(url ? `${text} ${url}` : text).then(() => {
+            alert('Text copied to clipboard. You can share it manually.');
+          });
         }
       },
       [getSelectedText, subject, url]

@@ -106,7 +106,7 @@ export const languageOptions: LanguageOption[] = [
   { value: 'tr', label: 'Türkçe' }, // Turkish
   { value: 'uk', label: 'Українська' }, // Ukrainian
   { value: 'ur', label: 'اردو' }, // Urdu
-  { value: 'uz', label: 'O\'zbek' }, // Uzbek
+  { value: 'uz', label: "O'zbek" }, // Uzbek
   { value: 'vi', label: 'Tiếng Việt' }, // Vietnamese
   { value: 'yo', label: 'Yorùbá' }, // Yoruba
   { value: 'yue', label: '粵語' }, // Cantonese

@@ -20,8 +20,7 @@ export const extractVideoId = (): string => {
 export const storeContinuationToken = async (videoId: string, token: string): Promise<void> => {
   try {
     await db.setItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId), token);
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 export const getContinuationToken = async (videoId: string): Promise<string | null> => {
@@ -35,8 +34,7 @@ export const getContinuationToken = async (videoId: string): Promise<string | nu
 export const clearContinuationToken = async (videoId: string): Promise<void> => {
   try {
     await db.removeItem(CACHE_KEYS.CONTINUATION_TOKEN(videoId));
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 export const getCachedComments = async (videoId: string): Promise<Comment[] | null> => {

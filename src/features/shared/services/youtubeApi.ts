@@ -66,7 +66,10 @@ export class YouTubeApiService {
         this.pendingPotTokenResolvers.clear();
       }
 
-      if (event.data && (event.data.type === 'URL_CHANGED' || event.data.type === 'URL_CHANGE_TO_VIDEO')) {
+      if (
+        event.data &&
+        (event.data.type === 'URL_CHANGED' || event.data.type === 'URL_CHANGE_TO_VIDEO')
+      ) {
         this.capturedPotToken = null;
         this.capturedPotVideoId = null;
         this.pendingPotTokenResolvers.clear();
@@ -467,9 +470,7 @@ export class YouTubeApiService {
         let errorText = '';
         try {
           errorText = await response.text();
-        } catch (readError) {
-        }
-
+        } catch (readError) {}
 
         throw new Error(
           `YouTube API error: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`
@@ -503,16 +504,15 @@ export class YouTubeApiService {
       },
     };
 
-
-      const response = await this.fetchFromApi({
-        endpoint: 'player',
+    const response = await this.fetchFromApi({
+      endpoint: 'player',
       queryParams: {
         prettyPrint: 'false',
         ycn: '95',
       },
       body: requestBody,
-        signal,
-      });
+      signal,
+    });
 
     return response;
   }
@@ -538,14 +538,12 @@ export class YouTubeApiService {
         error?: { name?: string; message?: string; stack?: string };
       }>('YCN_REQUEST_TIMEDTEXT_FETCH', { url, headers });
 
-
       if (!response.ok) {
         if (response.error) {
           throw new Error(
             `YouTube timedtext main world fetch failed: ${response.error.name || 'Error'} ${response.error.message || ''}`.trim()
           );
         }
-
 
         throw new Error(
           `YouTube timedtext error: ${response.status} ${response.statusText}${response.body ? ` - ${response.body}` : ''}`

@@ -9,8 +9,7 @@ export const PerformanceWrapper: React.FC<React.PropsWithChildren<PerformanceWra
   children,
 }) => {
   useEffect(() => {
-    return () => {
-    };
+    return () => {};
   }, [id]);
 
   return <>{children}</>;

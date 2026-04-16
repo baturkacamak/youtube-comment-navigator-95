@@ -56,7 +56,6 @@ export async function saveLiveChatMessages(
       );
     }
 
-
     // Validate messages before saving
     const validMessages = messages.filter((msg) => {
       if (!msg.messageId) {
@@ -105,7 +104,6 @@ export async function saveLiveChatMessages(
 
     return newMessages.length;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error; // Re-throw if already a LiveChatError
     }
@@ -188,7 +186,6 @@ export async function loadLiveChatMessages(
       );
     }
 
-
     // OPTIMIZATION: Use compound index [videoId+timestampMs] for sorted access
     // This avoids loading ALL messages into memory just to sort and slice
 
@@ -227,7 +224,6 @@ export async function loadLiveChatMessages(
 
     return results;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -260,7 +256,6 @@ export async function getLiveChatMessageCount(videoId: string): Promise<number> 
 
     return count;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -296,7 +291,6 @@ export async function saveLiveChatReply(reply: Comment, parentMessageId: string)
       );
     }
 
-
     // Ensure reply has correct flags
     const replyWithFlags: Comment = {
       ...reply,
@@ -312,7 +306,6 @@ export async function saveLiveChatReply(reply: Comment, parentMessageId: string)
 
     return id;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -341,7 +334,6 @@ export async function loadLiveChatReplies(parentMessageId: string): Promise<Comm
       );
     }
 
-
     const replies = await db.comments
       .where('commentParentId')
       .equals(parentMessageId)
@@ -350,7 +342,6 @@ export async function loadLiveChatReplies(parentMessageId: string): Promise<Comm
 
     return replies;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -379,7 +370,6 @@ async function incrementMessageReplyCount(messageId: string): Promise<void> {
         .where('messageId')
         .equals(messageId)
         .modify({ replyCount: currentCount + 1, hasReplies: true });
-
     } else {
     }
   } catch (error: any) {
@@ -402,12 +392,10 @@ export async function deleteLiveChatMessages(videoId: string): Promise<number> {
       );
     }
 
-
     const count = await db.liveChatMessages.where('videoId').equals(videoId).delete();
 
     return count;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -436,7 +424,6 @@ export async function deleteLiveChatReplies(videoId: string): Promise<number> {
       );
     }
 
-
     // Delete all comments that are marked as livechat (isLiveChat = true)
     const count = await db.comments
       .where('videoId')
@@ -446,7 +433,6 @@ export async function deleteLiveChatReplies(videoId: string): Promise<number> {
 
     return count;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -494,7 +480,6 @@ export async function bookmarkLiveChatMessage(messageId: string, note?: string):
       );
     }
 
-
     const updated = await db.liveChatMessages
       .where('messageId')
       .equals(messageId)
@@ -512,9 +497,7 @@ export async function bookmarkLiveChatMessage(messageId: string, note?: string):
         { messageId }
       );
     }
-
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -542,7 +525,6 @@ export async function unbookmarkLiveChatMessage(messageId: string): Promise<void
       );
     }
 
-
     const updated = await db.liveChatMessages.where('messageId').equals(messageId).modify({
       isBookmarked: false,
       bookmarkAddedDate: undefined,
@@ -557,9 +539,7 @@ export async function unbookmarkLiveChatMessage(messageId: string): Promise<void
         { messageId }
       );
     }
-
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }
@@ -588,7 +568,6 @@ export async function getBookmarkedLiveChatMessages(videoId: string): Promise<Li
       );
     }
 
-
     const messages = await db.liveChatMessages
       .where('[videoId+isBookmarked]')
       .equals([videoId, 1])
@@ -596,7 +575,6 @@ export async function getBookmarkedLiveChatMessages(videoId: string): Promise<Li
 
     return messages;
   } catch (error: any) {
-
     if (error.type && error.type in LiveChatErrorType) {
       throw error;
     }

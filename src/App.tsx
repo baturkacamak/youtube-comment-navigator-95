@@ -23,7 +23,10 @@ import Tabs from './features/shared/components/Tabs';
 import { useSelector } from 'react-redux';
 import { RootState } from './types/rootState';
 import i18n from 'i18next';
-import { useCommentsFromDB, useTotalUnfilteredCount } from './features/comments/hooks/useCommentsFromDB';
+import {
+  useCommentsFromDB,
+  useTotalUnfilteredCount,
+} from './features/comments/hooks/useCommentsFromDB';
 import { extractYouTubeVideoIdFromUrl } from './features/shared/utils/extractYouTubeVideoIdFromUrl';
 import IntelligenceTab from './features/intelligence/components/IntelligenceTab';
 import Collapsible from './features/shared/components/Collapsible';

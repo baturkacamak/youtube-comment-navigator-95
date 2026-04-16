@@ -42,8 +42,10 @@ const BatchExportAccordion: React.FC = () => {
   const [videos, setVideos] = useState<PlaylistVideoItem[]>([]);
   const [isLoadingVideos, setIsLoadingVideos] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set<string>());
-  const [selectedContent, setSelectedContent] = useState<BatchExportContentSelection>(defaultContent);
-  const [selectedFormats, setSelectedFormats] = useState<BatchExportFormatSelection>(defaultFormats);
+  const [selectedContent, setSelectedContent] =
+    useState<BatchExportContentSelection>(defaultContent);
+  const [selectedFormats, setSelectedFormats] =
+    useState<BatchExportFormatSelection>(defaultFormats);
   const [isExporting, setIsExporting] = useState(false);
   const [progress, setProgress] = useState<BatchExportProgress | null>(null);
 
@@ -272,7 +274,10 @@ const BatchExportAccordion: React.FC = () => {
               <select
                 value={selectedFormats.comments}
                 onChange={(event) =>
-                  setSelectedFormats((prev) => ({ ...prev, comments: event.target.value as 'json' | 'csv' }))
+                  setSelectedFormats((prev) => ({
+                    ...prev,
+                    comments: event.target.value as 'json' | 'csv',
+                  }))
                 }
                 disabled={!selectedContent.comments || isExporting}
                 className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-gray-700 dark:text-gray-200"
@@ -318,7 +323,10 @@ const BatchExportAccordion: React.FC = () => {
               <select
                 value={selectedFormats.description}
                 onChange={(event) =>
-                  setSelectedFormats((prev) => ({ ...prev, description: event.target.value as 'txt' | 'json' }))
+                  setSelectedFormats((prev) => ({
+                    ...prev,
+                    description: event.target.value as 'txt' | 'json',
+                  }))
                 }
                 disabled={!selectedContent.description || isExporting}
                 className="text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-2 py-1 text-gray-700 dark:text-gray-200"
@@ -337,7 +345,9 @@ const BatchExportAccordion: React.FC = () => {
                   total: progress.totalVideos,
                 })}
               </p>
-              {progress.currentVideoTitle && <p className="truncate">{progress.currentVideoTitle}</p>}
+              {progress.currentVideoTitle && (
+                <p className="truncate">{progress.currentVideoTitle}</p>
+              )}
               <p>{progress.stage}</p>
             </div>
           )}

@@ -259,7 +259,6 @@ export const fetchAndProcessComments = async (
         clearFreshVideoMarker(videoId);
       }
 
-
       // Emit database event for reactive UI updates
       if (insertedCount > 0) {
         const commentIds = mainProcessedData.items.map((c: any) => c.commentId).filter(Boolean);
@@ -381,7 +380,6 @@ async function fetchRepliesAndProcess(
       if (dispatch) {
         dispatch(setTotalCommentsCount(localCommentCount));
       }
-
 
       performanceMonitor.end(`Process & Save Replies (${replies.length})`);
     } else {

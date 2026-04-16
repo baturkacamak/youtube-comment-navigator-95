@@ -1,4 +1,3 @@
-
 // Define necessary types locally for self-containment
 export type RequestHeaders = Record<string, string>;
 export type RequestCredentials = 'include' | 'same-origin' | 'omit';
@@ -42,7 +41,6 @@ class HttpService {
     const browserHeaders = this.getRandomizedBrowserHeaders(headers);
     let lastError: any = null;
     const requestId = Math.random().toString(36).substr(2, 9);
-
 
     // 1. Try using the modern Fetch API first
     if (typeof fetch === 'function') {

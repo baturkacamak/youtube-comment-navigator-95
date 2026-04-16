@@ -180,12 +180,10 @@ class hoverAction {
   reset(clearCache = true): void {
     if (!this.isInitialized) return;
 
-
     this.actionExecuted = false;
     if (clearCache) {
       this.actionResult = undefined; // Reset to initial value
       this.cacheEntry = null;
-
     }
     // Don't clear actionPromise here, abortAction handles ongoing promises.
 
@@ -263,7 +261,6 @@ class hoverAction {
         delay
         // { trailing: true, leading: false } // Example options object - uncomment/adjust if supported
       );
-
     }
 
     // Add event listeners
@@ -280,7 +277,6 @@ class hoverAction {
       this.element.addEventListener('touchend', this.handleTouchEnd);
       this.element.addEventListener('touchcancel', this.handleTouchEnd);
       this.element.addEventListener('touchmove', this.handleTouchMove, { passive: true });
-
     }
   }
 
@@ -323,7 +319,6 @@ class hoverAction {
 
   private handleClick(e: MouseEvent): void {
     if (!this.isInitialized) return;
-
 
     this.clearTimers(); // Cancel any pending delayed actions
 
@@ -458,7 +453,6 @@ class hoverAction {
   private initiateActionTrigger(type: 'hover' | 'focus'): void {
     const delay = type === 'focus' ? this.focusDelay : this.hoverDelay;
 
-
     // Cancel timers for other interaction types
     if (type === 'hover') this.clearFocusTimer();
     if (type === 'focus') this.clearHoverTimer();
@@ -471,8 +465,7 @@ class hoverAction {
       if (result !== undefined && this.onResult) {
         try {
           this.onResult(result.data);
-        } catch (err) {
-        }
+        } catch (err) {}
       }
       return;
     }
@@ -526,21 +519,18 @@ class hoverAction {
     if (this.hoverTimer) {
       clearTimeout(this.hoverTimer);
       this.hoverTimer = null;
-
     }
   }
   private clearFocusTimer(): void {
     if (this.focusTimer) {
       clearTimeout(this.focusTimer);
       this.focusTimer = null;
-
     }
   }
   private clearTouchTimer(): void {
     if (this.touchTimer) {
       clearTimeout(this.touchTimer);
       this.touchTimer = null;
-
     }
   }
 
@@ -617,8 +607,7 @@ class hoverAction {
         // Ensure onResult is called even when returning cached data
         try {
           this.onResult(existingResult.data);
-        } catch (err) {
-        }
+        } catch (err) {}
       }
       return Promise.resolve(existingResult.data);
     }
@@ -638,8 +627,7 @@ class hoverAction {
       if (!signal.aborted && this.onProgress) {
         try {
           this.onProgress(progress);
-        } catch (err) {
-        }
+        } catch (err) {}
       }
     };
 
@@ -660,7 +648,6 @@ class hoverAction {
         if (this.cacheTTL !== null && this.cacheTTL >= 0) {
           // Allow 0 TTL for session cache maybe?
           this.cacheEntry = new cacheEntry(result, this.cacheTTL);
-
         }
 
         // === Success State Update ===
@@ -672,8 +659,7 @@ class hoverAction {
         if (this.onResult) {
           try {
             this.onResult(result);
-          } catch (err) {
-          }
+          } catch (err) {}
         }
         this.dispatchEvent('result', { result });
 
@@ -734,8 +720,7 @@ class hoverAction {
     if (this.onClick) {
       try {
         this.onClick(result, _e);
-      } catch {
-      }
+      } catch {}
     }
     this.dispatchEvent('clickProcessed', { result, originalEvent: _e });
   }

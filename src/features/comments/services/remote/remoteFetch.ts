@@ -35,8 +35,7 @@ function abortAllOngoingOperations() {
   try {
     currentAbortController.abort();
     currentAbortController = new AbortController();
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 // Track the current video for cleanup purposes
@@ -200,8 +199,7 @@ async function loadCachedCommentsIfAny(videoId: string, dispatch: any): Promise<
       dispatch(setIsLoading(false));
       return true;
     }
-  } catch (err) {
-  }
+  } catch (err) {}
   return false;
 }
 
@@ -252,8 +250,7 @@ async function iterateFetchComments(
       const flushed = await flushBufferedComments(videoId);
       if (flushed > 0) {
       }
-    } catch (flushError) {
-    }
+    } catch (flushError) {}
   }
 
   return hasQueuedRepliesValue;
@@ -267,7 +264,6 @@ async function deleteCommentsIfFreshFetch(
   if (!localToken) {
     try {
       await deleteCommentsFromDb(videoId);
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }
