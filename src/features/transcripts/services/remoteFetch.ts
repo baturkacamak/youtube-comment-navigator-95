@@ -94,54 +94,51 @@ export async function fetchTranscriptFromRemote(
   url: string,
   language?: string
 ): Promise<ProcessedTranscript> {
-  try {
-    if (!url) {
-      throw new Error('Transcript base URL not found.');
-    }
-
-    // 1. Try to get the intercepted POT token first (most reliable)
-    // Wait up to 3 seconds for the injected script to find it
-    let potToken = await youtubeApi.waitForPotToken(3000);
-
-    if (!potToken) {
-      // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
-      try {
-        const playerResponse = await youtubeApi.fetchPlayer();
-        potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
-      } catch (e) {}
-    }
-
-    const variants = buildTranscriptRequestVariants(url, { language, potToken });
-
-    let response = '';
-    let data: any = null;
-    let lastError: unknown = null;
-
-    for (const variant of variants) {
-      try {
-        response = await youtubeApi.fetchTimedText(variant.url);
-        if (!response.trim()) {
-          throw new Error('Timedtext response body was empty');
-        }
-
-        data = JSON.parse(response);
-        break;
-      } catch (error) {
-        lastError = error;
-      }
-    }
-
-    if (!data) {
-      throw (lastError instanceof Error ? lastError : new Error(String(lastError)));
-    }
-
-
-    // Assuming the response is the raw transcript data that needs processing
-    const processed = processTranscriptData(data);
-    return processed;
-  } catch (error) {
-    throw error;
+  if (!url) {
+    throw new Error('Transcript base URL not found.');
   }
+
+  // 1. Try to get the intercepted POT token first (most reliable)
+  // Wait up to 3 seconds for the injected script to find it
+  let potToken = await youtubeApi.waitForPotToken(3000);
+
+  if (!potToken) {
+    // 2. Fallback: Try to fetch player response manually (might not contain POT if request is clean)
+    try {
+      const playerResponse = await youtubeApi.fetchPlayer();
+      potToken = playerResponse?.serviceIntegrityDimensions?.poToken;
+    } catch {
+      // Ignore fallback player fetch failures and continue with other variants.
+    }
+  }
+
+  const variants = buildTranscriptRequestVariants(url, { language, potToken });
+
+  let response = '';
+  let data: any = null;
+  let lastError: unknown = null;
+
+  for (const variant of variants) {
+    try {
+      response = await youtubeApi.fetchTimedText(variant.url);
+      if (!response.trim()) {
+        throw new Error('Timedtext response body was empty');
+      }
+
+      data = JSON.parse(response);
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (!data) {
+    throw (lastError instanceof Error ? lastError : new Error(String(lastError)));
+  }
+
+  // Assuming the response is the raw transcript data that needs processing
+  const processed = processTranscriptData(data);
+  return processed;
 }
 
 /**
@@ -159,26 +156,22 @@ interface CaptionTracksResponse {
  * @returns A promise that resolves to the base URL of the transcript.
  */
 export async function fetchCaptionTracks(url: string): Promise<string> {
-  try {
-    const response = await httpService.get(url);
+  const response = await httpService.get(url);
 
-    // The response is a string that needs to be parsed to find the captionTracks JSON
-    const captionTracksJson = response.split('"captionTracks":')[1];
-    if (!captionTracksJson) {
-      throw new Error('Caption tracks not found in the response.');
-    }
-
-    const captionTracksDataString = captionTracksJson.split(',"videoDetails"')[0];
-    const captionTracks: CaptionTracksResponse = JSON.parse(captionTracksDataString);
-
-    if (captionTracks.captionTracks?.[0]?.baseUrl) {
-      return captionTracks.captionTracks[0].baseUrl;
-    } else {
-      throw new Error('Transcript base URL not found.');
-    }
-  } catch (error) {
-    throw error;
+  // The response is a string that needs to be parsed to find the captionTracks JSON
+  const captionTracksJson = response.split('"captionTracks":')[1];
+  if (!captionTracksJson) {
+    throw new Error('Caption tracks not found in the response.');
   }
+
+  const captionTracksDataString = captionTracksJson.split(',"videoDetails"')[0];
+  const captionTracks: CaptionTracksResponse = JSON.parse(captionTracksDataString);
+
+  if (captionTracks.captionTracks?.[0]?.baseUrl) {
+    return captionTracks.captionTracks[0].baseUrl;
+  }
+
+  throw new Error('Transcript base URL not found.');
 }
 
 export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
@@ -190,11 +183,9 @@ export const fetchCaptionTrackBaseUrl = async (): Promise<string | null> => {
     const captionTracks = data?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
 
     const baseUrl = captionTracks[0]?.baseUrl || null;
-    if (!baseUrl) {
-    }
 
     return baseUrl;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

@@ -3,7 +3,7 @@ import { RootState } from '../types/rootState'; // Adjust the path as necessary
 import { Comment } from '../types/commentTypes'; // Adjust the path as necessary
 import { LiveChatMessage } from '../types/liveChatTypes';
 import { FilterState } from '../types/filterTypes';
-import { saveSettings } from '../features/settings/utils/settingsUtils';
+import { getSettings, saveSettings } from '../features/settings/utils/settingsUtils';
 
 // Helper function to safely load from localStorage
 const loadPreference = <T>(key: string, defaultValue: T): T => {
@@ -40,6 +40,44 @@ const defaultFilters: FilterState = {
   },
 };
 
+const defaultSettings: RootState['settings'] = {
+  textSize: 'text-base',
+  fontFamily: 'Arial, sans-serif',
+  showFiltersSorts: true,
+  showContentOnSearch: false,
+  geminiApiKey: '',
+  enableDeveloperMode: false,
+};
+
+const loadSettingsPreference = (): RootState['settings'] => {
+  const savedSettings = getSettings();
+
+  return {
+    ...defaultSettings,
+    textSize: typeof savedSettings.textSize === 'string' ? savedSettings.textSize : defaultSettings.textSize,
+    fontFamily:
+      typeof savedSettings.fontFamily === 'string'
+        ? savedSettings.fontFamily
+        : defaultSettings.fontFamily,
+    showFiltersSorts:
+      typeof savedSettings.showFiltersSorts === 'boolean'
+        ? savedSettings.showFiltersSorts
+        : defaultSettings.showFiltersSorts,
+    showContentOnSearch:
+      typeof savedSettings.showContentOnSearch === 'boolean'
+        ? savedSettings.showContentOnSearch
+        : defaultSettings.showContentOnSearch,
+    geminiApiKey:
+      typeof savedSettings.geminiApiKey === 'string'
+        ? savedSettings.geminiApiKey
+        : defaultSettings.geminiApiKey,
+    enableDeveloperMode:
+      typeof savedSettings.enableDeveloperMode === 'boolean'
+        ? savedSettings.enableDeveloperMode
+        : defaultSettings.enableDeveloperMode,
+  };
+};
+
 /**
  * Redux Store - View Buffer Architecture
  *
@@ -59,14 +97,7 @@ const defaultFilters: FilterState = {
  */
 const initialState: RootState = {
   // Settings and filters
-  settings: {
-    textSize: 'text-base',
-    fontFamily: 'Arial, sans-serif',
-    showFiltersSorts: true,
-    showContentOnSearch: false,
-    geminiApiKey: '',
-    enableDeveloperMode: false,
-  },
+  settings: loadSettingsPreference(),
   filters: loadPreference('filter_preferences', defaultFilters),
 
   // Comments View Buffer - holds currently displayed comments
@@ -207,7 +238,12 @@ const commentsSlice = createSlice({
     },
 
     // Reset action
-    resetState: () => initialState,
+    resetState: (state) => ({
+      ...initialState,
+      settings: state.settings,
+      filters: state.filters,
+      transcriptSelectedLanguage: state.transcriptSelectedLanguage,
+    }),
 
     // Search keyword actions
     setSearchKeyword: (state, action: PayloadAction<string>) => {

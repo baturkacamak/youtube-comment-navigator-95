@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import ToggleButton from '../../shared/components/ToggleButton';
 import { RootState } from '../../../types/rootState';
-import { setShowContentOnSearch, setShowFiltersSorts } from '../../../store/store';
+import { setShowContentOnSearch } from '../../../store/store';
 import { getSettings } from '../utils/settingsUtils';
 
 const ShowContentOnSearchToggle: React.FC = () => {
@@ -14,10 +14,10 @@ const ShowContentOnSearchToggle: React.FC = () => {
   useEffect(() => {
     try {
       const settings = getSettings();
-      dispatch(setShowFiltersSorts((settings.showContentOnSearch as boolean) ?? false));
+      dispatch(setShowContentOnSearch((settings.showContentOnSearch as boolean) ?? false));
     } catch (error) {
       console.error('Error loading show content on search setting:', error);
-      dispatch(setShowFiltersSorts(false)); // Default to false on error
+      dispatch(setShowContentOnSearch(false)); // Default to false on error
     }
   }, [dispatch]);
 
