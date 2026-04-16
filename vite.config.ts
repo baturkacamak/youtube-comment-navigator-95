@@ -48,6 +48,9 @@ export default defineConfig({
     target: 'es2020',
     minify: 'esbuild',
   },
+  esbuild: {
+    charset: 'ascii',
+  },
   test: {
     globals: true,
     environment: 'jsdom',
