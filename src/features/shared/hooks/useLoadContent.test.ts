@@ -10,6 +10,8 @@ import {
 import { extractVideoId } from '../../comments/services/remote/utils';
 import { setLiveChatError, setLiveChatLoading } from '../../../store/store';
 
+const mockShowToast = vi.fn();
+
 // Mock dependencies
 vi.mock('react-redux', () => ({
   useDispatch: vi.fn(),
@@ -46,6 +48,12 @@ vi.mock('../../utils/logger', () => ({
   },
 }));
 
+vi.mock('../contexts/ToastContext', () => ({
+  useToast: () => ({
+    showToast: mockShowToast,
+  }),
+}));
+
 // Mock error handler
 vi.mock('../../comments/services/liveChat/liveChatErrorHandler', () => ({
   shouldShowLiveChatErrorToast: vi.fn().mockReturnValue(true),
@@ -59,6 +67,7 @@ describe('useLoadContent', () => {
     vi.clearAllMocks();
     (useDispatch as any).mockReturnValue(mockDispatch);
     (extractVideoId as any).mockReturnValue('test-video-id');
+    mockShowToast.mockReset();
   });
 
   describe('loadLiveChat', () => {

@@ -1,6 +1,7 @@
 // src/features/comments/hooks/useCommentsFromDB.ts
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { useSelector } from 'react-redux';
 import { db } from '../../shared/utils/database/database';
 import { Comment } from '../../../types/commentTypes';
 import { FilterState } from '../../../types/filterTypes';
@@ -8,6 +9,7 @@ import { loadPagedComments, countComments } from '../services/pagination';
 import { PAGINATION } from '../../shared/utils/appConstants';
 import { dbEvents } from '../../shared/utils/database/dbEvents';
 import { throttle } from '../../shared/utils/debounce';
+import { selectIsLoading } from '../../../store/selectors';
 
 /** Throttle interval for UI updates during heavy fetching (ms) */
 const UI_UPDATE_THROTTLE_MS = 1000;
@@ -77,6 +79,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   // Component instance ID for logging
   const instanceId = useRef(`hook-${Math.random().toString(36).substr(2, 6)}`);
   const logPrefix = `[useCommentsFromDB:${instanceId.current}]`;
+  const globalLoading = useSelector(selectIsLoading);
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [page, setPage] = useState(0);
@@ -86,6 +89,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   const abortControllerRef = useRef<AbortController | null>(null);
   const isLoadingRef = useRef(isLoading);
   const loadingMoreRef = useRef(loadingMore);
+  const prevGlobalLoadingRef = useRef(globalLoading);
 
   useEffect(() => {
     isLoadingRef.current = isLoading;
@@ -94,6 +98,17 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
   useEffect(() => {
     loadingMoreRef.current = loadingMore;
   }, [loadingMore]);
+
+  useEffect(() => {
+    const startedGlobalLoading = !prevGlobalLoadingRef.current && globalLoading;
+
+    if (startedGlobalLoading && comments.length > 0) {
+      setComments([]);
+      setPage(0);
+    }
+
+    prevGlobalLoadingRef.current = globalLoading;
+  }, [comments.length, globalLoading]);
 
   const metricsRef = useRef<PerformanceMetrics>({
     lastFetchDuration: 0,
@@ -248,8 +263,7 @@ export const useCommentsFromDB = (options: UseCommentsFromDBOptions): UseComment
     setError(null);
 
     fetchPage(0, false)
-      .catch((err) => {
-      })
+      .catch((err) => {})
       .finally(() => {
         setIsLoading(false);
       });
