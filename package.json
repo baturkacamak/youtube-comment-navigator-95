@@ -97,7 +97,7 @@
     "fake-indexeddb": "^6.2.5",
     "framer-motion": "^12.29.2",
     "fs-extra": "^10.1.0",
-    "globals": "^16.0.0",
+    "globals": "^17.5.0",
     "husky": "^9.1.7",
     "i18next-parser": "^9.4.0",
     "jsdom": "^27.4.0",
