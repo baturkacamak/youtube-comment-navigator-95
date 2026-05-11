@@ -156,7 +156,8 @@ describe('DownloadAccordion', () => {
         mockVisibleData,
         'json', // default format for comments
         'test-file',
-        undefined
+        undefined,
+        'compact'
       );
     });
 
@@ -190,7 +191,13 @@ describe('DownloadAccordion', () => {
       expect(mockFetchAll).toHaveBeenCalled();
     });
 
-    expect(executeDownload).toHaveBeenCalledWith(mockAllData, 'json', 'test-file', undefined);
+    expect(executeDownload).toHaveBeenCalledWith(
+      mockAllData,
+      'json',
+      'test-file',
+      undefined,
+      'compact'
+    );
   });
 
   it('uses visible data by default even when allData is available', async () => {
@@ -212,7 +219,13 @@ describe('DownloadAccordion', () => {
     fireEvent.click(downloadBtn);
 
     await waitFor(() => {
-      expect(executeDownload).toHaveBeenCalledWith(mockVisibleData, 'json', 'test-file', undefined);
+      expect(executeDownload).toHaveBeenCalledWith(
+        mockVisibleData,
+        'json',
+        'test-file',
+        undefined,
+        'compact'
+      );
     });
 
     expect(mockFetchAll).not.toHaveBeenCalled();
@@ -240,7 +253,13 @@ describe('DownloadAccordion', () => {
     fireEvent.click(downloadBtn);
 
     await waitFor(() => {
-      expect(executeDownload).toHaveBeenCalledWith(mockAllData, 'json', 'test-file', undefined);
+      expect(executeDownload).toHaveBeenCalledWith(
+        mockAllData,
+        'json',
+        'test-file',
+        undefined,
+        'compact'
+      );
     });
   });
 

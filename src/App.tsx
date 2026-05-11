@@ -70,7 +70,7 @@ const App: React.FC = () => {
     videoId,
     filters,
     searchKeyword,
-    topLevelOnly: true,
+    topLevelOnly: false,
     excludeLiveChat: true,
   });
 
@@ -87,7 +87,7 @@ const App: React.FC = () => {
       filters,
       searchKeyword,
       {
-        topLevelOnly: true,
+        topLevelOnly: false,
         excludeLiveChat: true,
       }
     );

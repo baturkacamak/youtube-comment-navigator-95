@@ -12,6 +12,9 @@ import {
   LiveChatErrorType,
 } from '../../../../types/liveChatTypes';
 import { Comment } from '../../../../types/commentTypes';
+import { devLog } from '../../../devtools/devLogger';
+
+const LIVE_CHAT_SCOPE = 'livechat';
 
 /**
  * Creates a structured error for livechat operations
@@ -96,14 +99,19 @@ export async function saveLiveChatMessages(
       return 0;
     }
 
-    if (newMessages.length < validMessages.length) {
-    }
-
     // Use bulkAdd for new messages only
     await db.liveChatMessages.bulkAdd(newMessages);
 
     return newMessages.length;
   } catch (error: any) {
+    devLog('error', LIVE_CHAT_SCOPE, 'Database save for live chat messages failed', {
+      videoId,
+      attemptedCount: messages?.length ?? 0,
+      error:
+        error instanceof Error
+          ? { name: error.name, message: error.message, stack: error.stack }
+          : { message: String(error) },
+    });
     if (error.type && error.type in LiveChatErrorType) {
       throw error; // Re-throw if already a LiveChatError
     }

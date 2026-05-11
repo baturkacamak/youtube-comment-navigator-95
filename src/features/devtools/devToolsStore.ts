@@ -13,6 +13,14 @@ type Subscriber = (entries: DevLogEntry[]) => void;
 
 const STORAGE_KEY = 'ycn-devtools-log-entries';
 
+const shouldStoreEntry = (entry: Pick<DevLogEntry, 'scope' | 'level'>): boolean => {
+  if (entry.scope === 'transcript' && entry.level !== 'error') {
+    return false;
+  }
+
+  return true;
+};
+
 const loadPersistedEntries = (): DevLogEntry[] => {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -32,7 +40,8 @@ const loadPersistedEntries = (): DevLogEntry[] => {
         typeof entry.timestamp === 'string' &&
         typeof entry.level === 'string' &&
         typeof entry.scope === 'string' &&
-        typeof entry.message === 'string'
+        typeof entry.message === 'string' &&
+        shouldStoreEntry(entry)
     );
   } catch {
     return [];
@@ -53,6 +62,10 @@ class DevToolsStore {
   }
 
   add(entry: Omit<DevLogEntry, 'id' | 'timestamp'>) {
+    if (!shouldStoreEntry(entry)) {
+      return;
+    }
+
     const next: DevLogEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       timestamp: new Date().toISOString(),

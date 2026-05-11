@@ -5,6 +5,7 @@ import {
   setTranscripts,
   setLiveChatLoading,
   setLiveChatError,
+  setLiveChatMessageCount,
 } from '../../../store/store';
 import { fetchTranscript } from '../../transcripts/services/fetchTranscript';
 import { fetchCommentsFromRemote } from '../../comments/services/remote/remoteFetch';
@@ -13,6 +14,7 @@ import {
   deleteLiveChatMessages,
   deleteLiveChatReplies,
   hasLiveChatMessages,
+  getLiveChatMessageCount,
 } from '../../comments/services/liveChat/liveChatDatabase';
 import { extractVideoId } from '../../comments/services/remote/utils';
 import {
@@ -93,6 +95,8 @@ const useLoadContent = (bypassCache = false) => {
       if (!bypassCache) {
         const exists = await hasLiveChatMessages(videoId);
         if (exists) {
+          const totalCount = await getLiveChatMessageCount(videoId);
+          dispatch(setLiveChatMessageCount(totalCount));
           dispatch(setLiveChatLoading(false));
           return;
         }
@@ -107,6 +111,8 @@ const useLoadContent = (bypassCache = false) => {
       // Fetch live chat
       const controller = new AbortController();
       await fetchAndProcessLiveChat(videoId, window, controller.signal);
+      const totalCount = await getLiveChatMessageCount(videoId);
+      dispatch(setLiveChatMessageCount(totalCount));
     } catch (error: any) {
       dispatch(setLiveChatError(error.message || 'Failed to load live chat'));
 

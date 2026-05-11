@@ -220,11 +220,6 @@ export const loadPagedComments = async (
   searchKeyword: string = '',
   options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean } = {}
 ): Promise<Comment[]> => {
-  const timerId = `loadPagedComments-${videoId}-p${page}-${Date.now()}-${Math.random()
-    .toString(36)
-    .substr(2, 5)}`;
-  const logPrefix = `[loadPagedComments] videoId: ${videoId}, page ${page}`;
-
   if (!videoId) {
     return [];
   }
@@ -237,6 +232,64 @@ export const loadPagedComments = async (
 
   try {
     const offset = page * pageSize;
+
+    if (!options.topLevelOnly) {
+      let collection = commentsTable.where('videoId').equals(videoId);
+
+      if (
+        hasActiveCommentFilters(filters) ||
+        searchKeyword ||
+        options.excludeLiveChat ||
+        options.onlyLiveChat
+      ) {
+        collection = collection.filter((comment) =>
+          applyFiltersAndSearch(comment, filters, searchKeyword, options)
+        );
+      }
+
+      const allComments = await collection.toArray();
+
+      switch (sortBy) {
+        case 'likes':
+          allComments.sort((a, b) => a.likes - b.likes);
+          break;
+        case 'replies':
+          allComments.sort((a, b) => a.replyCount - b.replyCount);
+          break;
+        case 'author':
+          allComments.sort((a, b) => a.author.localeCompare(b.author));
+          break;
+        case 'normalized':
+          allComments.sort((a, b) => (a.normalizedScore || 0) - (b.normalizedScore || 0));
+          break;
+        case 'zscore':
+          allComments.sort((a, b) => (a.weightedZScore || 0) - (b.weightedZScore || 0));
+          break;
+        case 'bayesian':
+          allComments.sort((a, b) => (a.bayesianAverage || 0) - (b.bayesianAverage || 0));
+          break;
+        case 'length':
+          allComments.sort((a, b) => (a.wordCount || 0) - (b.wordCount || 0));
+          break;
+        case 'random':
+          for (let i = allComments.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [allComments[i], allComments[j]] = [allComments[j], allComments[i]];
+          }
+          break;
+        case 'date':
+        default:
+          allComments.sort((a, b) => a.publishedDate - b.publishedDate);
+          break;
+      }
+
+      if (sortOrder === 'desc' && sortBy !== 'random') {
+        allComments.reverse();
+      }
+
+      return allComments.slice(offset, offset + pageSize);
+    }
+
     const baseIndex = 'videoId+replyLevel';
     const buildIndexKey = (field: string) => `[${baseIndex}+${field}]`;
 
@@ -245,7 +298,6 @@ export const loadPagedComments = async (
       upper: [videoId, 0, Dexie.maxKey],
     };
 
-    const queryTimer = `${timerId}-querySetup`;
     let collection: Dexie.Collection<Comment, number>;
     switch (sortBy) {
       case 'date':
@@ -303,7 +355,6 @@ export const loadPagedComments = async (
       options.excludeLiveChat ||
       options.onlyLiveChat
     ) {
-      const filterTimer = `${timerId}-applyingFiltersAndSearch`;
       filteredCollection = collection.filter((comment) =>
         applyFiltersAndSearch(comment, filters, searchKeyword, options)
       );
@@ -314,7 +365,6 @@ export const loadPagedComments = async (
       filteredCollection = filteredCollection.reverse();
     }
 
-    const arrayTimer = `${timerId}-toArray`;
     const pagedComments = await filteredCollection.offset(offset).limit(pageSize).toArray();
 
     if (sortBy === 'author') {
@@ -325,8 +375,6 @@ export const loadPagedComments = async (
     }
 
     if (sortBy === 'random') {
-      const scanTimer = `${timerId}-randomShuffle`;
-
       let allTopLevelCollection = commentsTable
         .where(buildIndexKey('publishedDate'))
         .between(bounds.lower, bounds.upper, true, true);

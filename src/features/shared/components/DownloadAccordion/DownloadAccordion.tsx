@@ -1,7 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DocumentArrowDownIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
-import { DownloadAccordionProps, DownloadFormat, DownloadScope, FORMAT_CONFIG } from './types';
+import {
+  DownloadAccordionProps,
+  DownloadFormat,
+  DownloadScope,
+  ExportFieldPreset,
+  FORMAT_CONFIG,
+} from './types';
 import { generateFileName, executeDownload } from './downloadUtils';
 import Collapsible from '../Collapsible';
 import { useToast } from '../../contexts/ToastContext';
@@ -29,6 +35,12 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   const [selectedScope, setSelectedScope] = useState<DownloadScope>(() => {
     return (localStorage.getItem('download_scope_preference') as DownloadScope) || 'visible';
   });
+  const supportsFieldPresets = contentType === 'comments' || contentType === 'bookmarks';
+  const [selectedFieldPreset, setSelectedFieldPreset] = useState<ExportFieldPreset>(() => {
+    return (
+      (localStorage.getItem('download_field_preset_preference') as ExportFieldPreset) || 'compact'
+    );
+  });
 
   // Save preferences when they change
   useEffect(() => {
@@ -38,6 +50,10 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
   useEffect(() => {
     localStorage.setItem('download_scope_preference', selectedScope);
   }, [selectedScope]);
+
+  useEffect(() => {
+    localStorage.setItem('download_field_preset_preference', selectedFieldPreset);
+  }, [selectedFieldPreset]);
 
   // Reset format when content type changes if current format is not available
   useEffect(() => {
@@ -100,7 +116,13 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
       }
 
       const fileName = generateFileName(contentType, selectedFormat, selectedScope, fileNamePrefix);
-      executeDownload(dataToDownload, selectedFormat, fileName, formatTextContent);
+      executeDownload(
+        dataToDownload,
+        selectedFormat,
+        fileName,
+        formatTextContent,
+        supportsFieldPresets ? selectedFieldPreset : undefined
+      );
 
       // Show success message
       const itemCount = Array.isArray(dataToDownload) ? dataToDownload.length : 0;
@@ -142,6 +164,12 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
     json: 'JSON',
     csv: 'CSV',
     srt: 'SRT',
+  };
+
+  const fieldPresetLabels: Record<ExportFieldPreset, string> = {
+    compact: 'Compact',
+    standard: 'Standard',
+    full: 'Full',
   };
 
   return (
@@ -195,6 +223,31 @@ const DownloadAccordion: React.FC<DownloadAccordionProps> = ({
               ))}
             </div>
           </div>
+
+          {supportsFieldPresets && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('Fields')}
+              </label>
+              <div className="flex flex-wrap gap-3">
+                {(['compact', 'standard', 'full'] as ExportFieldPreset[]).map((preset) => (
+                  <label key={preset} className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="download-field-preset"
+                      value={preset}
+                      checked={selectedFieldPreset === preset}
+                      onChange={() => setSelectedFieldPreset(preset)}
+                      className="form-radio h-4 w-4 text-blue-600 dark:text-blue-400 border-gray-300 dark:border-gray-600 focus:ring-blue-500"
+                    />
+                    <span className="ml-2 text-sm text-gray-700 dark:text-gray-300">
+                      {t(fieldPresetLabels[preset])}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Scope Section - only show if allData is available */}
           {allData !== undefined && (

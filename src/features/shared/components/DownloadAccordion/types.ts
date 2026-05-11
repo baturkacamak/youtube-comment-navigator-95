@@ -1,6 +1,7 @@
 export type ContentType = 'transcript' | 'livechat' | 'comments' | 'bookmarks';
 export type DownloadFormat = 'txt' | 'json' | 'csv' | 'srt';
 export type DownloadScope = 'visible' | 'all';
+export type ExportFieldPreset = 'compact' | 'standard' | 'full';
 
 export interface DownloadOption {
   label: string;

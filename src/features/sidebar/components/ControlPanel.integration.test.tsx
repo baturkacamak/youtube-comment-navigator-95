@@ -101,7 +101,8 @@ describe('ControlPanel Download Integration', () => {
         allComments,
         'json',
         'comments-export',
-        undefined
+        undefined,
+        'compact'
       );
     });
 
@@ -138,7 +139,8 @@ describe('ControlPanel Download Integration', () => {
         visibleComments,
         'json',
         'comments-export',
-        undefined
+        undefined,
+        'compact'
       );
     });
 

@@ -57,7 +57,7 @@ const mockCommentsTable = {
 };
 
 const resetMocks = () => {
-  // Clear call history for all mocks
+  // Reset call history and queued implementations for all mocks
   const allMocks = [
     mockToArray,
     mockLimit,
@@ -71,7 +71,7 @@ const resetMocks = () => {
     mockCount,
     mockCommentsTable.where,
   ];
-  allMocks.forEach((m) => m.mockClear());
+  allMocks.forEach((m) => m.mockReset());
 
   // Reset implementations
   mockLimit.mockImplementation(() => collectionMethods);
@@ -179,16 +179,12 @@ describe('Pagination Services', () => {
       const expectedComments = [sampleComment3, sampleComment2, sampleComment1];
       mockToArray.mockResolvedValue(expectedComments);
       await loadPagedComments(mockTable, 'v1');
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel+publishedDate]');
-      expect(mockBetween).toHaveBeenCalledWith(
-        ['v1', 0, Dexie.minKey],
-        ['v1', 0, Dexie.maxKey],
-        true,
-        true
-      );
-      expect(mockReverse).toHaveBeenCalled();
-      expect(mockOffset).toHaveBeenCalledWith(0);
-      expect(mockLimit).toHaveBeenCalledWith(PAGINATION.DEFAULT_PAGE_SIZE);
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockBetween).not.toHaveBeenCalled();
+      expect(mockReverse).not.toHaveBeenCalled();
+      expect(mockOffset).not.toHaveBeenCalled();
+      expect(mockLimit).not.toHaveBeenCalled();
       expect(mockToArray).toHaveBeenCalled();
     });
 
@@ -199,8 +195,10 @@ describe('Pagination Services', () => {
 
       await loadPagedComments(mockTable, 'v1', page, pageSize);
 
-      expect(mockOffset).toHaveBeenCalledWith(page * pageSize);
-      expect(mockLimit).toHaveBeenCalledWith(pageSize);
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockOffset).not.toHaveBeenCalled();
+      expect(mockLimit).not.toHaveBeenCalled();
       expect(mockToArray).toHaveBeenCalled();
     });
 
@@ -210,13 +208,9 @@ describe('Pagination Services', () => {
 
       const result = await loadPagedComments(mockTable, 'v1', 0, 10, 'likes', 'asc');
 
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel+likes]');
-      expect(mockBetween).toHaveBeenCalledWith(
-        ['v1', 0, Dexie.minKey],
-        ['v1', 0, Dexie.maxKey],
-        true,
-        true
-      );
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockBetween).not.toHaveBeenCalled();
       expect(mockReverse).not.toHaveBeenCalled();
       expect(result).toEqual(expectedComments);
     });
@@ -304,14 +298,14 @@ describe('Pagination Services', () => {
 
     it('should handle "random" sort', async () => {
       const allComments = [sampleComment1, sampleComment2, sampleComment3];
-      mockToArray.mockResolvedValueOnce(allComments);
-      mockToArray.mockResolvedValueOnce(allComments);
+      mockToArray.mockResolvedValue(allComments);
 
       const result = await loadPagedComments(mockTable, 'v1', 0, 2, 'random', 'desc');
 
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel+publishedDate]');
-      expect(mockBetween).toHaveBeenCalled();
-      expect(mockToArray).toHaveBeenCalledTimes(2);
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockBetween).not.toHaveBeenCalled();
+      expect(mockToArray).toHaveBeenCalledTimes(1);
 
       expect(result.length).toBe(2);
       expect(allComments).toEqual(expect.arrayContaining(result));
@@ -339,7 +333,8 @@ describe('Pagination Services', () => {
 
       const result = await loadPagedComments(mockTable, 'v1', 0, 10, 'author', 'asc');
 
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel+author]');
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
       expect(mockToArray).toHaveBeenCalled();
       expect(result).toEqual(expectedSorted);
     });
@@ -418,18 +413,12 @@ describe('Pagination Services', () => {
     it('should return empty array for a page beyond the total number of comments', async () => {
       const page = 5;
       const pageSize = 10;
-      mockOffset.mockImplementation(() => {
-        mockLimit.mockImplementation(() => {
-          mockToArray.mockResolvedValue([]);
-          // Limit returns a collection
-          return collectionMethods;
-        });
-        // Offset returns a collection
-        return collectionMethods;
-      });
+      mockToArray.mockResolvedValue([sampleComment1, sampleComment2, sampleComment3]);
       const result = await loadPagedComments(mockTable, 'v1', page, pageSize);
-      expect(mockOffset).toHaveBeenCalledWith(page * pageSize);
-      expect(mockLimit).toHaveBeenCalledWith(pageSize);
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockOffset).not.toHaveBeenCalled();
+      expect(mockLimit).not.toHaveBeenCalled();
       expect(mockToArray).toHaveBeenCalled();
       expect(result).toEqual([]);
     });
@@ -466,8 +455,10 @@ describe('Pagination Services', () => {
       const result = await loadAllComments(mockTable, 'v1');
 
       expect(mockCount).toHaveBeenCalled();
-      expect(mockOffset).toHaveBeenCalledWith(0);
-      expect(mockLimit).toHaveBeenCalledWith(45);
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockOffset).not.toHaveBeenCalled();
+      expect(mockLimit).not.toHaveBeenCalled();
       expect(result).toEqual(allComments);
     });
 

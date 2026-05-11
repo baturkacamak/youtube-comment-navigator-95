@@ -9,9 +9,11 @@ import {
   setTranscripts,
   setLiveChatLoading,
   setBookmarkedLiveChatMessages,
+  setLiveChatMessageCount,
 } from '../../../../store/store';
 import { fetchTranscript } from '../../../transcripts/services/fetchTranscript';
 import { fetchAndProcessLiveChat } from '../../../comments/services/liveChat/fetchLiveChat';
+import { getLiveChatMessageCount } from '../../../comments/services/liveChat/liveChatDatabase';
 import { extractVideoId } from '../../../comments/services/remote/utils';
 import { db } from '../../utils/database/database';
 import { seedMockData } from '../../utils/mockDataSeeder';
@@ -119,6 +121,7 @@ const fetchAndSetLiveChat = async (
     const existingMessages = await db.liveChatMessages.where('videoId').equals(videoId).count();
 
     if (existingMessages > 0) {
+      dispatch(setLiveChatMessageCount(existingMessages));
       return;
     }
 
@@ -127,7 +130,10 @@ const fetchAndSetLiveChat = async (
     const controller = new AbortController();
 
     fetchAndProcessLiveChat(videoId, window, controller.signal)
-      .then(() => {})
+      .then(async () => {
+        const totalCount = await getLiveChatMessageCount(videoId);
+        dispatch(setLiveChatMessageCount(totalCount));
+      })
       .catch((error: any) => {
         if (error.name !== 'AbortError') {
           if (shouldShowLiveChatErrorToast(error)) {

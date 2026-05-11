@@ -1,4 +1,7 @@
 import { deepFindObjKey, wrapTryCatch } from './common';
+import { devLog } from '../../../devtools/devLogger';
+
+const LIVE_CHAT_SCOPE = 'livechat';
 
 export interface ChatContinuationResult {
   continuationData: any;
@@ -93,7 +96,12 @@ export function extractLiveChatContinuation(ytData: any): ChatContinuationResult
       sourcePath: undefined,
     };
   } catch (e) {
-    console.error(e);
+    devLog('error', LIVE_CHAT_SCOPE, 'Live chat continuation extraction failed', {
+      error:
+        e instanceof Error
+          ? { name: e.name, message: e.message, stack: e.stack }
+          : { message: String(e) },
+    });
     return {
       continuationData: null,
       apiVersion: 'fallback',
