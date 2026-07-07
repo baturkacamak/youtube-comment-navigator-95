@@ -3,3 +3,23 @@
 - Do not use `git commit --no-verify` as a workaround for failing hooks. Fix the hook or its command resolution first.
 - In this repository, prefer local Node entrypoints such as `node node_modules/<pkg>/...` instead of relying on `node_modules/.bin`.
 - Before committing, make sure the relevant local checks pass through the repo's normal scripts or hook commands.
+- Commit messages must satisfy commitlint. Use conventional commit format such as `fix: ...`, `feat: ...`, or `chore: ...`.
+- If a hook fails, fix the hook itself or the command path it uses. Do not bypass `pre-commit` or `commit-msg`.
+- For code changes, run the narrowest relevant test first, then run broader checks as needed.
+- For extension/release-facing changes, the minimum verification set is:
+  - `npm run build`
+  - `npm run test:e2e:build-only`
+  - any feature-specific unit or integration tests touched by the change
+- For Playwright in this repo, prefer the repo scripts or local entrypoint:
+  - `npm run test:e2e`
+  - `node node_modules/@playwright/test/cli.js test <spec>`
+- For Vitest in this repo, prefer:
+  - `npm test`
+  - `npm test -- --run <spec>`
+- To create a Chrome Store upload artifact, use:
+  - `./scripts/pack.sh`
+  - or `just package`
+- Packaging should happen only after the required verification passes.
+- The generated release artifact is named `youtube-comment-navigator-95_v<version>.zip` at the repo root.
+- Do not assume README instructions are fully up to date. Verify scripts and hook behavior from actual repo files first.
+- If you modify release, build, lint, test, or hook behavior, update this file and any nearby developer docs in the same change.
