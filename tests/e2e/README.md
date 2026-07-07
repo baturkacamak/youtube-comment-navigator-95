@@ -102,6 +102,14 @@ Tests basic extension functionality:
 - Corrupted localStorage is handled gracefully
 - Console errors are preserved in production build
 
+### 4. `live-chat.spec.ts` ⭐ (requires browser)
+
+Validates live chat replay behavior on real YouTube videos:
+
+- Replay messages load for known live chat replay videos
+- Emoji-only and mixed text/emoji messages render as non-empty messages
+- Videos without live chat show the expected empty state
+
 ## How These Tests Catch Production Bugs
 
 ### Example 1: The i18n Bug

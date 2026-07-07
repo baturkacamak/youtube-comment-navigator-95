@@ -132,9 +132,38 @@ export function formatChatRuns(
 
   const items = Array.isArray(runs) ? runs : [];
 
+  const getRunText = (run: any): string => {
+    const text = (wrapTryCatch(() => run?.text) as string) || '';
+    if (text) {
+      return text;
+    }
+
+    const emoji = wrapTryCatch(() => run?.emoji) as any;
+    if (!emoji) {
+      return '';
+    }
+
+    const shortcut = (wrapTryCatch(() => emoji?.shortcuts?.[0]) as string) || '';
+    const accessibilityLabel =
+      (wrapTryCatch(() => emoji?.image?.accessibility?.accessibilityData?.label) as string) || '';
+    const emojiId = (wrapTryCatch(() => emoji?.emojiId) as string) || '';
+
+    if (emoji.isCustomEmoji) {
+      if (shortcut) {
+        return shortcut;
+      }
+
+      if (accessibilityLabel) {
+        return `:${accessibilityLabel}:`;
+      }
+    }
+
+    return emojiId || accessibilityLabel || shortcut;
+  };
+
   for (const run of items) {
     try {
-      const text = (wrapTryCatch(() => run?.text) as string) || '';
+      const text = getRunText(run);
       result.fullText += text;
 
       const startTimeValue = wrapTryCatch(
