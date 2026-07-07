@@ -1,6 +1,14 @@
 {
-  "*.{ts,tsx}": ["eslint --fix", "prettier --write", "vitest related --run"],
-  "*.{js,jsx}": ["eslint --fix", "prettier --write", "vitest related --run"],
-  "*.{json,md,yml,yaml}": ["prettier --write"],
-  "*.{css,scss}": ["prettier --write"]
+  "*.{ts,tsx}": [
+    "node node_modules/eslint/bin/eslint.js --fix",
+    "node node_modules/prettier/bin/prettier.cjs --write",
+    "node node_modules/vitest/vitest.mjs related --run"
+  ],
+  "*.{js,jsx}": [
+    "node node_modules/eslint/bin/eslint.js --fix",
+    "node node_modules/prettier/bin/prettier.cjs --write",
+    "node node_modules/vitest/vitest.mjs related --run"
+  ],
+  "*.{json,md,yml,yaml}": ["node node_modules/prettier/bin/prettier.cjs --write"],
+  "*.{css,scss}": ["node node_modules/prettier/bin/prettier.cjs --write"]
 }
