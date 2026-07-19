@@ -24,3 +24,35 @@
 - The generated release artifact is named `youtube-comment-navigator-95_v<version>.zip` at the repo root.
 - Do not assume README instructions are fully up to date. Verify scripts and hook behavior from actual repo files first.
 - If you modify release, build, lint, test, or hook behavior, update this file and any nearby developer docs in the same change.
+
+## YouTube Internal Integration Changes
+
+YouTube frequently changes undocumented page data, Innertube endpoints,
+continuations, and client requirements. These rules apply to comments, replies,
+live chat, transcripts, playlists, and metadata.
+
+Before changing an integration:
+
+1. Reproduce the problem in a real browser session. Test both direct page load
+   and YouTube SPA navigation where relevant.
+2. Capture evidence from the current page or network behavior. Verify the
+   actual endpoint, request method, headers, request body, response status, and
+   response schema before implementing.
+3. Treat external projects, old code, documentation, and search results as
+   hypotheses, not proof. Validate them against the current YouTube response.
+4. Prefer the same request path and page context YouTube currently uses. When
+   recreating an internal request, validate the minimum required headers,
+   client context, credentials mode, and response shape.
+5. Add safe diagnostics for failures: feature and video ID, request or endpoint
+   name, HTTP status and response top-level keys, continuation or parser source
+   path, and navigation mode (direct versus SPA). Never log cookies,
+   authorization headers, API keys, or complete continuation tokens.
+6. A fix is not complete until an E2E test proves the user-visible outcome:
+   comments or replies appear in the list; live-chat messages appear in the
+   list; transcript entries appear in the transcript UI; playlist or metadata
+   UI reaches the expected populated state. A successful build or absence of an
+   error alone is insufficient.
+7. When an integration breaks after a YouTube change, first determine which
+   layer changed: page-data source, request construction, response schema,
+   parser, persistence, or UI update. Do not add timing retries or DOM
+   fallbacks until the failing layer is evidenced.
