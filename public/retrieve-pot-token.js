@@ -297,27 +297,58 @@
 
   async function fetchLiveChatInitialDataInPage() {
     try {
-      const url = new URL(location.href);
-      url.searchParams.set('pbj', '1');
+      const ytcfgData = window.ytcfg?.data_ || window.ytcfg || {};
+      const apiKey =
+        ytcfgData?.INNERTUBE_API_KEY ||
+        ytcfgData?.WEB_PLAYER_CONTEXT_CONFIGS?.WEB_PLAYER_CONTEXT_CONFIG_ID_KEVLAR_WATCH
+          ?.innertubeApiKey;
+      const videoId = getCurrentVideoId();
+      const client = ytcfgData?.INNERTUBE_CONTEXT?.client;
+      if (!apiKey || !videoId || !client) {
+        return { ok: false, error: { message: 'Innertube watch-next context is unavailable' } };
+      }
 
-      const response = await fetch(url.toString(), {
-        method: 'GET',
-        credentials: 'include',
-        cache: 'no-store',
-        referrer: location.href,
-        referrerPolicy: 'strict-origin-when-cross-origin',
-      });
+      const headers = {
+        accept: 'application/json',
+        'accept-language':
+          ytcfgData?.GOOGLE_FEEDBACK_PRODUCT_DATA?.accept_language || 'en-US,en;q=0.9',
+        'content-type': 'application/json',
+        'x-youtube-client-name': String(ytcfgData?.INNERTUBE_CONTEXT_CLIENT_NAME || '1'),
+        'x-youtube-client-version': ytcfgData?.INNERTUBE_CONTEXT_CLIENT_VERSION || '',
+      };
+
+      const response = await fetch(
+        `https://www.youtube.com/youtubei/v1/next?prettyPrint=false&key=${encodeURIComponent(apiKey)}`,
+        {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            context: { client },
+            videoId,
+            contentCheckOk: true,
+            racyCheckOk: true,
+          }),
+          credentials: 'include',
+          cache: 'no-store',
+          referrer: location.href,
+          referrerPolicy: 'strict-origin-when-cross-origin',
+        }
+      );
 
       if (!response.ok) {
         return { ok: false, status: response.status, statusText: response.statusText };
       }
 
-      let text = await response.text();
-      if (text.startsWith(")]}'\\n")) {
-        text = text.slice(5);
+      const body = await response.json();
+      if (!body?.contents) {
+        return {
+          ok: false,
+          body,
+          error: { message: 'Watch-next response did not contain page data' },
+        };
       }
 
-      return { ok: true, body: JSON.parse(text) };
+      return { ok: true, body };
     } catch (error) {
       return {
         ok: false,
@@ -332,50 +363,7 @@
   function getLiveChatDiagnostics() {
     try {
       const ytInitialData = window.ytInitialData || null;
-      const watchFlexy = document.querySelector('ytd-watch-flexy');
-      const liveChatFrame = document.querySelector('ytd-live-chat-frame');
-      const liveChatIframe = document.querySelector(
-        'ytd-live-chat-frame iframe, iframe#chatframe, iframe[src*="live_chat"]'
-      );
-      const liveChatFrameData = liveChatFrame?.data || null;
-      const iframeContinuation = (() => {
-        try {
-          const frameUrl = deepFindContinuation(liveChatFrameData, 'url').find(
-            (value) => typeof value === 'string' && value.includes('live_chat')
-          );
-          const iframeUrl = liveChatIframe?.src || liveChatIframe?.getAttribute('src') || frameUrl;
-          if (!iframeUrl) return null;
-
-          const url = new URL(iframeUrl, location.origin);
-          const continuation = url.searchParams.get('continuation');
-          if (!continuation) return null;
-
-          return {
-            continuationData: {
-              continuation,
-              clickTrackingParams: url.searchParams.get('click_tracking_params') || undefined,
-            },
-            apiVersion: 'fallback',
-            sourcePath: 'ytd-live-chat-frame iframe[src]',
-            continuationType: url.pathname.includes('live_chat_replay') ? 'replay' : 'reload',
-          };
-        } catch (e) {
-          return null;
-        }
-      })();
-      const liveChatDataSources = [
-        { name: 'window.ytInitialData', value: ytInitialData },
-        { name: 'ytd-watch-flexy.data', value: watchFlexy?.data || null },
-        { name: 'ytd-watch-flexy.playerResponse', value: watchFlexy?.playerResponse || null },
-        { name: 'window.ytInitialPlayerResponse', value: window.ytInitialPlayerResponse || null },
-      ];
-      const continuationSource = liveChatDataSources
-        .map(({ name, value }) => ({ name, result: extractLiveChatContinuationInPage(value) }))
-        .find(({ result }) => Boolean(result?.continuationData));
-      const continuation =
-        iframeContinuation ||
-        continuationSource?.result ||
-        extractLiveChatContinuationInPage(ytInitialData);
+      const continuation = extractLiveChatContinuationInPage(ytInitialData);
       const conversationBar =
         ytInitialData?.contents?.twoColumnWatchNextResults?.conversationBar || null;
       const liveChatRenderer = conversationBar?.liveChatRenderer || null;
@@ -395,22 +383,7 @@
         currentVideoId: getCurrentVideoId(),
         readyState: document.readyState,
         locationHref: location.href,
-        pageDataVideoId: ytInitialData?.currentVideoEndpoint?.watchEndpoint?.videoId || null,
-        isWatchPageLoading: watchFlexy ? watchFlexy.hasAttribute('is-loading') : undefined,
         hasYtInitialData: Boolean(ytInitialData),
-        hasLiveChatFrame: Boolean(liveChatFrame),
-        liveChatIframeSrc: liveChatIframe?.getAttribute('src') || null,
-        liveChatFrameUrls: deepFindContinuation(liveChatFrameData, 'url')
-          .filter((value) => typeof value === 'string' && value.includes('live_chat'))
-          .slice(0, 3),
-        liveChatDataSources: liveChatDataSources.map(({ name, value }) => ({
-          name,
-          hasValue: Boolean(value),
-          topLevelKeys: value && typeof value === 'object' ? Object.keys(value).slice(0, 20) : [],
-        })),
-        continuationSource: iframeContinuation
-          ? 'ytd-live-chat-frame iframe[src]'
-          : continuationSource?.name || null,
         conversationBarKeys: conversationBar ? Object.keys(conversationBar) : [],
         hasLiveChatRenderer: Boolean(liveChatRenderer),
         hasYtcfg: Boolean(window.ytcfg),

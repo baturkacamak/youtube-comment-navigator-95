@@ -162,9 +162,6 @@ interface LiveChatDiagnosticsPayload {
   currentVideoId?: string | null;
   readyState?: string;
   locationHref?: string;
-  pageDataVideoId?: string | null;
-  isWatchPageLoading?: boolean;
-  hasLiveChatFrame?: boolean;
   hasYtInitialData?: boolean;
   hasYtcfg?: boolean;
   hasInnertubeClient?: boolean;
@@ -338,53 +335,10 @@ const fetchLiveChatPayload = async (params: {
   return response.body;
 };
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const requestLiveChatDiagnostics = async (
-  videoId: string,
-  timeoutMs: number = 12000,
-  intervalMs: number = 250
-): Promise<LiveChatDiagnosticsPayload | null> => {
-  let deadline = Date.now() + timeoutMs;
-  const liveChatFrameDeadline = Date.now() + 60000;
-  let lastPayload: LiveChatDiagnosticsPayload | null = null;
-
-  while (Date.now() < deadline) {
-    lastPayload = await requestLiveChatDiagnosticsOnce(Math.min(intervalMs, 1000));
-
-    const payloadVideoId = lastPayload?.currentVideoId || null;
-    const continuationData = lastPayload?.continuation?.continuationData;
-    const continuationToken = continuationData?.continuation || null;
-    const videoMatches = payloadVideoId === videoId;
-
-    if (videoMatches && continuationToken) {
-      return lastPayload;
-    }
-
-    // The native chat frame is created before its iframe receives a replay
-    // continuation during SPA navigation. Once that frame is visible, give
-    // YouTube enough time to populate its iframe URL.
-    if (lastPayload?.hasLiveChatFrame) {
-      deadline = Math.max(deadline, liveChatFrameDeadline);
-    }
-
-    // YouTube navigation is client-side. The URL can change before the new
-    // watch page has populated its conversation bar, so keep polling while
-    // that page is still loading instead of treating the missing continuation
-    // as proof that the video has no chat replay.
-    if (
-      videoMatches &&
-      lastPayload?.pageDataVideoId === videoId &&
-      lastPayload.isWatchPageLoading === false
-    ) {
-      return lastPayload;
-    }
-
-    await sleep(intervalMs);
-  }
-
-  return lastPayload;
-};
+  _videoId: string,
+  timeoutMs: number = 1500
+): Promise<LiveChatDiagnosticsPayload | null> => requestLiveChatDiagnosticsOnce(timeoutMs);
 
 export const fetchAndProcessLiveChat = async (
   videoId: string,
