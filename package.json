@@ -55,7 +55,12 @@
     "format:check": "node node_modules/prettier/bin/prettier.cjs --check \"src/**/*.{ts,tsx,css,scss,json}\"",
     "postinstall": "node scripts/repair-crx-plugin-deps.mjs",
     "prepare": "husky",
-    "sync-store": "npx tsx scripts/sync-store-descriptions.ts"
+    "sync-store": "npx tsx scripts/sync-store-descriptions.ts",
+    "toolkit": "node ../browser-extension-toolkit/packages/cli/dist/index.js",
+    "toolkit:version": "node ../browser-extension-toolkit/packages/cli/dist/index.js version --project .",
+    "toolkit:package": "node ../browser-extension-toolkit/packages/cli/dist/index.js package zip --project .",
+    "toolkit:package:source": "node ../browser-extension-toolkit/packages/cli/dist/index.js package source --project .",
+    "toolkit:store:descriptions": "node ../browser-extension-toolkit/packages/cli/dist/index.js store-descriptions sync --project ."
   },
   "browserslist": {
     "production": [
