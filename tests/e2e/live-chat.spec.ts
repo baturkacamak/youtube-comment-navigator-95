@@ -9,7 +9,7 @@ const liveChatVideos = [
 
 const noLiveChatVideo = 'https://youtu.be/dYNLbHUuPRw';
 const interactiveLiveChatVideo = 'https://youtu.be/eqKE9As_sD4';
-const spaNavigationLiveChatVideoId = 'G7_fkeWzrTU';
+const spaNavigationLiveChatVideoId = 'Iu4hiStcjpo';
 
 const navigateToYouTubeUrl = async (page: Page, url: string): Promise<void> => {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -108,8 +108,8 @@ test.describe('Live Chat E2E', () => {
     });
   }
 
-  test('does not report a missing chat replay after YouTube SPA navigation from the homepage', async () => {
-    test.setTimeout(120000);
+  test('loads chat replay after YouTube SPA navigation from the homepage', async () => {
+    test.setTimeout(180000);
 
     await page.goto('https://www.youtube.com/', { waitUntil: 'domcontentloaded' });
     await handleYouTubeConsent(page);
@@ -136,10 +136,7 @@ test.describe('Live Chat E2E', () => {
     });
 
     await openLiveChatTab(page);
-    // The native replay frame can take over a minute to expose its continuation
-    // after an SPA transition. The regression is the premature "no live chat"
-    // error, not completion of the full replay archive download.
-    await page.waitForTimeout(70000);
+    await waitForLiveChatMessages(page, 120000);
     await expect(page.getByText('Error loading live chat:')).toHaveCount(0);
   });
 

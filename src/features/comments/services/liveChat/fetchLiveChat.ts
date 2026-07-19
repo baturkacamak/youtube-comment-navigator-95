@@ -234,6 +234,33 @@ interface LiveChatFetchBridgeResponse {
   };
 }
 
+const requestLiveChatInitialData = async (): Promise<LiveChatFetchBridgeResponse> => {
+  const requestId = `livechat-initial-data-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+  return new Promise((resolve, reject) => {
+    const timeoutHandle = window.setTimeout(() => {
+      cleanup();
+      reject(new Error('Main world live chat initial-data fetch timed out'));
+    }, 15000);
+
+    const handleMessage = (event: MessageEvent) => {
+      if (event.source !== window) return;
+      if (event.data?.type !== 'YCN_LIVE_CHAT_INITIAL_DATA_RESULT') return;
+      if (event.data?.requestId !== requestId) return;
+      cleanup();
+      resolve((event.data?.payload || { ok: false }) as LiveChatFetchBridgeResponse);
+    };
+
+    const cleanup = () => {
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(timeoutHandle);
+    };
+
+    window.addEventListener('message', handleMessage);
+    window.postMessage({ type: 'YCN_REQUEST_LIVE_CHAT_INITIAL_DATA_FETCH', requestId }, '*');
+  });
+};
+
 const requestLiveChatFetch = async (payload: {
   continuation: string;
   isReplay?: boolean;
@@ -362,20 +389,29 @@ const requestLiveChatDiagnostics = async (
 export const fetchAndProcessLiveChat = async (
   videoId: string,
   windowObj: any,
-  signal: AbortSignal
+  signal: AbortSignal,
+  onMessagesSaved?: () => Promise<void> | void
 ) => {
   try {
-    const diagnostics = await requestLiveChatDiagnostics(videoId);
-
-    let continuationResult: ChatContinuationResult | null = diagnostics?.continuation
-      ?.continuationData
-      ? {
-          continuationData: diagnostics.continuation.continuationData,
-          apiVersion: diagnostics.continuation.apiVersion ?? 'fallback',
-          sourcePath: diagnostics.continuation.sourcePath ?? undefined,
-          continuationType: diagnostics.continuation.continuationType ?? undefined,
-        }
+    const initialDataResponse = await requestLiveChatInitialData();
+    const initialDataContinuation = initialDataResponse.ok
+      ? extractLiveChatContinuation(initialDataResponse.body)
       : null;
+    const diagnostics = initialDataContinuation?.continuationData
+      ? null
+      : await requestLiveChatDiagnostics(videoId);
+
+    let continuationResult: ChatContinuationResult | null =
+      initialDataContinuation?.continuationData
+        ? initialDataContinuation
+        : diagnostics?.continuation?.continuationData
+          ? {
+              continuationData: diagnostics.continuation.continuationData,
+              apiVersion: diagnostics.continuation.apiVersion ?? 'fallback',
+              sourcePath: diagnostics.continuation.sourcePath ?? undefined,
+              continuationType: diagnostics.continuation.continuationType ?? undefined,
+            }
+          : null;
 
     if (!continuationResult && windowObj?.ytInitialData) {
       continuationResult = extractLiveChatContinuation(windowObj.ytInitialData);
@@ -384,6 +420,9 @@ export const fetchAndProcessLiveChat = async (
     if (!continuationResult) {
       devLog('error', LIVE_CHAT_SCOPE, 'Live chat diagnostics returned no continuation', {
         videoId,
+        initialDataFetch: initialDataResponse.ok
+          ? { ok: true, continuationFound: Boolean(initialDataContinuation?.continuationData) }
+          : { ok: false, error: initialDataResponse.error, status: initialDataResponse.status },
         hasWindowObject: Boolean(windowObj),
         hasContentScriptYtInitialData: Boolean(windowObj?.ytInitialData),
         diagnostics,
@@ -460,7 +499,7 @@ export const fetchAndProcessLiveChat = async (
     const actions = initialResponse?.continuationContents?.liveChatContinuation?.actions;
 
     if (actions) {
-      await saveActions(actions, videoId);
+      await saveActions(actions, videoId, onMessagesSaved);
     }
 
     const nextContinuation = extractResponseContinuation(initialResponse);
@@ -469,13 +508,15 @@ export const fetchAndProcessLiveChat = async (
       await processPlayerSeekLoop(
         { continuation: nextContinuation.data.continuation },
         videoId,
-        signal
+        signal,
+        onMessagesSaved
       );
     } else if (nextContinuation.kind === 'replay' && nextContinuation.data?.continuation) {
       await processFallbackLoop(
         { continuation: nextContinuation.data.continuation },
         videoId,
-        signal
+        signal,
+        onMessagesSaved
       );
     } else if (nextContinuation.kind === 'reload' && nextContinuation.data?.continuation) {
       await processReloadLoop(
@@ -484,7 +525,8 @@ export const fetchAndProcessLiveChat = async (
           clickTrackingParams: nextContinuation.data.clickTrackingParams,
         },
         videoId,
-        signal
+        signal,
+        onMessagesSaved
       );
     } else if (
       continuationResult.continuationType === 'playerSeek' &&
@@ -514,7 +556,11 @@ export const fetchAndProcessLiveChat = async (
  * Save livechat actions to database with extensive error handling
  * Separates messages (saved to liveChatMessages) from replies (saved to comments)
  */
-async function saveActions(actions: any[], videoId: string) {
+async function saveActions(
+  actions: any[],
+  videoId: string,
+  onMessagesSaved?: () => Promise<void> | void
+) {
   if (!actions || actions.length === 0) {
     return;
   }
@@ -527,6 +573,9 @@ async function saveActions(actions: any[], videoId: string) {
     if (processedData.messages.length > 0) {
       try {
         const savedCount = await saveLiveChatMessages(processedData.messages, videoId);
+        if (savedCount > 0) {
+          await onMessagesSaved?.();
+        }
       } catch (saveError: any) {
         devLog('error', LIVE_CHAT_SCOPE, 'Failed to save live chat messages', {
           videoId,
@@ -571,7 +620,12 @@ async function saveActions(actions: any[], videoId: string) {
   }
 }
 
-async function processPlayerSeekLoop(initialToken: any, videoId: string, signal: AbortSignal) {
+async function processPlayerSeekLoop(
+  initialToken: any,
+  videoId: string,
+  signal: AbortSignal,
+  onMessagesSaved?: () => Promise<void> | void
+) {
   let token = initialToken;
   let currentOffsetTimeMsec = '0';
   let loopCount = 0;
@@ -609,7 +663,7 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
         // Looking at saveActions code: it calls processLiveChatActions and db.
         // It does NOT use dispatch.
         // So I will remove dispatch from saveActions as well.
-        await saveActions(actions, videoId);
+        await saveActions(actions, videoId, onMessagesSaved);
 
         lastOffsetTime = wrapTryCatch(() => {
           const offsetData = deepFindObjKey(actions[actions.length - 1], 'videoOffsetTimeMsec')[0];
@@ -648,7 +702,8 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
               await processFallbackLoop(
                 { continuation: replayContinuation.continuation },
                 videoId,
-                signal
+                signal,
+                onMessagesSaved
               );
               break;
             }
@@ -667,7 +722,8 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
         await processFallbackLoop(
           { continuation: nextContinuation.data.continuation },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else if (nextContinuation.kind === 'reload' && nextContinuation.data?.continuation) {
@@ -677,7 +733,8 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
             clickTrackingParams: nextContinuation.data.clickTrackingParams,
           },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else {
@@ -695,7 +752,12 @@ async function processPlayerSeekLoop(initialToken: any, videoId: string, signal:
   }
 }
 
-async function processFallbackLoop(initialToken: any, videoId: string, signal: AbortSignal) {
+async function processFallbackLoop(
+  initialToken: any,
+  videoId: string,
+  signal: AbortSignal,
+  onMessagesSaved?: () => Promise<void> | void
+) {
   let token = initialToken;
   let loopCount = 0;
   let emptyActionLoops = 0;
@@ -717,7 +779,7 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
 
       const actions = response?.continuationContents?.liveChatContinuation?.actions;
       if (actions && actions.length > 0) {
-        await saveActions(actions, videoId);
+        await saveActions(actions, videoId, onMessagesSaved);
         emptyActionLoops = 0;
       } else {
         emptyActionLoops += 1;
@@ -735,7 +797,8 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
         await processPlayerSeekLoop(
           { continuation: nextContinuation.data.continuation },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else if (nextContinuation.kind === 'reload' && nextContinuation.data?.continuation) {
@@ -745,7 +808,8 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
             clickTrackingParams: nextContinuation.data.clickTrackingParams,
           },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else {
@@ -765,7 +829,8 @@ async function processFallbackLoop(initialToken: any, videoId: string, signal: A
 async function processReloadLoop(
   initialToken: { continuation: string; clickTrackingParams?: string },
   videoId: string,
-  signal: AbortSignal
+  signal: AbortSignal,
+  onMessagesSaved?: () => Promise<void> | void
 ) {
   let token = initialToken;
   let loopCount = 0;
@@ -789,7 +854,7 @@ async function processReloadLoop(
 
       const actions = response?.continuationContents?.liveChatContinuation?.actions;
       if (actions && actions.length > 0) {
-        await saveActions(actions, videoId);
+        await saveActions(actions, videoId, onMessagesSaved);
         emptyActionLoops = 0;
       } else {
         emptyActionLoops += 1;
@@ -808,14 +873,16 @@ async function processReloadLoop(
         await processFallbackLoop(
           { continuation: nextContinuation.data.continuation },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else if (nextContinuation.kind === 'playerSeek' && nextContinuation.data?.continuation) {
         await processPlayerSeekLoop(
           { continuation: nextContinuation.data.continuation },
           videoId,
-          signal
+          signal,
+          onMessagesSaved
         );
         break;
       } else {

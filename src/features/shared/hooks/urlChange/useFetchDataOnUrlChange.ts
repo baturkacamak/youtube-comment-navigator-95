@@ -129,7 +129,9 @@ const fetchAndSetLiveChat = async (
     dispatch(setLiveChatLoading(true));
     const controller = new AbortController();
 
-    fetchAndProcessLiveChat(videoId, window, controller.signal)
+    fetchAndProcessLiveChat(videoId, window, controller.signal, async () => {
+      dispatch(setLiveChatMessageCount(await getLiveChatMessageCount(videoId)));
+    })
       .then(async () => {
         const totalCount = await getLiveChatMessageCount(videoId);
         dispatch(setLiveChatMessageCount(totalCount));

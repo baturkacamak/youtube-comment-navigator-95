@@ -110,7 +110,9 @@ const useLoadContent = (bypassCache = false) => {
 
       // Fetch live chat
       const controller = new AbortController();
-      await fetchAndProcessLiveChat(videoId, window, controller.signal);
+      await fetchAndProcessLiveChat(videoId, window, controller.signal, async () => {
+        dispatch(setLiveChatMessageCount(await getLiveChatMessageCount(videoId)));
+      });
       const totalCount = await getLiveChatMessageCount(videoId);
       dispatch(setLiveChatMessageCount(totalCount));
     } catch (error: any) {

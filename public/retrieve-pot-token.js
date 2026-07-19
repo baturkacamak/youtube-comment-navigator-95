@@ -197,8 +197,9 @@
 
   function extractLiveChatContinuationInPage(ytData) {
     try {
+      const responseData = ytData?.response || ytData;
       const continuations =
-        ytData?.contents?.twoColumnWatchNextResults?.conversationBar?.liveChatRenderer
+        responseData?.contents?.twoColumnWatchNextResults?.conversationBar?.liveChatRenderer
           ?.continuations;
 
       if (Array.isArray(continuations) && continuations.length > 0) {
@@ -292,6 +293,40 @@
       sourcePath: null,
       continuationType: null,
     };
+  }
+
+  async function fetchLiveChatInitialDataInPage() {
+    try {
+      const url = new URL(location.href);
+      url.searchParams.set('pbj', '1');
+
+      const response = await fetch(url.toString(), {
+        method: 'GET',
+        credentials: 'include',
+        cache: 'no-store',
+        referrer: location.href,
+        referrerPolicy: 'strict-origin-when-cross-origin',
+      });
+
+      if (!response.ok) {
+        return { ok: false, status: response.status, statusText: response.statusText };
+      }
+
+      let text = await response.text();
+      if (text.startsWith(")]}'\\n")) {
+        text = text.slice(5);
+      }
+
+      return { ok: true, body: JSON.parse(text) };
+    } catch (error) {
+      return {
+        ok: false,
+        error:
+          error instanceof Error
+            ? { name: error.name, message: error.message }
+            : { message: String(error) },
+      };
+    }
   }
 
   function getLiveChatDiagnostics() {
@@ -847,6 +882,18 @@
         window.postMessage(
           {
             type: 'YCN_LIVE_CHAT_FETCH_RESULT',
+            requestId: event.data.requestId,
+            payload,
+          },
+          '*'
+        );
+      });
+    }
+    if (event.data && event.data.type === 'YCN_REQUEST_LIVE_CHAT_INITIAL_DATA_FETCH') {
+      fetchLiveChatInitialDataInPage().then((payload) => {
+        window.postMessage(
+          {
+            type: 'YCN_LIVE_CHAT_INITIAL_DATA_RESULT',
             requestId: event.data.requestId,
             payload,
           },

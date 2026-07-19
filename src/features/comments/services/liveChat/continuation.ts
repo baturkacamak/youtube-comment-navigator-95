@@ -13,10 +13,11 @@ export interface ChatContinuationResult {
 export function extractLiveChatContinuation(ytData: any): ChatContinuationResult {
   try {
     if (ytData) {
+      const responseData = ytData.response || ytData;
       // Check in standard location
       const continuations = wrapTryCatch(
         () =>
-          ytData.contents?.twoColumnWatchNextResults?.conversationBar?.liveChatRenderer
+          responseData.contents?.twoColumnWatchNextResults?.conversationBar?.liveChatRenderer
             ?.continuations
       );
 
