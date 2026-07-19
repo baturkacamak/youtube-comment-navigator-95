@@ -207,7 +207,8 @@ You can also run the workflow manually from GitHub Actions tab if needed.
 
 ## Notes
 
-- Tests run in **headful mode** (browser visible) because Chrome extensions don't work in headless mode
+- Tests run in **headful mode** (browser visible) because Chrome extensions don't work in headless mode.
+- Set `PLAYWRIGHT_HIDE_BROWSER=true` to keep the required headed browser off-screen while tests run.
 - Tests use a **persistent context** to properly load the extension
 - Each test creates a new browser context for isolation
 - Tests may take 1-2 minutes to complete as they interact with real YouTube

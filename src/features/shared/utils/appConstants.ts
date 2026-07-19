@@ -119,3 +119,4 @@ export const ENABLE_LOGGER = true; // Set to false to disable logger messages
 // API Constants
 export const YOUTUBE_API_KEY = '';
 export const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/videos';
+export const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/channel';

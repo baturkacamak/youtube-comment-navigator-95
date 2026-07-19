@@ -10,6 +10,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const EXTENSION_PATH = path.join(__dirname, '../../../dist');
+const hiddenWindowArgs =
+  process.env.PLAYWRIGHT_HIDE_BROWSER === 'true'
+    ? ['--window-position=-32000,-32000', '--window-size=1440,900']
+    : [];
 
 export interface TestVideo {
   id: string;
@@ -38,13 +42,14 @@ export interface ExtensionContext {
  */
 export async function launchExtension(): Promise<ExtensionContext> {
   const context = await chromium.launchPersistentContext('', {
-    headless: false, // Extensions require headful mode
+    headless: false,
     args: [
       `--disable-extensions-except=${EXTENSION_PATH}`,
       `--load-extension=${EXTENSION_PATH}`,
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--mute-audio',
+      ...hiddenWindowArgs,
     ],
     // Don't show "Chrome is being controlled by automated software" banner
     ignoreDefaultArgs: ['--enable-automation'],
@@ -78,42 +83,20 @@ export async function waitForExtensionInjection(page: Page, timeout = 30000) {
  */
 export async function handleYouTubeConsent(page: Page): Promise<void> {
   try {
-    // Wait a short time for potential consent dialog
-    const consentDialog = await page.waitForSelector(
-      'tp-yt-paper-dialog:has-text("Before you continue"), [aria-label="Reject all"], [aria-label="Accept all"], button:has-text("Reject all"), button:has-text("Accept all"), button:has-text("Accept the use")',
-      { timeout: 5000 }
-    );
+    const deadline = Date.now() + 15000;
 
-    if (consentDialog) {
-      // Try to find and click "Reject all" or "Accept all" button
-      const rejectButton = await page.$('button:has-text("Reject all")');
-      if (rejectButton) {
-        await rejectButton.click();
-        await page.waitForTimeout(1000);
-        return;
+    while (Date.now() < deadline) {
+      for (const frame of page.frames()) {
+        const rejectButton = frame.getByText(/^Reject all$/i).first();
+        if (await rejectButton.isVisible().catch(() => false)) {
+          // The consent dialog can be below the viewport or inside a frame.
+          await rejectButton.evaluate((button) => (button as HTMLElement).click());
+          await page.waitForTimeout(1000);
+          return;
+        }
       }
 
-      const acceptButton = await page.$('button:has-text("Accept all")');
-      if (acceptButton) {
-        await acceptButton.click();
-        await page.waitForTimeout(1000);
-        return;
-      }
-
-      // Try aria-label based buttons
-      const ariaReject = await page.$('[aria-label="Reject all"]');
-      if (ariaReject) {
-        await ariaReject.click();
-        await page.waitForTimeout(1000);
-        return;
-      }
-
-      const ariaAccept = await page.$('[aria-label="Accept all"]');
-      if (ariaAccept) {
-        await ariaAccept.click();
-        await page.waitForTimeout(1000);
-        return;
-      }
+      await page.waitForTimeout(250);
     }
   } catch {
     // No consent dialog appeared, continue
@@ -196,7 +179,11 @@ export async function setLocalStorage(page: Page, key: string, value: unknown): 
  * Clear all localStorage
  */
 export async function clearLocalStorage(page: Page): Promise<void> {
-  await page.evaluate(() => {
-    localStorage.clear();
-  });
+  try {
+    await page.evaluate(() => {
+      localStorage.clear();
+    });
+  } catch {
+    // about:blank has an opaque origin, so localStorage is not available before navigation.
+  }
 }

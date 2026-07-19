@@ -1,9 +1,5 @@
 import { test, expect, BrowserContext, Page } from '@playwright/test';
-import {
-  launchExtension,
-  handleYouTubeConsent,
-  clearLocalStorage,
-} from './helpers/extension';
+import { launchExtension, handleYouTubeConsent, clearLocalStorage } from './helpers/extension';
 
 const liveChatVideos = [
   'https://youtu.be/RBt6mn3pyok',
@@ -12,6 +8,7 @@ const liveChatVideos = [
 ];
 
 const noLiveChatVideo = 'https://youtu.be/dYNLbHUuPRw';
+const interactiveLiveChatVideo = 'https://youtu.be/eqKE9As_sD4';
 
 const navigateToYouTubeUrl = async (page: Page, url: string): Promise<void> => {
   await page.goto(url, { waitUntil: 'domcontentloaded' });
@@ -26,9 +23,15 @@ const navigateToYouTubeUrl = async (page: Page, url: string): Promise<void> => {
 };
 
 const openLiveChatTab = async (page: Page): Promise<void> => {
-  const liveChatTab = page.getByRole('button', { name: /Live Chat/i }).first();
+  const liveChatTab = page.getByRole('button', { name: /^Live Chat(?: \(\d+\))?$/i }).first();
   await expect(liveChatTab).toBeVisible({ timeout: 10000 });
-  await liveChatTab.click();
+  await liveChatTab.evaluate((button) => button.click());
+};
+
+const loadLiveChat = async (page: Page): Promise<void> => {
+  const loadButton = page.getByRole('button', { name: /Load Live Chat/i });
+  await expect(loadButton).toBeVisible({ timeout: 10000 });
+  await loadButton.evaluate((button) => button.click());
 };
 
 const waitForLiveChatReady = async (page: Page): Promise<void> => {
@@ -50,6 +53,15 @@ const waitForLiveChatReady = async (page: Page): Promise<void> => {
       }
     )
     .not.toBe('pending');
+};
+
+const waitForLiveChatMessages = async (page: Page): Promise<void> => {
+  await expect
+    .poll(() => page.locator('li[data-message-id]').count(), {
+      timeout: 60000,
+      intervals: [1000, 2000, 3000],
+    })
+    .toBeGreaterThan(0);
 };
 
 let context: BrowserContext;
@@ -104,5 +116,41 @@ test.describe('Live Chat E2E', () => {
       timeout: 20000,
     });
     await expect(page.locator('li[data-message-id]')).toHaveCount(0);
+  });
+
+  test('links chat authors and follows the video timeline when auto-scroll is enabled', async () => {
+    test.setTimeout(120000);
+    await navigateToYouTubeUrl(page, interactiveLiveChatVideo);
+    await loadLiveChat(page);
+    await openLiveChatTab(page);
+    await waitForLiveChatMessages(page);
+
+    const messages = page.locator('li[data-message-id][data-video-offset-time]');
+    await expect(messages).not.toHaveCount(0);
+
+    const authorLink = messages.first().locator('a[href^="https://www.youtube.com/channel/"]');
+    await expect(authorLink).toBeVisible();
+    await expect(authorLink).toHaveAttribute('target', '_blank');
+    await expect(authorLink).toHaveAttribute('rel', 'noopener noreferrer');
+
+    const transcript = page.locator('[aria-label="Live Chat Transcript"] ul');
+    await transcript.evaluate((element) => {
+      element.scrollTop = 0;
+    });
+
+    const targetMessage = messages.last();
+    const targetTime = Number(await targetMessage.getAttribute('data-video-offset-time'));
+    expect(targetTime).toBeGreaterThanOrEqual(0);
+
+    const autoScrollCheckbox = page.getByRole('checkbox', { name: /Auto-scroll/i });
+    await autoScrollCheckbox.check();
+    await page.locator('#movie_player video, video.html5-main-video').evaluate((video, time) => {
+      video.currentTime = time;
+      video.dispatchEvent(new Event('timeupdate'));
+    }, targetTime);
+
+    await expect
+      .poll(() => transcript.evaluate((element) => element.scrollTop), { timeout: 5000 })
+      .toBeGreaterThan(0);
   });
 });

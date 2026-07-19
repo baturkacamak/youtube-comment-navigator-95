@@ -29,6 +29,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
 }) => {
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const lastAutoScrolledMessageId = useRef<string | null>(null);
   const [autoScroll, setAutoScroll] = useState(false);
 
   // Generate text for export/copy
@@ -42,11 +43,43 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       .join('\n');
   }, [messages]);
 
-  // Auto-scroll to bottom when new messages arrive (optional)
+  // Keep the transcript aligned with the video's current playback position.
   useEffect(() => {
-    if (autoScroll && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (!autoScroll || messages.length === 0) return;
+
+    const video = document.querySelector<HTMLVideoElement>(
+      '#movie_player video, video.html5-main-video'
+    );
+    if (!video) return;
+
+    const scrollToCurrentMessage = () => {
+      const currentMessage = messages.reduce<(typeof messages)[number] | undefined>(
+        (latest, message) =>
+          message.videoOffsetTimeSec !== undefined &&
+          message.videoOffsetTimeSec <= video.currentTime
+            ? message
+            : latest,
+        undefined
+      );
+
+      if (!currentMessage || currentMessage.messageId === lastAutoScrolledMessageId.current) return;
+
+      const messageElement = Array.from(
+        scrollRef.current?.querySelectorAll<HTMLElement>('li[data-message-id]') ?? []
+      ).find((element) => element.dataset.messageId === currentMessage.messageId);
+
+      messageElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      lastAutoScrolledMessageId.current = currentMessage.messageId;
+    };
+
+    scrollToCurrentMessage();
+    video.addEventListener('timeupdate', scrollToCurrentMessage);
+    video.addEventListener('seeked', scrollToCurrentMessage);
+
+    return () => {
+      video.removeEventListener('timeupdate', scrollToCurrentMessage);
+      video.removeEventListener('seeked', scrollToCurrentMessage);
+    };
   }, [messages, autoScroll]);
 
   const handleScroll = () => {
@@ -62,6 +95,9 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
 
   const handleAutoScrollChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAutoScroll(e.target.checked);
+    if (!e.target.checked) {
+      lastAutoScrolledMessageId.current = null;
+    }
   };
 
   if (isLoading && messages.length === 0) {

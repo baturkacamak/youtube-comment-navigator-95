@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { afterEach } from 'vitest';
 import LiveChatTranscript from './LiveChatTranscript';
 
 // Mock dependencies
@@ -10,7 +11,11 @@ vi.mock('react-i18next', () => ({
 
 // Mock child components
 vi.mock('./LiveChatMessageItem', () => ({
-  default: ({ message }: any) => <li data-testid="chat-message">{message.message}</li>,
+  default: ({ message }: any) => (
+    <li data-testid="chat-message" data-message-id={message.messageId}>
+      {message.message}
+    </li>
+  ),
 }));
 vi.mock('../../transcripts/components/buttons/CopyButton', () => ({
   default: () => <button data-testid="copy-btn">Copy</button>,
@@ -69,6 +74,11 @@ describe('LiveChatTranscript', () => {
       videoOffsetTimeSec: 20,
     },
   ];
+
+  afterEach(() => {
+    document.querySelector('#movie_player')?.remove();
+    vi.restoreAllMocks();
+  });
 
   it('renders loading state when empty and loading', () => {
     render(<LiveChatTranscript messages={[]} isLoading={true} />);
@@ -156,5 +166,26 @@ describe('LiveChatTranscript', () => {
 
     fireEvent.click(checkbox);
     expect(checkbox).toBeChecked();
+  });
+
+  it('scrolls to the latest chat message at the current video time when auto-scroll is enabled', () => {
+    const scrollIntoView = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
+      value: scrollIntoView,
+      configurable: true,
+    });
+
+    const player = document.createElement('div');
+    player.id = 'movie_player';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'currentTime', { value: 15, configurable: true });
+    player.appendChild(video);
+    document.body.appendChild(player);
+
+    render(<LiveChatTranscript messages={mockMessages} isLoading={false} />);
+    fireEvent.click(screen.getByTestId('auto-scroll-checkbox'));
+
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
+    expect(screen.getByText('Hello').closest('li')).not.toBeNull();
   });
 });

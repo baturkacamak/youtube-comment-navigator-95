@@ -16,6 +16,7 @@ import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { seekVideo } from '../../shared/utils/videoController';
 
 import Tooltip from '../../shared/components/Tooltip';
+import { YOUTUBE_CHANNEL_URL } from '../../shared/utils/appConstants';
 
 interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
   index?: number;
@@ -87,6 +88,7 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     <li
       className={`mb-2 flex items-center rounded-lg ${textSize} ${index % 2 === 0 ? 'bg-gray-100 dark:bg-gray-700' : 'bg-slate-50 dark:bg-gray-800'}`}
       data-message-id={message.messageId}
+      data-video-offset-time={message.videoOffsetTimeSec}
     >
       <div className="flex items-center w-full">
         {/* Timestamp - Clickable */}
@@ -106,7 +108,19 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
         <div className="flex-1 pb-2 -mb-2 inline-flex items-center gap-2">
           {/* Author with badges */}
           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-1">
-            {message.author}
+            {message.authorChannelId ? (
+              <a
+                href={`${YOUTUBE_CHANNEL_URL}/${message.authorChannelId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded"
+                aria-label={`Go to ${message.author}'s channel`}
+              >
+                {message.author}
+              </a>
+            ) : (
+              message.author
+            )}
 
             {/* Badges */}
             {message.badges &&

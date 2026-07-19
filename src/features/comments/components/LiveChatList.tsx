@@ -131,7 +131,7 @@ const LiveChatList: React.FC = () => {
    */
   useEffect(() => {
     fetchLiveChatFromDB();
-  }, [page, videoId, dispatch]);
+  }, [page, videoId, dispatch, liveChatState.messageCount]);
 
   // Handle component mount logging
   useEffect(() => {

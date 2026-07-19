@@ -20,6 +20,7 @@ import hoverAction from '../../shared/utils/hoverAction';
 import { fetchRepliesForComment } from '../services/pagination';
 import { db } from '../../shared/utils/database/database';
 import { eventEmitter } from '../../shared/utils/eventEmitter';
+import { YOUTUBE_CHANNEL_URL } from '../../shared/utils/appConstants';
 
 interface CommentFooterProps {
   comment: Comment;
@@ -242,7 +243,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             </Tooltip>
           )}
           <a
-            href={`https://www.youtube.com/channel/${comment.authorChannelId}`}
+            href={`${YOUTUBE_CHANNEL_URL}/${comment.authorChannelId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center"

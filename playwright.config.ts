@@ -29,9 +29,9 @@ export default defineConfig({
       name: 'chromium-extension',
       use: {
         ...devices['Desktop Chrome'],
-        // Extension tests need a persistent context
+        // Extension tests use their own persistent context in launchExtension.
         launchOptions: {
-          headless: false, // Extensions don't work in headless mode
+          headless: false,
         },
       },
     },

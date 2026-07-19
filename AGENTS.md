@@ -13,6 +13,7 @@
 - For Playwright in this repo, prefer the repo scripts or local entrypoint:
   - `npm run test:e2e`
   - `node node_modules/@playwright/test/cli.js test <spec>`
+  - Set `PLAYWRIGHT_HIDE_BROWSER=true` to run headed extension E2E tests with the browser window off-screen.
 - For Vitest in this repo, prefer:
   - `npm test`
   - `npm test -- --run <spec>`
