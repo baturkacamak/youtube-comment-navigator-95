@@ -297,7 +297,50 @@
   function getLiveChatDiagnostics() {
     try {
       const ytInitialData = window.ytInitialData || null;
-      const continuation = extractLiveChatContinuationInPage(ytInitialData);
+      const watchFlexy = document.querySelector('ytd-watch-flexy');
+      const liveChatFrame = document.querySelector('ytd-live-chat-frame');
+      const liveChatIframe = document.querySelector(
+        'ytd-live-chat-frame iframe, iframe#chatframe, iframe[src*="live_chat"]'
+      );
+      const liveChatFrameData = liveChatFrame?.data || null;
+      const iframeContinuation = (() => {
+        try {
+          const frameUrl = deepFindContinuation(liveChatFrameData, 'url').find(
+            (value) => typeof value === 'string' && value.includes('live_chat')
+          );
+          const iframeUrl = liveChatIframe?.src || liveChatIframe?.getAttribute('src') || frameUrl;
+          if (!iframeUrl) return null;
+
+          const url = new URL(iframeUrl, location.origin);
+          const continuation = url.searchParams.get('continuation');
+          if (!continuation) return null;
+
+          return {
+            continuationData: {
+              continuation,
+              clickTrackingParams: url.searchParams.get('click_tracking_params') || undefined,
+            },
+            apiVersion: 'fallback',
+            sourcePath: 'ytd-live-chat-frame iframe[src]',
+            continuationType: url.pathname.includes('live_chat_replay') ? 'replay' : 'reload',
+          };
+        } catch (e) {
+          return null;
+        }
+      })();
+      const liveChatDataSources = [
+        { name: 'window.ytInitialData', value: ytInitialData },
+        { name: 'ytd-watch-flexy.data', value: watchFlexy?.data || null },
+        { name: 'ytd-watch-flexy.playerResponse', value: watchFlexy?.playerResponse || null },
+        { name: 'window.ytInitialPlayerResponse', value: window.ytInitialPlayerResponse || null },
+      ];
+      const continuationSource = liveChatDataSources
+        .map(({ name, value }) => ({ name, result: extractLiveChatContinuationInPage(value) }))
+        .find(({ result }) => Boolean(result?.continuationData));
+      const continuation =
+        iframeContinuation ||
+        continuationSource?.result ||
+        extractLiveChatContinuationInPage(ytInitialData);
       const conversationBar =
         ytInitialData?.contents?.twoColumnWatchNextResults?.conversationBar || null;
       const liveChatRenderer = conversationBar?.liveChatRenderer || null;
@@ -317,7 +360,22 @@
         currentVideoId: getCurrentVideoId(),
         readyState: document.readyState,
         locationHref: location.href,
+        pageDataVideoId: ytInitialData?.currentVideoEndpoint?.watchEndpoint?.videoId || null,
+        isWatchPageLoading: watchFlexy ? watchFlexy.hasAttribute('is-loading') : undefined,
         hasYtInitialData: Boolean(ytInitialData),
+        hasLiveChatFrame: Boolean(liveChatFrame),
+        liveChatIframeSrc: liveChatIframe?.getAttribute('src') || null,
+        liveChatFrameUrls: deepFindContinuation(liveChatFrameData, 'url')
+          .filter((value) => typeof value === 'string' && value.includes('live_chat'))
+          .slice(0, 3),
+        liveChatDataSources: liveChatDataSources.map(({ name, value }) => ({
+          name,
+          hasValue: Boolean(value),
+          topLevelKeys: value && typeof value === 'object' ? Object.keys(value).slice(0, 20) : [],
+        })),
+        continuationSource: iframeContinuation
+          ? 'ytd-live-chat-frame iframe[src]'
+          : continuationSource?.name || null,
         conversationBarKeys: conversationBar ? Object.keys(conversationBar) : [],
         hasLiveChatRenderer: Boolean(liveChatRenderer),
         hasYtcfg: Boolean(window.ytcfg),
