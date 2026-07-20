@@ -168,12 +168,14 @@ describe('LiveChatTranscript', () => {
     expect(checkbox).toBeChecked();
   });
 
-  it('scrolls to the latest chat message at the current video time when auto-scroll is enabled', () => {
-    const scrollIntoView = vi.fn();
-    Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', {
-      value: scrollIntoView,
+  it('scrolls the chat list, without scrolling the page, when auto-scroll is enabled', () => {
+    const listScrollTo = vi.fn();
+    const windowScrollTo = vi.fn();
+    Object.defineProperty(HTMLElement.prototype, 'scrollTo', {
+      value: listScrollTo,
       configurable: true,
     });
+    Object.defineProperty(window, 'scrollTo', { value: windowScrollTo, configurable: true });
 
     const player = document.createElement('div');
     player.id = 'movie_player';
@@ -185,7 +187,30 @@ describe('LiveChatTranscript', () => {
     render(<LiveChatTranscript messages={mockMessages} isLoading={false} />);
     fireEvent.click(screen.getByTestId('auto-scroll-checkbox'));
 
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
+    expect(listScrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+    expect(windowScrollTo).not.toHaveBeenCalled();
     expect(screen.getByText('Hello').closest('li')).not.toBeNull();
+  });
+
+  it('loads another page instead of stopping at the last loaded message', () => {
+    const onLoadMore = vi.fn();
+    const player = document.createElement('div');
+    player.id = 'movie_player';
+    const video = document.createElement('video');
+    Object.defineProperty(video, 'currentTime', { value: 30, configurable: true });
+    player.appendChild(video);
+    document.body.appendChild(player);
+
+    render(
+      <LiveChatTranscript
+        messages={mockMessages}
+        isLoading={false}
+        hasMore={true}
+        onLoadMore={onLoadMore}
+      />
+    );
+    fireEvent.click(screen.getByTestId('auto-scroll-checkbox'));
+
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
   });
 });

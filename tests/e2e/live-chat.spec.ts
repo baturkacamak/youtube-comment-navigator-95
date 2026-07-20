@@ -65,6 +65,47 @@ const waitForLiveChatMessages = async (page: Page, timeout: number = 60000): Pro
     .toBeGreaterThan(0);
 };
 
+const getLaterLoadedChatMessage = async (
+  page: Page,
+  minimumIndex: number,
+  minimumVideoOffsetTime: number
+): Promise<{ messageId: string; videoOffsetTimeSec: number } | null> => {
+  return page.evaluate(
+    async ({ index, videoOffsetTime }) => {
+      return new Promise((resolve, reject) => {
+        const openRequest = indexedDB.open('youtube-comment-navigator-95');
+        openRequest.onerror = () => reject(openRequest.error);
+        openRequest.onsuccess = () => {
+          const database = openRequest.result;
+          const request = database
+            .transaction('liveChatMessages', 'readonly')
+            .objectStore('liveChatMessages')
+            .getAll();
+
+          request.onerror = () => reject(request.error);
+          request.onsuccess = () => {
+            database.close();
+            const messages = request.result
+              .filter((message) => typeof message.videoOffsetTimeSec === 'number')
+              .sort((first, second) => first.timestampMs - second.timestampMs);
+            for (let messageIndex = messages.length - 1; messageIndex >= index; messageIndex--) {
+              if (messages[messageIndex].videoOffsetTimeSec > videoOffsetTime) {
+                resolve(messages[messageIndex]);
+                return;
+              }
+            }
+            resolve(null);
+          };
+        };
+      });
+    },
+    { index: minimumIndex, videoOffsetTime: minimumVideoOffsetTime }
+  ) as Promise<{
+    messageId: string;
+    videoOffsetTimeSec: number;
+  } | null>;
+};
+
 let context: BrowserContext;
 let page: Page;
 
@@ -171,19 +212,36 @@ test.describe('Live Chat E2E', () => {
       element.scrollTop = 0;
     });
 
-    const targetMessage = messages.last();
-    const targetTime = Number(await targetMessage.getAttribute('data-video-offset-time'));
+    const initialMessageCount = await messages.count();
+    const lastLoadedTime = Number(await messages.last().getAttribute('data-video-offset-time'));
+    const targetMessage = await getLaterLoadedChatMessage(
+      page,
+      initialMessageCount,
+      lastLoadedTime
+    );
+    expect(targetMessage).not.toBeNull();
+    const targetTime = targetMessage!.videoOffsetTimeSec;
     expect(targetTime).toBeGreaterThanOrEqual(0);
 
     const autoScrollCheckbox = page.getByRole('checkbox', { name: /Auto-scroll/i });
-    await autoScrollCheckbox.check();
+    await autoScrollCheckbox.evaluate((checkbox) => (checkbox as HTMLInputElement).click());
+    const pageScrollTop = await page.evaluate(() => window.scrollY);
     await page.locator('#movie_player video, video.html5-main-video').evaluate((video, time) => {
       video.currentTime = time;
       video.dispatchEvent(new Event('timeupdate'));
     }, targetTime);
 
     await expect
+      .poll(() => messages.count(), { timeout: 20000 })
+      .toBeGreaterThan(initialMessageCount);
+    await expect(page.locator(`li[data-message-id="${targetMessage!.messageId}"]`)).toBeVisible({
+      timeout: 20000,
+    });
+    await expect
       .poll(() => transcript.evaluate((element) => element.scrollTop), { timeout: 5000 })
       .toBeGreaterThan(0);
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY), { timeout: 5000 })
+      .toBe(pageScrollTop);
   });
 });

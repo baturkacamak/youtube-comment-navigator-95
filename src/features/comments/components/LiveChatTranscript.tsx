@@ -30,7 +30,13 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   const { t } = useTranslation();
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastAutoScrolledMessageId = useRef<string | null>(null);
+  const autoLoadMoreRequested = useRef(false);
   const [autoScroll, setAutoScroll] = useState(false);
+
+  // Allow another page request after the previous one has added messages.
+  useEffect(() => {
+    autoLoadMoreRequested.current = false;
+  }, [messages.length]);
 
   // Generate text for export/copy
   const transcriptText = useMemo(() => {
@@ -53,6 +59,29 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
     if (!video) return;
 
     const scrollToCurrentMessage = () => {
+      const latestLoadedTime = messages.reduce<number | undefined>(
+        (latest, message) =>
+          message.videoOffsetTimeSec !== undefined &&
+          (latest === undefined || message.videoOffsetTimeSec > latest)
+            ? message.videoOffsetTimeSec
+            : latest,
+        undefined
+      );
+
+      // Messages are deliberately loaded in pages. Do not settle on the last
+      // loaded message when playback has moved into a later, unloaded page.
+      if (
+        hasMore &&
+        latestLoadedTime !== undefined &&
+        video.currentTime > latestLoadedTime &&
+        !isLoading &&
+        !autoLoadMoreRequested.current
+      ) {
+        autoLoadMoreRequested.current = true;
+        onLoadMore?.();
+        return;
+      }
+
       const currentMessage = messages.reduce<(typeof messages)[number] | undefined>(
         (latest, message) =>
           message.videoOffsetTimeSec !== undefined &&
@@ -68,7 +97,21 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
         scrollRef.current?.querySelectorAll<HTMLElement>('li[data-message-id]') ?? []
       ).find((element) => element.dataset.messageId === currentMessage.messageId);
 
-      messageElement?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      const transcript = scrollRef.current;
+      if (!messageElement || !transcript) return;
+
+      // `scrollIntoView` can also scroll the page to reveal the transcript.
+      // Keep playback-following navigation contained within the chat list.
+      const messageTop =
+        transcript.scrollTop +
+        messageElement.getBoundingClientRect().top -
+        transcript.getBoundingClientRect().top;
+      const centeredScrollTop =
+        messageTop - (transcript.clientHeight - messageElement.offsetHeight) / 2;
+      transcript.scrollTo({
+        top: Math.max(0, centeredScrollTop),
+        behavior: 'smooth',
+      });
       lastAutoScrolledMessageId.current = currentMessage.messageId;
     };
 
@@ -80,7 +123,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
       video.removeEventListener('timeupdate', scrollToCurrentMessage);
       video.removeEventListener('seeked', scrollToCurrentMessage);
     };
-  }, [messages, autoScroll]);
+  }, [messages, autoScroll, hasMore, isLoading, onLoadMore]);
 
   const handleScroll = () => {
     if (!scrollRef.current || !onLoadMore || !hasMore) return;
