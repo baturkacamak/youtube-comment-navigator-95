@@ -12,7 +12,11 @@
     }
   },
   "permissions": ["storage", "scripting"],
-  "host_permissions": ["*://*.youtube.com/*"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "https://www.googleapis.com/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
   "background": {
     "service_worker": "src/background.ts"
   },

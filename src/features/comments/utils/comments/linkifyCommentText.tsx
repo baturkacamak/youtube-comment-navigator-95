@@ -1,4 +1,5 @@
 import React from 'react';
+import ExternalLink from '../../../shared/components/ExternalLink';
 
 export const linkifyCommentText = (text: string): (JSX.Element | string)[] => {
   const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#%=~_|])/gi;
@@ -14,15 +15,9 @@ export const linkifyCommentText = (text: string): (JSX.Element | string)[] => {
     // Push URL link
     const url = match[0];
     elements.push(
-      <a
-        key={`${match.index}`}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 underline"
-      >
+      <ExternalLink key={`${match.index}`} href={url} className="text-blue-500 underline">
         {url}
-      </a>
+      </ExternalLink>
     );
 
     lastIndex = match.index + url.length;

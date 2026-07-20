@@ -116,7 +116,6 @@ const FontSetting: React.FC = () => {
         options={availableFonts}
         selectedOption={selectedFont}
         setSelectedOption={handleFontChange}
-        buttonClassName="w-full rounded-lg"
         isSearchable={availableFonts.length >= 15}
         DefaultIcon={AiOutlineFontSize}
       />

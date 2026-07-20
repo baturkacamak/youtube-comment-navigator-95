@@ -26,18 +26,11 @@ const executePrompt = async (prompt: string, apiKey?: string): Promise<string> =
   // 2. Try API Key (Gemini)
   if (apiKey) {
     try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-          }),
-        }
+      const data = await new Promise<any>((resolve) =>
+        chrome.runtime.sendMessage({ type: 'YCN_GEMINI_GENERATE', prompt }, resolve)
       );
-      const data = await response.json();
-      return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Failed to get response from API.';
+      if (data?.error) throw new Error(data.error);
+      return data?.result || 'Failed to get response from API.';
     } catch (e) {
       console.error('API request failed:', e);
       throw new Error('Failed to fetch from API.');

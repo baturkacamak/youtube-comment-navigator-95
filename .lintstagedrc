@@ -1,10 +1,5 @@
 {
-  "*.{ts,tsx}": [
-    "node node_modules/eslint/bin/eslint.js --fix",
-    "node node_modules/prettier/bin/prettier.cjs --write",
-    "node node_modules/vitest/vitest.mjs related --run"
-  ],
-  "*.{js,jsx}": [
+  "*.{ts,tsx,js,jsx}": [
     "node node_modules/eslint/bin/eslint.js --fix",
     "node node_modules/prettier/bin/prettier.cjs --write",
     "node node_modules/vitest/vitest.mjs related --run"

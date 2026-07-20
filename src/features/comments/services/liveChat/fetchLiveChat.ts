@@ -4,8 +4,34 @@ import { extractLiveChatContinuation, ChatContinuationResult } from './continuat
 import { wrapTryCatch, deepFindObjKey } from './common';
 import { saveLiveChatMessages } from './liveChatDatabase';
 import { devLog } from '../../../devtools/devLogger';
+import logger from '../../../shared/utils/logger';
 
 const LIVE_CHAT_SCOPE = 'livechat';
+const unavailableVideos = new Set<string>();
+class LiveChatUnavailableError extends Error {
+  constructor() {
+    super("This video doesn't have live chat");
+    this.name = 'LiveChatUnavailableError';
+  }
+}
+class LiveChatBridgeTimeoutError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'LiveChatBridgeTimeoutError';
+  }
+}
+const delay = (ms: number, signal?: AbortSignal) =>
+  new Promise<void>((resolve, reject) => {
+    const id = window.setTimeout(resolve, ms);
+    signal?.addEventListener(
+      'abort',
+      () => {
+        clearTimeout(id);
+        reject(new DOMException('The operation was aborted.', 'AbortError'));
+      },
+      { once: true }
+    );
+  });
 
 const summarizeError = (error: unknown) => {
   if (error instanceof Error) {
@@ -316,7 +342,24 @@ const fetchLiveChatPayload = async (params: {
   }
 
   const { signal: _signal, ...bridgePayload } = params;
-  const response = await requestLiveChatFetch(bridgePayload);
+  let response!: LiveChatFetchBridgeResponse;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    response = await requestLiveChatFetch(bridgePayload);
+    if (response.ok || ![429, 500, 502, 503, 504].includes(Number(response.status))) break;
+    if (attempt === 2) break;
+    const waitMs = [500, 1500][attempt] + Math.floor(Math.random() * 200);
+    devLog('error', LIVE_CHAT_SCOPE, 'Transient live chat request failed; retrying', {
+      status: response.status,
+      attempt: attempt + 1,
+      waitMs,
+    });
+    logger.error('[livechat] transient request retry', {
+      status: response.status,
+      attempt: attempt + 1,
+      waitMs,
+    });
+    await delay(waitMs, _signal);
+  }
 
   if (_signal?.aborted) {
     throw new DOMException('The operation was aborted.', 'AbortError');
@@ -347,7 +390,21 @@ export const fetchAndProcessLiveChat = async (
   onMessagesSaved?: () => Promise<void> | void
 ) => {
   try {
-    const initialDataResponse = await requestLiveChatInitialData();
+    if (unavailableVideos.has(videoId)) throw new LiveChatUnavailableError();
+    let initialDataResponse: LiveChatFetchBridgeResponse;
+    try {
+      initialDataResponse = await requestLiveChatInitialData();
+    } catch (error) {
+      if (!(error instanceof Error) || !error.message.includes('timed out')) throw error;
+      logger.error('[livechat] initial-data bridge timeout; retrying once', { videoId });
+      devLog('error', LIVE_CHAT_SCOPE, 'Initial-data bridge timeout; retrying once', { videoId });
+      await delay(400, signal);
+      try {
+        initialDataResponse = await requestLiveChatInitialData();
+      } catch {
+        throw new LiveChatBridgeTimeoutError('Live chat page data timed out');
+      }
+    }
     const initialDataContinuation = initialDataResponse.ok
       ? extractLiveChatContinuation(initialDataResponse.body)
       : null;
@@ -372,16 +429,8 @@ export const fetchAndProcessLiveChat = async (
     }
 
     if (!continuationResult) {
-      devLog('error', LIVE_CHAT_SCOPE, 'Live chat diagnostics returned no continuation', {
-        videoId,
-        initialDataFetch: initialDataResponse.ok
-          ? { ok: true, continuationFound: Boolean(initialDataContinuation?.continuationData) }
-          : { ok: false, error: initialDataResponse.error, status: initialDataResponse.status },
-        hasWindowObject: Boolean(windowObj),
-        hasContentScriptYtInitialData: Boolean(windowObj?.ytInitialData),
-        diagnostics,
-      });
-      throw new Error("This video doesn't have live chat");
+      unavailableVideos.add(videoId);
+      throw new LiveChatUnavailableError();
     }
 
     if (!continuationResult.continuationData) {

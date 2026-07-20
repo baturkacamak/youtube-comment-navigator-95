@@ -5,6 +5,7 @@
 - Before committing, make sure the relevant local checks pass through the repo's normal scripts or hook commands.
 - Commit messages must satisfy commitlint. Use conventional commit format such as `fix: ...`, `feat: ...`, or `chore: ...`.
 - If a hook fails, fix the hook itself or the command path it uses. Do not bypass `pre-commit` or `commit-msg`.
+- The staged-file hook runs ESLint, Prettier, and `vitest related` once for the combined TypeScript/JavaScript file set; do not split that test command into concurrent overlapping groups.
 - For code changes, run the narrowest relevant test first, then run broader checks as needed.
 - For extension/release-facing changes, the minimum verification set is:
   - `npm run build`
@@ -24,6 +25,18 @@
 - The generated release artifact is named `youtube-comment-navigator-95_v<version>.zip` at the repo root.
 - Do not assume README instructions are fully up to date. Verify scripts and hook behavior from actual repo files first.
 - If you modify release, build, lint, test, or hook behavior, update this file and any nearby developer docs in the same change.
+
+## Extension Secrets
+
+- Never store API keys, access tokens, OAuth credentials, or other secrets in page `localStorage`, `sessionStorage`, the DOM, Redux state, injected page scripts, logs, or extension bundles.
+- Store user-provided secrets only in `chrome.storage.local` (or the Firefox equivalent) and access them only from the background service worker.
+- Network calls requiring a secret must be made by the background service worker. Content/UI code may receive only non-sensitive status and result data.
+- When replacing an insecure legacy setting, migrate it once to extension storage and remove it from page storage immediately; never expose it again for masking or display.
+
+## UI Implementation
+
+- Before creating UI controls or styles, inspect `src/features/shared/components/` and reuse the existing component that fits. Do not introduce raw inputs, buttons, selects, or duplicate styling when a shared component already provides the behavior.
+- If the shared component does not support a required capability, extend it with tests instead of creating a parallel component.
 
 ## YouTube Internal Integration Changes
 

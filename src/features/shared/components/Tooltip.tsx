@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import classNames from 'classnames';
 import { TooltipProps } from '../../../types/layoutTypes';
+
+type Placement = NonNullable<TooltipProps['position']>;
+const GAP = 8;
+const VIEWPORT_PADDING = 8;
 
 const Tooltip: React.FC<TooltipProps> = ({
   text,
@@ -10,65 +15,110 @@ const Tooltip: React.FC<TooltipProps> = ({
   textColor = 'text-white',
   position = 'top',
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  const [style, setStyle] = useState<React.CSSProperties>({ visibility: 'hidden' });
+  const [placement, setPlacement] = useState<Placement>(position);
 
-  const positionClasses = {
-    top: 'bottom-full left-1/2 transform -translate-x-1/2 mb-2',
-    bottom: 'top-full left-1/2 transform -translate-x-1/2 mt-2',
-    left: 'right-full top-1/2 transform -translate-y-1/2 mr-2',
-    right: 'left-full top-1/2 transform -translate-y-1/2 ml-2',
-  };
+  const updatePosition = useCallback(() => {
+    const trigger = triggerRef.current?.getBoundingClientRect();
+    const tooltip = tooltipRef.current?.getBoundingClientRect();
+    if (!trigger || !tooltip) return;
+    const candidates: Placement[] = [
+      position,
+      ...(['top', 'bottom', 'right', 'left'] as Placement[]).filter((item) => item !== position),
+    ];
+    const fits = (side: Placement) =>
+      side === 'top'
+        ? trigger.top - tooltip.height - GAP >= VIEWPORT_PADDING
+        : side === 'bottom'
+          ? trigger.bottom + tooltip.height + GAP <= window.innerHeight - VIEWPORT_PADDING
+          : side === 'left'
+            ? trigger.left - tooltip.width - GAP >= VIEWPORT_PADDING
+            : trigger.right + tooltip.width + GAP <= window.innerWidth - VIEWPORT_PADDING;
+    const next = candidates.find(fits) || position;
+    let left = trigger.left + trigger.width / 2 - tooltip.width / 2;
+    let top = trigger.top - tooltip.height - GAP;
+    if (next === 'bottom') top = trigger.bottom + GAP;
+    if (next === 'left') {
+      left = trigger.left - tooltip.width - GAP;
+      top = trigger.top + trigger.height / 2 - tooltip.height / 2;
+    }
+    if (next === 'right') {
+      left = trigger.right + GAP;
+      top = trigger.top + trigger.height / 2 - tooltip.height / 2;
+    }
+    setPlacement(next);
+    setStyle({
+      position: 'fixed',
+      zIndex: 2147483647,
+      left: Math.max(
+        VIEWPORT_PADDING,
+        Math.min(left, window.innerWidth - tooltip.width - VIEWPORT_PADDING)
+      ),
+      top: Math.max(
+        VIEWPORT_PADDING,
+        Math.min(top, window.innerHeight - tooltip.height - VIEWPORT_PADDING)
+      ),
+      visibility: 'visible',
+      backgroundColor: bgColor === 'bg-black' ? '#000' : undefined,
+      color: textColor === 'text-white' ? '#fff' : undefined,
+      padding: '4px 8px',
+      borderRadius: '4px',
+      fontSize: '12px',
+      lineHeight: '16px',
+      fontWeight: 500,
+      maxWidth: '320px',
+      boxShadow: '0 1px 2px rgb(0 0 0 / 0.2)',
+    });
+  }, [position, bgColor, textColor]);
 
-  // Tailwind does not support dynamic border color utilities like `border-t-${bgColor}` easily without safelisting or using arbitrary values if bgColor is complex.
-  // However, the original code used `bgColor` for the main div. The arrow needs to match.
-  // The original used `clipPath` on a simple div.
-  // Let's stick to the original `clipPath` approach for the arrow but adapted for positions, or use CSS borders which are simpler.
-  // If `bgColor` is 'bg-black', the arrow needs to be black. `text-black` on the arrow div + currentcolor borders works.
-  // But `bgColor` prop is a background class, not a color value.
-  // We can try to keep the original clipPath div but positioned dynamically.
-
-  // Mapping position to arrow position style
-  const arrowPositionStyles: Record<string, React.CSSProperties> = {
-    top: { top: '100%', left: '50%', transform: 'translateX(-50%)' },
-    bottom: { bottom: '100%', left: '50%', transform: 'translateX(-50%) rotate(180deg)' },
-    left: { left: '100%', top: '50%', transform: 'translateY(-50%) rotate(-90deg)' },
-    right: { right: '100%', top: '50%', transform: 'translateY(-50%) rotate(90deg)' },
-  };
+  useLayoutEffect(() => {
+    if (!visible) return;
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [visible, updatePosition, text]);
 
   return (
-    <div
-      className="relative inline-flex items-center"
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-      onFocus={() => setIsVisible(true)}
-      onBlur={() => setIsVisible(false)}
-      aria-describedby="tooltip"
-    >
-      {children}
-      {text && (
-        <div
-          role="tooltip"
-          className={classNames(
-            'absolute w-max px-2 py-1 text-xs font-medium rounded shadow-sm z-50 pointer-events-none transition-opacity duration-200',
-            positionClasses[position],
-            bgColor,
-            textColor,
-            isVisible ? 'opacity-100' : 'opacity-0',
-            className
-          )}
-        >
-          {text}
-          {/* Arrow */}
+    <>
+      <div
+        ref={triggerRef}
+        className="inline-flex items-center"
+        onMouseEnter={() => setVisible(true)}
+        onMouseLeave={() => setVisible(false)}
+        onFocus={() => setVisible(true)}
+        onBlur={() => setVisible(false)}
+        aria-describedby={visible ? 'ycn-tooltip' : undefined}
+      >
+        {children}
+      </div>
+      {visible &&
+        typeof document !== 'undefined' &&
+        createPortal(
           <div
-            className={classNames('absolute w-2 h-2 pointer-events-none', bgColor)}
-            style={{
-              clipPath: 'polygon(100% 0, 0 0, 50% 100%)',
-              ...arrowPositionStyles[position],
-            }}
-          />
-        </div>
-      )}
-    </div>
+            ref={tooltipRef}
+            id="ycn-tooltip"
+            role="tooltip"
+            data-placement={placement}
+            style={style}
+            className={classNames(
+              'fixed z-[2147483647] w-max max-w-xs px-2 py-1 text-xs font-medium rounded shadow-sm pointer-events-none',
+              bgColor,
+              textColor,
+              className
+            )}
+          >
+            {text}
+          </div>,
+          document.body
+        )}
+    </>
   );
 };
 

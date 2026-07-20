@@ -41,6 +41,8 @@ export interface Comment {
   weightedZScore?: number;
   bayesianAverage?: number;
   isLiveChat?: boolean;
+  /** Origin used for this cached record; avoids silently mixing incompatible result sets. */
+  source?: 'innertube' | 'dataApi';
 }
 
 export interface CommentActionsProps {

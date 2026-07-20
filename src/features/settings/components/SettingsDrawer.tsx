@@ -13,6 +13,7 @@ import i18n from 'i18next';
 import ShowContentOnSearchToggle from './ShowContentOnSearchToggle';
 import AIApiKeySetting from './AIApiKeySetting';
 import DeveloperModeToggle from './DeveloperModeToggle';
+import YouTubeDataApiSetting from './YouTubeDataApiSetting';
 
 const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
         }`}
       >
         <div
-          className="bg-white dark:bg-gray-800 w-80 h-full shadow-lg p-4 flex flex-col justify-between"
+          className="bg-white dark:bg-gray-800 w-80 max-h-[calc(100vh-2rem)] overflow-y-auto shadow-lg p-4 flex flex-col justify-between"
           role="dialog"
           aria-labelledby="settings-title"
           aria-describedby="settings-description"
@@ -90,6 +91,9 @@ const SettingsDrawer: React.FC<SettingsDrawerProps> = ({ isOpen, onClose }) => {
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
                 <AIApiKeySetting />
+              </div>
+              <div className="flex items-center justify-between p-2 rounded-lg bg-gray-100 dark:bg-gray-700">
+                <YouTubeDataApiSetting />
               </div>
             </div>
           </div>

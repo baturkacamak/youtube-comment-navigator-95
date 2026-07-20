@@ -77,7 +77,6 @@ const LanguageSetting: React.FC = () => {
         options={languageOptions}
         selectedOption={selectedLanguage}
         setSelectedOption={setSelectedLanguage}
-        buttonClassName="w-full rounded-lg"
         isSearchable={true}
         DefaultIcon={LanguageIcon}
         testId="language-select"

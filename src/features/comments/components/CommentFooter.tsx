@@ -10,6 +10,7 @@ import {
   LinkIcon,
 } from '@heroicons/react/24/outline';
 import { useTranslation } from 'react-i18next';
+import ExternalLink from '../../shared/components/ExternalLink';
 import { Comment } from '../../../types/commentTypes';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import Tooltip from '../../shared/components/Tooltip';
@@ -143,16 +144,14 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               </>
             )}
           </button>
-          <a
+          <ExternalLink
             href={`https://www.youtube.com/watch?v=${videoId}&lc=${comment.commentId}`}
-            target="_blank"
-            rel="noopener noreferrer"
             className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
             aria-label={t('Go to original comment')}
           >
             <LinkIcon className="w-4 h-4 mr-1" aria-hidden="true" />
             <span className="text-sm">{t('Original')}</span>
-          </a>
+          </ExternalLink>
           {comment.replyCount > 0 && (
             <button
               ref={viewRepliesButtonRef}
@@ -242,10 +241,8 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               />
             </Tooltip>
           )}
-          <a
+          <ExternalLink
             href={`${YOUTUBE_CHANNEL_URL}/${comment.authorChannelId}`}
-            target="_blank"
-            rel="noopener noreferrer"
             className="flex items-center"
             aria-label={t("Go to author's channel")}
           >
@@ -259,7 +256,7 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
             <span className="ml-2 text-md font-bold text-gray-800 dark:text-gray-200">
               {comment.author}
             </span>
-          </a>
+          </ExternalLink>
         </div>
       </div>
     );

@@ -12,6 +12,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   selectedOption,
   setSelectedOption,
   buttonClassName,
+  containerClassName,
   isSearchable = false,
   DefaultIcon,
   testId,
@@ -111,10 +112,10 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   }, [searchTerm, options, isSearchable, t]);
 
   return (
-    <div className="relative inline-block text-left w-48 h-10">
+    <div className={`relative inline-block text-left w-48 h-10 ${containerClassName || ''}`}>
       <button
         type="button"
-        className={`inline-flex h-full justify-between items-center  w-full shadow-sm px-4 py-2 bg-teal-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 ${buttonClassName || 'rounded-lg'}`}
+        className={`inline-flex h-full justify-between items-center w-full rounded-lg shadow-sm px-4 py-2 bg-teal-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 ${buttonClassName || ''}`}
         id="options-menu"
         aria-haspopup="true"
         aria-expanded={isOpen}

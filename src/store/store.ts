@@ -47,6 +47,8 @@ const defaultSettings: RootState['settings'] = {
   showContentOnSearch: false,
   geminiApiKey: '',
   enableDeveloperMode: false,
+  commentSource: 'auto',
+  hasYouTubeDataApiKey: false,
 };
 
 const loadSettingsPreference = (): RootState['settings'] => {
@@ -78,6 +80,10 @@ const loadSettingsPreference = (): RootState['settings'] => {
       typeof savedSettings.enableDeveloperMode === 'boolean'
         ? savedSettings.enableDeveloperMode
         : defaultSettings.enableDeveloperMode,
+    commentSource:
+      savedSettings.commentSource === 'innertube' || savedSettings.commentSource === 'dataApi'
+        ? savedSettings.commentSource
+        : 'auto',
   };
 };
 
@@ -231,6 +237,13 @@ const commentsSlice = createSlice({
       state.settings.enableDeveloperMode = action.payload;
       saveSettings({ enableDeveloperMode: state.settings.enableDeveloperMode });
     },
+    setCommentSource: (state, action: PayloadAction<'auto' | 'innertube' | 'dataApi'>) => {
+      state.settings.commentSource = action.payload;
+      saveSettings({ commentSource: action.payload });
+    },
+    setHasYouTubeDataApiKey: (state, action: PayloadAction<boolean>) => {
+      state.settings.hasYouTubeDataApiKey = action.payload;
+    },
 
     setTranscriptSelectedLanguage: (
       state,
@@ -300,6 +313,8 @@ export const {
   setShowContentOnSearch,
   setGeminiApiKey,
   setEnableDeveloperMode,
+  setCommentSource,
+  setHasYouTubeDataApiKey,
 
   setTranscriptSelectedLanguage,
   // Reset action

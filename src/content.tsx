@@ -14,6 +14,22 @@ import PlaylistBatchExportWidget from './features/batch-export/components/Playli
 // --- Helper Classes ---
 
 class DOMHelper {
+  static async migrateLegacyGeminiKey(): Promise<void> {
+    try {
+      const raw = localStorage.getItem('settings');
+      const settings = raw ? JSON.parse(raw) : null;
+      const legacyKey =
+        typeof settings?.geminiApiKey === 'string' ? settings.geminiApiKey.trim() : '';
+      if (!legacyKey) return;
+      await new Promise<void>((resolve) =>
+        chrome.runtime.sendMessage({ type: 'YCN_GEMINI_KEY_SET', key: legacyKey }, () => resolve())
+      );
+      delete settings.geminiApiKey;
+      localStorage.setItem('settings', JSON.stringify(settings));
+    } catch {
+      /* retain the legacy setting if migration could not complete */
+    }
+  }
   static createAppContainer(commentsSectionId: string, containerId: string): HTMLElement | null {
     const commentsSection = document.getElementById(commentsSectionId);
     if (!commentsSection) {
@@ -222,6 +238,7 @@ class YouTubeCommentNavigator {
   }
 
   mountReactApp(container: HTMLElement) {
+    void DOMHelper.migrateLegacyGeminiKey();
     this.root = ReactDOM.createRoot(container);
 
     // Apply initial theme to container

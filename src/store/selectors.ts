@@ -41,6 +41,13 @@ export const selectGeminiApiKey = createSelector(
   [selectSettings],
   (settings) => settings.geminiApiKey
 );
+export const selectCommentSource = createSelector(
+  [selectSettings],
+  (settings) => settings.commentSource || 'auto'
+);
+export const selectHasYouTubeDataApiKey = createSelector([selectSettings], (settings) =>
+  Boolean(settings.hasYouTubeDataApiKey)
+);
 
 // Filter-specific selectors
 export const selectSortBy = createSelector([selectFilters], (filters) => filters.sortBy);

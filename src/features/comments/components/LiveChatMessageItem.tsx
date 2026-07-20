@@ -16,6 +16,7 @@ import { ChatBubbleBottomCenterTextIcon } from '@heroicons/react/24/outline';
 import { seekVideo } from '../../shared/utils/videoController';
 
 import Tooltip from '../../shared/components/Tooltip';
+import ExternalLink from '../../shared/components/ExternalLink';
 import { YOUTUBE_CHANNEL_URL } from '../../shared/utils/appConstants';
 
 interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
@@ -109,15 +110,13 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
           {/* Author with badges */}
           <span className="font-semibold text-sm text-gray-900 dark:text-gray-100 flex items-center gap-1">
             {message.authorChannelId ? (
-              <a
+              <ExternalLink
                 href={`${YOUTUBE_CHANNEL_URL}/${message.authorChannelId}`}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="hover:underline focus:outline-none focus:ring-2 focus:ring-blue-600 rounded"
                 aria-label={`Go to ${message.author}'s channel`}
               >
                 {message.author}
-              </a>
+              </ExternalLink>
             ) : (
               message.author
             )}

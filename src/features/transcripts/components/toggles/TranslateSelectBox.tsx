@@ -152,7 +152,6 @@ const TranslateSelectBox: React.FC = () => {
         options={languages}
         selectedOption={selectedLanguage}
         setSelectedOption={handleLanguageChange}
-        buttonClassName="w-full rounded-lg"
         isSearchable={true}
         DefaultIcon={LanguageIcon}
       />

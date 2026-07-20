@@ -20,6 +20,8 @@ import { CACHE_KEYS, PAGINATION, isLocalEnvironment } from '../../../shared/util
 import { db } from '../../../shared/utils/database/database';
 import { countComments, loadPagedComments } from '../pagination';
 import { seedMockData } from '../../../shared/utils/mockDataSeeder';
+import { getSettings } from '../../../settings/utils/settingsUtils';
+import { fetchDataApiComments } from '../dataApi/fetchDataApiComments';
 
 let currentAbortController = new AbortController();
 
@@ -61,6 +63,22 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     const windowObj = window as any;
 
     if (videoId) {
+    }
+
+    const source = getSettings().commentSource;
+    const apiMode =
+      source === 'dataApi' ||
+      (source === 'auto' &&
+        (await new Promise<boolean>((resolve) =>
+          chrome.runtime.sendMessage({ type: 'YCN_YT_API_STATUS' }, (value) =>
+            resolve(Boolean(value?.configured))
+          )
+        )));
+    if (apiMode) {
+      await deleteCommentsFromDb(videoId);
+      await fetchDataApiComments(videoId, (count) => dispatch(setTotalCommentsCount(count)));
+      await loadInitialComments(videoId, dispatch);
+      return;
     }
 
     // Clean up previous video's accumulator if switching videos

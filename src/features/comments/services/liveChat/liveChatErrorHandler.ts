@@ -9,6 +9,10 @@ export function getLiveChatFetchErrorMessage(error: any): string {
   const errorMessage = error.message || String(error);
   const errorString = errorMessage.toLowerCase();
 
+  if (error?.name === 'LiveChatBridgeTimeoutError') {
+    return 'Live chat page data timed out. Please try again.';
+  }
+
   // Live chat not available
   if (
     errorString.includes('no live chat continuation') ||

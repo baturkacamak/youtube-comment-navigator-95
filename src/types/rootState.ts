@@ -20,6 +20,8 @@ export interface RootState {
     showContentOnSearch: boolean;
     geminiApiKey: string;
     enableDeveloperMode?: boolean;
+    commentSource?: 'auto' | 'innertube' | 'dataApi';
+    hasYouTubeDataApiKey?: boolean;
   };
   filteredTranscripts: any[];
   bookmarkedLines: any[];

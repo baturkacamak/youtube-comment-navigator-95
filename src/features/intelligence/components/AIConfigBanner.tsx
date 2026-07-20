@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { selectGeminiApiKey } from '../../../store/selectors';
 import { useLocalIntelligence } from '../hooks/useLocalIntelligence';
+import ExternalLink from '../../shared/components/ExternalLink';
 
 interface AIConfigBannerProps {
   onOpenSettings?: () => void;
@@ -117,14 +118,12 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
         <p className="font-medium mb-1">{t('Option 2: Use Gemini API Key')}</p>
         <p className="text-amber-600 dark:text-amber-400">
           {t('Add your API key in Settings.')}{' '}
-          <a
+          <ExternalLink
             href="https://aistudio.google.com/app/apikey"
-            target="_blank"
-            rel="noopener noreferrer"
             className="underline hover:text-amber-800 dark:hover:text-amber-200"
           >
             {t('Get a free API key')}
-          </a>
+          </ExternalLink>
         </p>
       </div>
     </div>

@@ -5,16 +5,19 @@ import { KeyIcon, EyeIcon, EyeSlashIcon, CheckCircleIcon } from '@heroicons/reac
 import { setGeminiApiKey } from '../../../store/store';
 import { selectGeminiApiKey } from '../../../store/selectors';
 import Input from '../../shared/components/Input';
+import ExternalLink from '../../shared/components/ExternalLink';
 
 const AIApiKeySetting: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const apiKey = useSelector(selectGeminiApiKey);
   const [showKey, setShowKey] = useState(false);
-  const [localKey, setLocalKey] = useState(apiKey || '');
+  const [localKey, setLocalKey] = useState('');
 
   const handleSave = () => {
-    dispatch(setGeminiApiKey(localKey));
+    chrome.runtime.sendMessage({ type: 'YCN_GEMINI_KEY_SET', key: localKey }, (value) =>
+      dispatch(setGeminiApiKey(value?.configured ? 'configured' : ''))
+    );
   };
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +30,7 @@ const AIApiKeySetting: React.FC = () => {
     }
   };
 
-  const hasUnsavedChanges = localKey !== apiKey;
+  const hasUnsavedChanges = Boolean(localKey);
   const isConfigured = apiKey && apiKey.length > 0;
 
   return (
@@ -76,14 +79,12 @@ const AIApiKeySetting: React.FC = () => {
       </div>
       <p className="text-xs text-gray-500 dark:text-gray-400">
         {t('Used for AI analysis when Chrome AI is unavailable.')}{' '}
-        <a
+        <ExternalLink
           href="https://aistudio.google.com/app/apikey"
-          target="_blank"
-          rel="noopener noreferrer"
           className="text-teal-600 hover:underline dark:text-teal-400"
         >
           {t('Get API key')}
-        </a>
+        </ExternalLink>
       </p>
     </div>
   );

@@ -48,6 +48,14 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'warn',
       'no-empty': 'warn',
       'no-useless-catch': 'warn',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "JSXOpeningElement[name.name='a'] > JSXAttribute[name.name='target'][value.value='_blank']",
+          message: 'Use the shared ExternalLink component for external links opened in a new tab.',
+        },
+      ],
     },
   }
 );

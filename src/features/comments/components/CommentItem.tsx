@@ -16,6 +16,7 @@ import { Comment } from '../../../types/commentTypes';
 import { extractYouTubeVideoIdFromUrl } from '../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { db } from '../../shared/utils/database/database';
 import { eventEmitter } from '../../shared/utils/eventEmitter';
+import ExternalLink from '../../shared/components/ExternalLink';
 
 const CommentItem: React.FC<CommentItemProps> = React.memo(
   ({
@@ -125,7 +126,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
         >
           <div className="flex items-start w-full relative">
             {videoThumbnailUrl && (
-              <a href={videoUrl} target="_blank" rel="noopener noreferrer">
+              <ExternalLink href={videoUrl}>
                 <img
                   src={videoThumbnailUrl}
                   alt="Video Thumbnail"
@@ -133,18 +134,16 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
                   loading="lazy"
                   decoding="async"
                 />
-              </a>
+              </ExternalLink>
             )}
             <div className="flex-1">
               {videoTitle && (
-                <a
+                <ExternalLink
                   href={videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-md font-semibold mb-2 block hover:underline"
                 >
                   {videoTitle}
-                </a>
+                </ExternalLink>
               )}
               <CommentBody content={comment.content} handleTimestampClick={handleClickTimestamp} />
               {bookmarkTimestamp && (

@@ -4,6 +4,7 @@ import { StarIcon } from '@heroicons/react/24/solid'; // Importing the Star icon
 import { useTranslation } from 'react-i18next';
 import { AiFillGithub } from 'react-icons/ai'; // Importing the GitHub icon
 import packageJson from '../../../../package.json';
+import ExternalLink from '../../shared/components/ExternalLink';
 
 const SettingsInfo: React.FC = () => {
   const { t } = useTranslation();
@@ -21,12 +22,12 @@ const SettingsInfo: React.FC = () => {
       </p>
       <p className="flex items-center">
         <AiFillGithub className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
-        <a
+        <ExternalLink
           href="https://github.com/baturkacamak/youtube-comment-navigator-95"
           className="text-teal-600 dark:text-teal-400"
         >
           {t('GitHub Repository')}
-        </a>
+        </ExternalLink>
       </p>
       <p className="flex items-center">
         <EnvelopeIcon className="w-5 h-5 mr-2 text-teal-600 dark:text-teal-400" />
@@ -42,14 +43,12 @@ const SettingsInfo: React.FC = () => {
           </div>
           <div>
             <span>{t('If you enjoy using this extension, please')}</span>
-            <a
+            <ExternalLink
               href="https://chromewebstore.google.com/detail/youtube-comment-navigator-95/oehnfehgimbnfnibacgkgichanehmbje"
               className="text-teal-600 dark:text-teal-400 underline ml-1"
-              target="_blank"
-              rel="noopener noreferrer"
             >
               {t('rate it on the Chrome Web Store')}
-            </a>
+            </ExternalLink>
             .
           </div>
         </div>
