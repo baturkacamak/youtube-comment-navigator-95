@@ -18,22 +18,3 @@ export function formatTimestamp(seconds: number): string {
 
   return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
-
-/**
- * Parse a timestamp string (HH:MM:SS or MM:SS) to seconds
- * @param timestamp Timestamp string
- * @returns Timestamp in seconds
- */
-export function parseTimestamp(timestamp: string): number {
-  const parts = timestamp.split(':').map(Number);
-
-  if (parts.length === 3) {
-    // HH:MM:SS
-    return parts[0] * 3600 + parts[1] * 60 + parts[2];
-  } else if (parts.length === 2) {
-    // MM:SS
-    return parts[0] * 60 + parts[1];
-  }
-
-  return 0;
-}

@@ -26,7 +26,6 @@ interface ExtendedLiveChatMessageItemProps extends LiveChatMessageItemProps {
 const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
   message,
   index = 0,
-  onTimestampClick,
   showReplies: showRepliesExternal,
   onToggleReplies,
 }) => {
@@ -55,19 +54,10 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
     loadReplies();
   }, [showReplies, message.messageId, message.hasReplies, replies.length]);
 
-  const handleTimestampClickInternal = (
-    event: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
-  ) => {
+  const handleTimestampClickInternal = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (message.videoOffsetTimeSec !== undefined) {
-      if (event.type === 'click' || (event as React.KeyboardEvent).key === 'Enter') {
-        event.preventDefault();
-
-        seekVideo(message.videoOffsetTimeSec);
-
-        if (onTimestampClick) {
-          onTimestampClick(message.videoOffsetTimeSec);
-        }
-      }
+      event.preventDefault();
+      seekVideo(message.videoOffsetTimeSec);
     }
   };
 
@@ -94,15 +84,13 @@ const LiveChatMessageItem: React.FC<ExtendedLiveChatMessageItemProps> = ({
       <div className="flex items-center w-full">
         {/* Timestamp - Clickable */}
         <Tooltip text={`Jump to ${timestampDisplay}`}>
-          <span
+          <button
+            type="button"
             className="bg-stone-200 text-sm font-medium rounded text-gray-800 dark:bg-gray-500 dark:text-gray-900 px-2 py-1 mr-2 cursor-pointer hover:bg-stone-300 dark:hover:bg-gray-400 transition-colors"
             onClick={handleTimestampClickInternal}
-            onKeyDown={handleTimestampClickInternal}
-            role="button"
-            tabIndex={0}
           >
             {timestampDisplay}
-          </span>
+          </button>
         </Tooltip>
 
         {/* Message Content */}

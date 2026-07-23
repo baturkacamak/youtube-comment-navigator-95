@@ -84,7 +84,6 @@ export interface LiveChatReply {
 export interface LiveChatTranscriptProps {
   messages: LiveChatMessage[];
   isLoading: boolean;
-  onTimestampClick?: (timestampSeconds: number) => void;
   /** Loads the next page when playback moves beyond the loaded chat range. */
   onLoadMore?: () => void;
   hasMore?: boolean;
@@ -96,7 +95,6 @@ export interface LiveChatTranscriptProps {
  */
 export interface LiveChatMessageItemProps {
   message: LiveChatMessage;
-  onTimestampClick?: (timestampSeconds: number) => void;
   showReplies?: boolean;
   onToggleReplies?: (messageId: string) => void;
 }

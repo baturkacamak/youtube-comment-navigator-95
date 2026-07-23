@@ -22,7 +22,6 @@ import { formatTimestamp } from '../utils/liveChat/formatTimestamp';
 const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
   messages,
   isLoading,
-  onTimestampClick,
   onLoadMore,
   hasMore = false,
   fetchAllMessages,
@@ -220,12 +219,7 @@ const LiveChatTranscript: React.FC<LiveChatTranscriptProps> = ({
         style={{ maxHeight: 'calc(100vh - 200px)' }}
       >
         {messages.map((message, index) => (
-          <LiveChatMessageItem
-            key={message.messageId}
-            message={message}
-            index={index}
-            onTimestampClick={onTimestampClick}
-          />
+          <LiveChatMessageItem key={message.messageId} message={message} index={index} />
         ))}
 
         {/* Loading more indicator */}

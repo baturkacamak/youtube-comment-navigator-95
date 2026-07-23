@@ -102,19 +102,6 @@ const LiveChatList: React.FC = () => {
   }, [videoId, page, pageSize, liveChatState.isLoading, dispatch]);
 
   /**
-   * Handle timestamp click - seek video to specific time
-   */
-  const handleTimestampClick = (timestampSeconds: number) => {
-    try {
-      const player = document.querySelector('#movie_player') as any;
-      if (player && typeof player.seekTo === 'function') {
-        player.seekTo(timestampSeconds, true);
-      } else {
-      }
-    } catch (error: any) {}
-  };
-
-  /**
    * Load more messages (pagination)
    */
   const handleLoadMore = () => {
@@ -188,7 +175,6 @@ const LiveChatList: React.FC = () => {
       <LiveChatTranscript
         messages={liveChatMessages}
         isLoading={liveChatState.isLoading}
-        onTimestampClick={handleTimestampClick}
         onLoadMore={handleLoadMore}
         hasMore={hasMore}
         fetchAllMessages={fetchAllMessages}
