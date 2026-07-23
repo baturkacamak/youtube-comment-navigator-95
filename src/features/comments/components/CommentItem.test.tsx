@@ -37,14 +37,20 @@ vi.mock('./CommentFooter', () => ({
     isFetchingReplies: boolean;
     cacheFetchedReplies: (replies: Comment[]) => void;
     handleCopyToClipboard: () => void;
+    showAllRepliesAction?: () => void;
   }) => {
     CommentFooterSpy(props);
-    const { onToggleReplies, showReplies, isFetchingReplies } = props;
+    const { onToggleReplies, showReplies, isFetchingReplies, showAllRepliesAction } = props;
     return (
       <div data-testid="comment-footer">
         <button onClick={onToggleReplies} data-testid="toggle-replies-btn">
           {showReplies ? 'Hide replies' : 'Show replies'}
         </button>
+        {showAllRepliesAction && (
+          <button onClick={showAllRepliesAction} data-testid="show-all-replies-btn">
+            Show all replies
+          </button>
+        )}
         {isFetchingReplies && <span>Loading replies...</span>}
       </div>
     );
@@ -145,6 +151,49 @@ describe('CommentItem', () => {
     // Wait for replies to load
     await waitFor(() => {
       expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
+    });
+  });
+
+  it('opens and loads replies when a search result marks the thread for expansion', async () => {
+    const { fetchRepliesForComment } = await import('../services/pagination');
+    (fetchRepliesForComment as any).mockResolvedValue([
+      { ...mockComment, commentId: 'reply-1', replyLevel: 1 },
+    ]);
+    const { rerender } = render(<CommentItem comment={mockComment} />);
+
+    rerender(<CommentItem comment={{ ...mockComment, showRepliesDefault: true }} />);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('toggle-replies-btn')).toHaveTextContent('Hide replies');
+      expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
+    });
+    expect(fetchRepliesForComment).toHaveBeenCalledWith(expect.anything(), 'video-1', 'comment-1');
+  });
+
+  it('shows only matching replies first, then expands to the complete thread on request', async () => {
+    const { fetchRepliesForComment } = await import('../services/pagination');
+    (fetchRepliesForComment as any).mockResolvedValue([
+      { ...mockComment, commentId: 'matching-reply', replyLevel: 1 },
+      { ...mockComment, commentId: 'other-reply', replyLevel: 1 },
+    ]);
+
+    render(
+      <CommentItem
+        comment={{
+          ...mockComment,
+          showRepliesDefault: true,
+          matchedReplyIds: ['matching-reply'],
+        }}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Replies count: 1')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByTestId('show-all-replies-btn'));
+    await waitFor(() => {
+      expect(screen.getByText('Replies count: 2')).toBeInTheDocument();
     });
   });
 

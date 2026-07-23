@@ -296,6 +296,29 @@ describe('Pagination Services', () => {
       expect(result).toEqual(mockFilteredData);
     });
 
+    it('shows a matching reply through its parent and opens that reply thread by default', async () => {
+      const replyMatchingSearch = {
+        ...sampleReply1,
+        content: 'clen appears only in this reply',
+      };
+      const allComments = [sampleComment1, sampleComment2, replyMatchingSearch];
+
+      mockToArray.mockResolvedValue(allComments);
+
+      const result = await loadPagedComments(mockTable, 'v1', 0, 10, 'date', 'desc', {}, 'clen', {
+        topLevelOnly: true,
+        excludeLiveChat: true,
+      });
+
+      expect(result).toEqual([
+        expect.objectContaining({
+          commentId: 'c1',
+          showRepliesDefault: true,
+          matchedReplyIds: ['r1'],
+        }),
+      ]);
+    });
+
     it('should handle "random" sort', async () => {
       const allComments = [sampleComment1, sampleComment2, sampleComment3];
       mockToArray.mockResolvedValue(allComments);
@@ -474,19 +497,15 @@ describe('Pagination Services', () => {
 
     it('should pass filters and search options through to counting and loading', async () => {
       const filters = { hasLinks: true };
-      mockCount.mockResolvedValue(1);
-      mockFilter.mockImplementation((filterFn) => {
-        mockToArray.mockResolvedValue([sampleComment2].filter(filterFn));
-        return collectionMethods;
-      });
+      mockToArray.mockResolvedValue([sampleComment2]);
 
       const result = await loadAllComments(mockTable, 'v1', 'date', 'desc', filters, 'link', {
         topLevelOnly: true,
         excludeLiveChat: true,
       });
 
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
-      expect(mockFilter).toHaveBeenCalled();
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
       expect(result).toEqual([sampleComment2]);
     });
   });
@@ -551,11 +570,7 @@ describe('Pagination Services', () => {
       const filters = { members: true };
       const searchKeyword = 'two';
       const expectedCount = 1;
-      mockFilter.mockImplementation((filterFn) => {
-        const filtered = [sampleComment1, sampleComment2, sampleComment3].filter(filterFn);
-        mockCount.mockResolvedValue(filtered.length);
-        return collectionMethods;
-      });
+      mockToArray.mockResolvedValue([sampleComment1, sampleComment2, sampleComment3]);
 
       const resultPromise = countComments(mockTable, 'v1', filters, searchKeyword, {
         topLevelOnly: true,
@@ -563,11 +578,21 @@ describe('Pagination Services', () => {
       vi.runAllTimers();
       const result = await resultPromise;
 
-      expect(mockCommentsTable.where).toHaveBeenCalledWith('[videoId+replyLevel]');
-      expect(mockBetween).toHaveBeenCalledWith(['v1', 0], ['v1', 0], true, true);
-      expect(mockFilter).toHaveBeenCalled();
-      expect(mockCount).toHaveBeenCalled();
+      expect(mockCommentsTable.where).toHaveBeenCalledWith('videoId');
+      expect(mockEquals).toHaveBeenCalledWith('v1');
+      expect(mockToArray).toHaveBeenCalled();
       expect(result).toBe(expectedCount);
+    });
+
+    it('counts a thread when its reply matches the search keyword', async () => {
+      mockToArray.mockResolvedValue([
+        sampleComment1,
+        { ...sampleReply1, content: 'clen appears only in this reply' },
+      ]);
+
+      const result = await countComments(mockTable, 'v1', {}, 'clen', { topLevelOnly: true });
+
+      expect(result).toBe(1);
     });
 
     it('should return 0 on database error', async () => {

@@ -55,6 +55,7 @@ const CommentList: React.FC<CommentListProps> = () => {
   const dispatch = useDispatch();
   const listRef = useRef<List>(null);
   const rowHeightsRef = useRef<Map<number, number>>(new Map());
+  const [, setRowHeightsVersion] = React.useState(0);
 
   // Get filters and search from Redux (UI state)
   const filters = useSelector((state: RootState) => state.filters);
@@ -168,16 +169,13 @@ const CommentList: React.FC<CommentListProps> = () => {
     [comments, hasMore]
   );
 
-  const totalMeasuredHeight = React.useMemo(() => {
-    let total = 0;
-    for (let index = 0; index < comments.length; index += 1) {
-      total += getRowHeight(index);
-    }
-    if (hasMore) {
-      total += getRowHeight(comments.length);
-    }
-    return total;
-  }, [comments.length, getRowHeight, hasMore]);
+  let totalMeasuredHeight = 0;
+  for (let index = 0; index < comments.length; index += 1) {
+    totalMeasuredHeight += getRowHeight(index);
+  }
+  if (hasMore) {
+    totalMeasuredHeight += getRowHeight(comments.length);
+  }
 
   // Callback to update actual height after render
   const setRowHeight = useCallback((index: number, height: number) => {
@@ -185,6 +183,7 @@ const CommentList: React.FC<CommentListProps> = () => {
     if (currentHeight !== height) {
       rowHeightsRef.current.set(index, height);
       listRef.current?.resetAfterIndex(index);
+      setRowHeightsVersion((version) => version + 1);
     }
   }, []);
 

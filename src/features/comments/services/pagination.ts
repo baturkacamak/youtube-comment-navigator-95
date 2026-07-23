@@ -209,6 +209,93 @@ const applyFiltersAndSearch = (
   return true;
 };
 
+const matchesSearchKeyword = (comment: Comment, searchKeyword: string): boolean => {
+  const normalizedKeyword = searchKeyword.toLowerCase();
+  return Boolean(
+    comment.content?.toLowerCase().includes(normalizedKeyword) ||
+    comment.author?.toLowerCase().includes(normalizedKeyword)
+  );
+};
+
+const getReplyAwareTopLevelSearchResults = async (
+  commentsTable: Dexie.Table<Comment, number>,
+  videoId: string,
+  filters: CommentFilters,
+  searchKeyword: string,
+  options: { topLevelOnly?: boolean; excludeLiveChat?: boolean; onlyLiveChat?: boolean }
+): Promise<Comment[]> => {
+  const allComments = await commentsTable.where('videoId').equals(videoId).toArray();
+  const matchingReplyIdsByParent = new Map<string, string[]>();
+
+  allComments.forEach((comment) => {
+    if (
+      comment.replyLevel === 1 &&
+      comment.commentParentId &&
+      matchesSearchKeyword(comment, searchKeyword)
+    ) {
+      const matchingReplyIds = matchingReplyIdsByParent.get(comment.commentParentId) || [];
+      matchingReplyIds.push(comment.commentId);
+      matchingReplyIdsByParent.set(comment.commentParentId, matchingReplyIds);
+    }
+  });
+
+  return allComments
+    .filter(
+      (comment) =>
+        comment.replyLevel === 0 &&
+        applyFiltersAndSearch(comment, filters, '', options) &&
+        (matchesSearchKeyword(comment, searchKeyword) ||
+          matchingReplyIdsByParent.has(comment.commentId))
+    )
+    .map((comment) => {
+      const matchedReplyIds = matchingReplyIdsByParent.get(comment.commentId);
+      return matchedReplyIds ? { ...comment, showRepliesDefault: true, matchedReplyIds } : comment;
+    });
+};
+
+const sortComments = (comments: Comment[], sortBy: string, sortOrder: string): Comment[] => {
+  const sortedComments = [...comments];
+
+  switch (sortBy) {
+    case 'likes':
+      sortedComments.sort((a, b) => a.likes - b.likes);
+      break;
+    case 'replies':
+      sortedComments.sort((a, b) => a.replyCount - b.replyCount);
+      break;
+    case 'author':
+      sortedComments.sort((a, b) => a.author.localeCompare(b.author));
+      break;
+    case 'normalized':
+      sortedComments.sort((a, b) => (a.normalizedScore || 0) - (b.normalizedScore || 0));
+      break;
+    case 'zscore':
+      sortedComments.sort((a, b) => (a.weightedZScore || 0) - (b.weightedZScore || 0));
+      break;
+    case 'bayesian':
+      sortedComments.sort((a, b) => (a.bayesianAverage || 0) - (b.bayesianAverage || 0));
+      break;
+    case 'length':
+      sortedComments.sort((a, b) => (a.wordCount || 0) - (b.wordCount || 0));
+      break;
+    case 'random':
+      for (let index = sortedComments.length - 1; index > 0; index -= 1) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [sortedComments[index], sortedComments[randomIndex]] = [
+          sortedComments[randomIndex],
+          sortedComments[index],
+        ];
+      }
+      return sortedComments;
+    case 'date':
+    default:
+      sortedComments.sort((a, b) => a.publishedDate - b.publishedDate);
+      break;
+  }
+
+  return sortOrder === 'desc' ? sortedComments.reverse() : sortedComments;
+};
+
 export const loadPagedComments = async (
   commentsTable: Dexie.Table<Comment, number>,
   videoId: string,
@@ -232,6 +319,17 @@ export const loadPagedComments = async (
 
   try {
     const offset = page * pageSize;
+
+    if (options.topLevelOnly && searchKeyword) {
+      const matchingThreads = await getReplyAwareTopLevelSearchResults(
+        commentsTable,
+        videoId,
+        filters,
+        searchKeyword,
+        options
+      );
+      return sortComments(matchingThreads, sortBy, sortOrder).slice(offset, offset + pageSize);
+    }
 
     if (!options.topLevelOnly) {
       let collection = commentsTable.where('videoId').equals(videoId);
@@ -460,6 +558,17 @@ export const countComments = async (
   }
 
   try {
+    if (options.topLevelOnly && searchKeyword) {
+      const matchingThreads = await getReplyAwareTopLevelSearchResults(
+        commentsTable,
+        videoId,
+        filters,
+        searchKeyword,
+        options
+      );
+      return matchingThreads.length;
+    }
+
     let baseCollection: Dexie.Collection<Comment, number>;
 
     if (options.topLevelOnly) {

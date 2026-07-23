@@ -32,6 +32,8 @@ export interface Comment {
   authorThumb?: string;
   isOwner?: boolean;
   showRepliesDefault?: boolean;
+  /** Reply IDs that matched the active search; used to show a compact search preview. */
+  matchedReplyIds?: string[];
   note?: string;
   // Additional fields for database
   id?: number;

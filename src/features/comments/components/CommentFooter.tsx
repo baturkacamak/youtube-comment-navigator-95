@@ -31,6 +31,8 @@ interface CommentFooterProps {
   isFetchingReplies: boolean;
   handleCopyToClipboard: () => void;
   copySuccess: boolean;
+  showAllRepliesAction?: () => void;
+  totalReplyCount?: number;
 }
 
 const CommentFooter: React.FC<CommentFooterProps> = React.memo(
@@ -42,6 +44,8 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
     isFetchingReplies,
     handleCopyToClipboard,
     copySuccess,
+    showAllRepliesAction,
+    totalReplyCount,
   }) => {
     const { t } = useTranslation();
     const currentVideoId = extractYouTubeVideoIdFromUrl();
@@ -191,6 +195,18 @@ const CommentFooter: React.FC<CommentFooterProps> = React.memo(
               )}
               <span className="text-sm">
                 {showReplies ? t('Hide replies') : t('Show replies')} ({comment.replyCount})
+              </span>
+            </button>
+          )}
+          {showReplies && showAllRepliesAction && (
+            <button
+              onClick={showAllRepliesAction}
+              className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-all duration-300"
+              aria-label={`${t('Show replies')} (${t('All')}: ${totalReplyCount})`}
+            >
+              <ChevronDownIcon className="w-4 h-4 mr-1" aria-hidden="true" />
+              <span className="text-sm">
+                {t('Show replies')} ({t('All')}: {totalReplyCount})
               </span>
             </button>
           )}

@@ -33,11 +33,13 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
     const { t } = useTranslation();
     const [copySuccess, setCopySuccess] = useState(false);
     const [showReplies, setShowReplies] = useState(comment.showRepliesDefault || false);
+    const [showAllReplies, setShowAllReplies] = useState(!comment.showRepliesDefault);
     const [fetchedReplies, setFetchedReplies] = useState<Comment[] | null>(null);
     const [isFetchingReplies, setIsFetchingReplies] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const parentCommentRef = useRef<HTMLDivElement>(null);
+    const autoExpandedCommentIdRef = useRef<string | null>(null);
     const videoId = comment.videoId || extractYouTubeVideoIdFromUrl();
 
     useEffect(() => {
@@ -78,27 +80,49 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
       setError(null);
     }, []);
 
+    const loadReplies = React.useCallback(async () => {
+      if (fetchedReplies !== null) {
+        return;
+      }
+
+      setIsFetchingReplies(true);
+      setError(null);
+      try {
+        const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
+        setFetchedReplies(replies);
+        eventEmitter.emit(`replies-loaded-${comment.commentId}`, replies);
+      } catch (_error) {
+        setFetchedReplies([]);
+        setError(t('Failed to load replies. Please try again.'));
+        eventEmitter.emit(`replies-loaded-${comment.commentId}`, []);
+      } finally {
+        setIsFetchingReplies(false);
+      }
+    }, [comment.commentId, fetchedReplies, t, videoId]);
+
+    useEffect(() => {
+      if (!comment.showRepliesDefault) {
+        autoExpandedCommentIdRef.current = null;
+        return;
+      }
+
+      if (autoExpandedCommentIdRef.current !== comment.commentId) {
+        autoExpandedCommentIdRef.current = comment.commentId;
+        setShowReplies(true);
+        setShowAllReplies(false);
+        void loadReplies();
+      }
+    }, [comment.commentId, comment.showRepliesDefault, loadReplies]);
+
     const handleToggleReplies = React.useCallback(async () => {
       const newShowReplies = !showReplies;
       setShowReplies(newShowReplies);
 
-      if (newShowReplies && fetchedReplies === null) {
-        setIsFetchingReplies(true);
-        setError(null);
-        try {
-          const replies = await fetchRepliesForComment(db.comments, videoId, comment.commentId);
-          setFetchedReplies(replies);
-          // Emit event that replies are loaded
-          eventEmitter.emit(`replies-loaded-${comment.commentId}`, replies);
-        } catch (error) {
-          setFetchedReplies([]);
-          setError(t('Failed to load replies. Please try again.'));
-          eventEmitter.emit(`replies-loaded-${comment.commentId}`, []);
-        } finally {
-          setIsFetchingReplies(false);
-        }
+      if (newShowReplies) {
+        setShowAllReplies(true);
+        await loadReplies();
       }
-    }, [showReplies, fetchedReplies, videoId, comment.commentId, t]);
+    }, [loadReplies, showReplies]);
 
     const isSticky = useSticky(parentCommentRef, showReplies);
     const videoUrl = `https://www.youtube.com/watch?v=${comment.videoId}`;
@@ -106,6 +130,17 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
     const bookmarkTimestamp = comment.bookmarkAddedDate
       ? new Date(comment.bookmarkAddedDate).getTime()
       : null;
+    const matchingReplyIds = comment.matchedReplyIds || [];
+    const visibleReplies =
+      !showAllReplies && matchingReplyIds.length > 0
+        ? (fetchedReplies || []).filter((reply) => matchingReplyIds.includes(reply.commentId))
+        : fetchedReplies || [];
+    const showAllRepliesAction =
+      !showAllReplies &&
+      matchingReplyIds.length > 0 &&
+      matchingReplyIds.length < (fetchedReplies?.length || 0)
+        ? () => setShowAllReplies(true)
+        : undefined;
 
     return (
       <Box
@@ -167,6 +202,8 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
             isFetchingReplies={isFetchingReplies}
             handleCopyToClipboard={handleCopy}
             copySuccess={copySuccess}
+            showAllRepliesAction={showAllRepliesAction}
+            totalReplyCount={fetchedReplies?.length || comment.replyCount}
           />
           {error && (
             <div className="mt-2 p-2 text-sm text-red-600 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
@@ -176,7 +213,7 @@ const CommentItem: React.FC<CommentItemProps> = React.memo(
         </div>
         {Number(comment.replyCount) > 0 && (
           <CommentReplies
-            replies={fetchedReplies ?? []}
+            replies={visibleReplies}
             showReplies={showReplies}
             isLoading={isFetchingReplies}
             parentCommentId={comment.commentId}
