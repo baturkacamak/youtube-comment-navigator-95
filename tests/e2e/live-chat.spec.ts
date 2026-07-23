@@ -1,5 +1,5 @@
 import { test, expect, BrowserContext, Page } from '@playwright/test';
-import { launchExtension, handleYouTubeConsent, clearLocalStorage } from './helpers/extension';
+import { launchExtension, navigateToYouTubePage, clearLocalStorage } from './helpers/extension';
 
 const liveChatVideos = [
   'https://youtu.be/RBt6mn3pyok',
@@ -12,8 +12,7 @@ const interactiveLiveChatVideo = 'https://youtu.be/eqKE9As_sD4';
 const spaNavigationLiveChatVideoId = 'Iu4hiStcjpo';
 
 const navigateToYouTubeUrl = async (page: Page, url: string): Promise<void> => {
-  await page.goto(url, { waitUntil: 'domcontentloaded' });
-  await handleYouTubeConsent(page);
+  await navigateToYouTubePage(page, url);
   await page.waitForSelector('ytd-app', { timeout: 15000 });
   await page.evaluate(() => window.scrollTo(0, 500));
   await page.waitForTimeout(2500);
@@ -152,15 +151,12 @@ test.describe('Live Chat E2E', () => {
   test('loads chat replay after YouTube SPA navigation from the homepage', async () => {
     test.setTimeout(180000);
 
-    await page.goto('https://www.youtube.com/', { waitUntil: 'domcontentloaded' });
-    await handleYouTubeConsent(page);
+    await navigateToYouTubePage(page, 'https://www.youtube.com/');
     await page.waitForSelector('ytd-app', { timeout: 15000 });
 
-    await page.goto(
-      `https://www.youtube.com/results?search_query=${spaNavigationLiveChatVideoId}`,
-      {
-        waitUntil: 'domcontentloaded',
-      }
+    await navigateToYouTubePage(
+      page,
+      `https://www.youtube.com/results?search_query=${spaNavigationLiveChatVideoId}`
     );
     await page.waitForSelector(`a[href^="/watch?v=${spaNavigationLiveChatVideoId}"]`, {
       timeout: 30000,

@@ -3,7 +3,7 @@ import {
   launchExtension,
   navigateToYouTubeVideo,
   clearLocalStorage,
-  handleYouTubeConsent,
+  reloadYouTubePage,
   getLocalStorage,
 } from './helpers/extension';
 
@@ -26,8 +26,7 @@ test.describe('Settings Persistence E2E', () => {
 
   test.beforeEach(async () => {
     await clearLocalStorage(page);
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await handleYouTubeConsent(page);
+    await reloadYouTubePage(page);
     await page.waitForSelector('ytd-app', { timeout: 15000 });
     await page.evaluate(() => window.scrollTo(0, 500));
     await page.waitForTimeout(2000);
@@ -62,8 +61,7 @@ test.describe('Settings Persistence E2E', () => {
         expect(settings?.theme).toBe('dark');
 
         // Reload page
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await handleYouTubeConsent(page);
+        await reloadYouTubePage(page);
         await page.waitForSelector('ytd-app', { timeout: 15000 });
         await page.evaluate(() => window.scrollTo(0, 500));
         await page.waitForTimeout(2000);
@@ -98,8 +96,7 @@ test.describe('Settings Persistence E2E', () => {
         await page.waitForTimeout(500);
 
         // Reload page
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await handleYouTubeConsent(page);
+        await reloadYouTubePage(page);
         await page.waitForSelector('ytd-app', { timeout: 15000 });
         await page.evaluate(() => window.scrollTo(0, 500));
         await page.waitForTimeout(2000);

@@ -36,6 +36,33 @@ export interface ExtensionContext {
   page: Page;
 }
 
+const consentTasks = new WeakMap<Page, { url: string; task: Promise<void> }>();
+const preparedPages = new WeakSet<Page>();
+
+const isYouTubePage = (page: Page): boolean => {
+  try {
+    return new URL(page.url()).hostname.endsWith('youtube.com');
+  } catch {
+    return false;
+  }
+};
+
+const prepareYouTubePage = (page: Page): void => {
+  if (preparedPages.has(page)) return;
+  preparedPages.add(page);
+
+  page.on('domcontentloaded', () => {
+    if (!isYouTubePage(page)) return;
+
+    const url = page.url();
+    const existingTask = consentTasks.get(page);
+    if (existingTask?.url === url) return;
+
+    const task = handleYouTubeConsent(page);
+    consentTasks.set(page, { url, task });
+  });
+};
+
 /**
  * Launch Chrome with the extension loaded
  * Returns a context and page ready for testing
@@ -55,7 +82,9 @@ export async function launchExtension(): Promise<ExtensionContext> {
     ignoreDefaultArgs: ['--enable-automation'],
   });
 
+  context.on('page', prepareYouTubePage);
   const page = await context.newPage();
+  prepareYouTubePage(page);
   return { context, page };
 }
 
@@ -103,6 +132,31 @@ export async function handleYouTubeConsent(page: Page): Promise<void> {
   }
 }
 
+/** Wait for the centrally scheduled consent dismissal after a YouTube navigation. */
+export async function waitForYouTubeConsent(page: Page): Promise<void> {
+  if (!isYouTubePage(page)) return;
+
+  const scheduledTask = consentTasks.get(page);
+  if (scheduledTask?.url === page.url()) {
+    await scheduledTask.task;
+    return;
+  }
+
+  await handleYouTubeConsent(page);
+}
+
+/** Navigate to any YouTube page and dismiss consent before the caller continues. */
+export async function navigateToYouTubePage(page: Page, url: string): Promise<void> {
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  await waitForYouTubeConsent(page);
+}
+
+/** Reload a YouTube page and dismiss consent before the caller continues. */
+export async function reloadYouTubePage(page: Page): Promise<void> {
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await waitForYouTubeConsent(page);
+}
+
 /**
  * Navigate to a YouTube video and wait for extension to load
  */
@@ -110,12 +164,7 @@ export async function navigateToYouTubeVideo(
   page: Page,
   videoId = defaultTestVideo.id
 ): Promise<void> {
-  await page.goto(`https://www.youtube.com/watch?v=${videoId}`, {
-    waitUntil: 'domcontentloaded',
-  });
-
-  // Handle cookie consent dialog if it appears
-  await handleYouTubeConsent(page);
+  await navigateToYouTubePage(page, `https://www.youtube.com/watch?v=${videoId}`);
 
   // Wait for YouTube to load
   await page.waitForSelector('ytd-app', { timeout: 15000 });

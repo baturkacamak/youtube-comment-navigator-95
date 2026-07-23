@@ -3,7 +3,7 @@ import {
   launchExtension,
   navigateToYouTubeVideo,
   clearLocalStorage,
-  handleYouTubeConsent,
+  reloadYouTubePage,
 } from './helpers/extension';
 
 /**
@@ -42,8 +42,7 @@ test.describe('Extension Loading', () => {
 
   test('extension displays core UI elements', async () => {
     await clearLocalStorage(page);
-    await page.reload({ waitUntil: 'domcontentloaded' });
-    await handleYouTubeConsent(page);
+    await reloadYouTubePage(page);
     await page.waitForSelector('ytd-app', { timeout: 15000 });
     await page.evaluate(() => window.scrollTo(0, 500));
     await page.waitForTimeout(2000);

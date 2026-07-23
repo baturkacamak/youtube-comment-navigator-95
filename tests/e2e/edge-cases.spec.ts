@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import {
   launchExtension,
   navigateToYouTubeVideo,
-  handleYouTubeConsent,
+  navigateToYouTubePage,
   testVideos,
 } from './helpers/extension';
 
@@ -17,10 +17,7 @@ test.describe('Edge Cases - Browser Specific', () => {
     const { context, page } = await launchExtension();
 
     try {
-      await page.goto('https://www.youtube.com/', {
-        waitUntil: 'domcontentloaded',
-      });
-      await handleYouTubeConsent(page);
+      await navigateToYouTubePage(page, 'https://www.youtube.com/');
       await page.waitForTimeout(3000);
 
       // Extension should not crash on homepage

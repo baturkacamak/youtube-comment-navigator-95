@@ -15,6 +15,10 @@
   - `npm run test:e2e`
   - `node node_modules/@playwright/test/cli.js test <spec>`
   - Set `PLAYWRIGHT_HIDE_BROWSER=true` to run headed extension E2E tests with the browser window off-screen.
+- Use `navigateToYouTubePage`, `navigateToYouTubeVideo`, or `reloadYouTubePage` from
+  `tests/e2e/helpers/extension.ts` for every YouTube navigation in Playwright tests.
+  These helpers centrally dismiss YouTube's cookie-consent modal before test actions continue;
+  do not add per-spec consent-clicking logic.
 - For Vitest in this repo, prefer:
   - `npm test`
   - `npm test -- --run <spec>`
