@@ -3,6 +3,8 @@
 - Do not use `git commit --no-verify` as a workaround for failing hooks. Fix the hook or its command resolution first.
 - In this repository, prefer local Node entrypoints such as `node node_modules/<pkg>/...` instead of relying on `node_modules/.bin`.
 - Before committing, make sure the relevant local checks pass through the repo's normal scripts or hook commands.
+- GitHub Actions installs private `@baturkacamak` packages with the
+  `PACKAGES_READ_TOKEN` repository secret; keep that token out of files and logs.
 - Commit messages must satisfy commitlint. Use conventional commit format such as `fix: ...`, `feat: ...`, or `chore: ...`.
 - If a hook fails, fix the hook itself or the command path it uses. Do not bypass `pre-commit` or `commit-msg`.
 - The staged-file hook runs ESLint, Prettier, and `vitest related` once for the combined TypeScript/JavaScript file set; do not split that test command into concurrent overlapping groups.
