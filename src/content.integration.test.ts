@@ -176,7 +176,7 @@ describe('content.tsx integration', () => {
     expect(document.getElementById('youtube-comment-navigator-playlist-batch')).toBeNull();
   });
 
-  it('migrates a legacy Gemini key without retaining it in page settings', async () => {
+  it('does not migrate a legacy page-storage Gemini key', async () => {
     localStorage.setItem(
       'settings',
       JSON.stringify({ geminiApiKey: 'dummy-legacy-api-key', textSize: 'text-base' })
@@ -187,22 +187,19 @@ describe('content.tsx integration', () => {
     await vi.advanceTimersByTimeAsync(2500);
     await vi.waitFor(() => expect(mockStoreDispatch).toHaveBeenCalled());
 
-    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
-      { type: 'YCN_AI/SET_KEY', key: 'dummy-legacy-api-key' },
+    expect(chrome.runtime.sendMessage).not.toHaveBeenCalledWith(
+      { type: 'YCN_AI/SET_KEY', key: expect.any(String) },
       expect.any(Function)
     );
     expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
       { type: 'YCN_AI/STATUS' },
       expect.any(Function)
     );
-    expect(JSON.parse(localStorage.getItem('settings') ?? '{}')).toEqual({
-      geminiApiKey: 'configured',
-      textSize: 'text-base',
-    });
+    expect(JSON.parse(localStorage.getItem('settings') ?? '{}')).toEqual({ textSize: 'text-base' });
     expect(mockSetGeminiApiKey).toHaveBeenCalledWith('configured');
   });
 
-  it('does not migrate the configured marker as if it were an API key', async () => {
+  it('only synchronizes configured state and never sends the page marker as a key', async () => {
     localStorage.setItem('settings', JSON.stringify({ geminiApiKey: 'configured' }));
     setUrl('/watch?v=video-a');
 

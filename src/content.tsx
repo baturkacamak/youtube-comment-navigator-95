@@ -15,24 +15,17 @@ import logger from './features/shared/utils/logger';
 // --- Helper Classes ---
 
 class DOMHelper {
-  static async migrateLegacyGeminiKey(): Promise<void> {
+  static async syncGeminiKeyStatus(): Promise<void> {
     try {
-      const raw = localStorage.getItem('settings');
-      const settings = raw ? JSON.parse(raw) : null;
-      const legacyKey =
-        typeof settings?.geminiApiKey === 'string' ? settings.geminiApiKey.trim() : '';
-      if (legacyKey && legacyKey !== 'configured') {
-        await new Promise<void>((resolve, reject) =>
-          chrome.runtime.sendMessage({ type: 'YCN_AI/SET_KEY', key: legacyKey }, (response) => {
-            if (chrome.runtime.lastError || !response?.configured) {
-              reject(new Error('Legacy AI key migration failed.'));
-              return;
-            }
-            resolve();
-          })
-        );
-        settings.geminiApiKey = 'configured';
-        localStorage.setItem('settings', JSON.stringify(settings));
+      const rawSettings = localStorage.getItem('settings');
+      if (rawSettings) {
+        const settings = JSON.parse(rawSettings);
+        const legacyValue =
+          typeof settings?.geminiApiKey === 'string' ? settings.geminiApiKey.trim() : '';
+        if (legacyValue && legacyValue !== 'configured') {
+          delete settings.geminiApiKey;
+          localStorage.setItem('settings', JSON.stringify(settings));
+        }
       }
 
       const configured = await new Promise<boolean>((resolve, reject) =>
@@ -50,11 +43,10 @@ class DOMHelper {
       );
       store.dispatch(setGeminiApiKey(configured ? 'configured' : ''));
     } catch (error) {
-      logger.error('Gemini API key migration or status synchronization failed.', {
-        operation: 'migrate-legacy-gemini-key',
-        hasLegacyKey: Boolean(localStorage.getItem('settings')),
+      logger.error('Gemini API key status synchronization failed.', {
+        operation: 'sync-gemini-key-status',
         errorName: error instanceof Error ? error.name : 'UnknownError',
-        errorMessage: error instanceof Error ? error.message : 'Unknown migration failure.',
+        errorMessage: error instanceof Error ? error.message : 'Unknown status failure.',
       });
     }
   }
@@ -266,7 +258,7 @@ class YouTubeCommentNavigator {
   }
 
   mountReactApp(container: HTMLElement) {
-    void DOMHelper.migrateLegacyGeminiKey();
+    void DOMHelper.syncGeminiKeyStatus();
     this.root = ReactDOM.createRoot(container);
 
     // Apply initial theme to container
