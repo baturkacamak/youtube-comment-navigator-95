@@ -10,6 +10,7 @@ import { isLocalEnvironment, languageOptions } from './features/shared/utils/app
 import { ToastProvider } from './features/shared/contexts/ToastContext';
 import ToastContainer from './features/shared/components/ToastContainer';
 import PlaylistBatchExportWidget from './features/batch-export/components/PlaylistBatchExportWidget';
+import logger from './features/shared/utils/logger';
 
 // --- Helper Classes ---
 
@@ -20,21 +21,41 @@ class DOMHelper {
       const settings = raw ? JSON.parse(raw) : null;
       const legacyKey =
         typeof settings?.geminiApiKey === 'string' ? settings.geminiApiKey.trim() : '';
-      if (!legacyKey) return;
-      await new Promise<void>((resolve, reject) =>
-        chrome.runtime.sendMessage({ type: 'YCN_AI/SET_KEY', key: legacyKey }, (response) => {
+      if (legacyKey && legacyKey !== 'configured') {
+        await new Promise<void>((resolve, reject) =>
+          chrome.runtime.sendMessage({ type: 'YCN_AI/SET_KEY', key: legacyKey }, (response) => {
+            if (chrome.runtime.lastError || !response?.configured) {
+              reject(new Error('Legacy AI key migration failed.'));
+              return;
+            }
+            resolve();
+          })
+        );
+        settings.geminiApiKey = 'configured';
+        localStorage.setItem('settings', JSON.stringify(settings));
+      }
+
+      const configured = await new Promise<boolean>((resolve, reject) =>
+        chrome.runtime.sendMessage({ type: 'YCN_AI/STATUS' }, (response) => {
           if (chrome.runtime.lastError || !response?.configured) {
-            reject(new Error('Legacy AI key migration failed.'));
+            if (chrome.runtime.lastError) {
+              reject(new Error('AI key status check failed.'));
+              return;
+            }
+            resolve(false);
             return;
           }
-          resolve();
+          resolve(true);
         })
       );
-      settings.geminiApiKey = 'configured';
-      localStorage.setItem('settings', JSON.stringify(settings));
-      store.dispatch(setGeminiApiKey('configured'));
-    } catch {
-      /* retain the legacy setting if migration could not complete */
+      store.dispatch(setGeminiApiKey(configured ? 'configured' : ''));
+    } catch (error) {
+      logger.error('Gemini API key migration or status synchronization failed.', {
+        operation: 'migrate-legacy-gemini-key',
+        hasLegacyKey: Boolean(localStorage.getItem('settings')),
+        errorName: error instanceof Error ? error.name : 'UnknownError',
+        errorMessage: error instanceof Error ? error.message : 'Unknown migration failure.',
+      });
     }
   }
   static createAppContainer(commentsSectionId: string, containerId: string): HTMLElement | null {

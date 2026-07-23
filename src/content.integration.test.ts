@@ -5,20 +5,27 @@ const roots: Array<{
   root: { render: ReturnType<typeof vi.fn>; unmount: ReturnType<typeof vi.fn> };
 }> = [];
 
-const { mockCreateRoot, mockStoreDispatch, mockSetGeminiApiKey } = vi.hoisted(() => ({
-  mockCreateRoot: vi.fn((container: Element) => {
-    const root = {
-      render: vi.fn(),
-      unmount: vi.fn(),
-    };
-    roots.push({ container, root });
-    return root;
-  }),
-  mockStoreDispatch: vi.fn(),
-  mockSetGeminiApiKey: vi.fn((value: string) => ({
-    type: 'settings/setGeminiApiKey',
-    payload: value,
-  })),
+const { mockCreateRoot, mockStoreDispatch, mockSetGeminiApiKey, mockLoggerError } = vi.hoisted(
+  () => ({
+    mockCreateRoot: vi.fn((container: Element) => {
+      const root = {
+        render: vi.fn(),
+        unmount: vi.fn(),
+      };
+      roots.push({ container, root });
+      return root;
+    }),
+    mockStoreDispatch: vi.fn(),
+    mockSetGeminiApiKey: vi.fn((value: string) => ({
+      type: 'settings/setGeminiApiKey',
+      payload: value,
+    })),
+    mockLoggerError: vi.fn(),
+  })
+);
+
+vi.mock('./features/shared/utils/logger', () => ({
+  default: { error: mockLoggerError },
 }));
 
 vi.mock('react-dom/client', () => ({
@@ -184,10 +191,33 @@ describe('content.tsx integration', () => {
       { type: 'YCN_AI/SET_KEY', key: 'dummy-legacy-api-key' },
       expect.any(Function)
     );
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
+      { type: 'YCN_AI/STATUS' },
+      expect.any(Function)
+    );
     expect(JSON.parse(localStorage.getItem('settings') ?? '{}')).toEqual({
       geminiApiKey: 'configured',
       textSize: 'text-base',
     });
+    expect(mockSetGeminiApiKey).toHaveBeenCalledWith('configured');
+  });
+
+  it('does not migrate the configured marker as if it were an API key', async () => {
+    localStorage.setItem('settings', JSON.stringify({ geminiApiKey: 'configured' }));
+    setUrl('/watch?v=video-a');
+
+    await import('./content');
+    await vi.advanceTimersByTimeAsync(2500);
+    await vi.waitFor(() => expect(mockStoreDispatch).toHaveBeenCalled());
+
+    expect(chrome.runtime.sendMessage).not.toHaveBeenCalledWith(
+      { type: 'YCN_AI/SET_KEY', key: 'configured' },
+      expect.any(Function)
+    );
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
+      { type: 'YCN_AI/STATUS' },
+      expect.any(Function)
+    );
     expect(mockSetGeminiApiKey).toHaveBeenCalledWith('configured');
   });
 });

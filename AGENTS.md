@@ -43,6 +43,12 @@
 
 ## Error Diagnostics
 
+- Project-wide, every caught unexpected error that prevents an operation from
+  completing must emit `logger.error` before it is converted to a user-facing
+  message, rethrown, or handled by a fallback. Use `logger.warn` for expected,
+  recoverable fallback conditions; do not log user cancellation or normal control
+  flow as errors, and avoid repeating the same diagnostic without adding new
+  layer-specific context.
 - At external API, provider, storage, parsing, and runtime-message failure
   boundaries, add `logger.error` diagnostics with the operation, feature/provider,
   stable identifiers, HTTP status, error code, and safe response shape when

@@ -1,4 +1,5 @@
 import { registerGeminiBackground } from '@baturkacamak/extension-ai-webextension';
+import { createGeminiStorageAdapter } from './features/intelligence/services/geminiStorage';
 
 const aiBackgroundLogger = {
   error(message: string, context?: Record<string, unknown>) {
@@ -16,7 +17,7 @@ const send = (tabId: number, message: unknown) =>
 const storageGet = async () => (await chrome.storage.local.get(KEY))[KEY] as string | undefined;
 
 registerGeminiBackground(chrome.runtime, {
-  storage: chrome.storage.local,
+  storage: createGeminiStorageAdapter(chrome.storage.local),
   storageKey: GEMINI_KEY,
   namespace: 'YCN_AI',
   logger: aiBackgroundLogger,
