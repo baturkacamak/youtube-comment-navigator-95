@@ -161,6 +161,7 @@ const createTestStore = (preloadedState = {}) => {
         showFiltersSorts: true,
         showContentOnSearch: false,
         geminiApiKey: '',
+        aiResponseLanguage: 'interface',
       },
       ...preloadedState,
     },

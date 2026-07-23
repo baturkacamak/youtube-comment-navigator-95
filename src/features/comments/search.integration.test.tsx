@@ -25,6 +25,7 @@ describe('Search Functionality Integration Tests', () => {
       showFiltersSorts: true,
       showContentOnSearch: false,
       geminiApiKey: '',
+      aiResponseLanguage: 'interface',
     },
     filters: {
       keyword: '',

@@ -13,6 +13,9 @@ import {
 } from '@baturkacamak/extension-ai-webextension';
 import logger from '../../shared/utils/logger';
 import { describeAIExecutionError } from './aiErrorDiagnostics';
+import { appendAIResponseLanguageInstruction } from './aiResponseLanguage';
+import store from '../../../store/store';
+import { getSettings } from '../../settings/utils/settingsUtils';
 
 export const AI_MESSAGE_NAMESPACE = 'YCN_AI';
 
@@ -61,15 +64,25 @@ const executePrompt = async (
   prompt: string,
   signal?: AbortSignal
 ): Promise<string> => {
+  const savedInterfaceLanguage = getSettings().language;
+  const interfaceLanguage =
+    typeof savedInterfaceLanguage === 'string'
+      ? savedInterfaceLanguage
+      : navigator.language || navigator.languages?.[0] || 'en';
+  const localizedPrompt = appendAIResponseLanguageInstruction(
+    prompt,
+    store.getState().settings.aiResponseLanguage,
+    interfaceLanguage
+  );
   try {
-    return await engine.generate(prompt, { signal });
+    return await engine.generate(localizedPrompt, { signal });
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') throw error;
 
-    const report = describeAIExecutionError(error, prompt);
+    const report = describeAIExecutionError(error, localizedPrompt);
     logger.error('AI analysis request failed.', {
       operation,
-      promptLength: prompt.length,
+      promptLength: localizedPrompt.length,
       failureCount: report.failures.length,
       providerIds: report.failures.map(({ providerId }) => providerId).join(', '),
     });

@@ -209,5 +209,8 @@
   "Description": "Tanım",
   "Progress: {{completed}}/{{total}}": "İlerleme durumu: {{completed}}/{{total}}",
   "Exporting...": "Dışa aktarılıyor...",
-  "Export {{count}} Videos": "{{count}} Videoyu Dışa Aktar"
+  "Export {{count}} Videos": "{{count}} Videoyu Dışa Aktar",
+  "AI response language": "Yapay zekâ yanıt dili",
+  "Same as interface": "Arayüz diliyle aynı",
+  "AI analyses will be generated in this language.": "Yapay zekâ analizleri bu dilde oluşturulur."
 }

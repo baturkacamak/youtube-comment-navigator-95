@@ -46,6 +46,7 @@ const defaultSettings: RootState['settings'] = {
   showFiltersSorts: true,
   showContentOnSearch: false,
   geminiApiKey: '',
+  aiResponseLanguage: 'interface',
   enableDeveloperMode: false,
   commentSource: 'auto',
   hasYouTubeDataApiKey: false,
@@ -73,6 +74,10 @@ const loadSettingsPreference = (): RootState['settings'] => {
         ? savedSettings.showContentOnSearch
         : defaultSettings.showContentOnSearch,
     geminiApiKey: savedSettings.geminiApiKey === 'configured' ? 'configured' : '',
+    aiResponseLanguage:
+      typeof savedSettings.aiResponseLanguage === 'string'
+        ? savedSettings.aiResponseLanguage
+        : defaultSettings.aiResponseLanguage,
     enableDeveloperMode:
       typeof savedSettings.enableDeveloperMode === 'boolean'
         ? savedSettings.enableDeveloperMode
@@ -230,6 +235,10 @@ const commentsSlice = createSlice({
       state.settings.geminiApiKey = action.payload;
       saveSettings({ geminiApiKey: state.settings.geminiApiKey });
     },
+    setAIResponseLanguage: (state, action: PayloadAction<string>) => {
+      state.settings.aiResponseLanguage = action.payload;
+      saveSettings({ aiResponseLanguage: action.payload });
+    },
     setEnableDeveloperMode: (state, action: PayloadAction<boolean>) => {
       state.settings.enableDeveloperMode = action.payload;
       saveSettings({ enableDeveloperMode: state.settings.enableDeveloperMode });
@@ -309,6 +318,7 @@ export const {
   setFontFamily,
   setShowContentOnSearch,
   setGeminiApiKey,
+  setAIResponseLanguage,
   setEnableDeveloperMode,
   setCommentSource,
   setHasYouTubeDataApiKey,

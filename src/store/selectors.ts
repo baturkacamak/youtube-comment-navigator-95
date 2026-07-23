@@ -41,6 +41,10 @@ export const selectGeminiApiKey = createSelector(
   [selectSettings],
   (settings) => settings.geminiApiKey
 );
+export const selectAIResponseLanguage = createSelector(
+  [selectSettings],
+  (settings) => settings.aiResponseLanguage || 'interface'
+);
 export const selectCommentSource = createSelector(
   [selectSettings],
   (settings) => settings.commentSource || 'auto'

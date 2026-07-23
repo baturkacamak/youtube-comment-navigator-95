@@ -139,6 +139,7 @@ const createTestStore = () =>
         showFiltersSorts: true,
         showContentOnSearch: false,
         geminiApiKey: '',
+        aiResponseLanguage: 'interface',
       },
     },
   });

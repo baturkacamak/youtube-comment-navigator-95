@@ -6,6 +6,7 @@ import {
   setShowFiltersSorts,
   setFontFamily,
   setShowContentOnSearch,
+  setAIResponseLanguage,
 } from '../../store/store';
 import { getSettings, saveSettings } from './utils/settingsUtils';
 import type { RootState } from '../../types/rootState';
@@ -25,6 +26,7 @@ describe('Settings Integration Tests - Redux & localStorage', () => {
       showFiltersSorts: true,
       showContentOnSearch: false,
       geminiApiKey: '',
+      aiResponseLanguage: 'interface',
     },
     filters: {
       keyword: '',
@@ -144,6 +146,24 @@ describe('Settings Integration Tests - Redux & localStorage', () => {
 
       const savedSettings = getSettings();
       expect(savedSettings.showContentOnSearch).toBe(true);
+    });
+  });
+
+  describe('AI Response Language Settings', () => {
+    it('updates Redux state and persists the selected language', () => {
+      store.dispatch(setAIResponseLanguage('tr'));
+
+      const state = store.getState() as RootState;
+      expect(state.settings.aiResponseLanguage).toBe('tr');
+      expect(getSettings().aiResponseLanguage).toBe('tr');
+    });
+
+    it('can follow the interface language again after an explicit selection', () => {
+      store.dispatch(setAIResponseLanguage('es'));
+      store.dispatch(setAIResponseLanguage('interface'));
+
+      expect((store.getState() as RootState).settings.aiResponseLanguage).toBe('interface');
+      expect(getSettings().aiResponseLanguage).toBe('interface');
     });
   });
 

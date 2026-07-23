@@ -19,6 +19,7 @@ export interface RootState {
     fontFamily: string;
     showContentOnSearch: boolean;
     geminiApiKey: string;
+    aiResponseLanguage: string;
     enableDeveloperMode?: boolean;
     commentSource?: 'auto' | 'innertube' | 'dataApi';
     hasYouTubeDataApiKey?: boolean;
