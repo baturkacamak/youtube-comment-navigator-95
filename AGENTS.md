@@ -41,6 +41,17 @@
 - Network calls requiring a secret must be made by the background service worker. Content/UI code may receive only non-sensitive status and result data.
 - When replacing an insecure legacy setting, migrate it once to extension storage and remove it from page storage immediately; never expose it again for masking or display.
 
+## Error Diagnostics
+
+- At external API, provider, storage, parsing, and runtime-message failure
+  boundaries, add `logger.error` diagnostics with the operation, feature/provider,
+  stable identifiers, HTTP status, error code, and safe response shape when
+  available. Do not silently discard caught errors or replace them with a generic
+  message before logging the underlying cause.
+- Never include API keys, access tokens, prompts, generated/user content,
+  authorization headers, cookies, or complete provider response bodies in logs.
+  Log lengths, counts, IDs, status values, and top-level keys instead.
+
 ## UI Implementation
 
 - Before creating UI controls or styles, inspect `src/features/shared/components/` and reuse the existing component that fits. Do not introduce raw inputs, buttons, selects, or duplicate styling when a shared component already provides the behavior.

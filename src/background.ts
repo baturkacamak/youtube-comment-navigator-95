@@ -1,5 +1,11 @@
 import { registerGeminiBackground } from '@baturkacamak/extension-ai-webextension';
 
+const aiBackgroundLogger = {
+  error(message: string, context?: Record<string, unknown>) {
+    console.error(`[YouTube Comment Navigator AI] ${message}`, context ?? {});
+  },
+};
+
 const KEY = 'youtubeDataApiKey';
 const GEMINI_KEY = 'geminiApiKey';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -13,6 +19,7 @@ registerGeminiBackground(chrome.runtime, {
   storage: chrome.storage.local,
   storageKey: GEMINI_KEY,
   namespace: 'YCN_AI',
+  logger: aiBackgroundLogger,
 });
 
 function toComment(snippet: any, videoId: string, parentId?: string, replyCount = 0): ApiComment {

@@ -11,6 +11,8 @@ import {
   type BuiltInAIGlobal,
   type RuntimeAIClient,
 } from '@baturkacamak/extension-ai-webextension';
+import logger from '../../shared/utils/logger';
+import { describeAIExecutionError } from './aiErrorDiagnostics';
 
 export const AI_MESSAGE_NAMESPACE = 'YCN_AI';
 
@@ -21,12 +23,17 @@ let runtimeClient: RuntimeAIClient | null = null;
 const getRuntimeClient = (): RuntimeAIClient => {
   if (runtimeClient) return runtimeClient;
   if (typeof chrome === 'undefined' || !chrome.runtime) {
+    logger.error('AI extension runtime is unavailable.', {
+      operation: 'create-runtime-client',
+      providerId: 'gemini-api',
+    });
     throw new Error('Extension runtime is unavailable.');
   }
   runtimeClient = createRuntimeAIClient({
     runtime: chrome.runtime,
     namespace: AI_MESSAGE_NAMESPACE,
     providerId: 'gemini-api',
+    logger,
   });
   return runtimeClient;
 };
@@ -49,8 +56,30 @@ const formatCommentsForPrompt = (comments: Comment[], limit = 50): string => {
   );
 };
 
-const executePrompt = (prompt: string, signal?: AbortSignal): Promise<string> =>
-  engine.generate(prompt, { signal });
+const executePrompt = async (
+  operation: string,
+  prompt: string,
+  signal?: AbortSignal
+): Promise<string> => {
+  try {
+    return await engine.generate(prompt, { signal });
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') throw error;
+
+    const report = describeAIExecutionError(error, prompt);
+    logger.error('AI analysis request failed.', {
+      operation,
+      promptLength: prompt.length,
+      failureCount: report.failures.length,
+      providerIds: report.failures.map(({ providerId }) => providerId).join(', '),
+    });
+    report.failures.forEach((failure) => {
+      logger.error('AI provider failed.', { operation, ...failure });
+    });
+
+    throw new Error(report.displayMessage);
+  }
+};
 
 export const getBuiltInAIAvailability = (): Promise<AIAvailability> =>
   builtInProvider.availability();
@@ -65,7 +94,7 @@ export const summarizeComments = async (
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
   const prompt = `Here are the top comments from a YouTube video. Summarize the main topics, overall sentiment, and any recurring arguments or jokes. Keep it concise (under 200 words).\n\n${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('executive-summary', prompt, signal);
 };
 
 export const analyzeSentiment = async (
@@ -80,7 +109,7 @@ export const analyzeSentiment = async (
   
   Comments:
   ${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('vibe-check', prompt, signal);
 };
 
 export const extractQuestions = async (
@@ -89,13 +118,13 @@ export const extractQuestions = async (
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
   const prompt = `Identify valid, unanswered questions from these comments. Ignore rhetorical questions. Return a bulleted list of the top 3-5 questions. If none, say "No clear questions found."\n\n${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('smart-qa', prompt, signal);
 };
 
 export const extractIdeas = async (comments: Comment[], signal?: AbortSignal): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
   const prompt = `Identify feature requests, video ideas, or constructive feedback. Return a bulleted list of the top 3-5 suggestions. If none, say "No specific ideas found."\n\n${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('idea-miner', prompt, signal);
 };
 
 export const analyzeControversy = async (
@@ -104,7 +133,7 @@ export const analyzeControversy = async (
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
   const prompt = `Identify if there is any controversy or debate in these comments. If yes, summarize the opposing viewpoints in 2-3 sentences. If everyone agrees, say "Low controversy."\n\n${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('controversy-radar', prompt, signal);
 };
 
 export const analyzeAudience = async (
@@ -113,5 +142,5 @@ export const analyzeAudience = async (
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
   const prompt = `Based on the language, jargon, and topics, describe the likely audience profile (e.g., 'Beginners', 'Industry Experts', 'Angry Gamers') in 2 sentences.\n\n${commentText}`;
-  return executePrompt(prompt, signal);
+  return executePrompt('audience-profiling', prompt, signal);
 };
