@@ -1,7 +1,8 @@
-export interface ButtonProps {
+import type { ButtonHTMLAttributes, ComponentType, SVGProps } from 'react';
+
+export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick'> {
   onClick: () => void;
-  icon: any;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   label: string;
-  className?: string;
   iconOnly?: boolean;
 }

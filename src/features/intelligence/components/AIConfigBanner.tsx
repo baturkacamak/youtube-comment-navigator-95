@@ -12,10 +12,10 @@ import { useLocalIntelligence } from '../hooks/useLocalIntelligence';
 import ExternalLink from '../../shared/components/ExternalLink';
 
 interface AIConfigBannerProps {
-  onOpenSettings?: () => void;
+  onConfigure?: () => void;
 }
 
-const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
+const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onConfigure }) => {
   const { t } = useTranslation();
   const { status } = useLocalIntelligence();
   const apiKey = useSelector(selectGeminiApiKey);
@@ -69,9 +69,9 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
             </span>
           </div>
         </div>
-        {onOpenSettings && (
+        {onConfigure && (
           <button
-            onClick={onOpenSettings}
+            onClick={onConfigure}
             className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-800 dark:hover:bg-blue-700 rounded-md transition-colors"
           >
             <Cog6ToothIcon className="w-3.5 h-3.5" />
@@ -97,9 +97,9 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
             </span>
           </div>
         </div>
-        {onOpenSettings && (
+        {onConfigure && (
           <button
-            onClick={onOpenSettings}
+            onClick={onConfigure}
             className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-100 hover:bg-amber-200 dark:text-amber-300 dark:bg-amber-800 dark:hover:bg-amber-700 rounded-md transition-colors flex-shrink-0"
           >
             <Cog6ToothIcon className="w-3.5 h-3.5" />
@@ -118,7 +118,7 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
         </p>
         <p className="font-medium mb-1">{t('Option 2: Use Gemini API Key')}</p>
         <p className="text-amber-600 dark:text-amber-400">
-          {t('Add your API key in Settings.')}{' '}
+          {t('Add your API key in AI settings below.')}{' '}
           <ExternalLink
             href="https://aistudio.google.com/app/apikey"
             className="underline hover:text-amber-800 dark:hover:text-amber-200"

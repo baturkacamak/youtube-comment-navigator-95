@@ -212,5 +212,7 @@
   "Understand who your viewers are based on their language and interests.": "Understand who your viewers are based on their language and interests.",
   "AI response language": "AI response language",
   "Same as interface": "Same as interface",
-  "AI analyses will be generated in this language.": "AI analyses will be generated in this language."
+  "AI analyses will be generated in this language.": "AI analyses will be generated in this language.",
+  "AI settings": "AI settings",
+  "Add your API key in AI settings below.": "Add your API key in AI settings below."
 }

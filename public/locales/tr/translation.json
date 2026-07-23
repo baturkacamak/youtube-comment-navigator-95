@@ -212,5 +212,7 @@
   "Export {{count}} Videos": "{{count}} Videoyu Dışa Aktar",
   "AI response language": "Yapay zekâ yanıt dili",
   "Same as interface": "Arayüz diliyle aynı",
-  "AI analyses will be generated in this language.": "Yapay zekâ analizleri bu dilde oluşturulur."
+  "AI analyses will be generated in this language.": "Yapay zekâ analizleri bu dilde oluşturulur.",
+  "AI settings": "Yapay zekâ ayarları",
+  "Add your API key in AI settings below.": "API anahtarınızı aşağıdaki yapay zekâ ayarlarına ekleyin."
 }

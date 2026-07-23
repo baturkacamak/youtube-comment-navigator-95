@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import AnalysisCard from './AnalysisCard';
 import AIConfigBanner from './AIConfigBanner';
 import AnalysisActionBar from './AnalysisActionBar';
@@ -6,13 +6,14 @@ import { Comment } from '../../../types/commentTypes';
 import { CARD_CONFIGS } from '../constants/cardConfigs';
 import { useAnalysisManager } from '../hooks/useAnalysisManager';
 import { getRendererByType } from '../utils/renderHelpers';
+import AIConfigurationPanel from './AIConfigurationPanel';
 
 interface IntelligenceTabProps {
   comments: Comment[];
-  onOpenSettings?: () => void;
 }
 
-const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSettings }) => {
+const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments }) => {
+  const [isConfigurationOpen, setIsConfigurationOpen] = useState(false);
   const {
     cardStates,
     isAnalyzing,
@@ -35,7 +36,12 @@ const IntelligenceTab: React.FC<IntelligenceTabProps> = ({ comments, onOpenSetti
   return (
     <div className="flex flex-col gap-4 p-1">
       {/* AI Configuration Banner */}
-      <AIConfigBanner onOpenSettings={onOpenSettings} />
+      <AIConfigBanner onConfigure={() => setIsConfigurationOpen(true)} />
+
+      <AIConfigurationPanel
+        isOpen={isConfigurationOpen}
+        onToggle={() => setIsConfigurationOpen((current) => !current)}
+      />
 
       {/* Action Bar */}
       <AnalysisActionBar
