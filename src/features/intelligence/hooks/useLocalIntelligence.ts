@@ -1,38 +1,20 @@
-import { useState, useEffect } from 'react';
-import { AIModelCapabilities } from '../types/window.ai';
+import { useCallback } from 'react';
+import { useAIAvailability } from '@baturkacamak/extension-ai-react';
+import { getBuiltInAIAvailability } from '../services/aiService';
 
 export type AIStatus = 'checking' | 'unavailable' | 'download-required' | 'ready';
 
 export const useLocalIntelligence = () => {
-  const [status, setStatus] = useState<AIStatus>('checking');
-  const [capabilities, setCapabilities] = useState<AIModelCapabilities | null>(null);
+  const check = useCallback(() => getBuiltInAIAvailability(), []);
+  const { status: availability, refresh } = useAIAvailability(check);
+  const status: AIStatus =
+    availability === 'checking'
+      ? 'checking'
+      : availability === 'available'
+        ? 'ready'
+        : availability === 'downloadable' || availability === 'downloading'
+          ? 'download-required'
+          : 'unavailable';
 
-  useEffect(() => {
-    const checkAI = async () => {
-      try {
-        if (!window.ai || !window.ai.languageModel) {
-          setStatus('unavailable');
-          return;
-        }
-
-        const caps = await window.ai.languageModel.capabilities();
-        setCapabilities(caps);
-
-        if (caps.available === 'readily') {
-          setStatus('ready');
-        } else if (caps.available === 'after-download') {
-          setStatus('download-required');
-        } else {
-          setStatus('unavailable');
-        }
-      } catch (e) {
-        console.error('Failed to check AI capabilities:', e);
-        setStatus('unavailable');
-      }
-    };
-
-    checkAI();
-  }, []);
-
-  return { status, capabilities };
+  return { status, capabilities: null, refresh };
 };

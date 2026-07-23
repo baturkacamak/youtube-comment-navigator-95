@@ -72,10 +72,7 @@ const loadSettingsPreference = (): RootState['settings'] => {
       typeof savedSettings.showContentOnSearch === 'boolean'
         ? savedSettings.showContentOnSearch
         : defaultSettings.showContentOnSearch,
-    geminiApiKey:
-      typeof savedSettings.geminiApiKey === 'string'
-        ? savedSettings.geminiApiKey
-        : defaultSettings.geminiApiKey,
+    geminiApiKey: savedSettings.geminiApiKey === 'configured' ? 'configured' : '',
     enableDeveloperMode:
       typeof savedSettings.enableDeveloperMode === 'boolean'
         ? savedSettings.enableDeveloperMode

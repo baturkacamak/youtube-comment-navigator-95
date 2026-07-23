@@ -15,6 +15,10 @@ on:
       - 'playwright.config.ts'
       - 'manifest.json'
 
+permissions:
+  contents: read
+  packages: read
+
 jobs:
   build-verification:
     name: Build Verification Tests
@@ -29,9 +33,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@baturkacamak'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build extension
         run: npm run build
@@ -61,9 +69,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@baturkacamak'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium

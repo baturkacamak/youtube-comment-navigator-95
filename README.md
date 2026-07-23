@@ -116,8 +116,12 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 1.  **Install Dependencies:**
 
     ```bash
-    npm install
+    NODE_AUTH_TOKEN="$(gh auth token)" npm install
     ```
+
+    The reusable AI packages are private GitHub Packages. Your GitHub token must
+    have `read:packages`; run `gh auth refresh -h github.com -s read:packages`
+    once if needed. Never write the token directly into `.npmrc`.
 
 2.  **Start Development Server (with Hot Module Replacement):**
 

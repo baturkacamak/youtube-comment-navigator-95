@@ -56,7 +56,6 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
   }
 
   if (hasApiKey) {
-    const maskedKey = `${apiKey.slice(0, 6)}...${apiKey.slice(-4)}`;
     return (
       <div className="flex items-center justify-between px-4 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
         <div className="flex items-center gap-3">
@@ -65,7 +64,9 @@ const AIConfigBanner: React.FC<AIConfigBannerProps> = ({ onOpenSettings }) => {
             <span className="text-sm font-medium text-blue-800 dark:text-blue-300">
               {t('API Key Configured')}
             </span>
-            <span className="text-xs text-blue-600 dark:text-blue-400 font-mono">{maskedKey}</span>
+            <span className="text-xs text-blue-600 dark:text-blue-400">
+              {t('Stored securely in extension storage')}
+            </span>
           </div>
         </div>
         {onOpenSettings && (

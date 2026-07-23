@@ -1,3 +1,5 @@
+import { registerGeminiBackground } from '@baturkacamak/extension-ai-webextension';
+
 const KEY = 'youtubeDataApiKey';
 const GEMINI_KEY = 'geminiApiKey';
 const API = 'https://www.googleapis.com/youtube/v3';
@@ -6,6 +8,12 @@ type ApiComment = Record<string, unknown>;
 const send = (tabId: number, message: unknown) =>
   chrome.tabs.sendMessage(tabId, message).catch(() => undefined);
 const storageGet = async () => (await chrome.storage.local.get(KEY))[KEY] as string | undefined;
+
+registerGeminiBackground(chrome.runtime, {
+  storage: chrome.storage.local,
+  storageKey: GEMINI_KEY,
+  namespace: 'YCN_AI',
+});
 
 function toComment(snippet: any, videoId: string, parentId?: string, replyCount = 0): ApiComment {
   const publishedDate = Date.parse(snippet.publishedAt || '') || Date.now();
@@ -111,39 +119,6 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
         respond({ ok: false, error: error?.reason || error?.message || 'API key test failed.' });
       }
     })();
-    return true;
-  }
-  if (message?.type === 'YCN_GEMINI_STATUS') {
-    chrome.storage.local
-      .get(GEMINI_KEY)
-      .then((v) => respond({ configured: Boolean(v[GEMINI_KEY]) }));
-    return true;
-  }
-  if (message?.type === 'YCN_GEMINI_KEY_SET') {
-    chrome.storage.local
-      .set({ [GEMINI_KEY]: message.key?.trim() || '' })
-      .then(() => respond({ configured: Boolean(message.key?.trim()) }));
-    return true;
-  }
-  if (message?.type === 'YCN_GEMINI_GENERATE') {
-    chrome.storage.local.get(GEMINI_KEY).then(async (v) => {
-      const key = typeof v[GEMINI_KEY] === 'string' ? v[GEMINI_KEY] : '';
-      if (!key) return respond({ error: 'Gemini API key is not configured.' });
-      try {
-        const r = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(key)}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: message.prompt }] }] }),
-          }
-        );
-        const d = await r.json();
-        respond({ result: d.candidates?.[0]?.content?.parts?.[0]?.text, error: d.error?.message });
-      } catch {
-        respond({ error: 'Failed to fetch from API.' });
-      }
-    });
     return true;
   }
   if (message?.type === 'YCN_YT_API_STATUS') {

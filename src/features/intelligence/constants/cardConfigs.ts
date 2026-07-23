@@ -31,7 +31,7 @@ export interface CardConfig {
   icon: typeof SparklesIcon;
   iconColorClass: string;
   accentColorClass: string;
-  analyzer: (comments: Comment[], apiKey?: string) => Promise<string>;
+  analyzer: (comments: Comment[], signal?: AbortSignal) => Promise<string>;
   renderType: 'default' | 'sentiment' | 'list';
 }
 

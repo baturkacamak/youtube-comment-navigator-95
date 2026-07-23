@@ -3,6 +3,10 @@ name: CI
 on:
   push:
     branches: [main, master]
+
+permissions:
+  contents: read
+  packages: read
   pull_request:
     branches: [main, master]
 
@@ -19,9 +23,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@baturkacamak'
 
       - name: Install dependencies
         run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run linter
         run: npm run lint

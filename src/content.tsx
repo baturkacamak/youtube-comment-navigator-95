@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import store, { setGeminiApiKey } from './store/store';
 import App from './App';
 import './styles/index.css';
 import './i18n';
@@ -21,11 +21,18 @@ class DOMHelper {
       const legacyKey =
         typeof settings?.geminiApiKey === 'string' ? settings.geminiApiKey.trim() : '';
       if (!legacyKey) return;
-      await new Promise<void>((resolve) =>
-        chrome.runtime.sendMessage({ type: 'YCN_GEMINI_KEY_SET', key: legacyKey }, () => resolve())
+      await new Promise<void>((resolve, reject) =>
+        chrome.runtime.sendMessage({ type: 'YCN_AI/SET_KEY', key: legacyKey }, (response) => {
+          if (chrome.runtime.lastError || !response?.configured) {
+            reject(new Error('Legacy AI key migration failed.'));
+            return;
+          }
+          resolve();
+        })
       );
-      delete settings.geminiApiKey;
+      settings.geminiApiKey = 'configured';
       localStorage.setItem('settings', JSON.stringify(settings));
+      store.dispatch(setGeminiApiKey('configured'));
     } catch {
       /* retain the legacy setting if migration could not complete */
     }

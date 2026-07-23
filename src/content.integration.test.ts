@@ -5,7 +5,7 @@ const roots: Array<{
   root: { render: ReturnType<typeof vi.fn>; unmount: ReturnType<typeof vi.fn> };
 }> = [];
 
-const { mockCreateRoot } = vi.hoisted(() => ({
+const { mockCreateRoot, mockStoreDispatch, mockSetGeminiApiKey } = vi.hoisted(() => ({
   mockCreateRoot: vi.fn((container: Element) => {
     const root = {
       render: vi.fn(),
@@ -14,6 +14,11 @@ const { mockCreateRoot } = vi.hoisted(() => ({
     roots.push({ container, root });
     return root;
   }),
+  mockStoreDispatch: vi.fn(),
+  mockSetGeminiApiKey: vi.fn((value: string) => ({
+    type: 'settings/setGeminiApiKey',
+    payload: value,
+  })),
 }));
 
 vi.mock('react-dom/client', () => ({
@@ -44,7 +49,8 @@ vi.mock('react-redux', () => ({
 }));
 
 vi.mock('./store/store', () => ({
-  default: {},
+  default: { dispatch: mockStoreDispatch },
+  setGeminiApiKey: mockSetGeminiApiKey,
 }));
 
 const mockI18nOn = vi.fn();
@@ -79,11 +85,15 @@ describe('content.tsx integration', () => {
 
     // Simulate YouTube watch DOM skeleton.
     document.body.innerHTML = '<div id="app-shell"><div id="comments"></div></div>';
+    localStorage.clear();
 
     // Mock chrome APIs used by content script.
     (globalThis as unknown as { chrome: unknown }).chrome = {
       runtime: {
         getURL: (path: string) => `chrome-extension://test/${path}`,
+        sendMessage: vi.fn((_message: unknown, callback: (response: unknown) => void) =>
+          callback({ configured: true })
+        ),
       },
       i18n: {
         getUILanguage: () => 'en-US',
@@ -157,5 +167,27 @@ describe('content.tsx integration', () => {
     expect(watchRootSecond.unmount).toHaveBeenCalledTimes(1);
     expect(document.getElementById('youtube-comment-navigator-app')).toBeNull();
     expect(document.getElementById('youtube-comment-navigator-playlist-batch')).toBeNull();
+  });
+
+  it('migrates a legacy Gemini key without retaining it in page settings', async () => {
+    localStorage.setItem(
+      'settings',
+      JSON.stringify({ geminiApiKey: 'dummy-legacy-api-key', textSize: 'text-base' })
+    );
+    setUrl('/watch?v=video-a');
+
+    await import('./content');
+    await vi.advanceTimersByTimeAsync(2500);
+    await vi.waitFor(() => expect(mockStoreDispatch).toHaveBeenCalled());
+
+    expect(chrome.runtime.sendMessage).toHaveBeenCalledWith(
+      { type: 'YCN_AI/SET_KEY', key: 'dummy-legacy-api-key' },
+      expect.any(Function)
+    );
+    expect(JSON.parse(localStorage.getItem('settings') ?? '{}')).toEqual({
+      geminiApiKey: 'configured',
+      textSize: 'text-base',
+    });
+    expect(mockSetGeminiApiKey).toHaveBeenCalledWith('configured');
   });
 });

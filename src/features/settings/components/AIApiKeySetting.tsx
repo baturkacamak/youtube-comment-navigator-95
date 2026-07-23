@@ -6,6 +6,7 @@ import { setGeminiApiKey } from '../../../store/store';
 import { selectGeminiApiKey } from '../../../store/selectors';
 import Input from '../../shared/components/Input';
 import ExternalLink from '../../shared/components/ExternalLink';
+import { setRemoteAIApiKey } from '../../intelligence/services/aiService';
 
 const AIApiKeySetting: React.FC = () => {
   const { t } = useTranslation();
@@ -14,10 +15,11 @@ const AIApiKeySetting: React.FC = () => {
   const [showKey, setShowKey] = useState(false);
   const [localKey, setLocalKey] = useState('');
 
-  const handleSave = () => {
-    chrome.runtime.sendMessage({ type: 'YCN_GEMINI_KEY_SET', key: localKey }, (value) =>
-      dispatch(setGeminiApiKey(value?.configured ? 'configured' : ''))
-    );
+  const handleSave = async () => {
+    if (!localKey.trim()) return;
+    const value = await setRemoteAIApiKey(localKey);
+    dispatch(setGeminiApiKey(value.configured ? 'configured' : ''));
+    setLocalKey('');
   };
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +28,7 @@ const AIApiKeySetting: React.FC = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleSave();
+      void handleSave();
     }
   };
 
@@ -56,7 +58,7 @@ const AIApiKeySetting: React.FC = () => {
             value={localKey}
             onChange={handleKeyChange}
             onKeyDown={handleKeyDown}
-            onBlur={handleSave}
+            onBlur={() => void handleSave()}
             autoComplete="off"
           />
           <button
@@ -70,7 +72,7 @@ const AIApiKeySetting: React.FC = () => {
         </div>
         {hasUnsavedChanges && (
           <button
-            onClick={handleSave}
+            onClick={() => void handleSave()}
             className="px-3 py-1 text-xs bg-teal-600 text-white rounded hover:bg-teal-700 transition-colors"
           >
             {t('Save')}
