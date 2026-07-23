@@ -63,6 +63,35 @@
 - Before creating UI controls or styles, inspect `src/features/shared/components/` and reuse the existing component that fits. Do not introduce raw inputs, buttons, selects, or duplicate styling when a shared component already provides the behavior.
 - If the shared component does not support a required capability, extend it with tests instead of creating a parallel component.
 
+## Reuse and Shared Behavior
+
+- Before adding a utility, parser, formatter, validator, hook, event handler,
+  controller, service abstraction, or regular expression for an existing domain
+  concept, search the entire repository with `rg`. When the behavior could be
+  useful across extensions, also inspect the relevant private
+  `@baturkacamak/extension-ai-*` package before implementing it locally.
+- If the same semantic behavior is used in two or more places, keep one source
+  of truth in the smallest appropriate shared layer. Feature code should compose
+  that shared behavior instead of copying its parsing, conversion, validation,
+  side-effect, or error-handling logic.
+- When introducing or extending shared behavior, migrate the existing call sites
+  and remove obsolete duplicate helpers, callbacks, props, regular expressions,
+  and direct low-level calls in the same change. Do not leave parallel old and
+  new paths unless a documented compatibility boundary requires both.
+- Before considering the change complete, run an `rg` audit for the low-level
+  primitive being centralized (for example `seekTo`, timestamp regexes, direct
+  storage access, provider calls, or runtime messages) and confirm that remaining
+  occurrences are intentional boundary implementations.
+- Keep project-specific orchestration in this repository. Move genuinely
+  cross-project, framework-appropriate behavior into the corresponding private
+  package rather than creating similar local implementations in multiple
+  extensions.
+- Add focused contract tests for shared utilities and at least one representative
+  consumer or integration test proving that the shared path is actually used.
+- Do not merge concepts merely because they share a name. Preserve separate
+  abstractions when their semantics differ, such as video playback offsets versus
+  database, log, or wall-clock timestamps.
+
 ## YouTube Internal Integration Changes
 
 YouTube frequently changes undocumented page data, Innertube endpoints,
