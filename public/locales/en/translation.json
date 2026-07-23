@@ -214,5 +214,17 @@
   "Same as interface": "Same as interface",
   "AI analyses will be generated in this language.": "AI analyses will be generated in this language.",
   "AI settings": "AI settings",
-  "Add your API key in AI settings below.": "Add your API key in AI settings below."
+  "Add your API key in AI settings below.": "Add your API key in AI settings below.",
+  "Comment Summary": "Comment Summary",
+  "Understand the main topics, reactions, and recurring themes in the comments.": "Understand the main topics, reactions, and recurring themes in the comments.",
+  "Key Takeaways": "Key Takeaways",
+  "Extract useful context, observations, and lessons shared by viewers.": "Extract useful context, observations, and lessons shared by viewers.",
+  "Questions & Answers": "Questions & Answers",
+  "Match useful viewer questions with answers found in the comments.": "Match useful viewer questions with answers found in the comments.",
+  "Tips & Resources": "Tips & Resources",
+  "Collect useful tips, recommendations, alternatives, links, and tools.": "Collect useful tips, recommendations, alternatives, links, and tools.",
+  "Consensus & Debate": "Consensus & Debate",
+  "See where viewers agree and where their perspectives differ.": "See where viewers agree and where their perspectives differ.",
+  "Corrections & Warnings": "Corrections & Warnings",
+  "Surface viewer-reported corrections, caveats, missing context, and warnings.": "Surface viewer-reported corrections, caveats, missing context, and warnings."
 }

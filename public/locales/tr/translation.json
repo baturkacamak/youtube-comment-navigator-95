@@ -214,5 +214,17 @@
   "Same as interface": "Arayüz diliyle aynı",
   "AI analyses will be generated in this language.": "Yapay zekâ analizleri bu dilde oluşturulur.",
   "AI settings": "Yapay zekâ ayarları",
-  "Add your API key in AI settings below.": "API anahtarınızı aşağıdaki yapay zekâ ayarlarına ekleyin."
+  "Add your API key in AI settings below.": "API anahtarınızı aşağıdaki yapay zekâ ayarlarına ekleyin.",
+  "Comment Summary": "Yorum Özeti",
+  "Understand the main topics, reactions, and recurring themes in the comments.": "Yorumlardaki ana konuları, tepkileri ve tekrarlanan temaları anlayın.",
+  "Key Takeaways": "Önemli Çıkarımlar",
+  "Extract useful context, observations, and lessons shared by viewers.": "İzleyicilerin paylaştığı faydalı bağlamı, gözlemleri ve çıkarımları bulun.",
+  "Questions & Answers": "Sorular ve Yanıtlar",
+  "Match useful viewer questions with answers found in the comments.": "Faydalı izleyici sorularını yorumlarda bulunan yanıtlarla eşleştirin.",
+  "Tips & Resources": "İpuçları ve Kaynaklar",
+  "Collect useful tips, recommendations, alternatives, links, and tools.": "Faydalı ipuçlarını, önerileri, alternatifleri, bağlantıları ve araçları toplayın.",
+  "Consensus & Debate": "Uzlaşı ve Tartışma",
+  "See where viewers agree and where their perspectives differ.": "İzleyicilerin nerede hemfikir olduğunu ve görüşlerinin nerede ayrıldığını görün.",
+  "Corrections & Warnings": "Düzeltmeler ve Uyarılar",
+  "Surface viewer-reported corrections, caveats, missing context, and warnings.": "İzleyicilerin bildirdiği düzeltmeleri, çekinceleri, eksik bağlamı ve uyarıları bulun."
 }

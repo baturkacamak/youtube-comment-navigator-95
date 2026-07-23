@@ -16,6 +16,14 @@ import { describeAIExecutionError } from './aiErrorDiagnostics';
 import { appendAIResponseLanguageInstruction } from './aiResponseLanguage';
 import store from '../../../store/store';
 import { getSettings } from '../../settings/utils/settingsUtils';
+import {
+  buildCommentSummaryPrompt,
+  buildConsensusAndDebatePrompt,
+  buildCorrectionsAndWarningsPrompt,
+  buildKeyTakeawaysPrompt,
+  buildQuestionsAndAnswersPrompt,
+  buildTipsAndResourcesPrompt,
+} from './consumerAnalysisPrompts';
 
 export const AI_MESSAGE_NAMESPACE = 'YCN_AI';
 
@@ -106,54 +114,53 @@ export const summarizeComments = async (
   signal?: AbortSignal
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Here are the top comments from a YouTube video. Summarize the main topics, overall sentiment, and any recurring arguments or jokes. Keep it concise (under 200 words).\n\n${commentText}`;
-  return executePrompt('executive-summary', prompt, signal);
+  return executePrompt('comment-summary', buildCommentSummaryPrompt(commentText), signal);
 };
 
-export const analyzeSentiment = async (
+export const extractKeyTakeaways = async (
   comments: Comment[],
   signal?: AbortSignal
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Analyze the sentiment of these comments. Provide the response in this exact format:
-  Vibe: [3 adjectives, comma separated]
-  Score: [0-100 number only, where 0 is negative, 100 is positive]
-  Explanation: [One sentence explaining the general mood]
-  
-  Comments:
-  ${commentText}`;
-  return executePrompt('vibe-check', prompt, signal);
+  return executePrompt('key-takeaways', buildKeyTakeawaysPrompt(commentText), signal);
 };
 
-export const extractQuestions = async (
+export const answerQuestionsFromComments = async (
   comments: Comment[],
   signal?: AbortSignal
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Identify valid, unanswered questions from these comments. Ignore rhetorical questions. Return a bulleted list of the top 3-5 questions. If none, say "No clear questions found."\n\n${commentText}`;
-  return executePrompt('smart-qa', prompt, signal);
+  return executePrompt(
+    'questions-and-answers',
+    buildQuestionsAndAnswersPrompt(commentText),
+    signal
+  );
 };
 
-export const extractIdeas = async (comments: Comment[], signal?: AbortSignal): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Identify feature requests, video ideas, or constructive feedback. Return a bulleted list of the top 3-5 suggestions. If none, say "No specific ideas found."\n\n${commentText}`;
-  return executePrompt('idea-miner', prompt, signal);
-};
-
-export const analyzeControversy = async (
+export const extractTipsAndResources = async (
   comments: Comment[],
   signal?: AbortSignal
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Identify if there is any controversy or debate in these comments. If yes, summarize the opposing viewpoints in 2-3 sentences. If everyone agrees, say "Low controversy."\n\n${commentText}`;
-  return executePrompt('controversy-radar', prompt, signal);
+  return executePrompt('tips-and-resources', buildTipsAndResourcesPrompt(commentText), signal);
 };
 
-export const analyzeAudience = async (
+export const analyzeConsensusAndDebate = async (
   comments: Comment[],
   signal?: AbortSignal
 ): Promise<string> => {
   const commentText = formatCommentsForPrompt(comments);
-  const prompt = `Based on the language, jargon, and topics, describe the likely audience profile (e.g., 'Beginners', 'Industry Experts', 'Angry Gamers') in 2 sentences.\n\n${commentText}`;
-  return executePrompt('audience-profiling', prompt, signal);
+  return executePrompt('consensus-and-debate', buildConsensusAndDebatePrompt(commentText), signal);
+};
+
+export const extractCorrectionsAndWarnings = async (
+  comments: Comment[],
+  signal?: AbortSignal
+): Promise<string> => {
+  const commentText = formatCommentsForPrompt(comments);
+  return executePrompt(
+    'corrections-and-warnings',
+    buildCorrectionsAndWarningsPrompt(commentText),
+    signal
+  );
 };

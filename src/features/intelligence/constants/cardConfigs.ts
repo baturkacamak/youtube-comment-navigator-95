@@ -1,28 +1,28 @@
 import {
   SparklesIcon,
-  FaceSmileIcon,
+  BookOpenIcon,
   QuestionMarkCircleIcon,
-  LightBulbIcon,
-  FireIcon,
-  UserGroupIcon,
+  LinkIcon,
+  ScaleIcon,
+  ExclamationTriangleIcon,
 } from '@heroicons/react/24/solid';
 import {
   summarizeComments,
-  analyzeSentiment,
-  extractQuestions,
-  extractIdeas,
-  analyzeControversy,
-  analyzeAudience,
+  extractKeyTakeaways,
+  answerQuestionsFromComments,
+  extractTipsAndResources,
+  analyzeConsensusAndDebate,
+  extractCorrectionsAndWarnings,
 } from '../services/aiService';
 import { Comment } from '../../../types/commentTypes';
 
 export type CardId =
-  | 'executive-summary'
-  | 'vibe-check'
-  | 'smart-qa'
-  | 'idea-miner'
-  | 'controversy-radar'
-  | 'audience-profiling';
+  | 'comment-summary'
+  | 'key-takeaways'
+  | 'questions-and-answers'
+  | 'tips-and-resources'
+  | 'consensus-and-debate'
+  | 'corrections-and-warnings';
 
 export interface CardConfig {
   id: CardId;
@@ -32,14 +32,14 @@ export interface CardConfig {
   iconColorClass: string;
   accentColorClass: string;
   analyzer: (comments: Comment[], signal?: AbortSignal) => Promise<string>;
-  renderType: 'default' | 'sentiment' | 'list';
+  renderType: 'default' | 'list';
 }
 
 export const CARD_CONFIGS: CardConfig[] = [
   {
-    id: 'executive-summary',
-    title: 'Executive Summary',
-    description: 'Get a quick overview of main topics, sentiment, and recurring themes.',
+    id: 'comment-summary',
+    title: 'Comment Summary',
+    description: 'Understand the main topics, reactions, and recurring themes in the comments.',
     icon: SparklesIcon,
     iconColorClass: 'text-yellow-500',
     accentColorClass: 'border-l-yellow-500',
@@ -47,53 +47,53 @@ export const CARD_CONFIGS: CardConfig[] = [
     renderType: 'default',
   },
   {
-    id: 'vibe-check',
-    title: 'Vibe Check',
-    description: 'Analyze the overall mood and emotional tone of the comments.',
-    icon: FaceSmileIcon,
+    id: 'key-takeaways',
+    title: 'Key Takeaways',
+    description: 'Extract useful context, observations, and lessons shared by viewers.',
+    icon: BookOpenIcon,
     iconColorClass: 'text-purple-500',
     accentColorClass: 'border-l-purple-500',
-    analyzer: analyzeSentiment,
-    renderType: 'sentiment',
+    analyzer: extractKeyTakeaways,
+    renderType: 'list',
   },
   {
-    id: 'smart-qa',
-    title: 'Smart Q&A',
-    description: 'Find unanswered questions that viewers are asking.',
+    id: 'questions-and-answers',
+    title: 'Questions & Answers',
+    description: 'Match useful viewer questions with answers found in the comments.',
     icon: QuestionMarkCircleIcon,
     iconColorClass: 'text-blue-500',
     accentColorClass: 'border-l-blue-500',
-    analyzer: extractQuestions,
-    renderType: 'list',
-  },
-  {
-    id: 'idea-miner',
-    title: 'Idea Miner',
-    description: 'Discover feature requests, video ideas, and constructive feedback.',
-    icon: LightBulbIcon,
-    iconColorClass: 'text-amber-500',
-    accentColorClass: 'border-l-amber-500',
-    analyzer: extractIdeas,
-    renderType: 'list',
-  },
-  {
-    id: 'controversy-radar',
-    title: 'Controversy Radar',
-    description: 'Detect debates, disagreements, and polarizing topics.',
-    icon: FireIcon,
-    iconColorClass: 'text-red-500',
-    accentColorClass: 'border-l-red-500',
-    analyzer: analyzeControversy,
+    analyzer: answerQuestionsFromComments,
     renderType: 'default',
   },
   {
-    id: 'audience-profiling',
-    title: 'Audience Profiling',
-    description: 'Understand who your viewers are based on their language and interests.',
-    icon: UserGroupIcon,
+    id: 'tips-and-resources',
+    title: 'Tips & Resources',
+    description: 'Collect useful tips, recommendations, alternatives, links, and tools.',
+    icon: LinkIcon,
+    iconColorClass: 'text-amber-500',
+    accentColorClass: 'border-l-amber-500',
+    analyzer: extractTipsAndResources,
+    renderType: 'list',
+  },
+  {
+    id: 'consensus-and-debate',
+    title: 'Consensus & Debate',
+    description: 'See where viewers agree and where their perspectives differ.',
+    icon: ScaleIcon,
     iconColorClass: 'text-teal-500',
     accentColorClass: 'border-l-teal-500',
-    analyzer: analyzeAudience,
+    analyzer: analyzeConsensusAndDebate,
+    renderType: 'default',
+  },
+  {
+    id: 'corrections-and-warnings',
+    title: 'Corrections & Warnings',
+    description: 'Surface viewer-reported corrections, caveats, missing context, and warnings.',
+    icon: ExclamationTriangleIcon,
+    iconColorClass: 'text-red-500',
+    accentColorClass: 'border-l-red-500',
+    analyzer: extractCorrectionsAndWarnings,
     renderType: 'default',
   },
 ];
