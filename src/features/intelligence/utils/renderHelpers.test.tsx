@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { renderDefault, renderList } from './renderHelpers';
 
 describe('AI result renderers', () => {
@@ -29,5 +29,16 @@ describe('AI result renderers', () => {
     expect(container.querySelector('img')).not.toBeInTheDocument();
     expect(container.querySelector('script')).not.toBeInTheDocument();
     expect(screen.getByText(/Safe/)).toBeInTheDocument();
+  });
+
+  it('turns generated timestamps into video seek controls', () => {
+    const postMessage = vi.spyOn(window, 'postMessage');
+    render(<>{renderDefault('Notable moments: 16:49 and 1:28:48')}</>);
+
+    fireEvent.click(screen.getByRole('button', { name: '16:49' }));
+    expect(postMessage).toHaveBeenCalledWith({ type: 'YCN_SEEK_TO', seconds: 1009 }, '*');
+
+    fireEvent.click(screen.getByRole('button', { name: '1:28:48' }));
+    expect(postMessage).toHaveBeenCalledWith({ type: 'YCN_SEEK_TO', seconds: 5328 }, '*');
   });
 });

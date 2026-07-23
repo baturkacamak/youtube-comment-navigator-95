@@ -60,7 +60,7 @@ export interface CommentActionsProps {
 
 export interface CommentContentProps {
   content: string;
-  handleTimestampClick: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+  handleTimestampClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface CommentHeaderProps {

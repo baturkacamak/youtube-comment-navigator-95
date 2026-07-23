@@ -1,8 +1,7 @@
 import { Comment } from '../../../../types/commentTypes';
 import convertLikesToNumber from '../formatting/convertLikesToNumber';
 import convertTimeAgoToDate from '../formatting/convertTimeAgoToDate';
-
-const timestampRegex = /\b(\d{1,2}):([0-5]\d)(?::([0-5]\d))?\b/;
+import { containsTimestamp } from '../../../shared/utils/timestamps';
 
 export const transformCommentsData = (comment: any, videoId: string): Comment => {
   const payload = comment.payload?.commentEntityPayload;
@@ -25,7 +24,7 @@ export const transformCommentsData = (comment: any, videoId: string): Comment =>
   const authorBadgeUrl = payload?.author?.sponsorBadgeUrl || false;
   const authorMemberSince = payload?.author?.sponsorBadgeA11y || false;
   const isMember = authorBadgeUrl && authorMemberSince;
-  const hasTimestamp = timestampRegex.test(content);
+  const hasTimestamp = containsTimestamp(content);
   const hasLinks = content.includes('http');
 
   // Extract commentParentId if replyLevel is 1
