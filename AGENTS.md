@@ -26,6 +26,12 @@
   - `npm test -- --run <spec>`
 - After changing UI translation keys or locale files, run `npm run check:translations`.
   It verifies source keys, locale parity, non-empty values, and interpolation placeholders.
+- Use the private `@baturkacamak/localization-toolkit` through
+  `l10n.config.json` for translation auditing, machine translation, translation
+  memory, and review UI. Do not recreate those behaviors in repository-local
+  scripts. Run `npm run translations:ui` for review or
+  `npm run translations:translate -- --languages <codes>` for explicit machine
+  translation; existing human values must not be overwritten by default.
 - To create a Chrome Store upload artifact, use:
   - `./scripts/pack.sh`
   - or `just package`
@@ -33,7 +39,11 @@
 - The generated release artifact is named `youtube-comment-navigator-95_v<version>.zip` at the repo root.
 - Do not assume README instructions are fully up to date. Verify scripts and hook behavior from actual repo files first.
 - If you modify release, build, lint, test, or hook behavior, update this file and any nearby developer docs in the same change.
-- Private `@baturkacamak/extension-ai-*` dependencies are installed from GitHub Packages. Local installs require `NODE_AUTH_TOKEN` with `read:packages`; GitHub Actions must use its scoped `GITHUB_TOKEN` with `packages: read` and package Actions access granted to this repository.
+- Private `@baturkacamak/extension-ai-*` and
+  `@baturkacamak/localization-toolkit` dependencies are installed from GitHub
+  Packages. Local installs require `NODE_AUTH_TOKEN` with `read:packages`;
+  GitHub Actions must use its scoped token with `packages: read` and package
+  Actions access granted to this repository.
 - Keep `react-draggable` pinned to `4.5.0` until its newer component declaration works with this project's React/TypeScript build; a fresh install of the current `4.7.x` range fails the production typecheck.
 
 ## Extension Secrets

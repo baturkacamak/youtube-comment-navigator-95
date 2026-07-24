@@ -1,0 +1,22 @@
+{
+  "baseLanguage": "en",
+  "localesDir": "public/locales",
+  "localeFileName": "translation.json",
+  "source": {
+    "directories": ["src"],
+    "extensions": [".ts", ".tsx"],
+    "exclude": [".test.", ".spec.", ".integration."],
+    "functionNames": ["t"]
+  },
+  "provider": {
+    "type": "google-web",
+    "concurrency": 4
+  },
+  "languageMap": {
+    "prs": "fa-AF"
+  },
+  "placeholderAllowMissing": {
+    "timeUnits.format": ["ago"]
+  },
+  "stateDir": ".l10n"
+}

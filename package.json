@@ -57,7 +57,9 @@
     "lint:fix": "node node_modules/eslint/bin/eslint.js src --fix",
     "format": "node node_modules/prettier/bin/prettier.cjs --write \"src/**/*.{ts,tsx,css,scss,json}\"",
     "format:check": "node node_modules/prettier/bin/prettier.cjs --check \"src/**/*.{ts,tsx,css,scss,json}\"",
-    "check:translations": "node scripts/check-translations.mjs",
+    "check:translations": "node node_modules/@baturkacamak/localization-toolkit/dist/cli.js check",
+    "translations:ui": "node node_modules/@baturkacamak/localization-toolkit/dist/cli.js ui",
+    "translations:translate": "node node_modules/@baturkacamak/localization-toolkit/dist/cli.js translate",
     "postinstall": "node scripts/repair-crx-plugin-deps.mjs",
     "prepare": "husky",
     "sync-store": "npx tsx scripts/sync-store-descriptions.ts",
@@ -80,6 +82,7 @@
     ]
   },
   "devDependencies": {
+    "@baturkacamak/localization-toolkit": "^0.1.1",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
     "@crxjs/vite-plugin": "^2.4.0",
