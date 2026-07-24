@@ -1,6 +1,6 @@
 {
   "name": "youtube-comment-navigator-95",
-  "version": "1.11.6",
+  "version": "1.11.7",
   "type": "module",
   "private": true,
   "dependencies": {
