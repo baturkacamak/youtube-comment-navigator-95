@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@baturkacamak'
@@ -33,22 +33,22 @@ jobs:
       - name: Run tests
         run: npm run test -- --run
 
-      - name: Build extension
-        run: npm run build
-
-      - name: Get version from tag
-        id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Create extension zip
+      - name: Verify release version
         run: |
-          cd dist
-          zip -r ../youtube-comment-navigator-${{ steps.version.outputs.VERSION }}.zip .
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          test "v${PACKAGE_VERSION}" = "${GITHUB_REF_NAME}"
+
+      - name: Build and package extension
+        run: ./scripts/pack.sh
+
+      - name: Resolve artifact name
+        id: artifact
+        run: echo "path=youtube-comment-navigator-95_v$(node -p \"require('./package.json').version\").zip" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: youtube-comment-navigator-${{ steps.version.outputs.VERSION }}.zip
+          files: ${{ steps.artifact.outputs.path }}
           generate_release_notes: true
           draft: false
           prerelease: false

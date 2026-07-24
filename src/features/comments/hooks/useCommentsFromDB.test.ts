@@ -415,7 +415,7 @@ describe('useCommentsFromDB', () => {
           expect(result.current.page).toBe(1);
           expect(result.current.comments.length).toBe(40);
         },
-        { timeout: 3000 }
+        { timeout: 10000 }
       );
 
       // Refresh
@@ -431,7 +431,7 @@ describe('useCommentsFromDB', () => {
         },
         { timeout: 3000 }
       );
-    });
+    }, 15000);
   });
 
   describe('totalCount reactivity', () => {

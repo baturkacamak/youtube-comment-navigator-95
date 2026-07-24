@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 test.describe('Build Output Verification', () => {
   const distPath = path.join(__dirname, '../../dist');
   const assetsPath = path.join(distPath, 'assets');
+  const maxContentBundleBytes = 3.5 * 1024 * 1024;
 
   test('dist folder exists with required files', () => {
     expect(fs.existsSync(distPath)).toBe(true);
@@ -35,6 +36,10 @@ test.describe('Build Output Verification', () => {
 
       // Verify bundle has content (not empty)
       expect(bundle.length).toBeGreaterThan(1000);
+      expect(
+        Buffer.byteLength(bundle),
+        'Content bundle exceeded the 3.5 MiB regression budget'
+      ).toBeLessThanOrEqual(maxContentBundleBytes);
 
       console.log(`✓ Content script bundle exists (${Math.round(bundle.length / 1024)}KB)`);
     }

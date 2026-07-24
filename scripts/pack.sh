@@ -9,7 +9,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Get the version from package.json
-VERSION=$(jq -r '.version' package.json)
+VERSION=$(node -p "require('./package.json').version")
 ZIP_NAME="youtube-comment-navigator-95_v${VERSION}.zip"
 BUILD_DIR="dist"
 

@@ -31,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@baturkacamak'
@@ -67,7 +67,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version-file: .nvmrc
           cache: 'npm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@baturkacamak'
@@ -78,7 +78,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.PACKAGES_READ_TOKEN }}
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: node node_modules/@playwright/test/cli.js install --with-deps chromium
 
       - name: Build extension
         run: npm run build

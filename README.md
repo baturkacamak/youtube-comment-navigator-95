@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml/badge.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.11.0-blue.svg)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
+[![Latest release](https://img.shields.io/github/v/release/baturkacamak/youtube-comment-navigator-95)](https://github.com/baturkacamak/youtube-comment-navigator-95/releases)
 
 ## Overview
 
@@ -41,7 +41,7 @@ YouTube Comment Navigator 95 is a Chrome extension designed to enhance your YouT
 ### Prerequisites
 
 - A Chromium-based browser (e.g., Google Chrome, Microsoft Edge, Brave, Opera)
-- **Node.js** (v18 or higher)
+- **Node.js 20 or 22** (Node 20 is pinned in `.nvmrc`)
 - **Just** command runner (optional, for easier workflow)
 
 ### Steps to Install
@@ -160,7 +160,13 @@ I hope you enjoy using YouTube Comment Navigator 95 and that it enhances your Yo
 - **build**: `tsc && vite build` - Type-checks and builds the production version.
 - **preview**: `vite preview` - Preview the build locally.
 - **test**: `vitest` - Runs unit tests.
+- **test:coverage**: Runs the unit suite and writes a coverage report.
 - **test:ui**: `vitest --ui` - Runs tests with a UI interface.
+- **check**: Runs lint, formatting, translation, unit, build, and build-verification checks.
+- **storybook**: Opens the shared-component workshop.
+- **build-storybook**: Produces a static Storybook build.
+- **package:source**: Creates the source-submission archive through the shared extension toolkit.
+- **package:stores**: Creates store-specific artifacts through the shared extension toolkit.
 - **build:css:rtl**: Generates RTL CSS support.
 
 ### Release Workflow

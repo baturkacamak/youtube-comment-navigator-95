@@ -3,6 +3,7 @@
 - Do not use `git commit --no-verify` as a workaround for failing hooks. Fix the hook or its command resolution first.
 - In this repository, prefer local Node entrypoints such as `node node_modules/<pkg>/...` instead of relying on `node_modules/.bin`.
 - Before committing, make sure the relevant local checks pass through the repo's normal scripts or hook commands.
+- Use Node 20 (pinned in `.nvmrc`) or Node 22. Run the complete non-live verification suite with `npm run check`.
 - GitHub Actions installs private `@baturkacamak` packages with the
   `PACKAGES_READ_TOKEN` repository secret; keep that token out of files and logs.
 - Commit messages must satisfy commitlint. Use conventional commit format such as `fix: ...`, `feat: ...`, or `chore: ...`.
@@ -36,6 +37,7 @@
   - `./scripts/pack.sh`
   - or `just package`
 - Packaging should happen only after the required verification passes.
+- Use `npm run package:source` and `npm run package:stores` for shared-toolkit source and store-specific artifacts. Use `npm run build-storybook` to verify shared-component stories.
 - The generated release artifact is named `youtube-comment-navigator-95_v<version>.zip` at the repo root.
 - Do not assume README instructions are fully up to date. Verify scripts and hook behavior from actual repo files first.
 - If you modify release, build, lint, test, or hook behavior, update this file and any nearby developer docs in the same change.
