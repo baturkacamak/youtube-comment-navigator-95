@@ -74,6 +74,17 @@
 
 - Before creating UI controls or styles, inspect `src/features/shared/components/` and reuse the existing component that fits. Do not introduce raw inputs, buttons, selects, or duplicate styling when a shared component already provides the behavior.
 - If the shared component does not support a required capability, extend it with tests instead of creating a parallel component.
+- Treat user-facing UI and documentation as one product experience. New screens
+  and substantial UI changes must use an intentional visual hierarchy,
+  consistent typography, spacing, color, radii, responsive behavior, and
+  accessible focus, loading, empty, success, and error states.
+- Every project README should be polished and easy to scan: include a concise
+  value proposition, verified quick start, clear feature/command references,
+  security and limitation callouts, and tasteful badges, diagrams, or current
+  screenshots of the real product when they materially help. Never use
+  fabricated screenshots or unsupported marketing claims.
+- When a user-visible workflow, command, or major UI changes, update the relevant
+  README section and visual assets in the same change.
 
 ## Reuse and Shared Behavior
 
