@@ -3,7 +3,7 @@ import { CARD_CONFIGS } from './cardConfigs';
 describe('consumer intelligence cards', () => {
   it('exposes the six viewer-focused analyses in their intended order', () => {
     expect(CARD_CONFIGS.map(({ id, title }) => ({ id, title }))).toEqual([
-      { id: 'comment-summary', title: 'Comment Summary' },
+      { id: 'comment-summary', title: 'Content Summary' },
       { id: 'key-takeaways', title: 'Key Takeaways' },
       { id: 'questions-and-answers', title: 'Questions & Answers' },
       { id: 'tips-and-resources', title: 'Tips & Resources' },

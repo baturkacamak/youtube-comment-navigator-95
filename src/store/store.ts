@@ -4,6 +4,7 @@ import { Comment } from '../types/commentTypes'; // Adjust the path as necessary
 import { LiveChatMessage } from '../types/liveChatTypes';
 import { FilterState } from '../types/filterTypes';
 import { getSettings, saveSettings } from '../features/settings/utils/settingsUtils';
+import type { AIAnalysisSource } from '../features/intelligence/types/analysis';
 
 // Helper function to safely load from localStorage
 const loadPreference = <T>(key: string, defaultValue: T): T => {
@@ -47,6 +48,7 @@ const defaultSettings: RootState['settings'] = {
   showContentOnSearch: false,
   geminiApiKey: '',
   aiResponseLanguage: 'interface',
+  aiAnalysisSource: 'auto',
   enableDeveloperMode: false,
   commentSource: 'auto',
   hasYouTubeDataApiKey: false,
@@ -78,6 +80,12 @@ const loadSettingsPreference = (): RootState['settings'] => {
       typeof savedSettings.aiResponseLanguage === 'string'
         ? savedSettings.aiResponseLanguage
         : defaultSettings.aiResponseLanguage,
+    aiAnalysisSource:
+      savedSettings.aiAnalysisSource === 'combined' ||
+      savedSettings.aiAnalysisSource === 'transcript' ||
+      savedSettings.aiAnalysisSource === 'comments'
+        ? savedSettings.aiAnalysisSource
+        : 'auto',
     enableDeveloperMode:
       typeof savedSettings.enableDeveloperMode === 'boolean'
         ? savedSettings.enableDeveloperMode
@@ -239,6 +247,10 @@ const commentsSlice = createSlice({
       state.settings.aiResponseLanguage = action.payload;
       saveSettings({ aiResponseLanguage: action.payload });
     },
+    setAIAnalysisSource: (state, action: PayloadAction<AIAnalysisSource>) => {
+      state.settings.aiAnalysisSource = action.payload;
+      saveSettings({ aiAnalysisSource: action.payload });
+    },
     setEnableDeveloperMode: (state, action: PayloadAction<boolean>) => {
       state.settings.enableDeveloperMode = action.payload;
       saveSettings({ enableDeveloperMode: state.settings.enableDeveloperMode });
@@ -319,6 +331,7 @@ export const {
   setShowContentOnSearch,
   setGeminiApiKey,
   setAIResponseLanguage,
+  setAIAnalysisSource,
   setEnableDeveloperMode,
   setCommentSource,
   setHasYouTubeDataApiKey,

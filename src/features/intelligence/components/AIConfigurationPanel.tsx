@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../shared/components/Button';
 import AIApiKeySetting from '../../settings/components/AIApiKeySetting';
 import AIResponseLanguageSetting from '../../settings/components/AIResponseLanguageSetting';
+import AIAnalysisSourceSetting from '../../settings/components/AIAnalysisSourceSetting';
 
 interface AIConfigurationPanelProps {
   isOpen: boolean;
@@ -24,12 +25,15 @@ const AIConfigurationPanel: React.FC<AIConfigurationPanelProps> = ({ isOpen, onT
         aria-controls="ai-configuration-content"
       />
       {isOpen && (
-        <div className="grid gap-3 border-t border-gray-200 p-3 dark:border-gray-600 md:grid-cols-2">
+        <div className="grid gap-3 border-t border-gray-200 p-3 dark:border-gray-600 md:grid-cols-3">
           <div className="rounded-lg bg-white p-3 dark:bg-gray-800">
             <AIApiKeySetting />
           </div>
           <div className="rounded-lg bg-white p-3 dark:bg-gray-800">
             <AIResponseLanguageSetting />
+          </div>
+          <div className="rounded-lg bg-white p-3 dark:bg-gray-800">
+            <AIAnalysisSourceSetting />
           </div>
         </div>
       )}

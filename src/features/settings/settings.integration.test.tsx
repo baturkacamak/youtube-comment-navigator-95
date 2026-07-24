@@ -7,6 +7,7 @@ import {
   setFontFamily,
   setShowContentOnSearch,
   setAIResponseLanguage,
+  setAIAnalysisSource,
 } from '../../store/store';
 import { getSettings, saveSettings } from './utils/settingsUtils';
 import type { RootState } from '../../types/rootState';
@@ -27,6 +28,7 @@ describe('Settings Integration Tests - Redux & localStorage', () => {
       showContentOnSearch: false,
       geminiApiKey: '',
       aiResponseLanguage: 'interface',
+      aiAnalysisSource: 'auto',
     },
     filters: {
       keyword: '',
@@ -164,6 +166,16 @@ describe('Settings Integration Tests - Redux & localStorage', () => {
 
       expect((store.getState() as RootState).settings.aiResponseLanguage).toBe('interface');
       expect(getSettings().aiResponseLanguage).toBe('interface');
+    });
+  });
+
+  describe('AI Analysis Source Settings', () => {
+    it('updates Redux state and persists the selected source', () => {
+      store.dispatch(setAIAnalysisSource('combined'));
+
+      const state = store.getState() as RootState;
+      expect(state.settings.aiAnalysisSource).toBe('combined');
+      expect(getSettings().aiAnalysisSource).toBe('combined');
     });
   });
 

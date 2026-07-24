@@ -14,7 +14,7 @@ import {
   analyzeConsensusAndDebate,
   extractCorrectionsAndWarnings,
 } from '../services/aiService';
-import { Comment } from '../../../types/commentTypes';
+import type { AnalysisInput } from '../types/analysis';
 
 export type CardId =
   | 'comment-summary'
@@ -31,15 +31,15 @@ export interface CardConfig {
   icon: typeof SparklesIcon;
   iconColorClass: string;
   accentColorClass: string;
-  analyzer: (comments: Comment[], signal?: AbortSignal) => Promise<string>;
+  analyzer: (input: AnalysisInput, signal?: AbortSignal) => Promise<string>;
   renderType: 'default' | 'list';
 }
 
 export const CARD_CONFIGS: CardConfig[] = [
   {
     id: 'comment-summary',
-    title: 'Comment Summary',
-    description: 'Understand the main topics, reactions, and recurring themes in the comments.',
+    title: 'Content Summary',
+    description: 'Understand video topics, viewer reactions, and recurring themes.',
     icon: SparklesIcon,
     iconColorClass: 'text-yellow-500',
     accentColorClass: 'border-l-yellow-500',

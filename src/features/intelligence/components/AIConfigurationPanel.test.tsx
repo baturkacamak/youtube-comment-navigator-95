@@ -13,6 +13,10 @@ vi.mock('../../settings/components/AIResponseLanguageSetting', () => ({
   default: () => <div>AI language control</div>,
 }));
 
+vi.mock('../../settings/components/AIAnalysisSourceSetting', () => ({
+  default: () => <div>AI source control</div>,
+}));
+
 describe('AIConfigurationPanel', () => {
   it('keeps AI controls collapsed until requested', () => {
     const onToggle = vi.fn();
@@ -20,6 +24,7 @@ describe('AIConfigurationPanel', () => {
 
     expect(screen.queryByText('Gemini key control')).not.toBeInTheDocument();
     expect(screen.queryByText('AI language control')).not.toBeInTheDocument();
+    expect(screen.queryByText('AI source control')).not.toBeInTheDocument();
 
     const settingsButton = screen.getByRole('button', { name: 'AI settings' });
     expect(settingsButton).toHaveAttribute('aria-expanded', 'false');
@@ -29,6 +34,7 @@ describe('AIConfigurationPanel', () => {
     rerender(<AIConfigurationPanel isOpen={true} onToggle={onToggle} />);
     expect(screen.getByText('Gemini key control')).toBeInTheDocument();
     expect(screen.getByText('AI language control')).toBeInTheDocument();
+    expect(screen.getByText('AI source control')).toBeInTheDocument();
     expect(settingsButton).toHaveAttribute('aria-expanded', 'true');
   });
 });

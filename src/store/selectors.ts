@@ -45,6 +45,10 @@ export const selectAIResponseLanguage = createSelector(
   [selectSettings],
   (settings) => settings.aiResponseLanguage || 'interface'
 );
+export const selectAIAnalysisSource = createSelector(
+  [selectSettings],
+  (settings) => settings.aiAnalysisSource || 'auto'
+);
 export const selectCommentSource = createSelector(
   [selectSettings],
   (settings) => settings.commentSource || 'auto'

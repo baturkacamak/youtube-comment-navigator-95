@@ -2,6 +2,7 @@ import { Comment } from './commentTypes';
 import { LiveChatMessage, LiveChatFetchState } from './liveChatTypes';
 import { FilterState } from './filterTypes'; // Adjust the path as necessary
 import { Option } from './utilityTypes';
+import type { AIAnalysisSource } from '../features/intelligence/types/analysis';
 
 export interface RootState {
   comments: Comment[];
@@ -20,6 +21,7 @@ export interface RootState {
     showContentOnSearch: boolean;
     geminiApiKey: string;
     aiResponseLanguage: string;
+    aiAnalysisSource?: AIAnalysisSource;
     enableDeveloperMode?: boolean;
     commentSource?: 'auto' | 'innertube' | 'dataApi';
     hasYouTubeDataApiKey?: boolean;

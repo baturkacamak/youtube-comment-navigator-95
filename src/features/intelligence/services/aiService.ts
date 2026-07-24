@@ -1,10 +1,4 @@
-import { Comment } from '../../../types/commentTypes';
-import {
-  AIEngine,
-  formatTextItems,
-  type AIAvailability,
-  type AIProvider,
-} from '@baturkacamak/extension-ai-core';
+import { AIEngine, type AIAvailability, type AIProvider } from '@baturkacamak/extension-ai-core';
 import {
   createChromeBuiltInProvider,
   createRuntimeAIClient,
@@ -24,6 +18,8 @@ import {
   buildQuestionsAndAnswersPrompt,
   buildTipsAndResourcesPrompt,
 } from './consumerAnalysisPrompts';
+import { buildAnalysisPromptMaterial } from './analysisSourceMaterial';
+import type { AnalysisInput, ResolvedAnalysisSource } from '../types/analysis';
 
 export const AI_MESSAGE_NAMESPACE = 'YCN_AI';
 
@@ -59,13 +55,6 @@ const runtimeProvider: AIProvider = {
   },
 };
 const engine = new AIEngine([builtInProvider, runtimeProvider]);
-
-const formatCommentsForPrompt = (comments: Comment[], limit = 50): string => {
-  return formatTextItems(
-    comments.map((comment) => ({ text: comment.content, weight: comment.likes })),
-    { limit }
-  );
-};
 
 const executePrompt = async (
   operation: string,
@@ -109,58 +98,57 @@ export const getRemoteAIStatus = () => getRuntimeClient().getStatus();
 
 export const setRemoteAIApiKey = (key: string) => getRuntimeClient().setApiKey(key);
 
-export const summarizeComments = async (
-  comments: Comment[],
+const executeAnalysis = (
+  operation: string,
+  input: AnalysisInput,
+  automaticSource: ResolvedAnalysisSource,
+  buildPrompt: (material: ReturnType<typeof buildAnalysisPromptMaterial>) => string,
   signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt('comment-summary', buildCommentSummaryPrompt(commentText), signal);
-};
+): Promise<string> =>
+  executePrompt(
+    operation,
+    buildPrompt(buildAnalysisPromptMaterial(input, automaticSource)),
+    signal
+  );
 
-export const extractKeyTakeaways = async (
-  comments: Comment[],
-  signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt('key-takeaways', buildKeyTakeawaysPrompt(commentText), signal);
-};
+export const summarizeComments = (input: AnalysisInput, signal?: AbortSignal): Promise<string> =>
+  executeAnalysis('comment-summary', input, 'comments', buildCommentSummaryPrompt, signal);
 
-export const answerQuestionsFromComments = async (
-  comments: Comment[],
+export const extractKeyTakeaways = (input: AnalysisInput, signal?: AbortSignal): Promise<string> =>
+  executeAnalysis('key-takeaways', input, 'combined', buildKeyTakeawaysPrompt, signal);
+
+export const answerQuestionsFromComments = (
+  input: AnalysisInput,
   signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt(
+): Promise<string> =>
+  executeAnalysis(
     'questions-and-answers',
-    buildQuestionsAndAnswersPrompt(commentText),
+    input,
+    'combined',
+    buildQuestionsAndAnswersPrompt,
     signal
   );
-};
 
-export const extractTipsAndResources = async (
-  comments: Comment[],
+export const extractTipsAndResources = (
+  input: AnalysisInput,
   signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt('tips-and-resources', buildTipsAndResourcesPrompt(commentText), signal);
-};
+): Promise<string> =>
+  executeAnalysis('tips-and-resources', input, 'combined', buildTipsAndResourcesPrompt, signal);
 
-export const analyzeConsensusAndDebate = async (
-  comments: Comment[],
+export const analyzeConsensusAndDebate = (
+  input: AnalysisInput,
   signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt('consensus-and-debate', buildConsensusAndDebatePrompt(commentText), signal);
-};
+): Promise<string> =>
+  executeAnalysis('consensus-and-debate', input, 'comments', buildConsensusAndDebatePrompt, signal);
 
-export const extractCorrectionsAndWarnings = async (
-  comments: Comment[],
+export const extractCorrectionsAndWarnings = (
+  input: AnalysisInput,
   signal?: AbortSignal
-): Promise<string> => {
-  const commentText = formatCommentsForPrompt(comments);
-  return executePrompt(
+): Promise<string> =>
+  executeAnalysis(
     'corrections-and-warnings',
-    buildCorrectionsAndWarningsPrompt(commentText),
+    input,
+    'combined',
+    buildCorrectionsAndWarningsPrompt,
     signal
   );
-};

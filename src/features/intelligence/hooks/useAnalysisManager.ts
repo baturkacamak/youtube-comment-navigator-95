@@ -7,7 +7,7 @@ import {
 import { selectGeminiApiKey } from '../../../store/selectors';
 import { useLocalIntelligence } from './useLocalIntelligence';
 import { CardId, CARD_CONFIGS } from '../constants/cardConfigs';
-import { Comment } from '../../../types/commentTypes';
+import type { AnalysisInput } from '../types/analysis';
 
 export type { AnalysisStatus } from '@baturkacamak/extension-ai-react';
 export type CardState = AnalysisState<string>;
@@ -17,8 +17,8 @@ export interface UseAnalysisManagerReturn {
   isAnalyzing: boolean;
   completedCount: number;
   canAnalyze: boolean;
-  analyzeCard: (cardId: CardId, comments: Comment[]) => Promise<void>;
-  analyzeAll: (comments: Comment[]) => Promise<void>;
+  analyzeCard: (cardId: CardId, input: AnalysisInput) => Promise<void>;
+  analyzeAll: (input: AnalysisInput) => Promise<void>;
   clearCard: (cardId: CardId) => void;
   clearAll: () => void;
   cancelAll: () => void;
@@ -34,11 +34,11 @@ export const useAnalysisManager = (): UseAnalysisManagerReturn => {
     () =>
       CARD_CONFIGS.map((config) => ({
         id: config.id,
-        analyze: (comments: Comment[], signal: AbortSignal) => config.analyzer(comments, signal),
+        analyze: (input: AnalysisInput, signal: AbortSignal) => config.analyzer(input, signal),
       })),
     []
   );
-  const manager = useReusableAnalysisManager<Comment[], CardId>({
+  const manager = useReusableAnalysisManager<AnalysisInput, CardId>({
     tasks,
     enabled: canAnalyze,
   });

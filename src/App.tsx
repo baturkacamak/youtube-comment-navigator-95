@@ -60,7 +60,6 @@ const App: React.FC = () => {
     filteredAndSortedBookmarks,
     transcript,
     liveFilteredCommentCount, // Use the new reactive count
-    comments,
     bookmarkedOnlyComments,
   } = useAppState();
 
@@ -195,7 +194,7 @@ const App: React.FC = () => {
           label: t('Intelligence'),
           icon: LightBulbIcon,
         },
-        content: <IntelligenceTab comments={filteredAndSortedComments} />,
+        content: <IntelligenceTab comments={filteredAndSortedComments} transcripts={transcript} />,
       },
     ],
     [
@@ -208,7 +207,6 @@ const App: React.FC = () => {
       transcript,
       filteredAndSortedBookmarks,
       showFiltersSorts,
-      comments,
       visibleCommentsForDownload,
       fetchAllCommentsForDownload,
       bookmarkedOnlyComments,
