@@ -24,6 +24,8 @@
 - For Vitest in this repo, prefer:
   - `npm test`
   - `npm test -- --run <spec>`
+- After changing UI translation keys or locale files, run `npm run check:translations`.
+  It verifies source keys, locale parity, non-empty values, and interpolation placeholders.
 - To create a Chrome Store upload artifact, use:
   - `./scripts/pack.sh`
   - or `just package`

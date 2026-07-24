@@ -57,6 +57,7 @@
     "lint:fix": "node node_modules/eslint/bin/eslint.js src --fix",
     "format": "node node_modules/prettier/bin/prettier.cjs --write \"src/**/*.{ts,tsx,css,scss,json}\"",
     "format:check": "node node_modules/prettier/bin/prettier.cjs --check \"src/**/*.{ts,tsx,css,scss,json}\"",
+    "check:translations": "node scripts/check-translations.mjs",
     "postinstall": "node scripts/repair-crx-plugin-deps.mjs",
     "prepare": "husky",
     "sync-store": "npx tsx scripts/sync-store-descriptions.ts",

@@ -37,6 +37,9 @@ jobs:
       - name: Check formatting
         run: npm run format:check
 
+      - name: Check translations
+        run: npm run check:translations
+
       - name: Run tests
         run: npm run test -- --run
 
