@@ -1,6 +1,6 @@
 {
   "name": "youtube-comment-navigator-95",
-  "version": "1.11.7",
+  "version": "1.11.8",
   "engines": {
     "node": "20.x || 22.x"
   },
