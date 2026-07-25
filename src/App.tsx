@@ -33,6 +33,7 @@ import Collapsible from './features/shared/components/Collapsible';
 import { db } from './features/shared/utils/database/database';
 import { loadAllComments } from './features/comments/services/pagination';
 import DevToolsPanel from './features/devtools/components/DevToolsPanel';
+import VideoCommentMonitorControl from './features/comment-monitoring/components/VideoCommentMonitorControl';
 
 const App: React.FC = () => {
   const { t } = useTranslation();
@@ -249,6 +250,7 @@ const App: React.FC = () => {
           />
           <hr className="border border-solid border-gray-200 dark:border-gray-600" />
           <SearchBar />
+          <VideoCommentMonitorControl videoId={videoId || null} />
         </Box>
         {(!showContentOnSearch || searchKeyword) && (
           <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>

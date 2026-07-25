@@ -1,119 +1,10 @@
 import { extractYouTubeVideoIdFromUrl } from '../../../shared/utils/extractYouTubeVideoIdFromUrl';
 import { youtubeApi } from '../../../shared/services/youtubeApi';
-
-// Helper to safely extract deep properties without crashing
-const safeGet = (fn: () => any) => {
-  try {
-    return fn();
-  } catch {
-    return undefined;
-  }
-};
-
-/**
- * Extracts the "Section Token" from the initial video details response.
- * This token identifies the comment section component within the video page.
- */
-const extractSectionToken = (data: any): string | undefined => {
-  try {
-    const contents =
-      safeGet(() => data?.contents?.twoColumnWatchNextResults?.results?.results?.contents) || [];
-
-    // Strategy 1: Look for continuationItemRenderer in itemSectionRenderer
-    const token = contents
-      .map((content: any) =>
-        safeGet(
-          () =>
-            content.itemSectionRenderer?.contents?.[0]?.continuationItemRenderer
-              ?.continuationEndpoint?.continuationCommand?.token
-        )
-      )
-      .find((t: string | undefined) => t);
-
-    return token;
-  } catch (e) {
-    return undefined;
-  }
-};
-
-/**
- * Extracts the final "Comments Token" from the comment section response.
- * This token is used to actually fetch the list of comments.
- */
-const extractCommentsToken = (data: any, sortOrderIndex: number = 0): string | undefined => {
-  try {
-    // The structure differs slightly when fetching the section directly.
-    // Usually found in onResponseReceivedEndpoints
-
-    const endpoints = data?.onResponseReceivedEndpoints || [];
-    let token: string | undefined;
-
-    // Strategy 1: Check onResponseReceivedEndpoints (typical for reload/continuation)
-    for (const endpoint of endpoints) {
-      const reloadContinuationItems = safeGet(
-        () => endpoint.reloadContinuationItemsCommand?.continuationItems
-      );
-      const appendContinuationItems = safeGet(
-        () => endpoint.appendContinuationItemsAction?.continuationItems
-      );
-      const items = reloadContinuationItems || appendContinuationItems || [];
-
-      // Look for sortFilterSubMenuRenderer in header
-      for (const item of items) {
-        // Check deep path for sort menu
-        const subMenuItems = safeGet(
-          () => item.commentsHeaderRenderer?.sortMenu?.sortFilterSubMenuRenderer?.subMenuItems
-        );
-        if (subMenuItems && subMenuItems[sortOrderIndex]) {
-          token = safeGet(
-            () => subMenuItems[sortOrderIndex].serviceEndpoint?.continuationCommand?.token
-          );
-          if (token) return token;
-        }
-
-        // Also check generic continuation items
-        if (item.continuationItemRenderer) {
-          // Usually direct token is for "Show more", but in header context it might be meaningful
-          // const directToken = safeGet(() => item.continuationItemRenderer?.continuationEndpoint?.continuationCommand?.token);
-        }
-      }
-    }
-
-    // Strategy 2: Fallback to the structure used in initial page load (if data comes from there)
-    const contents =
-      safeGet(() => data?.contents?.twoColumnWatchNextResults?.results?.results?.contents) || [];
-    token = contents
-      .map((content: any) =>
-        safeGet(
-          () =>
-            content.itemSectionRenderer?.header?.[0]?.commentsHeaderRenderer?.sortMenu
-              ?.sortFilterSubMenuRenderer?.subMenuItems?.[sortOrderIndex]?.serviceEndpoint
-              ?.continuationCommand?.token
-        )
-      )
-      .find((t: string | undefined) => t);
-
-    return token;
-  } catch (e) {
-    return undefined;
-  }
-};
-
-export const getContinuationTokenFromData = (
-  data: any,
-  _isFetchingReply: boolean = false
-): string | null => {
-  // This function is kept for backward compatibility or direct calls,
-  // but ideally, the logic should be split as above.
-  // For now, we delegate to the new extractors if it looks like a full page response.
-  const sectionToken = extractSectionToken(data);
-  if (sectionToken) return sectionToken;
-
-  const commentsToken = extractCommentsToken(data);
-  if (commentsToken) return commentsToken;
-
-  return null;
-};
+import {
+  extractCommentsToken,
+  extractSectionToken,
+  getContinuationTokenFromData,
+} from './commentContinuationTokens';
 
 export const fetchContinuationTokenFromRemote = async (videoId?: string): Promise<string> => {
   try {
@@ -159,3 +50,5 @@ export const fetchContinuationTokenFromRemote = async (videoId?: string): Promis
     return '';
   }
 };
+
+export { getContinuationTokenFromData };

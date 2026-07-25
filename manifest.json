@@ -11,7 +11,7 @@
       "128": "icon128.png"
     }
   },
-  "permissions": ["storage", "scripting"],
+  "permissions": ["storage", "scripting", "alarms", "notifications"],
   "host_permissions": [
     "*://*.youtube.com/*",
     "https://www.googleapis.com/*",

@@ -1,5 +1,21 @@
 import { registerGeminiBackground } from '@baturkacamak/extension-ai-webextension';
+import {
+  checkVideoCommentMonitorNow,
+  disableVideoCommentMonitoring,
+  enableVideoCommentMonitoring,
+  getVideoMonitorStatus,
+  registerCommentMonitorListeners,
+  syncCommentMonitorAlarm,
+} from './features/comment-monitoring/services/commentMonitorService';
 import { createGeminiStorageAdapter } from './features/intelligence/services/geminiStorage';
+import {
+  type DataApiCommentThreadsResponse,
+  mapDataApiComment,
+  readYouTubeDataApiKeyFromStorage,
+  requestYouTubeDataApi,
+  YOUTUBE_DATA_API_KEY_STORAGE,
+} from './features/shared/services/youtubeDataApi';
+import logger from './features/shared/utils/logger';
 
 const aiBackgroundLogger = {
   error(message: string, context?: Record<string, unknown>) {
@@ -7,14 +23,23 @@ const aiBackgroundLogger = {
   },
 };
 
-const KEY = 'youtubeDataApiKey';
 const GEMINI_KEY = 'geminiApiKey';
-const API = 'https://www.googleapis.com/youtube/v3';
-
-type ApiComment = Record<string, unknown>;
 const send = (tabId: number, message: unknown) =>
   chrome.tabs.sendMessage(tabId, message).catch(() => undefined);
-const storageGet = async () => (await chrome.storage.local.get(KEY))[KEY] as string | undefined;
+const storageGet = async () => readYouTubeDataApiKeyFromStorage(chrome.storage.local);
+
+const toSafeErrorContext = (error: unknown): Record<string, unknown> => ({
+  errorName: error instanceof Error ? error.name : 'UnknownError',
+  errorMessage: error instanceof Error ? error.message : 'YouTube Data API request failed.',
+  status:
+    typeof error === 'object' && error !== null && 'status' in error
+      ? (error as { status?: unknown }).status
+      : undefined,
+  reason:
+    typeof error === 'object' && error !== null && 'reason' in error
+      ? (error as { reason?: unknown }).reason
+      : undefined,
+});
 
 registerGeminiBackground(chrome.runtime, {
   storage: createGeminiStorageAdapter(chrome.storage.local),
@@ -23,45 +48,8 @@ registerGeminiBackground(chrome.runtime, {
   logger: aiBackgroundLogger,
 });
 
-function toComment(snippet: any, videoId: string, parentId?: string, replyCount = 0): ApiComment {
-  const publishedDate = Date.parse(snippet.publishedAt || '') || Date.now();
-  const content = snippet.textDisplay || snippet.textOriginal || '';
-  return {
-    author: snippet.authorDisplayName || '',
-    likes: Number(snippet.likeCount || 0),
-    viewLikes: '',
-    content,
-    published: snippet.publishedAt || '',
-    publishedDate,
-    authorAvatarUrl: snippet.authorProfileImageUrl || '',
-    isAuthorContentCreator: false,
-    authorChannelId: snippet.authorChannelId?.value || '',
-    replyCount,
-    commentId: snippet.id || '',
-    commentParentId: parentId || '',
-    replyLevel: parentId ? 1 : 0,
-    hasTimestamp: /\b\d{1,2}:\d{2}\b/.test(content),
-    hasLinks: /https?:\/\//i.test(content),
-    videoId,
-    wordCount: content.trim() ? content.trim().split(/\s+/).length : 0,
-    timestamp: Date.now(),
-    source: 'dataApi',
-  };
-}
-
-async function request(path: string, key: string, signal: AbortSignal) {
-  const response = await fetch(
-    `${API}${path}${path.includes('?') ? '&' : '?'}key=${encodeURIComponent(key)}`,
-    { signal }
-  );
-  const body = await response.json().catch(() => ({}));
-  if (!response.ok)
-    throw Object.assign(new Error(body?.error?.message || `HTTP ${response.status}`), {
-      status: response.status,
-      reason: body?.error?.errors?.[0]?.reason,
-    });
-  return body;
-}
+registerCommentMonitorListeners();
+void syncCommentMonitorAlarm();
 
 async function fetchComments(tabId: number, requestId: string, videoId: string) {
   const key = await storageGet();
@@ -72,19 +60,19 @@ async function fetchComments(tabId: number, requestId: string, videoId: string) 
   let pageToken = '';
   try {
     do {
-      const data = await request(
+      const data = (await requestYouTubeDataApi(
         `/commentThreads?part=snippet,replies&videoId=${encodeURIComponent(videoId)}&maxResults=100${pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : ''}`,
         key,
         controller.signal
-      );
+      )) as DataApiCommentThreadsResponse;
       quotaUsed++;
       pageToken = data.nextPageToken || '';
-      const comments: ApiComment[] = [];
+      const comments = [];
       for (const thread of data.items || []) {
         const top = thread.snippet?.topLevelComment;
         if (!top) continue;
         comments.push(
-          toComment(
+          mapDataApiComment(
             { ...top.snippet, id: top.id },
             videoId,
             undefined,
@@ -92,7 +80,7 @@ async function fetchComments(tabId: number, requestId: string, videoId: string) 
           )
         );
         for (const reply of thread.replies?.comments || [])
-          comments.push(toComment({ ...reply.snippet, id: reply.id }, videoId, top.id));
+          comments.push(mapDataApiComment({ ...reply.snippet, id: reply.id }, videoId, top.id));
       }
       count += comments.length;
       await send(tabId, {
@@ -104,11 +92,23 @@ async function fetchComments(tabId: number, requestId: string, videoId: string) 
         done: !pageToken,
       });
     } while (pageToken);
-  } catch (error: any) {
+  } catch (error: unknown) {
+    logger.error('YouTube Data API comment fetch failed.', {
+      operation: 'youtube-data-api-comment-fetch',
+      videoId,
+      count,
+      quotaUsed,
+      ...toSafeErrorContext(error),
+    });
     await send(tabId, {
       type: 'YCN_YT_API_ERROR',
       requestId,
-      error: error?.reason || error?.message || 'unknown',
+      error:
+        typeof error === 'object' && error !== null && 'reason' in error
+          ? (error as { reason?: string }).reason
+          : error instanceof Error
+            ? error.message
+            : 'unknown',
       count,
       quotaUsed,
     });
@@ -121,10 +121,26 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
       const key = typeof message.key === 'string' ? message.key.trim() : await storageGet();
       if (!key) return respond({ ok: false, error: 'Enter an API key first.' });
       try {
-        await request('/i18nLanguages?part=snippet&hl=en', key, new AbortController().signal);
+        await requestYouTubeDataApi(
+          '/i18nLanguages?part=snippet&hl=en',
+          key,
+          new AbortController().signal
+        );
         respond({ ok: true });
-      } catch (error: any) {
-        respond({ ok: false, error: error?.reason || error?.message || 'API key test failed.' });
+      } catch (error: unknown) {
+        logger.error('YouTube Data API key test failed.', {
+          operation: 'youtube-data-api-key-test',
+          ...toSafeErrorContext(error),
+        });
+        respond({
+          ok: false,
+          error:
+            typeof error === 'object' && error !== null && 'reason' in error
+              ? (error as { reason?: string }).reason
+              : error instanceof Error
+                ? error.message
+                : 'API key test failed.',
+        });
       }
     })();
     return true;
@@ -135,12 +151,39 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   }
   if (message?.type === 'YCN_YT_API_KEY_SET') {
     chrome.storage.local
-      .set({ [KEY]: message.key?.trim() || '' })
+      .set({ [YOUTUBE_DATA_API_KEY_STORAGE]: message.key?.trim() || '' })
       .then(() => respond({ configured: Boolean(message.key?.trim()) }));
     return true;
   }
   if (message?.type === 'YCN_YT_API_FETCH' && sender.tab?.id) {
     void fetchComments(sender.tab.id, message.requestId, message.videoId);
     respond({ started: true });
+    return true;
+  }
+  if (message?.type === 'YCN_COMMENT_MONITOR_STATUS' && typeof message.videoId === 'string') {
+    getVideoMonitorStatus(message.videoId).then(respond);
+    return true;
+  }
+  if (message?.type === 'YCN_COMMENT_MONITOR_ENABLE' && typeof message.videoId === 'string') {
+    enableVideoCommentMonitoring(message.videoId).then(respond, (error: unknown) =>
+      respond({
+        monitored: false,
+        lastCheckedAt: null,
+        nextCheckAt: null,
+        intervalMinutes: null,
+        lastKnownCount: 0,
+        lastKnownTotalCommentCount: null,
+        lastError: error instanceof Error ? error.message : 'Could not enable monitoring.',
+      })
+    );
+    return true;
+  }
+  if (message?.type === 'YCN_COMMENT_MONITOR_DISABLE' && typeof message.videoId === 'string') {
+    disableVideoCommentMonitoring(message.videoId).then(respond);
+    return true;
+  }
+  if (message?.type === 'YCN_COMMENT_MONITOR_CHECK_NOW' && typeof message.videoId === 'string') {
+    checkVideoCommentMonitorNow(message.videoId).then(respond);
+    return true;
   }
 });
