@@ -27,12 +27,22 @@
   - `npm test -- --run <spec>`
 - After changing UI translation keys or locale files, run `npm run check:translations`.
   It verifies source keys, locale parity, non-empty values, and interpolation placeholders.
+- All user-facing strings must be translatable. Do not add hard-coded UI text,
+  labels, placeholders, tooltips, aria labels, status messages, errors, or
+  documentation-like copy in components without routing it through the existing
+  i18n/translation system.
 - Use the private `@baturkacamak/localization-toolkit` through
   `l10n.config.json` for translation auditing, machine translation, translation
   memory, and review UI. Do not recreate those behaviors in repository-local
   scripts. Run `npm run translations:ui` for review or
   `npm run translations:translate -- --languages <codes>` for explicit machine
   translation; existing human values must not be overwritten by default.
+- After using machine translation, manually review the changed translations in
+  every affected locale before considering the work complete. Check at minimum
+  that product names and technical labels remain accurate, placeholders are
+  preserved, short UI actions keep the intended meaning, and ambiguous source
+  strings such as background operations or follow/monitor actions were not
+  translated into the wrong domain.
 - To create a Chrome Store upload artifact, use:
   - `./scripts/pack.sh`
   - or `just package`

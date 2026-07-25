@@ -249,8 +249,12 @@ const App: React.FC = () => {
             openDevPanel={() => setActiveTab('devtools')}
           />
           <hr className="border border-solid border-gray-200 dark:border-gray-600" />
-          <SearchBar />
-          <VideoCommentMonitorControl videoId={videoId || null} />
+          <div className="flex items-start gap-2">
+            <div className="min-w-0 flex-1">
+              <SearchBar />
+            </div>
+            <VideoCommentMonitorControl videoId={videoId || null} />
+          </div>
         </Box>
         {(!showContentOnSearch || searchKeyword) && (
           <Box className="flex flex-col w-full gap-2" borderColor={'border-transparent'}>

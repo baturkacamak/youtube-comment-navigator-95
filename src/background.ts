@@ -1,9 +1,11 @@
 import { registerGeminiBackground } from '@baturkacamak/extension-ai-webextension';
 import {
   checkVideoCommentMonitorNow,
+  clearVideoCommentMonitorErrors,
   disableVideoCommentMonitoring,
   enableVideoCommentMonitoring,
   getVideoMonitorStatus,
+  markVideoCommentMonitorsPausedForMissingKey,
   registerCommentMonitorListeners,
   syncCommentMonitorAlarm,
 } from './features/comment-monitoring/services/commentMonitorService';
@@ -150,9 +152,16 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     return true;
   }
   if (message?.type === 'YCN_YT_API_KEY_SET') {
-    chrome.storage.local
-      .set({ [YOUTUBE_DATA_API_KEY_STORAGE]: message.key?.trim() || '' })
-      .then(() => respond({ configured: Boolean(message.key?.trim()) }));
+    (async () => {
+      const key = message.key?.trim() || '';
+      await chrome.storage.local.set({ [YOUTUBE_DATA_API_KEY_STORAGE]: key });
+      if (key) {
+        await clearVideoCommentMonitorErrors();
+      } else {
+        await markVideoCommentMonitorsPausedForMissingKey();
+      }
+      respond({ configured: Boolean(key) });
+    })();
     return true;
   }
   if (message?.type === 'YCN_YT_API_FETCH' && sender.tab?.id) {
@@ -168,6 +177,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     enableVideoCommentMonitoring(message.videoId).then(respond, (error: unknown) =>
       respond({
         monitored: false,
+        apiKeyConfigured: false,
         lastCheckedAt: null,
         nextCheckAt: null,
         intervalMinutes: null,

@@ -26,6 +26,7 @@ export interface MonitoredVideo {
 
 export interface MonitorStatus {
   monitored: boolean;
+  apiKeyConfigured: boolean;
   lastCheckedAt: number | null;
   nextCheckAt: number | null;
   intervalMinutes: number | null;
@@ -37,6 +38,7 @@ export interface MonitorStatus {
 export interface MonitorCheckResult {
   ok: boolean;
   monitored: boolean;
+  apiKeyConfigured: boolean;
   lastCheckedAt: number | null;
   nextCheckAt: number | null;
   intervalMinutes: number | null;

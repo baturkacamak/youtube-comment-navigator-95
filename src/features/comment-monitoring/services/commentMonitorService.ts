@@ -16,6 +16,7 @@ import {
 const MONITORED_VIDEOS_KEY = 'commentMonitorVideos';
 const COMMENT_MONITOR_ALARM = 'ycn-comment-monitor';
 const COMMENT_MONITOR_WAKE_INTERVAL_MINUTES = 15;
+const MISSING_DATA_API_KEY_ERROR = 'Background monitoring requires a YouTube Data API key.';
 const MINUTE_MS = 60 * 1000;
 const DAY_MS = 24 * 60 * MINUTE_MS;
 const VIDEO_METADATA_BATCH_SIZE = 50;
@@ -50,14 +51,24 @@ const toSafeErrorContext = (error: unknown): Record<string, unknown> => ({
       : undefined,
 });
 
-const toMonitorStatus = (monitor: MonitoredVideo | undefined): MonitorStatus => ({
+const isMissingDataApiKeyError = (message: string | null | undefined): boolean =>
+  message === MISSING_DATA_API_KEY_ERROR;
+
+const toMonitorStatus = (
+  monitor: MonitoredVideo | undefined,
+  apiKeyConfigured: boolean
+): MonitorStatus => ({
   monitored: Boolean(monitor),
+  apiKeyConfigured,
   lastCheckedAt: monitor?.lastCheckedAt ?? null,
   nextCheckAt: monitor?.nextCheckAt ?? null,
   intervalMinutes: monitor?.intervalMinutes ?? null,
   lastKnownCount: monitor?.lastKnownCount ?? 0,
   lastKnownTotalCommentCount: monitor?.lastKnownTotalCommentCount ?? null,
-  lastError: monitor?.lastError ?? null,
+  lastError:
+    apiKeyConfigured && isMissingDataApiKeyError(monitor?.lastError)
+      ? null
+      : (monitor?.lastError ?? null),
 });
 
 export const getAdaptiveCommentMonitorIntervalMinutes = (
@@ -152,26 +163,27 @@ export const syncCommentMonitorAlarm = async (): Promise<void> => {
 };
 
 export const getVideoMonitorStatus = async (videoId: string): Promise<MonitorStatus> => {
-  const monitors = await readMonitors();
-  return toMonitorStatus(monitors[videoId]);
+  const [monitors, key] = await Promise.all([readMonitors(), readYouTubeDataApiKey()]);
+  return toMonitorStatus(monitors[videoId], Boolean(key));
 };
 
 export const enableVideoCommentMonitoring = async (videoId: string): Promise<MonitorStatus> => {
   const monitors = await readMonitors();
+  const key = await readYouTubeDataApiKey();
   if (monitors[videoId]) {
-    return toMonitorStatus(monitors[videoId]);
+    return toMonitorStatus(monitors[videoId], Boolean(key));
   }
 
-  const key = await readYouTubeDataApiKey();
   if (!key) {
     return {
       monitored: false,
+      apiKeyConfigured: false,
       lastCheckedAt: null,
       nextCheckAt: null,
       intervalMinutes: null,
       lastKnownCount: 0,
       lastKnownTotalCommentCount: null,
-      lastError: 'Background monitoring requires a YouTube Data API key.',
+      lastError: MISSING_DATA_API_KEY_ERROR,
     };
   }
 
@@ -208,7 +220,7 @@ export const enableVideoCommentMonitoring = async (videoId: string): Promise<Mon
 
   await writeMonitors(monitors);
   await syncCommentMonitorAlarm();
-  return toMonitorStatus(monitors[videoId]);
+  return toMonitorStatus(monitors[videoId], true);
 };
 
 export const disableVideoCommentMonitoring = async (videoId: string): Promise<MonitorStatus> => {
@@ -216,7 +228,49 @@ export const disableVideoCommentMonitoring = async (videoId: string): Promise<Mo
   delete monitors[videoId];
   await writeMonitors(monitors);
   await syncCommentMonitorAlarm();
-  return toMonitorStatus(undefined);
+  return toMonitorStatus(undefined, Boolean(await readYouTubeDataApiKey()));
+};
+
+export const clearVideoCommentMonitorErrors = async (): Promise<void> => {
+  const monitors = await readMonitors();
+  let changed = false;
+
+  for (const [videoId, monitor] of Object.entries(monitors)) {
+    if (!monitor.lastError) {
+      continue;
+    }
+
+    monitors[videoId] = {
+      ...monitor,
+      lastError: null,
+    };
+    changed = true;
+  }
+
+  if (changed) {
+    await writeMonitors(monitors);
+  }
+};
+
+export const markVideoCommentMonitorsPausedForMissingKey = async (): Promise<void> => {
+  const monitors = await readMonitors();
+  let changed = false;
+
+  for (const [videoId, monitor] of Object.entries(monitors)) {
+    if (monitor.lastError === MISSING_DATA_API_KEY_ERROR) {
+      continue;
+    }
+
+    monitors[videoId] = {
+      ...monitor,
+      lastError: MISSING_DATA_API_KEY_ERROR,
+    };
+    changed = true;
+  }
+
+  if (changed) {
+    await writeMonitors(monitors);
+  }
 };
 
 export const checkVideoCommentMonitorNow = async (
@@ -227,9 +281,11 @@ export const checkVideoCommentMonitorNow = async (
   const monitor = monitors[videoId];
 
   if (!monitor) {
+    const key = await readYouTubeDataApiKey();
     return {
       ok: false,
       monitored: false,
+      apiKeyConfigured: Boolean(key),
       lastCheckedAt: null,
       nextCheckAt: null,
       intervalMinutes: null,
@@ -240,12 +296,23 @@ export const checkVideoCommentMonitorNow = async (
     };
   }
 
-  try {
-    const key = await readYouTubeDataApiKey();
-    if (!key) {
-      throw new Error('Background monitoring requires a YouTube Data API key.');
-    }
+  const key = await readYouTubeDataApiKey();
+  if (!key) {
+    return {
+      ok: false,
+      monitored: true,
+      apiKeyConfigured: false,
+      lastCheckedAt: monitor.lastCheckedAt,
+      nextCheckAt: monitor.nextCheckAt,
+      intervalMinutes: monitor.intervalMinutes,
+      lastKnownCount: monitor.lastKnownCount,
+      lastKnownTotalCommentCount: monitor.lastKnownTotalCommentCount,
+      newCount: 0,
+      error: MISSING_DATA_API_KEY_ERROR,
+    };
+  }
 
+  try {
     const metadata = preloadedMetadata || (await fetchVideoCommentMonitorMetadata(videoId, key));
     const lastCheckedAt = Date.now();
     const previousTotalCommentCount = getMonitorCommentCount(monitor);
@@ -270,6 +337,7 @@ export const checkVideoCommentMonitorNow = async (
       return {
         ok: true,
         monitored: true,
+        apiKeyConfigured: true,
         lastCheckedAt,
         nextCheckAt: nextMonitor.nextCheckAt,
         intervalMinutes: nextMonitor.intervalMinutes,
@@ -309,6 +377,7 @@ export const checkVideoCommentMonitorNow = async (
     return {
       ok: true,
       monitored: true,
+      apiKeyConfigured: true,
       lastCheckedAt,
       nextCheckAt: nextMonitor.nextCheckAt,
       intervalMinutes: nextMonitor.intervalMinutes,
@@ -341,6 +410,7 @@ export const checkVideoCommentMonitorNow = async (
     return {
       ok: false,
       monitored: true,
+      apiKeyConfigured: Boolean(await readYouTubeDataApiKey()),
       lastCheckedAt: monitors[videoId].lastCheckedAt,
       nextCheckAt: monitors[videoId].nextCheckAt,
       intervalMinutes: monitors[videoId].intervalMinutes,
@@ -365,9 +435,6 @@ export const checkAllVideoCommentMonitors = async (): Promise<void> => {
 
   const key = await readYouTubeDataApiKey();
   if (!key) {
-    for (const videoId of dueVideoIds) {
-      await checkVideoCommentMonitorNow(videoId);
-    }
     return;
   }
 
