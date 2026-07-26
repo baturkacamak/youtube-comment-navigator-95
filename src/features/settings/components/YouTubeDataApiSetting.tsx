@@ -13,7 +13,7 @@ import {
   WrenchScrewdriverIcon,
 } from '@heroicons/react/24/outline';
 import ExternalLink from '../../shared/components/ExternalLink';
-import { Option } from '../../../types/utilityTypes';
+import { getCommentSourceOptions, resolveSelectableCommentSource } from './commentSourceOptions';
 
 const YouTubeDataApiSetting: React.FC = () => {
   const { t } = useTranslation();
@@ -23,13 +23,19 @@ const YouTubeDataApiSetting: React.FC = () => {
   const [key, setKey] = useState('');
   const [showKey, setShowKey] = useState(false);
   const [status, setStatus] = useState('');
+  const [keyStatusLoaded, setKeyStatusLoaded] = useState(false);
 
   useEffect(() => {
     chrome.runtime.sendMessage({ type: 'YCN_YT_API_STATUS' }, (result) => {
       if (chrome.runtime.lastError) return;
-      dispatch(setHasYouTubeDataApiKey(Boolean(result?.configured)));
+      const hasKey = Boolean(result?.configured);
+      dispatch(setHasYouTubeDataApiKey(hasKey));
+      setKeyStatusLoaded(true);
+      if (resolveSelectableCommentSource(source, hasKey) !== source) {
+        dispatch(setCommentSource('auto'));
+      }
     });
-  }, [dispatch]);
+  }, [dispatch, source]);
 
   const save = () => {
     if (!key.trim() && !configured) {
@@ -38,7 +44,12 @@ const YouTubeDataApiSetting: React.FC = () => {
 
     chrome.runtime.sendMessage({ type: 'YCN_YT_API_KEY_SET', key }, (result) => {
       if (chrome.runtime.lastError) return setStatus(t('Could not save the API key.'));
-      dispatch(setHasYouTubeDataApiKey(Boolean(result?.configured)));
+      const hasKey = Boolean(result?.configured);
+      dispatch(setHasYouTubeDataApiKey(hasKey));
+      setKeyStatusLoaded(true);
+      if (resolveSelectableCommentSource(source, hasKey) !== source) {
+        dispatch(setCommentSource('auto'));
+      }
       setKey('');
       setStatus(
         result?.configured ? t('API key saved in extension storage.') : t('API key removed.')
@@ -55,18 +66,18 @@ const YouTubeDataApiSetting: React.FC = () => {
     }
   };
   const hasUnsavedChanges = Boolean(key.trim());
-  const sourceOptions: Option[] = [
-    { value: 'auto', label: t('Automatic (recommended)') },
-    { value: 'innertube', label: t('YouTube direct') },
-    { value: 'dataApi', label: t('YouTube Data API') },
-  ];
+  const canUseDataApi = keyStatusLoaded ? configured : source === 'dataApi';
+  const sourceOptions = getCommentSourceOptions(t, canUseDataApi);
+  const selectedSource = resolveSelectableCommentSource(source, canUseDataApi);
 
   return (
     <div className="flex flex-col gap-2 w-full" data-testid="youtube-data-api-setting">
       <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{t('Comment source')}</p>
       <SelectBox
         options={sourceOptions}
-        selectedOption={sourceOptions.find((option) => option.value === source) || sourceOptions[0]}
+        selectedOption={
+          sourceOptions.find((option) => option.value === selectedSource) || sourceOptions[0]
+        }
         setSelectedOption={(option) =>
           dispatch(setCommentSource(option.value as 'auto' | 'innertube' | 'dataApi'))
         }

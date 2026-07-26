@@ -8,4 +8,6 @@ export interface Option {
   value: string;
   label: string;
   icon?: ComponentType<SVGProps<SVGSVGElement>>;
+  disabled?: boolean;
+  disabledReason?: string;
 }

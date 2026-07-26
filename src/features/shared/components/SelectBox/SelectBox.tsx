@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import { SelectBoxProps } from '../../../../types/filterTypes';
 import { Option } from '../../../../types/utilityTypes';
@@ -25,6 +25,23 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   const menuRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
+  const getNextEnabledIndex = useCallback(
+    (startIndex: number, direction: 1 | -1): number => {
+      if (filteredOptions.length === 0) return 0;
+
+      for (let offset = 0; offset < filteredOptions.length; offset += 1) {
+        const index =
+          (startIndex + direction * offset + filteredOptions.length) % filteredOptions.length;
+        if (!filteredOptions[index]?.disabled) {
+          return index;
+        }
+      }
+
+      return startIndex;
+    },
+    [filteredOptions]
+  );
+
   useEffect(() => {
     // Exclude the placeholder option when the dropdown is open
     const displayedOptions = options.filter((option) => option.value !== '');
@@ -36,6 +53,8 @@ const SelectBox: React.FC<SelectBoxProps> = ({
   }, [options, t]);
 
   const handleOptionClick = (option: Option, index: number) => {
+    if (option.disabled) return;
+
     setSelectedOption(option);
     setHighlightedIndex(index);
     setIsOpen(false);
@@ -49,17 +68,19 @@ const SelectBox: React.FC<SelectBoxProps> = ({
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault();
-        setHighlightedIndex((prevIndex) => (prevIndex + 1) % filteredOptions.length);
+        setHighlightedIndex((prevIndex) => getNextEnabledIndex(prevIndex + 1, 1));
         break;
       case 'ArrowUp':
         event.preventDefault();
-        setHighlightedIndex(
-          (prevIndex) => (prevIndex - 1 + filteredOptions.length) % filteredOptions.length
-        );
+        setHighlightedIndex((prevIndex) => getNextEnabledIndex(prevIndex - 1, -1));
         break;
       case 'Enter': {
         event.preventDefault();
-        setSelectedOption(filteredOptions[highlightedIndex]);
+        const highlightedOption = filteredOptions[highlightedIndex];
+        if (!highlightedOption || highlightedOption.disabled) {
+          break;
+        }
+        setSelectedOption(highlightedOption);
         setIsOpen(false);
         setSearchTerm('');
         // Reset filtered options to exclude the placeholder
@@ -82,9 +103,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
         menuRef.current?.focus();
       }
       const selectedIndex = options.findIndex((option) => option.value === selectedOption.value);
-      setHighlightedIndex(selectedIndex);
+      setHighlightedIndex(getNextEnabledIndex(selectedIndex >= 0 ? selectedIndex : 0, 1));
     }
-  }, [isOpen, options, selectedOption, isSearchable]);
+  }, [getNextEnabledIndex, isOpen, options, selectedOption, isSearchable]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

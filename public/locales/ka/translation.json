@@ -290,7 +290,7 @@
   "Background comment alerts": "ფონური კომენტარების გაფრთხილებები",
   "Checks this video on an adaptive schedule with the YouTube Data API while your browser stays open.": "ამოწმებს ამ ვიდეოს ადაპტირებულ განრიგზე YouTube Data API-ით, სანამ თქვენი ბრაუზერი ღიაა.",
   "Monitoring is paused. Add a YouTube Data API key in Settings to resume checks.": "მონიტორინგი შეჩერებულია. შემოწმების გასაგრძელებლად დაამატეთ YouTube მონაცემთა API გასაღები პარამეტრებში.",
-  "Requires a YouTube Data API key in Settings.": "საჭიროებს YouTube მონაცემთა API კლავიშს პარამეტრებში.",
+  "Requires a YouTube Data API key in Settings.": "საჭიროებს YouTube მონაცემთა API გასაღებს პარამეტრებში.",
   "Ready to follow this video.": "მზადაა ამ ვიდეოს თვალყური ადევნოთ.",
   "Stop following this video": "შეწყვიტე ამ ვიდეოს თვალყურის დევნება",
   "Check now": "შეამოწმეთ ახლა",

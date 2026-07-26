@@ -55,7 +55,14 @@ void syncCommentMonitorAlarm();
 
 async function fetchComments(tabId: number, requestId: string, videoId: string) {
   const key = await storageGet();
-  if (!key) return send(tabId, { type: 'YCN_YT_API_ERROR', requestId, error: 'missingKey' });
+  if (!key) {
+    logger.error('YouTube Data API comment fetch blocked because no key is configured.', {
+      operation: 'youtube-data-api-comment-fetch',
+      videoId,
+      errorCode: 'missingKey',
+    });
+    return send(tabId, { type: 'YCN_YT_API_ERROR', requestId, error: 'missingKey' });
+  }
   const controller = new AbortController();
   let quotaUsed = 0;
   let count = 0;
