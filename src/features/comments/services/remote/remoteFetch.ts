@@ -22,6 +22,7 @@ import { countComments, loadPagedComments } from '../pagination';
 import { seedMockData } from '../../../shared/utils/mockDataSeeder';
 import { getSettings } from '../../../settings/utils/settingsUtils';
 import { fetchDataApiComments } from '../dataApi/fetchDataApiComments';
+import { shouldUseDataApiForComments } from './commentSource';
 
 let currentAbortController = new AbortController();
 
@@ -66,14 +67,7 @@ export const fetchCommentsFromRemote = async (dispatch: any, bypassCache: boolea
     }
 
     const source = getSettings().commentSource;
-    const apiMode =
-      source === 'dataApi' ||
-      (source === 'auto' &&
-        (await new Promise<boolean>((resolve) =>
-          chrome.runtime.sendMessage({ type: 'YCN_YT_API_STATUS' }, (value) =>
-            resolve(Boolean(value?.configured))
-          )
-        )));
+    const apiMode = shouldUseDataApiForComments(source);
     if (apiMode) {
       await deleteCommentsFromDb(videoId);
       await fetchDataApiComments(videoId, (count) => dispatch(setTotalCommentsCount(count)));
